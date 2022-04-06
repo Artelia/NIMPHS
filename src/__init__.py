@@ -1,6 +1,7 @@
 from bpy.utils import unregister_class, register_class
 from .panels.main_panel import TBB_PT_MainPanel
 from .properties.settings import TBB_settings
+from .properties.clip import TBB_clip_scalar, TBB_clip
 
 bl_info = {
     "name": "Toolsbox Blender ",
@@ -18,6 +19,8 @@ bl_info = {
 classes = (
     TBB_PT_MainPanel,
     TBB_settings,
+    TBB_clip_scalar,
+    TBB_clip
 )
 
 def register():

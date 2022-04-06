@@ -17,7 +17,7 @@ class TBB_settings(PropertyGroup):
         soft_max=2.0,
         step=0.1,
         precision=2,
-        default=0.0,
+        default=0.0
     )
 
     end_time: FloatProperty(
@@ -29,7 +29,7 @@ class TBB_settings(PropertyGroup):
         soft_max=2.0,
         step=0.1,
         precision=2,
-        default=0.0,
+        default=0.0
     )
 
     import_point_data: BoolProperty(
