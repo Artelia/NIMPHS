@@ -1,8 +1,8 @@
 from bpy.utils import unregister_class, register_class
 from bpy.types import Scene
 from bpy.props import CollectionProperty
-import bpy
-from .operators.import_foam_file import TBB_OT_ImportFoamFile
+
+from .operators.import_foam_file import TBB_OT_ImportFoamFile, TBB_OT_ReloadFoamFile
 from .panels.main_panel import TBB_PT_MainPanel
 from .properties.settings import TBB_settings
 from .properties.clip import TBB_clip_scalar, TBB_clip
@@ -22,6 +22,7 @@ bl_info = {
 
 operators = (
     TBB_OT_ImportFoamFile,
+    TBB_OT_ReloadFoamFile,
 )
 
 panels = (

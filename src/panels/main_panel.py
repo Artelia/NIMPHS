@@ -10,22 +10,26 @@ class TBB_PT_MainPanel(Panel):
     bl_region_type = "UI"
     bl_category = "Toolsbox blender"
 
-    file_name = ""
+    file_reader = None
 
     def draw(self, context):
         layout = self.layout
-        # settings = context.scene.tbb_settings[0]
+
+        # Get settings
+        settings = None
+        if len(context.scene.tbb_settings) > 0:
+            settings = context.scene.tbb_settings[0]
 
         row = layout.row()
         row.label(text="Import")
         
         # Import section
         row = layout.row()
-        if self.file_name != "":
+        if settings != None and settings.file_path != "":
             box = row.box()
-            box.label(text="File: " + self.file_name)
-            row.operator("tbb.import_foam_file", text="", icon="IMPORT")
+            box.label(text="File: " + settings.file_path)
+            row = layout.row()
+            row.operator("tbb.import_foam_file", text="Import", icon="IMPORT")
+            row.operator("tbb.reload_foam_file", text="Reload", icon="FILE_REFRESH")
         else:
             row.operator("tbb.import_foam_file", text="Import OpenFoam file", icon="IMPORT")
-            
-
