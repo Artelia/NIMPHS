@@ -6,9 +6,10 @@ from bpy.props import StringProperty
 from pyvista import OpenFOAMReader
 from pathlib import Path
 
-def load_openfoam_file(file_path, panel):
+def load_openfoam_file(file_path, preview_time_step, panel):
     # TODO: does these lines can throw exceptions? How to manage errors here?
     panel.file_reader = OpenFOAMReader(file_path)
+    panel.file_reader.set_active_time_point(preview_time_step)
     panel.openfoam_data = panel.file_reader.read()
     panel.openfoam_mesh = panel.openfoam_data["internalMesh"]
 
@@ -28,6 +29,7 @@ class TBB_OT_ImportFoamFile(Operator, ImportHelper):
         try:
             settings = context.scene.tbb_settings[0]
         except IndexError as error:
+            print(error)
             settings = context.scene.tbb_settings.add()
 
         file_path = Path(self.filepath)
@@ -37,10 +39,14 @@ class TBB_OT_ImportFoamFile(Operator, ImportHelper):
 
         settings.file_path = self.filepath
 
-        load_openfoam_file(settings.file_path, bpy.types.TBB_PT_MainPanel)
+        load_openfoam_file(settings.file_path, settings.preview_time_step, bpy.types.TBB_PT_MainPanel)
 
         # Forces to redraw the view (magic trick)
         bpy.context.scene.frame_set(bpy.context.scene.frame_current)
+
+        # Because the operation can take a while, prevent the user that it is finished
+        self.report({"INFO"}, "File successfully imported")
+
         return {"FINISHED"}
 
 class TBB_OT_ReloadFoamFile(Operator):
@@ -55,9 +61,13 @@ class TBB_OT_ReloadFoamFile(Operator):
         except IndexError as error:
             # This error means that the settings have not been created yet.
             # It can be resolved by importing a new file.
+            print(error)
             self.report({"ERROR"}, "Please import a file first")
             return {"FINISHED"}
 
-        load_openfoam_file(settings.file_path, bpy.types.TBB_PT_MainPanel)
+        load_openfoam_file(settings.file_path, settings.preview_time_step, bpy.types.TBB_PT_MainPanel)
 
+        # Because the operation can take a while, prevent the user that it is finished
+        self.report({"INFO"}, "File successfully imported")
+        
         return {"FINISHED"}

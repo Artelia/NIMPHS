@@ -16,9 +16,10 @@ class TBB_PT_MainPanel(Panel):
         layout = self.layout
 
         # Get settings
-        settings = None
-        if len(context.scene.tbb_settings) > 0:
+        try:
             settings = context.scene.tbb_settings[0]
+        except IndexError as error:
+            settings = None
 
         row = layout.row()
         row.label(text="Import")
@@ -33,3 +34,12 @@ class TBB_PT_MainPanel(Panel):
             row.operator("tbb.reload_foam_file", text="Reload", icon="FILE_REFRESH")
         else:
             row.operator("tbb.import_foam_file", text="Import OpenFoam file", icon="IMPORT")
+
+        # Preview section
+        if settings != None:
+            row = layout.row()
+            row.label(text="Preview")
+            row = layout.row()
+            row.prop(settings, "preview_time_step")
+            row = layout.row()
+            row.operator("tbb.preview", text="Preview", icon="HIDE_OFF")
