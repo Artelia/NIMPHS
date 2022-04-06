@@ -4,8 +4,7 @@ from bpy.props import StringProperty, FloatProperty, BoolProperty
 class TBB_settings(PropertyGroup):
     file_path: StringProperty(
         name="OpenFoam file",
-        description="Path to the .foam file",
-        subtype="FILE_PATH"
+        description="Path to the .foam file"
     )
 
     start_time: FloatProperty(
