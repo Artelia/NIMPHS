@@ -1,7 +1,4 @@
-from bpy.types import Panel, Scene
-from bpy.props import PointerProperty
-from ..properties.settings import TBB_settings
-from bpy.props import StringProperty, FloatProperty, BoolProperty
+from bpy.types import Panel
 
 class TBB_PT_MainPanel(Panel):
     bl_label = "Toolsbox blender"

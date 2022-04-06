@@ -2,7 +2,9 @@ import bpy
 from bpy_extras.io_utils import ImportHelper
 from bpy.types import Operator
 from bpy.props import StringProperty
+
 from pyvista import OpenFOAMReader
+from pathlib import Path
 
 class TBB_OT_ImportFoamFile(Operator, ImportHelper):
     bl_idname="tbb.import_foam_file"
@@ -16,12 +18,20 @@ class TBB_OT_ImportFoamFile(Operator, ImportHelper):
 
     def execute(self, context):
         # If the settings properties have not been created yet
-        if len(context.scene.tbb_settings) <= 0:
-            context.scene.tbb_settings.add()
-        settings = context.scene.tbb_settings[0]
+        settings = None
+        try:
+            settings = context.scene.tbb_settings[0]
+        except IndexError as error:
+            settings = context.scene.tbb_settings.add()
+
+        file_path = Path(self.filepath)
+        if not file_path.exists():
+            self.report({"ERROR"}, "The choosen file does not exist")
+            return {"FINISHED"}
 
         settings.file_path = self.filepath
-
+        
+        # TODO: does this line can throw an exception?
         bpy.types.TBB_PT_MainPanel.file_reader = OpenFOAMReader(self.filepath)
 
         # Forces to redraw the view (magic trick)
@@ -34,6 +44,16 @@ class TBB_OT_ReloadFoamFile(Operator):
     bl_description="Reload the selected file"
 
     def execute(self, context):
-        settings = context.scene.tbb_settings[0]
+        settings = None
+        try:
+            settings = context.scene.tbb_settings[0]
+        except IndexError as error:
+            # This error means that the settings have not been created yet.
+            # It can be resolved by importing a new file.
+            self.report({"ERROR"}, "Please import a file first")
+            return {"FINISHED"}
+
+        # TODO: does this line can throw an exception?
         bpy.types.TBB_PT_MainPanel.file_reader = OpenFOAMReader(settings.file_path)
+
         return {"FINISHED"}
