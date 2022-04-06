@@ -6,6 +6,12 @@ from bpy.props import StringProperty
 from pyvista import OpenFOAMReader
 from pathlib import Path
 
+def load_openfoam_file(file_path, panel):
+    # TODO: does these lines can throw exceptions? How to manage errors here?
+    panel.file_reader = OpenFOAMReader(file_path)
+    panel.openfoam_data = panel.file_reader.read()
+    panel.openfoam_mesh = panel.openfoam_data["internalMesh"]
+
 class TBB_OT_ImportFoamFile(Operator, ImportHelper):
     bl_idname="tbb.import_foam_file"
     bl_label="Import"
@@ -30,9 +36,8 @@ class TBB_OT_ImportFoamFile(Operator, ImportHelper):
             return {"FINISHED"}
 
         settings.file_path = self.filepath
-        
-        # TODO: does this line can throw an exception?
-        bpy.types.TBB_PT_MainPanel.file_reader = OpenFOAMReader(self.filepath)
+
+        load_openfoam_file(settings.file_path, bpy.types.TBB_PT_MainPanel)
 
         # Forces to redraw the view (magic trick)
         bpy.context.scene.frame_set(bpy.context.scene.frame_current)
@@ -53,7 +58,6 @@ class TBB_OT_ReloadFoamFile(Operator):
             self.report({"ERROR"}, "Please import a file first")
             return {"FINISHED"}
 
-        # TODO: does this line can throw an exception?
-        bpy.types.TBB_PT_MainPanel.file_reader = OpenFOAMReader(settings.file_path)
+        load_openfoam_file(settings.file_path, bpy.types.TBB_PT_MainPanel)
 
         return {"FINISHED"}
