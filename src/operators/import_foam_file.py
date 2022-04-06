@@ -7,11 +7,16 @@ from pyvista import OpenFOAMReader
 from pathlib import Path
 
 def load_openfoam_file(file_path, preview_time_step, panel):
+    file = Path(file_path)
+    if not file.exists():
+        return False
+
     # TODO: does these lines can throw exceptions? How to manage errors here?
     panel.file_reader = OpenFOAMReader(file_path)
-    panel.file_reader.set_active_time_point(preview_time_step)
-    panel.openfoam_data = panel.file_reader.read()
-    panel.openfoam_mesh = panel.openfoam_data["internalMesh"]
+    # panel.file_reader.set_active_time_point(preview_time_step)
+    # panel.openfoam_data = panel.file_reader.read()
+    # panel.openfoam_mesh = panel.openfoam_data["internalMesh"]
+    return True
 
 class TBB_OT_ImportFoamFile(Operator, ImportHelper):
     bl_idname="tbb.import_foam_file"
@@ -32,19 +37,16 @@ class TBB_OT_ImportFoamFile(Operator, ImportHelper):
             print(error)
             settings = context.scene.tbb_settings.add()
 
-        file_path = Path(self.filepath)
-        if not file_path.exists():
+        success = load_openfoam_file(self.filepath, settings.preview_time_step, bpy.types.TBB_PT_MainPanel)
+        if not success:
             self.report({"ERROR"}, "The choosen file does not exist")
             return {"FINISHED"}
 
-        settings.file_path = self.filepath
-
-        load_openfoam_file(settings.file_path, settings.preview_time_step, bpy.types.TBB_PT_MainPanel)
+        settings.file_path = self.filepath        
 
         # Forces to redraw the view (magic trick)
         bpy.context.scene.frame_set(bpy.context.scene.frame_current)
 
-        # Because the operation can take a while, prevent the user that it is finished
         self.report({"INFO"}, "File successfully imported")
 
         return {"FINISHED"}
@@ -65,9 +67,11 @@ class TBB_OT_ReloadFoamFile(Operator):
             self.report({"ERROR"}, "Please import a file first")
             return {"FINISHED"}
 
-        load_openfoam_file(settings.file_path, settings.preview_time_step, bpy.types.TBB_PT_MainPanel)
+        success = load_openfoam_file(settings.file_path, settings.preview_time_step, bpy.types.TBB_PT_MainPanel)
+        if not success:
+            self.report({"ERROR"}, "The choosen file does not exist")
+            return {"FINISHED"}
 
-        # Because the operation can take a while, prevent the user that it is finished
-        self.report({"INFO"}, "File successfully imported")
+        self.report({"INFO"}, "File successfully reloaded")
         
         return {"FINISHED"}

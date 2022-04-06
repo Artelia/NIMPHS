@@ -44,5 +44,7 @@ class TBB_OT_Preview(Operator):
         context.view_layer.objects.active = obj
 
         mesh.from_pydata(vertices, [], faces)
+
+        self.report({"INFO"}, "Mesh successfully built: checkout the viewport")
         
         return {"FINISHED"}
