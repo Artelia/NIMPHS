@@ -13,7 +13,7 @@ bl_info = {
     "description": "Toolsbox",
     "author": "",
     "version": (0, 0, 1),
-    "blender": (2, 80, 0),
+    "blender": (3, 0, 0),
     "location": "View3D",
     "warning": "",
     "category": "Import",

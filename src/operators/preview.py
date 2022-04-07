@@ -19,7 +19,12 @@ class TBB_OT_Preview(Operator):
             return {"FINISHED"}
 
         # Read data at the chosen time step
-        bpy.types.TBB_PT_MainPanel.file_reader.set_active_time_point(settings.preview_time_step)
+        try:
+            bpy.types.TBB_PT_MainPanel.file_reader.set_active_time_point(settings.preview_time_step)
+        except ValueError as error:
+            self.report({"ERROR"}, "The selected time step is not defined (" + str(settings.preview_time_step) + ")")
+            return {"FINISHED"}
+            
         bpy.types.TBB_PT_MainPanel.openfoam_data = bpy.types.TBB_PT_MainPanel.file_reader.read()
         bpy.types.TBB_PT_MainPanel.openfoam_mesh = bpy.types.TBB_PT_MainPanel.openfoam_data["internalMesh"]
 
