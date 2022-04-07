@@ -21,17 +21,14 @@ def update_preview_time_step(settings, new_max):
     if new_max < default: default = 0
     prop.update(default=default, min=0, max=new_max)
 
-def load_openfoam_file(file_path, preview_time_step, panel):
+def load_openfoam_file(file_path):
     file = Path(file_path)
     if not file.exists():
         return False, None
 
-    # TODO: does these lines can throw exceptions? How to manage errors here?
-    panel.file_reader = OpenFOAMReader(file_path)
-    # panel.file_reader.set_active_time_point(preview_time_step)
-    # panel.openfoam_data = panel.file_reader.read()
-    # panel.openfoam_mesh = panel.openfoam_data["internalMesh"]
-    return True, panel.file_reader
+    # TODO: does this line can throw exceptions? How to manage errors here?
+    file_reader = OpenFOAMReader(file_path)
+    return True, file_reader
 
 class TBB_OT_ImportFoamFile(Operator, ImportHelper):
     bl_idname="tbb.import_foam_file"
@@ -45,7 +42,7 @@ class TBB_OT_ImportFoamFile(Operator, ImportHelper):
 
     def execute(self, context):
         settings = context.scene.tbb_settings
-        success, file_reader = load_openfoam_file(self.filepath, settings.preview_time_step, bpy.types.TBB_PT_MainPanel)
+        success, file_reader = load_openfoam_file(self.filepath)
         if not success:
             self.report({"ERROR"}, "The choosen file does not exist")
             return {"FINISHED"}
@@ -75,7 +72,7 @@ class TBB_OT_ReloadFoamFile(Operator):
             self.report({"ERROR"}, "Please select a file first")
             return {"FINISHED"}
 
-        success, file_reader = load_openfoam_file(settings.file_path, settings.preview_time_step, bpy.types.TBB_PT_MainPanel)
+        success, file_reader = load_openfoam_file(settings.file_path)
         if not success:
             self.report({"ERROR"}, "The choosen file does not exist")
             return {"FINISHED"}
@@ -88,6 +85,3 @@ class TBB_OT_ReloadFoamFile(Operator):
         self.report({"INFO"}, "Reload successfull")
         
         return {"FINISHED"}
-
-
-# rna_ui = bpy.context.scene.tbb_settings.get("_RNA_UI")

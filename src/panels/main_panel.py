@@ -7,11 +7,6 @@ class TBB_PT_MainPanel(Panel):
     bl_region_type = "UI"
     bl_category = "Toolsbox blender"
 
-    # Data used for the preview
-    file_reader = None
-    openfoam_data = None
-    openfoam_mesh = None
-
     def draw(self, context):
         layout = self.layout
         settings = context.scene.tbb_settings

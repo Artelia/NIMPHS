@@ -1,6 +1,20 @@
 import bpy
 from bpy.types import Operator
 
+from pyvista import OpenFOAMReader
+
+from ..operators.import_foam_file import load_openfoam_file
+
+def clip_mesh(clip, mesh):
+    if clip.type == "scalar":
+        scal = clip.scalars_props.scalars
+        val = clip.scalars_props.value
+        inv = clip.scalars_props.invert
+        mesh.set_active_scalars(name=scal, preference="point")
+        preview_mesh = mesh.clip_scalar(scalars=scal, invert=inv, value=val)
+    
+    return preview_mesh
+
 class TBB_OT_Preview(Operator):
     bl_idname="tbb.preview"
     bl_label="Preview"
@@ -8,26 +22,34 @@ class TBB_OT_Preview(Operator):
 
     def execute(self, context):
         settings = context.scene.tbb_settings
+        clip = context.scene.tbb_clip
         if settings.file_path == "":
             self.report({"ERROR"}, "Please import a file first")
             return {"FINISHED"}
-        
-        if bpy.types.TBB_PT_MainPanel.file_reader == None:
-            self.report({"ERROR"}, "No data found: please reload the selected file")
-            return {"FINISHED"}
 
-        # Read data at the chosen time step
+        success, file_reader = load_openfoam_file(settings.file_path)
+        if not success:
+            self.report({"ERROR"}, "The choosen file does not exist")
+            return {"FINISHED"}
+        
+        # Read data at the choosen time step
         try:
-            bpy.types.TBB_PT_MainPanel.file_reader.set_active_time_point(settings.preview_time_step)
+            file_reader.set_active_time_point(settings.preview_time_step)
         except ValueError as error:
+            print(error)
             self.report({"ERROR"}, "The selected time step is not defined (" + str(settings.preview_time_step) + ")")
             return {"FINISHED"}
-            
-        bpy.types.TBB_PT_MainPanel.openfoam_data = bpy.types.TBB_PT_MainPanel.file_reader.read()
-        bpy.types.TBB_PT_MainPanel.openfoam_mesh = bpy.types.TBB_PT_MainPanel.openfoam_data["internalMesh"]
+        
+        data = file_reader.read()
+        raw_mesh = data["internalMesh"]
 
         # Prepare the mesh for Blender
-        preview_mesh = bpy.types.TBB_PT_MainPanel.openfoam_mesh.extract_surface()
+        if clip.type != "no_clip":
+            preview_mesh = clip_mesh(clip, raw_mesh)
+            preview_mesh = preview_mesh.extract_surface()
+        else:
+            preview_mesh = raw_mesh.extract_surface()
+
         preview_mesh = preview_mesh.triangulate()
         preview_mesh = preview_mesh.compute_normals(consistent_normals=False, split_vertices=True)
 

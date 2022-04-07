@@ -4,7 +4,7 @@ from bpy.props import FloatProperty, BoolProperty, EnumProperty, PointerProperty
 class TBB_clip_scalar(PropertyGroup):
     scalars: EnumProperty(
         items=[
-            ("p", "p", "p field array"),
+            ("alpha.water", "alpha.water", "alpha.water field array"),
         ],
         name="Scalars",
         description="Name of scalars to clip on"
@@ -33,12 +33,13 @@ class TBB_clip_scalar(PropertyGroup):
 class TBB_clip(PropertyGroup):
     type: EnumProperty(
         items=[
+            ("no_clip", "None", "Do not clip"),
             ("scalar", "Scalars", "Clip a dataset by a scalar"),
             ("box", "Box", "Clip a dataset by a bounding box defined by the bounds")
         ],
         name="Type",
         description="Choose the clipping method",
-        default="scalar",
+        default="no_clip",
     )
 
     scalars_props: PointerProperty(type=TBB_clip_scalar)
