@@ -36,13 +36,18 @@ class TBB_OT_Preview(Operator):
         # TODO: This line can throw a value error
         faces = preview_mesh.faces.reshape((-1, 4))[:, 1:4]
 
-        # Create the preview mesh
-        mesh = bpy.data.meshes.new("TBB_review_mesh")  # add the new mesh
-        obj = bpy.data.objects.new(mesh.name, mesh)
-        col = context.collection
-        col.objects.link(obj)
+        # Create the preview mesh (or write over it if it already exists)
+        try:
+            mesh = bpy.data.meshes["TBB_preview_mesh"]
+            obj = bpy.data.objects["TBB_preview"]
+        except KeyError as error:
+            print(error)
+            mesh = bpy.data.meshes.new("TBB_preview_mesh")
+            obj = bpy.data.objects.new("TBB_preview", mesh)
+            context.collection.objects.link(obj)
+        
         context.view_layer.objects.active = obj
-
+        mesh.clear_geometry()
         mesh.from_pydata(vertices, [], faces)
 
         self.report({"INFO"}, "Mesh successfully built: checkout the viewport")

@@ -6,6 +6,14 @@ from bpy.props import StringProperty
 from pyvista import OpenFOAMReader
 from pathlib import Path
 
+def update_start_end_time_steps(settings, new_max):
+    # TODO: this is not working for the momement
+    for prop_id in ["start_time", "end_time"]:
+        prop = settings.id_properties_ui(prop_id)
+        default = getattr(settings, prop_id)
+        if new_max < default: default = 0
+        prop.update(default=default, min=0, max=new_max)
+
 def update_preview_time_step(settings, new_max):
     # TODO: this is not working for the momement
     prop = settings.id_properties_ui("preview_time_step")
@@ -44,8 +52,10 @@ class TBB_OT_ImportFoamFile(Operator, ImportHelper):
 
         settings.file_path = self.filepath
 
-        # Set the new preview_time_step upper bound
-        update_preview_time_step(settings, file_reader.number_time_points - 1)
+        # Set new upper bounds for integer options
+        new_max = file_reader.number_time_points - 1
+        update_preview_time_step(settings, new_max)
+        update_start_end_time_steps(settings, new_max)
 
         # Forces to redraw the view (magic trick)
         bpy.context.scene.frame_set(bpy.context.scene.frame_current)
@@ -70,8 +80,10 @@ class TBB_OT_ReloadFoamFile(Operator):
             self.report({"ERROR"}, "The choosen file does not exist")
             return {"FINISHED"}
 
-        # Set the new preview_time_step upper bound
-        update_preview_time_step(settings, file_reader.number_time_points - 1)
+        # Set new upper bounds for integer options
+        new_max = file_reader.number_time_points - 1
+        update_preview_time_step(settings, new_max)
+        update_start_end_time_steps(settings, new_max)
 
         self.report({"INFO"}, "Reload successfull")
         
