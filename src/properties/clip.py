@@ -49,4 +49,3 @@ class TBB_clip(PropertyGroup):
     )
 
     scalars_props: PointerProperty(type=TBB_clip_scalar)
-

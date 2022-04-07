@@ -1,5 +1,5 @@
 from bpy.types import PropertyGroup
-from bpy.props import StringProperty, BoolProperty, IntProperty
+from bpy.props import StringProperty, BoolProperty
 
 class TBB_settings(PropertyGroup):
     file_path: StringProperty(
@@ -7,41 +7,20 @@ class TBB_settings(PropertyGroup):
         description="Path to the .foam file"
     )
 
-    preview_time_step: IntProperty(
-        name="Preview time step",
-        description="Time step used for the preview section",
-        min=0,
-        soft_min=0,
-        max=25,
-        soft_max=25,
-        step=1,
-        default=5
-    )
+    # preview_time_step: IntProperty dynamically created
 
-    start_time: IntProperty(
-        name="Start time step",
-        description="Starting point of the sequence",
-        min=0,
-        soft_min=0,
-        max=25,
-        soft_max=25,
-        step=1,
-        default=0
-    )
+    # start_time: IntProperty dynamically created
 
-    end_time: IntProperty(
-        name="End time step",
-        description="Ending point of the sequence",
-        min=0,
-        soft_min=0,
-        max=25,
-        soft_max=25,
-        step=1,
-        default=0
-    )
+    # end_time: IntProperty dynamically created
 
     import_point_data: BoolProperty(
         name="Import point data",
         description="Import point data as vertex color groups",
         default=True
     )
+
+settings_dynamic_properties = [
+    ("preview_time_step", "Time step used for the preview section"),
+    ("start_time", "Starting point of the sequence"),
+    ("end_time", "Ending point of the sequence")
+]

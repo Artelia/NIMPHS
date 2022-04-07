@@ -22,5 +22,9 @@ class TBB_PT_Clip(Panel):
         if clip.type == "scalar":
             row = layout.row()
             row.prop(clip.scalars_props, "scalars")
+            row = layout.row()
+            row.prop(clip.scalars_props, "value")
+            row = layout.row()
+            row.prop(clip.scalars_props, "invert")
 
         

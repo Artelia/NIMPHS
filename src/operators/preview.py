@@ -34,10 +34,10 @@ class TBB_OT_Preview(Operator):
         
         # Read data at the choosen time step
         try:
-            file_reader.set_active_time_point(settings.preview_time_step)
+            file_reader.set_active_time_point(settings["preview_time_step"])
         except ValueError as error:
             print(error)
-            self.report({"ERROR"}, "The selected time step is not defined (" + str(settings.preview_time_step) + ")")
+            self.report({"ERROR"}, "The selected time step is not defined (" + str(settings["preview_time_step"]) + ")")
             return {"FINISHED"}
         
         data = file_reader.read()

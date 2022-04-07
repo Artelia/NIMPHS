@@ -2,9 +2,12 @@ import bpy
 from bpy_extras.io_utils import ImportHelper
 from bpy.types import Operator
 from bpy.props import StringProperty
+from rna_prop_ui import rna_idprop_ui_create
 
 from pyvista import OpenFOAMReader
 from pathlib import Path
+
+from ..properties.settings import settings_dynamic_properties
 
 class TBB_OT_ImportFoamFile(Operator, ImportHelper):
     bl_idname="tbb.import_foam_file"
@@ -28,7 +31,7 @@ class TBB_OT_ImportFoamFile(Operator, ImportHelper):
         context.scene.tbb_temp_data.update_file_reader(file_reader)
 
         # Update properties values
-        update_properties_values(settings, clip, file_reader.number_time_points - 1)
+        update_properties_values(settings, clip, file_reader)
 
         # Forces to redraw the view (magic trick)
         bpy.context.scene.frame_set(bpy.context.scene.frame_current)
@@ -66,28 +69,31 @@ class TBB_OT_ReloadFoamFile(Operator):
 def update_properties_values(settings, clip, file_reader):
     # Update settings
     max_time_step =  file_reader.number_time_points - 1
-    update_preview_time_step(settings, max_time_step)
-    update_start_end_time_steps(settings, max_time_step)
+    update_settings_props(settings, max_time_step)
     # Update clip
     update_clip_props(clip, file_reader)
 
 def update_clip_props(clip, file_reader):
     pass
 
-def update_start_end_time_steps(settings, new_max):
-    # TODO: this is not working for the momement
-    for prop_id in ["start_time", "end_time"]:
-        prop = settings.id_properties_ui(prop_id)
-        default = getattr(settings, prop_id)
-        if new_max < default: default = 0
-        prop.update(default=default, min=0, max=new_max)
+def update_settings_props(settings, new_max):
+    for prop_id, prop_desc in settings_dynamic_properties:
+        if settings.get(prop_id) == None:
+            rna_idprop_ui_create(
+                settings,
+                prop_id,
+                default=0,
+                min=0,
+                soft_min=0,
+                max=0,
+                soft_max=0,
+                description=prop_desc
+            )
 
-def update_preview_time_step(settings, new_max):
-    # TODO: this is not working for the momement
-    prop = settings.id_properties_ui("preview_time_step")
-    default = settings.preview_time_step
-    if new_max < default: default = 0
-    prop.update(default=default, min=0, max=new_max)
+        prop = settings.id_properties_ui(prop_id)
+        default = settings[prop_id]
+        if new_max < default: default = 0
+        prop.update(default=default, min=0, soft_min=0, max=new_max, soft_max=new_max)
 
 def load_openfoam_file(file_path):
     file = Path(file_path)

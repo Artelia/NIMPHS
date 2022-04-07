@@ -31,6 +31,6 @@ class TBB_PT_MainPanel(Panel):
             row = layout.row()
             row.label(text="Preview")
             row = layout.row()
-            row.prop(settings, "preview_time_step")
+            row.prop(settings, '["preview_time_step"]', text="Time step")
             row = layout.row()
             row.operator("tbb.preview", text="Preview", icon="HIDE_OFF")

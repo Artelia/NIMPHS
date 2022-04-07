@@ -18,8 +18,8 @@ class TBB_PT_CreateSequence(Panel):
 
         if settings.file_path != "":
             row = layout.row()
-            row.prop(settings, "start_time")
+            row.prop(settings, '["start_time"]', text="Start")
             row = layout.row()
-            row.prop(settings, "end_time")
+            row.prop(settings, '["end_time"]', text="End")
             row = layout.row()
             row.prop(settings, "import_point_data")
