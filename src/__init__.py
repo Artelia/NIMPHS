@@ -5,6 +5,7 @@ from bpy.props import PointerProperty
 from .operators.import_foam_file import TBB_OT_ImportFoamFile, TBB_OT_ReloadFoamFile
 from .operators.preview import TBB_OT_Preview
 from .panels.main_panel import TBB_PT_MainPanel
+from .panels.clip import TBB_PT_Clip
 from .panels.create_sequence import TBB_PT_CreateSequence
 from .properties.settings import TBB_settings
 from .properties.clip import TBB_clip_scalar, TBB_clip
@@ -30,7 +31,8 @@ operators = (
 
 panels = (
     TBB_PT_MainPanel,
-    TBB_PT_CreateSequence,
+    TBB_PT_Clip,
+    TBB_PT_CreateSequence
 )
 
 properties = (
@@ -48,6 +50,7 @@ def register():
     
     # Register custom properties
     Scene.tbb_settings = PointerProperty(type=TBB_settings)
+    Scene.tbb_clip = PointerProperty(type=TBB_clip)
 
 def unregister():
     for category in reversed(classes):
