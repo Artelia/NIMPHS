@@ -1,11 +1,17 @@
 from bpy.types import PropertyGroup
 from bpy.props import FloatProperty, BoolProperty, EnumProperty, PointerProperty
 
+# Dynamically load enum items for the scalars property
+def items(self, context):
+    items = []
+    if context.scene.tbb_temp_data.mesh_data != None:
+        for key in context.scene.tbb_temp_data.mesh_data.point_data.keys():
+            items.append((key, key, "Undocumented"))
+    return items
+
 class TBB_clip_scalar(PropertyGroup):
     scalars: EnumProperty(
-        items=[
-            ("alpha.water", "alpha.water", "alpha.water field array"),
-        ],
+        items=items,
         name="Scalars",
         description="Name of scalars to clip on"
     )

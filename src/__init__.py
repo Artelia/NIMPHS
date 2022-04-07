@@ -9,6 +9,7 @@ from .panels.clip import TBB_PT_Clip
 from .panels.create_sequence import TBB_PT_CreateSequence
 from .properties.settings import TBB_settings
 from .properties.clip import TBB_clip_scalar, TBB_clip
+from .properties.temporary_data import TBB_temporary_data
 
 bl_info = {
     "name": "Toolsbox Blender ",
@@ -51,6 +52,7 @@ def register():
     # Register custom properties
     Scene.tbb_settings = PointerProperty(type=TBB_settings)
     Scene.tbb_clip = PointerProperty(type=TBB_clip)
+    Scene.tbb_temp_data = TBB_temporary_data()
 
 def unregister():
     for category in reversed(classes):

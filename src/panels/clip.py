@@ -14,8 +14,13 @@ class TBB_PT_Clip(Panel):
 
     def draw(self,context):
         layout = self.layout
-        settings = context.scene.tbb_settings
         clip = context.scene.tbb_clip
 
         row = layout.row()
         row.prop(clip, "type")
+
+        if clip.type == "scalar":
+            row = layout.row()
+            row.prop(clip.scalars_props, "scalars")
+
+        
