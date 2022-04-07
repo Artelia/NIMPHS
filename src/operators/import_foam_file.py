@@ -70,11 +70,6 @@ def update_properties_values(settings, clip, file_reader):
     # Update settings
     max_time_step =  file_reader.number_time_points - 1
     update_settings_props(settings, max_time_step)
-    # Update clip
-    update_clip_props(clip, file_reader)
-
-def update_clip_props(clip, file_reader):
-    pass
 
 def update_settings_props(settings, new_max):
     for prop_id, prop_desc in settings_dynamic_properties:

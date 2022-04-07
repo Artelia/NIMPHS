@@ -8,7 +8,7 @@ from ..operators.import_foam_file import load_openfoam_file
 def clip_mesh(clip, mesh):
     if clip.type == "scalar":
         scal = clip.scalars_props.scalars
-        val = clip.scalars_props.value
+        val = clip.scalars_props["value"]
         inv = clip.scalars_props.invert
         mesh.set_active_scalars(name=scal, preference="point")
         preview_mesh = mesh.clip_scalar(scalars=scal, invert=inv, value=val)
@@ -27,6 +27,7 @@ class TBB_OT_Preview(Operator):
             self.report({"ERROR"}, "Please import a file first")
             return {"FINISHED"}
 
+        # TODO: changing time point does not work if we do not load the file again... We would like to use the file_reader from TBB_temp_data.
         success, file_reader = load_openfoam_file(settings.file_path)
         if not success:
             self.report({"ERROR"}, "The choosen file does not exist")
