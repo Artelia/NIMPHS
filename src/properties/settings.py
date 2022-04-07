@@ -12,8 +12,8 @@ class TBB_settings(PropertyGroup):
         description="Time step used for the preview section",
         min=0,
         soft_min=0,
-        max=10,
-        soft_max=10,
+        max=25,
+        soft_max=25,
         step=1,
         default=5
     )

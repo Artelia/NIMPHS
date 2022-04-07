@@ -29,20 +29,18 @@ class TBB_OT_ImportFoamFile(Operator, ImportHelper):
     )
 
     def execute(self, context):
-        # If the settings properties have not been created yet
-        settings = None
-        try:
-            settings = context.scene.tbb_settings[0]
-        except IndexError as error:
-            print(error)
-            settings = context.scene.tbb_settings.add()
-
+        settings = context.scene.tbb_settings
         success = load_openfoam_file(self.filepath, settings.preview_time_step, bpy.types.TBB_PT_MainPanel)
         if not success:
             self.report({"ERROR"}, "The choosen file does not exist")
             return {"FINISHED"}
 
-        settings.file_path = self.filepath        
+        settings.file_path = self.filepath
+
+        # Set the new preview_time_step upper bound
+        max_time_values = bpy.types.TBB_PT_MainPanel.file_reader.number_time_points - 1
+        prop = settings.id_properties_ui("preview_time_step")
+        prop.update(default=0, min=0, max=max_time_values)
 
         # Forces to redraw the view (magic trick)
         bpy.context.scene.frame_set(bpy.context.scene.frame_current)
@@ -57,14 +55,9 @@ class TBB_OT_ReloadFoamFile(Operator):
     bl_description="Reload the selected file"
 
     def execute(self, context):
-        settings = None
-        try:
-            settings = context.scene.tbb_settings[0]
-        except IndexError as error:
-            # This error means that the settings have not been created yet.
-            # It can be resolved by importing a new file.
-            print(error)
-            self.report({"ERROR"}, "Please import a file first")
+        settings = context.scene.tbb_settings
+        if settings.file_path == "":
+            self.report({"ERROR"}, "Please select a file first")
             return {"FINISHED"}
 
         success = load_openfoam_file(settings.file_path, settings.preview_time_step, bpy.types.TBB_PT_MainPanel)
@@ -72,6 +65,14 @@ class TBB_OT_ReloadFoamFile(Operator):
             self.report({"ERROR"}, "The choosen file does not exist")
             return {"FINISHED"}
 
-        self.report({"INFO"}, "File successfully reloaded")
+        # Set the new preview_time_step upper bound
+        max_time_values = bpy.types.TBB_PT_MainPanel.file_reader.number_time_points - 1
+        prop = settings.id_properties_ui("preview_time_step")
+        prop.update(default=0, min=0, max=max_time_values)
+
+        self.report({"INFO"}, "Reload successfull")
         
         return {"FINISHED"}
+
+
+# rna_ui = bpy.context.scene.tbb_settings.get("_RNA_UI")

@@ -14,19 +14,14 @@ class TBB_PT_MainPanel(Panel):
 
     def draw(self, context):
         layout = self.layout
-
-        # Get settings
-        try:
-            settings = context.scene.tbb_settings[0]
-        except IndexError as error:
-            settings = None
+        settings = context.scene.tbb_settings
 
         row = layout.row()
         row.label(text="Import")
         
         # Import section
         row = layout.row()
-        if settings != None and settings.file_path != "":
+        if settings.file_path != "":
             box = row.box()
             box.label(text="File: " + settings.file_path)
             row = layout.row()
@@ -36,7 +31,7 @@ class TBB_PT_MainPanel(Panel):
             row.operator("tbb.import_foam_file", text="Import OpenFoam file", icon="IMPORT")
 
         # Preview section
-        if settings != None:
+        if settings.file_path != "":
             row = layout.row()
             row.label(text="Preview")
             row = layout.row()

@@ -1,6 +1,6 @@
 from bpy.utils import unregister_class, register_class
 from bpy.types import Scene
-from bpy.props import CollectionProperty
+from bpy.props import PointerProperty
 
 from .operators.import_foam_file import TBB_OT_ImportFoamFile, TBB_OT_ReloadFoamFile
 from .operators.preview import TBB_OT_Preview
@@ -45,7 +45,7 @@ def register():
             register_class(cls)
     
     # Register custom properties
-    Scene.tbb_settings = CollectionProperty(type=TBB_settings)
+    Scene.tbb_settings = PointerProperty(type=TBB_settings)
 
 def unregister():
     for category in reversed(classes):

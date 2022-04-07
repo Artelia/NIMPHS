@@ -9,12 +9,8 @@ class TBB_OT_Preview(Operator):
     bl_description="Preview the current loaded file"
 
     def execute(self, context):
-        try:
-            settings = context.scene.tbb_settings[0]
-        except IndexError as error:
-            # This error means that the settings have not been created yet.
-            # It can be resolved by importing a new file.
-            print(error)
+        settings = context.scene.tbb_settings
+        if settings.file_path == "":
             self.report({"ERROR"}, "Please import a file first")
             return {"FINISHED"}
         
@@ -34,10 +30,11 @@ class TBB_OT_Preview(Operator):
 
         # Prepare data to import the mesh into blender
         vertices = preview_mesh.points
+        # TODO: This line can throw a value error
         faces = preview_mesh.faces.reshape((-1, 4))[:, 1:4]
 
         # Create the preview mesh
-        mesh = bpy.data.meshes.new("Preview_mesh")  # add the new mesh
+        mesh = bpy.data.meshes.new("TBB_review_mesh")  # add the new mesh
         obj = bpy.data.objects.new(mesh.name, mesh)
         col = context.collection
         col.objects.link(obj)
