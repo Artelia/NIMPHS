@@ -30,8 +30,9 @@ class TBB_PT_MainPanel(Panel):
         else:
             row.operator("tbb.import_foam_file", text="Import OpenFoam file", icon="IMPORT")
 
-        # Preview section
         if settings.file_path != "":
+
+            # Preview section
             row = layout.row()
             row.label(text="Preview")
             row = layout.row()

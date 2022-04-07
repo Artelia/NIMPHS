@@ -1,5 +1,5 @@
 from bpy.types import PropertyGroup
-from bpy.props import StringProperty, FloatProperty, BoolProperty, IntProperty
+from bpy.props import StringProperty, BoolProperty, IntProperty
 
 class TBB_settings(PropertyGroup):
     file_path: StringProperty(
@@ -18,28 +18,26 @@ class TBB_settings(PropertyGroup):
         default=5
     )
 
-    start_time: FloatProperty(
+    start_time: IntProperty(
         name="Start time step",
         description="Starting point of the sequence",
-        min=0.0,
-        soft_min=0.0,
-        max=2.0,
-        soft_max=2.0,
-        step=0.1,
-        precision=2,
-        default=0.0
+        min=0,
+        soft_min=0,
+        max=25,
+        soft_max=25,
+        step=1,
+        default=0
     )
 
-    end_time: FloatProperty(
+    end_time: IntProperty(
         name="End time step",
         description="Ending point of the sequence",
-        min=0.0,
-        soft_min=0.0,
-        max=2.0,
-        soft_max=2.0,
-        step=0.1,
-        precision=2,
-        default=0.0
+        min=0,
+        soft_min=0,
+        max=25,
+        soft_max=25,
+        step=1,
+        default=0
     )
 
     import_point_data: BoolProperty(

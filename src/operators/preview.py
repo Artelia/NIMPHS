@@ -1,8 +1,6 @@
 import bpy
 from bpy.types import Operator
 
-from pyvista import OpenFOAMReader
-
 class TBB_OT_Preview(Operator):
     bl_idname="tbb.preview"
     bl_label="Preview"

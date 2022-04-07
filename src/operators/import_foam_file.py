@@ -1,4 +1,3 @@
-from email.policy import default
 import bpy
 from bpy_extras.io_utils import ImportHelper
 from bpy.types import Operator
