@@ -45,8 +45,8 @@ class TBB_clip_scalar(PropertyGroup):
 
     invert: BoolProperty(
         name="Invert",
-        description="Flag on whether to flip/invert the clip. When True, only the mesh below value will be kept.\
-            When False, only values above value will be kept",
+        description="Flag on whether to flip/invert the clip. When True, only the mesh below value will be kept. \
+When False, only values above value will be kept",
         default=False
     )
 

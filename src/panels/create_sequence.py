@@ -23,3 +23,5 @@ class TBB_PT_CreateSequence(Panel):
             row.prop(settings, '["end_time"]', text="End")
             row = layout.row()
             row.prop(settings, "import_point_data")
+            row = layout.row()
+            row.operator("tbb.create_sequence", text="Create sequence", icon="RENDER_ANIMATION")

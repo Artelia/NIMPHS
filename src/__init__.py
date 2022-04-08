@@ -4,6 +4,7 @@ from bpy.props import PointerProperty
 
 from .operators.import_foam_file import TBB_OT_ImportFoamFile, TBB_OT_ReloadFoamFile
 from .operators.preview import TBB_OT_Preview
+from .operators.create_sequence import TBB_OT_CreateSequence
 from .panels.main_panel import TBB_PT_MainPanel
 from .panels.clip import TBB_PT_Clip
 from .panels.create_sequence import TBB_PT_CreateSequence
@@ -28,6 +29,7 @@ operators = (
     TBB_OT_ImportFoamFile,
     TBB_OT_ReloadFoamFile,
     TBB_OT_Preview,
+    TBB_OT_CreateSequence
 )
 
 panels = (
