@@ -35,6 +35,16 @@ class TBB_OT_ImportFoamFile(Operator, ImportHelper):
         # Update temp data
         context.scene.tbb_temp_data.update(file_reader, settings["preview_time_step"])
 
+        # Generate the preview mesh. This step is not present in the reload operator because
+        # the preview mesh may already be loaded. Moreover, this step takes a while on large meshes.
+        try:
+            preview_mesh = context.scene.tbb_temp_data.mesh_data.extract_surface()
+            generate_preview_object(preview_mesh, context)
+        except Exception as error:
+            print(error)
+            self.report({"ERROR"}, "Something went wrong building the mesh")
+            return {"FINISHED"}
+
         self.report({"INFO"}, "File successfully imported")
 
         return {"FINISHED"}
@@ -98,3 +108,27 @@ def load_openfoam_file(file_path):
     # TODO: does this line can throw exceptions? How to manage errors here?
     file_reader = OpenFOAMReader(file_path)
     return True, file_reader
+
+# The preview_mesh should be some extracted surface
+def generate_preview_object(preview_mesh, context, name="TBB_preview"):
+    preview_mesh = preview_mesh.triangulate()
+    preview_mesh = preview_mesh.compute_normals(consistent_normals=False, split_vertices=True)
+
+    # Prepare data to import the mesh into blender
+    vertices = preview_mesh.points
+    # TODO: This line can throw a value error
+    faces = preview_mesh.faces.reshape((-1, 4))[:, 1:4]
+
+    # Create the preview mesh (or write over it if it already exists)
+    try:
+        mesh = bpy.data.meshes[name + "_mesh"]
+        obj = bpy.data.objects[name]
+    except KeyError as error:
+        print(error)
+        mesh = bpy.data.meshes.new(name + "_mesh")
+        obj = bpy.data.objects.new(name, mesh)
+        context.collection.objects.link(obj)
+    
+    context.view_layer.objects.active = obj
+    mesh.clear_geometry()
+    mesh.from_pydata(vertices, [], faces)

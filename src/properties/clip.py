@@ -1,5 +1,5 @@
 from bpy.types import PropertyGroup
-from bpy.props import FloatProperty, BoolProperty, EnumProperty, PointerProperty
+from bpy.props import BoolProperty, EnumProperty, PointerProperty
 from rna_prop_ui import rna_idprop_ui_create
 
 # Dynamically load enum items for the scalars property

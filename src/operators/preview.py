@@ -1,19 +1,6 @@
-import bpy
 from bpy.types import Operator
 
-from pyvista import OpenFOAMReader
-
-from ..operators.import_foam_file import load_openfoam_file
-
-def clip_mesh(clip, mesh):
-    if clip.type == "scalar":
-        scal = clip.scalars_props.scalars
-        val = clip.scalars_props["value"]
-        inv = clip.scalars_props.invert
-        mesh.set_active_scalars(name=scal, preference="point")
-        preview_mesh = mesh.clip_scalar(scalars=scal, invert=inv, value=val)
-    
-    return preview_mesh
+from .import_foam_file import load_openfoam_file, generate_preview_object
 
 class TBB_OT_Preview(Operator):
     bl_idname="tbb.preview"
@@ -69,28 +56,23 @@ class TBB_OT_Preview(Operator):
         # of the enum property. This is surely not what the user was expecting.
         context.scene.tbb_temp_data.update(file_reader, settings["preview_time_step"], data, raw_mesh)
 
-        preview_mesh = preview_mesh.triangulate()
-        preview_mesh = preview_mesh.compute_normals(consistent_normals=False, split_vertices=True)
-
-        # Prepare data to import the mesh into blender
-        vertices = preview_mesh.points
-        # TODO: This line can throw a value error
-        faces = preview_mesh.faces.reshape((-1, 4))[:, 1:4]
-
-        # Create the preview mesh (or write over it if it already exists)
         try:
-            mesh = bpy.data.meshes["TBB_preview_mesh"]
-            obj = bpy.data.objects["TBB_preview"]
-        except KeyError as error:
+            generate_preview_object(preview_mesh, context)
+        except Exception as error:
             print(error)
-            mesh = bpy.data.meshes.new("TBB_preview_mesh")
-            obj = bpy.data.objects.new("TBB_preview", mesh)
-            context.collection.objects.link(obj)
-        
-        context.view_layer.objects.active = obj
-        mesh.clear_geometry()
-        mesh.from_pydata(vertices, [], faces)
+            self.report({"ERROR"}, "Something went wrong building the mesh")
+            return {"FINISHED"}
 
         self.report({"INFO"}, "Mesh successfully built: checkout the viewport.")
         
         return {"FINISHED"}
+
+def clip_mesh(clip, mesh):
+    if clip.type == "scalar":
+        scal = clip.scalars_props.scalars
+        val = clip.scalars_props["value"]
+        inv = clip.scalars_props.invert
+        mesh.set_active_scalars(name=scal, preference="point")
+        preview_mesh = mesh.clip_scalar(scalars=scal, invert=inv, value=val)
+    
+    return preview_mesh
