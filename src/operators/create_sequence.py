@@ -3,6 +3,7 @@ from bpy.types import Operator
 
 from pyvista import OpenFOAMReader
 import numpy as np
+import time
 
 from .preview import clip_mesh
 
@@ -17,6 +18,8 @@ class TBB_OT_CreateSequence(Operator):
     current_time_step = 0
     end_time_step = 0
     current_frame = 0
+
+    chrono_start = 0
 
     @classmethod
     def poll(cls, context):
@@ -51,6 +54,7 @@ class TBB_OT_CreateSequence(Operator):
 
         if event.type == "TIMER":
             if self.current_time_step <= self.end_time_step:
+                self.chrono_start = time.time()
                 try:
                     mesh = generate_mesh_for_sequence(context, self.current_time_step)
                 except Exception as error:
@@ -91,6 +95,8 @@ class TBB_OT_CreateSequence(Operator):
                     newKeyAtFrame = next((keyframe for keyframe in meshIdxCurve.keyframe_points if keyframe.co.x == context.scene.frame_current), None)
                     newKeyAtFrame.interpolation = 'CONSTANT'
 
+                print("Create sequence (time_step = " + str(self.current_time_step) + "), elapsed time = " + "{:.4f}".format(time.time() - self.chrono_start) + "s")
+
             else:
                 self.stop(context)
                 self.report({"INFO"}, "Create sequence finished")
@@ -115,6 +121,7 @@ def generate_mesh_for_sequence(context, time_step, name="TBB"):
     settings = context.scene.tbb_settings
     clip = context.scene.tbb_clip
 
+    # Read data from the given OpenFoam file
     file_reader = OpenFOAMReader(settings.file_path)
     file_reader.set_active_time_point(time_step)
     data = file_reader.read()
@@ -142,29 +149,34 @@ def generate_mesh_for_sequence(context, time_step, name="TBB"):
 
     # Import point data as vertex colors
     if settings.import_point_data:
-        for key in mesh.point_data.keys():
-            # Get field array
-            mesh.set_active_scalars(name=key, preference="point")
-            colors = mesh.active_scalars
-            # TODO: manage vector scalars
-            if len(colors.shape) == 1:
-                # Create new vertex colors array
-                vertex_colors = blender_mesh.vertex_colors.new(name=key, do_init=True)
-                # Normalize data
-                # TODO: manage vector scalars (this line generates an error)
-                max_value = np.max(colors)
-                if max_value != 0:
-                    colors  = np.divide(colors, max_value, out=colors, casting="unsafe")
-                # Prepare the mesh to loop over all its triangles
-                blender_mesh.calc_loop_triangles()
+        blender_mesh = generate_vertex_colors(mesh, blender_mesh)
 
-                # TODO: optimize this functions using numpy ? Vectorize the operation
-                for triangle in blender_mesh.loop_triangles:
-                    for vertex_id, color_id in zip(triangle.vertices, triangle.loops):
-                        color = 1.0 - colors[vertex_id]
-                        vertex_colors.data[color_id].color = (color, color, color, 1.0)
-            else:
-                print("ERROR::generate_mesh_for_sequence: " + key + " field array not managed")
+    return blender_mesh
+
+def generate_vertex_colors(mesh, blender_mesh):
+    for key in mesh.point_data.keys():
+        # Get field array
+        mesh.set_active_scalars(name=key, preference="point")
+        colors = mesh.active_scalars
+        # TODO: manage vector scalars
+        if len(colors.shape) == 1:
+            # Create new vertex colors array
+            vertex_colors = blender_mesh.vertex_colors.new(name=key, do_init=True)
+            # Normalize data
+            # TODO: manage vector scalars (this line generates an error)
+            max_value = np.max(colors)
+            if max_value != 0:
+                colors  = np.divide(colors, max_value, out=colors, casting="unsafe")
+            # Prepare the mesh to loop over all its triangles
+            blender_mesh.calc_loop_triangles()
+
+            # TODO: optimize this functions using numpy ? Vectorize the operation
+            for triangle in blender_mesh.loop_triangles:
+                for vertex_id, color_id in zip(triangle.vertices, triangle.loops):
+                    color = 1.0 - colors[vertex_id]
+                    vertex_colors.data[color_id].color = (color, color, color, 1.0)
+        else:
+            print("ERROR::generate_mesh_for_sequence: " + key + " field array not managed")
 
     return blender_mesh
 
