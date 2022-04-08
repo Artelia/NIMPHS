@@ -128,6 +128,8 @@ def generate_mesh_for_sequence(context, time_step, name="TBB"):
     # Create mesh from python data
     mesh = bpy.data.meshes.new(name + "_mesh")
     mesh.from_pydata(vertices, [], faces)
+    # Use fake user so Blender will save our mesh in the .blend file
+    mesh.use_fake_user = True
 
     return mesh
 
