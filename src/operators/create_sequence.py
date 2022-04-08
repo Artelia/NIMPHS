@@ -51,19 +51,26 @@ class TBB_OT_CreateSequence(Operator):
 
         if event.type == "TIMER":
             if self.current_time_step <= self.end_time_step:
-                mesh = generate_mesh_for_sequence(context, self.current_time_step)
+                try:
+                    mesh = generate_mesh_for_sequence(context, self.current_time_step)
+                except Exception as error:
+                    print("ERROR::TBB_OT_CreateSequence: " + str(error))
+                    self.report({"ERROR"}, "An error occured when creating the sequence, (time_step = " + str(self.current_time_step) + ")")
+                    self.stop(context)
+                    return {"CANCELLED"}
 
                 # First time step, create the sequence object
                 if self.current_time_step == self.start_time_step:
                     # Create the blender object (which will contain the sequence)
                     sequence_object = bpy.data.objects.new("TBB", mesh)
+                    # The object created from the convert_to_mesh_sequence() method adds "_sequence" at the end of the name
                     self.sequence_object_name = sequence_object.name + "_sequence"
                     context.collection.objects.link(sequence_object)
                     # Convert it to a mesh sequence
                     context.view_layer.objects.active = sequence_object
                     bpy.ops.ms.convert_to_mesh_sequence()
                 else:
-                    # Add the mesh to the sequence
+                    # Add mesh to the sequence
                     sequence_object = bpy.data.objects[self.sequence_object_name]
                     context.scene.frame_set(frame=self.current_frame)
 
