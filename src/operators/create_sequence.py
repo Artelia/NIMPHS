@@ -20,7 +20,8 @@ class TBB_OT_CreateSequence(Operator):
 
     @classmethod
     def poll(cls, context):
-        return not context.scene.tbb_settings.create_sequence_is_running
+        settings = context.scene.tbb_settings
+        return not settings.create_sequence_is_running and settings["start_time"] < settings["end_time"]
 
     def execute(self, context):
         wm = context.window_manager
