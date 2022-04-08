@@ -8,6 +8,7 @@ from .operators.create_sequence import TBB_OT_CreateSequence
 from .panels.main_panel import TBB_PT_MainPanel
 from .panels.clip import TBB_PT_Clip
 from .panels.create_sequence import TBB_PT_CreateSequence
+from .panels.progress_bar_create_sequence import register_custom_progress_bar
 from .properties.settings import TBB_settings
 from .properties.clip import TBB_clip_scalar, TBB_clip
 from .properties.temporary_data import TBB_temporary_data
@@ -55,6 +56,9 @@ def register():
     Scene.tbb_settings = PointerProperty(type=TBB_settings)
     Scene.tbb_clip = PointerProperty(type=TBB_clip)
     Scene.tbb_temp_data = TBB_temporary_data()
+
+    # Custom progress bar
+    register_custom_progress_bar()
 
 def unregister():
     for category in reversed(classes):

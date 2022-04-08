@@ -7,6 +7,11 @@ class TBB_settings(PropertyGroup):
         description="Path to the .foam file"
     )
 
+    create_sequence_is_running: BoolProperty(
+        name="Create sequence is running",
+        default=False
+    )
+
     # preview_time_step: IntProperty dynamically created
 
     # start_time: IntProperty dynamically created
