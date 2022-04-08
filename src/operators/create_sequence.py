@@ -2,6 +2,7 @@ import bpy
 from bpy.types import Operator
 
 from pyvista import OpenFOAMReader
+import numpy as np
 
 from .preview import clip_mesh
 
@@ -126,12 +127,38 @@ def generate_mesh_for_sequence(context, time_step, name="TBB"):
     faces = mesh.faces.reshape((-1, 4))[:, 1:4]
 
     # Create mesh from python data
-    mesh = bpy.data.meshes.new(name + "_mesh")
-    mesh.from_pydata(vertices, [], faces)
+    blender_mesh = bpy.data.meshes.new(name + "_mesh")
+    blender_mesh.from_pydata(vertices, [], faces)
     # Use fake user so Blender will save our mesh in the .blend file
-    mesh.use_fake_user = True
+    blender_mesh.use_fake_user = True
 
-    return mesh
+    # Import point data as vertex colors
+    if settings.import_point_data:
+        for key in mesh.point_data.keys():
+            # Get field array
+            mesh.set_active_scalars(name=key, preference="point")
+            colors = mesh.active_scalars
+            # TODO: manage vector scalars
+            if len(colors.shape) == 1:
+                # Create new vertex colors array
+                vertex_colors = blender_mesh.vertex_colors.new(name=key, do_init=True)
+                # Normalize data
+                # TODO: manage vector scalars (this line generates an error)
+                max_value = np.max(colors)
+                if max_value != 0:
+                    colors  = np.divide(colors, max_value, out=colors, casting="unsafe")
+                # Prepare the mesh to loop over all its triangles
+                blender_mesh.calc_loop_triangles()
+
+                # TODO: optimize this functions using numpy ? Vectorize the operation
+                for triangle in blender_mesh.loop_triangles:
+                    for vertex_id, color_id in zip(triangle.vertices, triangle.loops):
+                        color = 1.0 - colors[vertex_id]
+                        vertex_colors.data[color_id].color = (color, color, color, 1.0)
+            else:
+                print("ERROR::generate_mesh_for_sequence: " + key + " field array not managed")
+
+    return blender_mesh
 
 # Code taken from the Stop-motion-OBJ addon
 # Link: https://github.com/neverhood311/Stop-motion-OBJ/blob/rename-module-name/src/stop_motion_obj.py
