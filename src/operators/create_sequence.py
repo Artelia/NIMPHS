@@ -11,10 +11,11 @@ class TBB_OT_CreateSequence(Operator):
     bl_description="Create a mesh sequence using the selected parameters"
 
     timer = None
-    sequence_object = None
+    sequence_object_name = ""
     start_time_step = 0
     current_time_step = 0
     end_time_step = 0
+    current_frame = 0
 
     @classmethod
     def poll(cls, context):
@@ -35,6 +36,7 @@ class TBB_OT_CreateSequence(Operator):
         self.start_time_step = settings["start_time"]
         self.current_time_step = settings["start_time"]
         self.end_time_step = settings["end_time"]
+        self.current_frame = context.scene.frame_current
 
         settings.create_sequence_is_running = True
 
@@ -42,37 +44,63 @@ class TBB_OT_CreateSequence(Operator):
 
     def modal(self, context, event):
         if event.type == "ESC":
-            self.cancel(context)
+            self.stop(context, cancelled=True)
             return {"CANCELLED"}
 
         if event.type == "TIMER":
             if self.current_time_step <= self.end_time_step:
+                mesh = generate_mesh_for_sequence(context, self.current_time_step)
+
                 # First time step, create the sequence object
                 if self.current_time_step == self.start_time_step:
-                    mesh = generate_mesh_for_sequence(context, self.current_time_step)
-                    self.sequence_object = bpy.data.objects.new("TBB", mesh)
-                    context.collection.objects.link(self.sequence_object)
+                    # Create the blender object (which will contain the sequence)
+                    sequence_object = bpy.data.objects.new("TBB", mesh)
+                    self.sequence_object_name = sequence_object.name + "_sequence"
+                    context.collection.objects.link(sequence_object)
                     # Convert it to a mesh sequence
-                    context.view_layer.objects.active = self.sequence_object
+                    context.view_layer.objects.active = sequence_object
                     bpy.ops.ms.convert_to_mesh_sequence()
                 else:
-                    pass
+                    # Add the mesh to the sequence
+                    sequence_object = bpy.data.objects[self.sequence_object_name]
+                    context.scene.frame_set(frame=self.current_frame)
+
+                    # Code taken from the Stop-motion-OBJ addon
+                    # Link: https://github.com/neverhood311/Stop-motion-OBJ/blob/rename-module-name/src/panels.py
+                    # if the object doesn't have a 'curMeshIdx' fcurve, we can't add a mesh to it
+                    # TODO: manage the case when there is no 'curMeshIdx'. We may throw an exception or something.
+                    meshIdxCurve = next((curve for curve in sequence_object.animation_data.action.fcurves if 'curMeshIdx' in curve.data_path), None)
+
+                    # add the mesh to the end of the sequence
+                    meshIdx = addMeshToSequence(sequence_object, mesh)
+
+                    # add a new keyframe at this frame number for the new mesh
+                    sequence_object.mesh_sequence_settings.curMeshIdx = meshIdx
+                    sequence_object.keyframe_insert(data_path='mesh_sequence_settings.curMeshIdx', frame=context.scene.frame_current)
+
+                    # make the interpolation constant for this keyframe
+                    newKeyAtFrame = next((keyframe for keyframe in meshIdxCurve.keyframe_points if keyframe.co.x == context.scene.frame_current), None)
+                    newKeyAtFrame.interpolation = 'CONSTANT'
+
             else:
+                self.stop(context)
                 self.report({"INFO"}, "Create sequence finished")
                 return {"FINISHED"}
 
             context.scene.tbb_progress_value = self.current_time_step / (self.end_time_step - self.start_time_step) * 100
             self.current_time_step += 1
+            self.current_frame += 1
 
         return {"PASS_THROUGH"}
     
-    def cancel(self, context):
+    def stop(self, context, cancelled=False):
         wm = context.window_manager
         wm.event_timer_remove(self.timer)
         self.timer = None
         context.scene.tbb_settings.create_sequence_is_running = False
         context.scene.tbb_progress_value = -1.0
-        self.report({"INFO"}, "Create sequence cancelled")
+        if cancelled:
+            self.report({"INFO"}, "Create sequence cancelled")
 
 def generate_mesh_for_sequence(context, time_step, name="TBB"):
     settings = context.scene.tbb_settings
@@ -102,3 +130,32 @@ def generate_mesh_for_sequence(context, time_step, name="TBB"):
     mesh.from_pydata(vertices, [], faces)
 
     return mesh
+
+# Code taken from the Stop-motion-OBJ addon
+# Link: https://github.com/neverhood311/Stop-motion-OBJ/blob/rename-module-name/src/stop_motion_obj.py
+# 'mesh' is a Blender mesh
+# TODO: write another version that accepts a list of vertices and triangles
+#       and creates a new Blender mesh
+def addMeshToSequence(seqObj, mesh):
+    mesh.inMeshSequence = True
+
+    mss = seqObj.mesh_sequence_settings
+
+    # add the new mesh to meshNameArray
+    newMeshNameElement = mss.meshNameArray.add()
+    newMeshNameElement.key = mesh.name_full
+    newMeshNameElement.inMemory = True
+
+    # increment numMeshes
+    mss.numMeshes = mss.numMeshes + 1
+
+    # increment numMeshesInMemory
+    mss.numMeshesInMemory = mss.numMeshesInMemory + 1
+
+    # set initialized to True
+    mss.initialized = True
+
+    # set loaded to True
+    mss.loaded = True
+
+    return mss.numMeshes - 1
