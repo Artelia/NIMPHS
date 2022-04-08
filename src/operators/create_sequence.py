@@ -1,4 +1,9 @@
+import bpy
 from bpy.types import Operator
+
+from pyvista import OpenFOAMReader
+
+from .preview import clip_mesh
 
 class TBB_OT_CreateSequence(Operator):
     bl_idname="tbb.create_sequence"
@@ -6,7 +11,10 @@ class TBB_OT_CreateSequence(Operator):
     bl_description="Create a mesh sequence using the selected parameters"
 
     timer = None
-    progress = 0.0
+    sequence_object = None
+    start_time_step = 0
+    current_time_step = 0
+    end_time_step = 0
 
     @classmethod
     def poll(cls, context):
@@ -14,7 +22,7 @@ class TBB_OT_CreateSequence(Operator):
 
     def execute(self, context):
         wm = context.window_manager
-        context.scene.tbb_settings.create_sequence_is_running = True
+        settings = context.scene.tbb_settings
         # Create timer event
         self.timer = wm.event_timer_add(time_step=1e-3, window=context.window)
         wm.modal_handler_add(self)
@@ -22,6 +30,13 @@ class TBB_OT_CreateSequence(Operator):
         # Setup prograss bar
         context.scene.tbb_progress_label = "Create sequence"
         context.scene.tbb_progress_value = -1.0
+
+        # Setup for creating the sequence
+        self.start_time_step = settings["start_time"]
+        self.current_time_step = settings["start_time"]
+        self.end_time_step = settings["end_time"]
+
+        settings.create_sequence_is_running = True
 
         return {"RUNNING_MODAL"}
 
@@ -31,8 +46,23 @@ class TBB_OT_CreateSequence(Operator):
             return {"CANCELLED"}
 
         if event.type == "TIMER":
-            self.progress += .1
-            context.scene.tbb_progress_value = self.progress
+            if self.current_time_step <= self.end_time_step:
+                # First time step, create the sequence object
+                if self.current_time_step == self.start_time_step:
+                    mesh = generate_mesh_for_sequence(context, self.current_time_step)
+                    self.sequence_object = bpy.data.objects.new("TBB", mesh)
+                    context.collection.objects.link(self.sequence_object)
+                    # Convert it to a mesh sequence
+                    context.view_layer.objects.active = self.sequence_object
+                    bpy.ops.ms.convert_to_mesh_sequence()
+                else:
+                    pass
+            else:
+                self.report({"INFO"}, "Create sequence finished")
+                return {"FINISHED"}
+
+            context.scene.tbb_progress_value = self.current_time_step / (self.end_time_step - self.start_time_step) * 100
+            self.current_time_step += 1
 
         return {"PASS_THROUGH"}
     
@@ -43,3 +73,32 @@ class TBB_OT_CreateSequence(Operator):
         context.scene.tbb_settings.create_sequence_is_running = False
         context.scene.tbb_progress_value = -1.0
         self.report({"INFO"}, "Create sequence cancelled")
+
+def generate_mesh_for_sequence(context, time_step, name="TBB"):
+    settings = context.scene.tbb_settings
+    clip = context.scene.tbb_clip
+
+    file_reader = OpenFOAMReader(settings.file_path)
+    file_reader.set_active_time_point(time_step)
+    data = file_reader.read()
+    raw_mesh = data["internalMesh"]
+    
+    # Prepare the mesh for Blender
+    if clip.type != "no_clip":
+        mesh = clip_mesh(clip, raw_mesh)
+        mesh = mesh.extract_surface()
+    else:
+        mesh = raw_mesh.extract_surface()
+
+    mesh = mesh.triangulate()
+    mesh = mesh.compute_normals(consistent_normals=False, split_vertices=True)
+
+    # Prepare data to create the mesh into blender
+    vertices = mesh.points
+    faces = mesh.faces.reshape((-1, 4))[:, 1:4]
+
+    # Create mesh from python data
+    mesh = bpy.data.meshes.new(name + "_mesh")
+    mesh.from_pydata(vertices, [], faces)
+
+    return mesh

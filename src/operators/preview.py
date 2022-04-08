@@ -73,6 +73,6 @@ def clip_mesh(clip, mesh):
         val = clip.scalars_props["value"]
         inv = clip.scalars_props.invert
         mesh.set_active_scalars(name=scal, preference="point")
-        preview_mesh = mesh.clip_scalar(scalars=scal, invert=inv, value=val)
+        clipped_mesh = mesh.clip_scalar(scalars=scal, invert=inv, value=val)
     
-    return preview_mesh
+    return clipped_mesh

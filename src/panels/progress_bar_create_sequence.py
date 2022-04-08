@@ -1,7 +1,7 @@
 from bpy.types import Scene, VIEW3D_HT_tool_header
 from bpy.props import FloatProperty, StringProperty
 
-DEV_MODE = False
+DEV_MODE = True
 
 # Inspired by: https://blog.michelanders.nl/2017/04/how-to-add-progress-indicator-to-the-info-header-in-blender.html
 
