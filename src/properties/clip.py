@@ -1,6 +1,5 @@
 from bpy.types import PropertyGroup
 from bpy.props import BoolProperty, EnumProperty, PointerProperty
-from rna_prop_ui import rna_idprop_ui_create
 
 # Dynamically load enum items for the scalars property
 def scalar_items(self, context):
@@ -13,24 +12,22 @@ def scalar_items(self, context):
 def update_scalar_value_prop(self, context):
     scalars_props = context.scene.tbb_clip.scalars_props
     scalars = scalars_props.scalars
-    if scalars_props.get("value") == None:
-        rna_idprop_ui_create(
-            scalars_props,
-            "value",
-            default=0.5,
-            min=0.0,
-            soft_min=0.0,
-            max=1.0,
-            soft_max=1.0,
-            description="Set the clipping value"
-        )
 
-    prop = scalars_props.id_properties_ui("value")
+    try:
+        prop = scalars_props.id_properties_ui("value")
+    except Exception as error:
+        print("ERROR::update_scalar_value_prop: " + str(error))
+        return
+    
     default = scalars_props["value"]
 
     values = context.scene.tbb_temp_data.mesh_data[scalars]
     # TODO: not working with vector values
-    print(values)
+    # Find a way to modify the ui property to accept vector values
+    if len(values.shape) > 1:
+        print("ERROR::update_scalar_value_prop: vector scalars are not managed yet.")
+        return
+
     new_max = max(values)
     new_min = min(values)
     if new_max < default or new_min > default: default = new_min

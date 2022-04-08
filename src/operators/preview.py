@@ -28,7 +28,7 @@ class TBB_OT_Preview(Operator):
         try:
             file_reader.set_active_time_point(settings["preview_time_step"])
         except ValueError as error:
-            print(error)
+            print("ERROR::TBB_OT_Preview: " + str(error))
             self.report({"ERROR"}, "The selected time step is not defined (" + str(settings["preview_time_step"]) + ").")
             return {"FINISHED"}
         
@@ -40,7 +40,7 @@ class TBB_OT_Preview(Operator):
             try:
                 preview_mesh = clip_mesh(clip, raw_mesh)
             except KeyError as error:
-                print(error)
+                print("ERROR::TBB_OT_Preview: " + str(error))
                 self.report({"ERROR"}, "Can't clip on data named '" + str(clip.scalars_props.scalars) + "'. This field array can't be active.")
                 # Update temporary data, please read the comment below.
                 context.scene.tbb_temp_data.update(file_reader, settings["preview_time_step"], data, raw_mesh)
@@ -59,7 +59,7 @@ class TBB_OT_Preview(Operator):
         try:
             generate_preview_object(preview_mesh, context)
         except Exception as error:
-            print(error)
+            print("ERROR::TBB_OT_Preview: " + str(error))
             self.report({"ERROR"}, "Something went wrong building the mesh")
             return {"FINISHED"}
 

@@ -13,8 +13,8 @@ class TBB_temporary_data():
         try:
             self.file_reader.set_active_time_point(time_step)
         except ValueError as error:
-            print("TBB_temporary_data::" + error)
-        
+            print("ERROR::TBB_temporary_data: " + error)
+
         if new_file_data == None:
             self.file_data = self.file_reader.read()
         else:

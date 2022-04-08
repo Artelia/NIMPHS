@@ -8,6 +8,7 @@ from pyvista import OpenFOAMReader
 from pathlib import Path
 
 from ..properties.settings import settings_dynamic_properties
+from ..properties.clip import update_scalar_value_prop
 
 class TBB_OT_ImportFoamFile(Operator, ImportHelper):
     bl_idname="tbb.import_foam_file"
@@ -41,7 +42,7 @@ class TBB_OT_ImportFoamFile(Operator, ImportHelper):
             preview_mesh = context.scene.tbb_temp_data.mesh_data.extract_surface()
             generate_preview_object(preview_mesh, context)
         except Exception as error:
-            print(error)
+            print("ERROR::TBB_OT_ImportFoamFile: " + str(error))
             self.report({"ERROR"}, "Something went wrong building the mesh")
             return {"FINISHED"}
 
@@ -77,9 +78,22 @@ class TBB_OT_ReloadFoamFile(Operator):
         return {"FINISHED"}
 
 def update_properties_values(settings, clip, file_reader):
-    # Update settings
+    # Settings
     max_time_step =  file_reader.number_time_points - 1
     update_settings_props(settings, max_time_step)
+    # Scalar value prop
+    # TODO: find a better way to create this property
+    if clip.scalars_props.get("value") == None:
+        rna_idprop_ui_create(
+            clip.scalars_props,
+            "value",
+            default=0.5,
+            min=0.0,
+            soft_min=0.0,
+            max=1.0,
+            soft_max=1.0,
+            description="Set the clipping value"
+        )
 
 def update_settings_props(settings, new_max):
     for prop_id, prop_desc in settings_dynamic_properties:
@@ -124,7 +138,7 @@ def generate_preview_object(preview_mesh, context, name="TBB_preview"):
         mesh = bpy.data.meshes[name + "_mesh"]
         obj = bpy.data.objects[name]
     except KeyError as error:
-        print(error)
+        print("ERROR::generate_preview_mesh: " + str(error))
         mesh = bpy.data.meshes.new(name + "_mesh")
         obj = bpy.data.objects.new(name, mesh)
         context.collection.objects.link(obj)
