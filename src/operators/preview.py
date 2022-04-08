@@ -55,11 +55,19 @@ class TBB_OT_Preview(Operator):
             except KeyError as error:
                 print(error)
                 self.report({"ERROR"}, "Can't clip on data named '" + str(clip.scalars_props.scalars) + "'. This field array can't be active.")
+                # Update temporary data, please read the comment below.
+                context.scene.tbb_temp_data.update(file_reader, settings["preview_time_step"], data, raw_mesh)
                 return {"FINISHED"}
 
             preview_mesh = preview_mesh.extract_surface()
         else:
             preview_mesh = raw_mesh.extract_surface()
+
+        # Update temporary data. We do not update it just after the reading of the file. Here is why.
+        # This line will update the list of available scalars. If the choosen scalar is not available at
+        # the selected time step, the program will automatically choose another scalar due to the update function
+        # of the enum property. This is surely not what the user was expecting.
+        context.scene.tbb_temp_data.update(file_reader, settings["preview_time_step"], data, raw_mesh)
 
         preview_mesh = preview_mesh.triangulate()
         preview_mesh = preview_mesh.compute_normals(consistent_normals=False, split_vertices=True)

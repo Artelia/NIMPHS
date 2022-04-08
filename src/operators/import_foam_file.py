@@ -28,13 +28,12 @@ class TBB_OT_ImportFoamFile(Operator, ImportHelper):
             return {"FINISHED"}
 
         settings.file_path = self.filepath
-        context.scene.tbb_temp_data.update_file_reader(file_reader)
 
         # Update properties values
         update_properties_values(settings, clip, file_reader)
 
-        # Forces to redraw the view (magic trick)
-        bpy.context.scene.frame_set(bpy.context.scene.frame_current)
+        # Update temp data
+        context.scene.tbb_temp_data.update(file_reader, settings["preview_time_step"])
 
         self.report({"INFO"}, "File successfully imported")
 
@@ -57,10 +56,11 @@ class TBB_OT_ReloadFoamFile(Operator):
             self.report({"ERROR"}, "The choosen file does not exist")
             return {"FINISHED"}
 
-        context.scene.tbb_temp_data.update_file_reader(file_reader)
-
         # Update properties values
         update_properties_values(settings, clip, file_reader)
+
+        # Update temp data
+        context.scene.tbb_temp_data.update(file_reader, settings["preview_time_step"])
 
         self.report({"INFO"}, "Reload successfull")
         
