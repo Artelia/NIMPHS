@@ -154,6 +154,10 @@ def generate_mesh_for_sequence(context, time_step, name="TBB"):
     return blender_mesh
 
 def generate_vertex_colors(mesh, blender_mesh):
+    # Prepare the mesh to loop over all its triangles
+    blender_mesh.calc_loop_triangles()
+    vertex_ids = np.array([triangle.vertices for triangle in blender_mesh.loop_triangles]).flatten()
+    
     for key in mesh.point_data.keys():
         # Get field array
         mesh.set_active_scalars(name=key, preference="point")
@@ -167,14 +171,26 @@ def generate_vertex_colors(mesh, blender_mesh):
             max_value = np.max(colors)
             if max_value != 0:
                 colors  = np.divide(colors, max_value, out=colors, casting="unsafe")
-            # Prepare the mesh to loop over all its triangles
-            blender_mesh.calc_loop_triangles()
 
-            # TODO: optimize this functions using numpy ? Vectorize the operation
-            for triangle in blender_mesh.loop_triangles:
-                for vertex_id, color_id in zip(triangle.vertices, triangle.loops):
-                    color = 1.0 - colors[vertex_id]
-                    vertex_colors.data[color_id].color = (color, color, color, 1.0)
+            # TODO: optimize these functions using numpy ? Vectorize the operation
+            # VERSION 3
+            
+
+
+            # VERSION 2
+            colors_cpy = 1.0 - np.copy(colors)
+            data = np.tile(np.array([colors_cpy[vertex_ids]]).transpose(), (1, 4))
+            data[:, 3] = 1.0
+            for vertex_color_id in range(len(vertex_ids)):
+                vertex_colors.data[vertex_color_id].color = data[vertex_color_id]
+
+            # VERSION 1
+            # for triangle in blender_mesh.loop_triangles:
+            #     for vertex_id, color_id in zip(triangle.vertices, triangle.loops):
+            #         color = 1.0 - colors[vertex_id]
+            #         # if color_id < 10:
+            #         #     print(color_id, vertex_id, color)
+            #         vertex_colors.data[color_id].color = (color, color, color, 1.0)
         else:
             print("ERROR::generate_mesh_for_sequence: " + key + " field array not managed")
 
