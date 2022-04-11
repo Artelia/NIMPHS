@@ -157,7 +157,7 @@ def generate_vertex_colors(mesh, blender_mesh):
     # Prepare the mesh to loop over all its triangles
     blender_mesh.calc_loop_triangles()
     vertex_ids = np.array([triangle.vertices for triangle in blender_mesh.loop_triangles]).flatten()
-    
+
     for key in mesh.point_data.keys():
         # Get field array
         mesh.set_active_scalars(name=key, preference="point")
@@ -172,19 +172,21 @@ def generate_vertex_colors(mesh, blender_mesh):
             if max_value != 0:
                 colors  = np.divide(colors, max_value, out=colors, casting="unsafe")
 
-            # TODO: optimize these functions using numpy ? Vectorize the operation
-            # VERSION 3
-            
-
-
-            # VERSION 2
-            colors_cpy = 1.0 - np.copy(colors)
-            data = np.tile(np.array([colors_cpy[vertex_ids]]).transpose(), (1, 4))
+            # VERSION 3 QUITE FAST
+            one_minus_colors = 1.0 - colors
+            data = np.tile(np.array([one_minus_colors[vertex_ids]]).transpose(), (1, 4))
             data[:, 3] = 1.0
-            for vertex_color_id in range(len(vertex_ids)):
-                vertex_colors.data[vertex_color_id].color = data[vertex_color_id]
+            data = data.flatten()
+            vertex_colors.data.foreach_set("color", data)
 
-            # VERSION 1
+            # VERSION 2 SLOW
+            # one_minus_colors = 1.0 - colors
+            # data = np.tile(np.array([one_minus_colors[vertex_ids]]).transpose(), (1, 4))
+            # data[:, 3] = 1.0
+            # for vertex_color_id in range(len(vertex_ids)):
+            #     vertex_colors.data[vertex_color_id].color = data[vertex_color_id]
+
+            # VERSION 1 VERY SLOW
             # for triangle in blender_mesh.loop_triangles:
             #     for vertex_id, color_id in zip(triangle.vertices, triangle.loops):
             #         color = 1.0 - colors[vertex_id]
