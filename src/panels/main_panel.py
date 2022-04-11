@@ -20,17 +20,20 @@ class TBB_PT_MainPanel(Panel):
             box = row.box()
             box.label(text="File: " + settings.file_path)
             row = layout.row()
+            row.enabled = not settings.create_sequence_is_running
             row.operator("tbb.import_foam_file", text="Import", icon="IMPORT")
             row.operator("tbb.reload_foam_file", text="Reload", icon="FILE_REFRESH")
         else:
             row.operator("tbb.import_foam_file", text="Import OpenFoam file", icon="IMPORT")
 
         if settings.file_path != "":
-
             # Preview section
             row = layout.row()
+            row.enabled = not settings.create_sequence_is_running
             row.label(text="Preview")
             row = layout.row()
+            row.enabled = not settings.create_sequence_is_running
             row.prop(settings, '["preview_time_step"]', text="Time step")
             row = layout.row()
+            row.enabled = not settings.create_sequence_is_running
             row.operator("tbb.preview", text="Preview", icon="HIDE_OFF")

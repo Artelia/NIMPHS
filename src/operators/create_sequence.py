@@ -10,7 +10,7 @@ from .preview import clip_mesh
 class TBB_OT_CreateSequence(Operator):
     bl_idname="tbb.create_sequence"
     bl_label="Create sequence"
-    bl_description="Create a mesh sequence using the selected parameters"
+    bl_description="Create a mesh sequence using the selected parameters. Press 'esc' to cancel"
 
     timer = None
     sequence_object_name = ""

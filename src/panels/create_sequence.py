@@ -18,10 +18,13 @@ class TBB_PT_CreateSequence(Panel):
 
         if settings.file_path != "":
             row = layout.row()
+            row.enabled = not settings.create_sequence_is_running
             row.prop(settings, '["start_time"]', text="Start")
             row = layout.row()
+            row.enabled = not settings.create_sequence_is_running
             row.prop(settings, '["end_time"]', text="End")
             row = layout.row()
+            row.enabled = not settings.create_sequence_is_running
             row.prop(settings, "import_point_data")
             row = layout.row()
             row.operator("tbb.create_sequence", text="Create sequence", icon="RENDER_ANIMATION")

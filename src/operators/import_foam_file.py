@@ -72,6 +72,7 @@ class TBB_OT_ReloadFoamFile(Operator):
 
         # Update temp data
         context.scene.tbb_temp_data.update(file_reader, settings["preview_time_step"])
+        settings.create_sequence_is_running = False
 
         self.report({"INFO"}, "Reload successfull")
         
