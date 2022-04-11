@@ -26,5 +26,11 @@ class TBB_PT_CreateSequence(Panel):
             row = layout.row()
             row.enabled = not settings.create_sequence_is_running
             row.prop(settings, "import_point_data")
+
+            if settings.import_point_data:
+                row = layout.row()
+                row.enabled = not settings.create_sequence_is_running
+                row.prop(settings, "list_point_data", text="List")
+                
             row = layout.row()
             row.operator("tbb.create_sequence", text="Create sequence", icon="RENDER_ANIMATION")

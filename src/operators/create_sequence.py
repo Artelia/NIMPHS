@@ -149,16 +149,23 @@ def generate_mesh_for_sequence(context, time_step, name="TBB"):
 
     # Import point data as vertex colors
     if settings.import_point_data:
-        blender_mesh = generate_vertex_colors(mesh, blender_mesh)
+        blender_mesh = generate_vertex_colors(mesh, blender_mesh, settings.list_point_data, time_step)
 
     return blender_mesh
 
-def generate_vertex_colors(mesh, blender_mesh):
+def generate_vertex_colors(mesh, blender_mesh, list_point_data, time_step):
     # Prepare the mesh to loop over all its triangles
     blender_mesh.calc_loop_triangles()
     vertex_ids = np.array([triangle.vertices for triangle in blender_mesh.loop_triangles]).flatten()
 
-    for key in mesh.point_data.keys():
+    # Filter field arrays (check if they exists)
+    keys = list_point_data.split(";")
+    filtered_keys = [key for key in keys if key in mesh.point_data.keys()]
+    if keys != filtered_keys:
+        print("WARNING::generate_vertex_colors: some selected field arrays do not exist (time step = " + str(time_step) + ")")
+        print("Selected field array(s): ", keys)
+
+    for key in filtered_keys:
         # Get field array
         mesh.set_active_scalars(name=key, preference="point")
         colors = mesh.active_scalars
@@ -172,29 +179,13 @@ def generate_vertex_colors(mesh, blender_mesh):
             if max_value != 0:
                 colors  = np.divide(colors, max_value, out=colors, casting="unsafe")
 
-            # VERSION 3 QUITE FAST
             one_minus_colors = 1.0 - colors
             data = np.tile(np.array([one_minus_colors[vertex_ids]]).transpose(), (1, 4))
             data[:, 3] = 1.0
             data = data.flatten()
             vertex_colors.data.foreach_set("color", data)
-
-            # VERSION 2 SLOW
-            # one_minus_colors = 1.0 - colors
-            # data = np.tile(np.array([one_minus_colors[vertex_ids]]).transpose(), (1, 4))
-            # data[:, 3] = 1.0
-            # for vertex_color_id in range(len(vertex_ids)):
-            #     vertex_colors.data[vertex_color_id].color = data[vertex_color_id]
-
-            # VERSION 1 VERY SLOW
-            # for triangle in blender_mesh.loop_triangles:
-            #     for vertex_id, color_id in zip(triangle.vertices, triangle.loops):
-            #         color = 1.0 - colors[vertex_id]
-            #         # if color_id < 10:
-            #         #     print(color_id, vertex_id, color)
-            #         vertex_colors.data[color_id].color = (color, color, color, 1.0)
         else:
-            print("ERROR::generate_mesh_for_sequence: " + key + " field array not managed")
+            print("ERROR::generate_vertex_colors: " + key + " field array not managed")
 
     return blender_mesh
 

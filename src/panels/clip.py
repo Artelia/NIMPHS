@@ -30,6 +30,4 @@ class TBB_PT_Clip(Panel):
             row.prop(clip.scalars_props, '["value"]', text="Value")
             row = layout.row()
             row.enabled = not settings.create_sequence_is_running
-            row.prop(clip.scalars_props, "invert")
-
-        
+            row.prop(clip.scalars_props, "invert")        

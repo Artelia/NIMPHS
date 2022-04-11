@@ -24,6 +24,12 @@ class TBB_settings(PropertyGroup):
         default=True
     )
 
+    list_point_data: StringProperty(
+        name="Point data list",
+        description="List of point data to import as vertex color groups. Separate each with a semicolon",
+        default=""
+    )
+
 settings_dynamic_properties = [
     ("preview_time_step", "Time step used for the preview section"),
     ("start_time", "Starting point of the sequence"),
