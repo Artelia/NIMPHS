@@ -21,7 +21,7 @@ class TBB_settings(PropertyGroup):
     import_point_data: BoolProperty(
         name="Import point data",
         description="Import point data as vertex color groups",
-        default=True
+        default=False
     )
 
     list_point_data: StringProperty(

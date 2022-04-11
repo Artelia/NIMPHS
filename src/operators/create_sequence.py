@@ -169,23 +169,25 @@ def generate_vertex_colors(mesh, blender_mesh, list_point_data, time_step):
         # Get field array
         mesh.set_active_scalars(name=key, preference="point")
         colors = mesh.active_scalars
-        # TODO: manage vector scalars
-        if len(colors.shape) == 1:
-            # Create new vertex colors array
-            vertex_colors = blender_mesh.vertex_colors.new(name=key, do_init=True)
-            # Normalize data
-            # TODO: manage vector scalars (this line generates an error)
-            max_value = np.max(colors)
-            if max_value != 0:
-                colors  = np.divide(colors, max_value, out=colors, casting="unsafe")
+        # Create new vertex colors array
+        vertex_colors = blender_mesh.vertex_colors.new(name=key, do_init=True)
+        # Normalize data
+        colors = remap_array(colors)
 
-            one_minus_colors = 1.0 - colors
-            data = np.tile(np.array([one_minus_colors[vertex_ids]]).transpose(), (1, 4))
-            data[:, 3] = 1.0
-            data = data.flatten()
-            vertex_colors.data.foreach_set("color", data)
-        else:
-            print("ERROR::generate_vertex_colors: " + key + " field array not managed")
+        # TODO: invert colors should be an option
+        one_minus_colors = 1.0 - colors
+        # 1D scalars
+        if len(colors.shape) == 1:
+            data = np.tile(np.array([one_minus_colors[vertex_ids]]).transpose(), (1, 3))
+        # 2D scalars
+        if len(colors.shape) == 2:
+            data = one_minus_colors[vertex_ids]
+        
+        ones = np.ones((len(vertex_ids), 1))
+        data = np.hstack((data, ones))
+
+        data = data.flatten()
+        vertex_colors.data.foreach_set("color", data)
 
     return blender_mesh
 
@@ -217,3 +219,17 @@ def addMeshToSequence(seqObj, mesh):
     mss.loaded = True
 
     return mss.numMeshes - 1
+
+def remap_array(input, out_min=0.0, out_max=1.0):
+    in_min = np.min(input)
+    in_max = np.max(input)
+    print("IN MIN = ", in_min)
+    print("IN MAX = ", in_max)
+
+    if out_min == 0.0 and out_max == 0.0:
+        return np.zeros(shape=input.shape)
+    elif out_min == 1.0 and out_max == 1.0:
+        return np.ones(shape=input.shape)
+
+    return out_min + (out_max - out_min) * ((input - in_min) / (in_max - in_min))
+    
