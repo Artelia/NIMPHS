@@ -26,7 +26,7 @@ class TBB_PT_MainPanel(Panel):
         else:
             row.operator("tbb.import_foam_file", text="Import OpenFoam file", icon="IMPORT")
 
-        if settings.file_path != "":
+        if context.scene.tbb_temp_data.is_ok():
             # Preview section
             row = layout.row()
             row.enabled = not settings.create_sequence_is_running
@@ -37,3 +37,7 @@ class TBB_PT_MainPanel(Panel):
             row = layout.row()
             row.enabled = not settings.create_sequence_is_running
             row.operator("tbb.preview", text="Preview", icon="HIDE_OFF")
+        
+        else:
+            row = layout.row()
+            row.label(text="Error: please reload the file.", icon="ERROR")

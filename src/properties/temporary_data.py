@@ -24,3 +24,6 @@ class TBB_temporary_data():
             self.mesh_data = self.file_data["internalMesh"]
         else:
             self.mesh_data = new_mesh_data
+
+    def is_ok(self):
+        return self.file_reader != None and self.file_data != None and self.mesh_data != None

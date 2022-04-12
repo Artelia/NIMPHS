@@ -10,7 +10,7 @@ class TBB_PT_Clip(Panel):
 
     @classmethod
     def poll(cls, context):
-        return context.scene.tbb_settings.file_path != ""
+        return context.scene.tbb_temp_data.is_ok()
 
     def draw(self,context):
         layout = self.layout
@@ -42,7 +42,3 @@ class TBB_PT_Clip(Panel):
             row = layout.row()
             row.enabled = not settings.create_sequence_is_running
             row.prop(clip.scalars_props, "invert")
-
-        elif not show_clip_settings:
-            row = layout.row()
-            row.label(text="Error: please reload the file.", icon="ERROR")

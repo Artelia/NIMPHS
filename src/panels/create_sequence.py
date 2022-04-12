@@ -10,7 +10,7 @@ class TBB_PT_CreateSequence(Panel):
 
     @classmethod
     def poll(cls, context):
-        return context.scene.tbb_settings.file_path != ""
+        return context.scene.tbb_temp_data.is_ok()
 
     def draw(self, context):
         layout = self.layout

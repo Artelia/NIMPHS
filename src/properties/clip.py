@@ -16,7 +16,9 @@ def update_scalar_value_prop(self, context):
     scalars = scalars_props.scalars
 
     values = context.scene.tbb_temp_data.mesh_data[scalars]
+    # 1D array
     if len(values.shape) == 1: prop_name = "value"
+    # 2D array (array of vectors)
     elif len(values.shape) == 2: prop_name = "vector_value"
     else:
         print("ERROR::update_scalar_value_prop: invalid values shape for data named '" + str(scalars) + "' (shape = " + str(values.shape) + ")")
@@ -29,17 +31,19 @@ def update_scalar_value_prop(self, context):
         return
     
     default = scalars_props[prop_name]
-
+    
+    # 1D array
     if len(values.shape) == 1:
         new_max = np.max(values)
         new_min = np.min(values)
         if new_max < default or new_min > default: default = new_min
         prop.update(default=default, min=new_min, soft_min=new_min, max=new_max, soft_max=new_max)
 
+    # 2D array
     elif len(values.shape) == 2:
         new_max = np.max(values)
         new_min = np.min(values)
-        if new_max < default or new_min > default: default = new_min
+        if new_max < np.max(default) or new_min > np.min(default): default = (new_min, new_min, new_min)
         prop.update(default=default, min=new_min, soft_min=new_min, max=new_max, soft_max=new_max)
 
 
@@ -68,7 +72,7 @@ class TBB_clip(PropertyGroup):
         items=[
             ("no_clip", "None", "Do not clip"),
             ("scalar", "Scalars", "Clip a dataset by a scalar"),
-            ("box", "Box", "Clip a dataset by a bounding box defined by the bounds")
+            # ("box", "Box", "Clip a dataset by a bounding box defined by the bounds")
         ],
         name="Type",
         description="Choose the clipping method",
