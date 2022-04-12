@@ -158,30 +158,31 @@ def generate_vertex_colors(mesh, blender_mesh, list_point_data, time_step):
     blender_mesh.calc_loop_triangles()
     vertex_ids = np.array([triangle.vertices for triangle in blender_mesh.loop_triangles]).flatten()
 
-    # Filter field arrays (check if they exists)
+    # Filter field arrays (check if they exist)
     keys = list_point_data.split(";")
-    filtered_keys = [key for key in keys if key in mesh.point_data.keys()]
-    if keys != filtered_keys:
-        print("WARNING::generate_vertex_colors: some selected field arrays do not exist (time step = " + str(time_step) + ")")
-        print("Selected field array(s): ", keys)
+    filtered_keys = []
+    for raw_key in keys:
+        if raw_key not in mesh.point_data.keys():
+            print("WARNING::generate_vertex_colors: the field array named '" + raw_key + "' do not exist (time step = " + str(time_step) + ")")
+        else:
+            filtered_keys.append(raw_key)
 
-    for key in filtered_keys:
+    for field_array in filtered_keys:
         # Get field array
-        mesh.set_active_scalars(name=key, preference="point")
+        mesh.set_active_scalars(name=field_array, preference="point")
         colors = mesh.active_scalars
         # Create new vertex colors array
-        vertex_colors = blender_mesh.vertex_colors.new(name=key, do_init=True)
+        vertex_colors = blender_mesh.vertex_colors.new(name=field_array, do_init=True)
         # Normalize data
         colors = remap_array(colors)
-
-        # TODO: invert colors should be an option
-        one_minus_colors = 1.0 - colors
+        
+        colors = 1.0 - colors
         # 1D scalars
         if len(colors.shape) == 1:
-            data = np.tile(np.array([one_minus_colors[vertex_ids]]).transpose(), (1, 3))
+            data = np.tile(np.array([colors[vertex_ids]]).transpose(), (1, 3))
         # 2D scalars
         if len(colors.shape) == 2:
-            data = one_minus_colors[vertex_ids]
+            data = colors[vertex_ids]
         
         ones = np.ones((len(vertex_ids), 1))
         data = np.hstack((data, ones))
@@ -198,23 +199,17 @@ def generate_vertex_colors(mesh, blender_mesh, list_point_data, time_step):
 #       and creates a new Blender mesh
 def addMeshToSequence(seqObj, mesh):
     mesh.inMeshSequence = True
-
     mss = seqObj.mesh_sequence_settings
-
     # add the new mesh to meshNameArray
     newMeshNameElement = mss.meshNameArray.add()
     newMeshNameElement.key = mesh.name_full
     newMeshNameElement.inMemory = True
-
     # increment numMeshes
     mss.numMeshes = mss.numMeshes + 1
-
     # increment numMeshesInMemory
     mss.numMeshesInMemory = mss.numMeshesInMemory + 1
-
     # set initialized to True
     mss.initialized = True
-
     # set loaded to True
     mss.loaded = True
 
@@ -223,8 +218,6 @@ def addMeshToSequence(seqObj, mesh):
 def remap_array(input, out_min=0.0, out_max=1.0):
     in_min = np.min(input)
     in_max = np.max(input)
-    print("IN MIN = ", in_min)
-    print("IN MAX = ", in_max)
 
     if out_min == 0.0 and out_max == 0.0:
         return np.zeros(shape=input.shape)
@@ -232,4 +225,3 @@ def remap_array(input, out_min=0.0, out_max=1.0):
         return np.ones(shape=input.shape)
 
     return out_min + (out_max - out_min) * ((input - in_min) / (in_max - in_min))
-    
