@@ -3,6 +3,7 @@ from rna_prop_ui import rna_idprop_ui_create
 
 from pyvista import OpenFOAMReader
 from pathlib import Path
+import numpy as np
 
 from ..properties.settings import settings_dynamic_properties
 
@@ -41,17 +42,47 @@ def generate_preview_object(preview_mesh, context, name="TBB_preview"):
 
     # Create the preview mesh (or write over it if it already exists)
     try:
-        mesh = bpy.data.meshes[name + "_mesh"]
+        blender_mesh = bpy.data.meshes[name + "_mesh"]
         obj = bpy.data.objects[name]
     except KeyError as error:
         print("ERROR::generate_preview_mesh: " + str(error))
-        mesh = bpy.data.meshes.new(name + "_mesh")
-        obj = bpy.data.objects.new(name, mesh)
+        blender_mesh = bpy.data.meshes.new(name + "_mesh")
+        obj = bpy.data.objects.new(name, blender_mesh)
         context.collection.objects.link(obj)
     
     context.view_layer.objects.active = obj
-    mesh.clear_geometry()
-    mesh.from_pydata(vertices, [], faces)
+    blender_mesh.clear_geometry()
+    blender_mesh.from_pydata(vertices, [], faces)
+
+    return blender_mesh, obj, preview_mesh
+
+
+
+def create_preview_material(object, scalar_to_preview, name="TBB_preview_material"):
+    # Get the preview material
+    try:
+        material = bpy.data.materials[name]
+    except KeyError as error:
+        print("ERROR::create_preview_material: " + str(error))
+        material = bpy.data.materials.new(name=name)
+        material.use_nodes = True
+
+    # Get node tree
+    mat_node_tree = material.node_tree
+    vertex_color_node = mat_node_tree.nodes.get("TBB_vertex_color_node")
+    if vertex_color_node == None:
+        # If the node does not exist, create it and link it to the shader
+        vertex_color_node = mat_node_tree.nodes.new(type="ShaderNodeVertexColor")
+        vertex_color_node.name = "TBB_vertex_color_node"
+        principled_bsdf_node = mat_node_tree.nodes.get("Principled BSDF")
+        mat_node_tree.links.new(vertex_color_node.outputs[0], principled_bsdf_node.inputs[0])
+        vertex_color_node.location = (-200, 250)
+
+    # Update scalar to preview
+    vertex_color_node.layer_name = scalar_to_preview
+    # Make sure it is the active material
+    object.active_material = material
+
 
 
 
@@ -104,3 +135,117 @@ def update_settings_props(settings, new_max):
         default = settings[prop_id]
         if new_max < default: default = 0
         prop.update(default=default, min=0, soft_min=0, max=new_max, soft_max=new_max)
+
+
+
+def generate_mesh_for_sequence(context, time_step, name="TBB"):
+    settings = context.scene.tbb_settings
+    clip = context.scene.tbb_clip
+
+    # Read data from the given OpenFoam file
+    file_reader = OpenFOAMReader(settings.file_path)
+    file_reader.set_active_time_point(time_step)
+    data = file_reader.read()
+    raw_mesh = data["internalMesh"]
+    
+    # Prepare the mesh for Blender
+    if clip.type != "no_clip":
+        mesh = clip_mesh(clip, raw_mesh)
+        mesh = mesh.extract_surface()
+    else:
+        mesh = raw_mesh.extract_surface()
+
+    mesh = mesh.triangulate()
+    mesh = mesh.compute_normals(consistent_normals=False, split_vertices=True)
+
+    # Prepare data to create the mesh into blender
+    vertices = mesh.points
+    faces = mesh.faces.reshape((-1, 4))[:, 1:4]
+
+    # Create mesh from python data
+    blender_mesh = bpy.data.meshes.new(name + "_mesh")
+    blender_mesh.from_pydata(vertices, [], faces)
+    # Use fake user so Blender will save our mesh in the .blend file
+    blender_mesh.use_fake_user = True
+
+    # Import point data as vertex colors
+    if settings.import_point_data:
+        blender_mesh = generate_vertex_colors(mesh, blender_mesh, settings.list_point_data, time_step)
+
+    return blender_mesh
+
+
+
+def generate_vertex_colors(mesh, blender_mesh, list_point_data, time_step):
+    # Prepare the mesh to loop over all its triangles
+    blender_mesh.calc_loop_triangles()
+    vertex_ids = np.array([triangle.vertices for triangle in blender_mesh.loop_triangles]).flatten()
+
+    # Filter field arrays (check if they exist)
+    keys = list_point_data.split(";")
+    filtered_keys = []
+    for raw_key in keys:
+        if raw_key not in mesh.point_data.keys():
+            print("WARNING::generate_vertex_colors: the field array named '" + raw_key + "' do not exist (time step = " + str(time_step) + ")")
+        else:
+            filtered_keys.append(raw_key)
+
+    for field_array in filtered_keys:
+        # Get field array
+        colors = mesh.get_array(name=field_array, preference="point")
+        # Create new vertex colors array
+        vertex_colors = blender_mesh.vertex_colors.new(name=field_array, do_init=True)
+        # Normalize data
+        colors = remap_array(colors)
+        
+        colors = 1.0 - colors
+        # 1D scalars
+        if len(colors.shape) == 1:
+            data = np.tile(np.array([colors[vertex_ids]]).transpose(), (1, 3))
+        # 2D scalars
+        if len(colors.shape) == 2:
+            data = colors[vertex_ids]
+        
+        ones = np.ones((len(vertex_ids), 1))
+        data = np.hstack((data, ones))
+
+        data = data.flatten()
+        vertex_colors.data.foreach_set("color", data)
+
+    return blender_mesh
+
+
+
+# Code taken from the Stop-motion-OBJ addon
+# Link: https://github.com/neverhood311/Stop-motion-OBJ/blob/rename-module-name/src/stop_motion_obj.py
+# 'mesh' is a Blender mesh
+def add_mesh_to_sequence(seqObj, mesh):
+    mesh.inMeshSequence = True
+    mss = seqObj.mesh_sequence_settings
+    # add the new mesh to meshNameArray
+    newMeshNameElement = mss.meshNameArray.add()
+    newMeshNameElement.key = mesh.name_full
+    newMeshNameElement.inMemory = True
+    # increment numMeshes
+    mss.numMeshes = mss.numMeshes + 1
+    # increment numMeshesInMemory
+    mss.numMeshesInMemory = mss.numMeshesInMemory + 1
+    # set initialized to True
+    mss.initialized = True
+    # set loaded to True
+    mss.loaded = True
+
+    return mss.numMeshes - 1
+
+
+
+def remap_array(input, out_min=0.0, out_max=1.0):
+    in_min = np.min(input)
+    in_max = np.max(input)
+
+    if out_min == 0.0 and out_max == 0.0:
+        return np.zeros(shape=input.shape)
+    elif out_min == 1.0 and out_max == 1.0:
+        return np.ones(shape=input.shape)
+
+    return out_min + (out_max - out_min) * ((input - in_min) / (in_max - in_min))

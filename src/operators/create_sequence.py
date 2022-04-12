@@ -1,11 +1,9 @@
 import bpy
 from bpy.types import Operator
 
-from pyvista import OpenFOAMReader
-import numpy as np
 import time
 
-from .preview import clip_mesh
+from .utils import generate_mesh_for_sequence, add_mesh_to_sequence
 
 class TBB_OT_CreateSequence(Operator):
     bl_idname="tbb.create_sequence"
@@ -56,7 +54,7 @@ class TBB_OT_CreateSequence(Operator):
 
         if event.type == "TIMER":
             if self.current_time_step <= self.end_time_step:
-                self.chrono_start = time.time()
+                self.chrono_start = time.time() 
                 try:
                     mesh = generate_mesh_for_sequence(context, self.current_time_step, name=self.user_sequence_name)
                 except Exception as error:
@@ -87,7 +85,7 @@ class TBB_OT_CreateSequence(Operator):
                     meshIdxCurve = next((curve for curve in sequence_object.animation_data.action.fcurves if 'curMeshIdx' in curve.data_path), None)
 
                     # add the mesh to the end of the sequence
-                    meshIdx = addMeshToSequence(sequence_object, mesh)
+                    meshIdx = add_mesh_to_sequence(sequence_object, mesh)
 
                     # add a new keyframe at this frame number for the new mesh
                     sequence_object.mesh_sequence_settings.curMeshIdx = meshIdx
@@ -118,110 +116,3 @@ class TBB_OT_CreateSequence(Operator):
         context.scene.tbb_progress_value = -1.0
         if cancelled:
             self.report({"INFO"}, "Create sequence cancelled")
-
-def generate_mesh_for_sequence(context, time_step, name="TBB"):
-    settings = context.scene.tbb_settings
-    clip = context.scene.tbb_clip
-
-    # Read data from the given OpenFoam file
-    file_reader = OpenFOAMReader(settings.file_path)
-    file_reader.set_active_time_point(time_step)
-    data = file_reader.read()
-    raw_mesh = data["internalMesh"]
-    
-    # Prepare the mesh for Blender
-    if clip.type != "no_clip":
-        mesh = clip_mesh(clip, raw_mesh)
-        mesh = mesh.extract_surface()
-    else:
-        mesh = raw_mesh.extract_surface()
-
-    mesh = mesh.triangulate()
-    mesh = mesh.compute_normals(consistent_normals=False, split_vertices=True)
-
-    # Prepare data to create the mesh into blender
-    vertices = mesh.points
-    faces = mesh.faces.reshape((-1, 4))[:, 1:4]
-
-    # Create mesh from python data
-    blender_mesh = bpy.data.meshes.new(name + "_mesh")
-    blender_mesh.from_pydata(vertices, [], faces)
-    # Use fake user so Blender will save our mesh in the .blend file
-    blender_mesh.use_fake_user = True
-
-    # Import point data as vertex colors
-    if settings.import_point_data:
-        blender_mesh = generate_vertex_colors(mesh, blender_mesh, settings.list_point_data, time_step)
-
-    return blender_mesh
-
-def generate_vertex_colors(mesh, blender_mesh, list_point_data, time_step):
-    # Prepare the mesh to loop over all its triangles
-    blender_mesh.calc_loop_triangles()
-    vertex_ids = np.array([triangle.vertices for triangle in blender_mesh.loop_triangles]).flatten()
-
-    # Filter field arrays (check if they exist)
-    keys = list_point_data.split(";")
-    filtered_keys = []
-    for raw_key in keys:
-        if raw_key not in mesh.point_data.keys():
-            print("WARNING::generate_vertex_colors: the field array named '" + raw_key + "' do not exist (time step = " + str(time_step) + ")")
-        else:
-            filtered_keys.append(raw_key)
-
-    for field_array in filtered_keys:
-        # Get field array
-        mesh.set_active_scalars(name=field_array, preference="point")
-        colors = mesh.active_scalars
-        # Create new vertex colors array
-        vertex_colors = blender_mesh.vertex_colors.new(name=field_array, do_init=True)
-        # Normalize data
-        colors = remap_array(colors)
-        
-        colors = 1.0 - colors
-        # 1D scalars
-        if len(colors.shape) == 1:
-            data = np.tile(np.array([colors[vertex_ids]]).transpose(), (1, 3))
-        # 2D scalars
-        if len(colors.shape) == 2:
-            data = colors[vertex_ids]
-        
-        ones = np.ones((len(vertex_ids), 1))
-        data = np.hstack((data, ones))
-
-        data = data.flatten()
-        vertex_colors.data.foreach_set("color", data)
-
-    return blender_mesh
-
-# Code taken from the Stop-motion-OBJ addon
-# Link: https://github.com/neverhood311/Stop-motion-OBJ/blob/rename-module-name/src/stop_motion_obj.py
-# 'mesh' is a Blender mesh
-def addMeshToSequence(seqObj, mesh):
-    mesh.inMeshSequence = True
-    mss = seqObj.mesh_sequence_settings
-    # add the new mesh to meshNameArray
-    newMeshNameElement = mss.meshNameArray.add()
-    newMeshNameElement.key = mesh.name_full
-    newMeshNameElement.inMemory = True
-    # increment numMeshes
-    mss.numMeshes = mss.numMeshes + 1
-    # increment numMeshesInMemory
-    mss.numMeshesInMemory = mss.numMeshesInMemory + 1
-    # set initialized to True
-    mss.initialized = True
-    # set loaded to True
-    mss.loaded = True
-
-    return mss.numMeshes - 1
-
-def remap_array(input, out_min=0.0, out_max=1.0):
-    in_min = np.min(input)
-    in_max = np.max(input)
-
-    if out_min == 0.0 and out_max == 0.0:
-        return np.zeros(shape=input.shape)
-    elif out_min == 1.0 and out_max == 1.0:
-        return np.ones(shape=input.shape)
-
-    return out_min + (out_max - out_min) * ((input - in_min) / (in_max - in_min))
