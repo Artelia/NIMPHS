@@ -24,6 +24,12 @@ class TBB_settings(PropertyGroup):
         default=False
     )
 
+    sequence_name: StringProperty(
+        name="Sequence name",
+        description="Name of the sequence object",
+        default="TBB"
+    )
+
     list_point_data: StringProperty(
         name="Point data list",
         description="List of point data to import as vertex color groups. Separate each with a semicolon",

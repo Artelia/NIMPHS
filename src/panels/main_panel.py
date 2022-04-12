@@ -11,6 +11,9 @@ class TBB_PT_MainPanel(Panel):
         layout = self.layout
         settings = context.scene.tbb_settings
 
+        # Check if we need to lock the ui
+        enable_rows = not settings.create_sequence_is_running
+
         row = layout.row()
         row.label(text="Import")
         
@@ -20,7 +23,7 @@ class TBB_PT_MainPanel(Panel):
             box = row.box()
             box.label(text="File: " + settings.file_path)
             row = layout.row()
-            row.enabled = not settings.create_sequence_is_running
+            row.enabled = enable_rows
             row.operator("tbb.import_foam_file", text="Import", icon="IMPORT")
             row.operator("tbb.reload_foam_file", text="Reload", icon="FILE_REFRESH")
         else:
@@ -29,13 +32,13 @@ class TBB_PT_MainPanel(Panel):
         if context.scene.tbb_temp_data.is_ok():
             # Preview section
             row = layout.row()
-            row.enabled = not settings.create_sequence_is_running
+            row.enabled = enable_rows
             row.label(text="Preview")
             row = layout.row()
-            row.enabled = not settings.create_sequence_is_running
+            row.enabled = enable_rows
             row.prop(settings, '["preview_time_step"]', text="Time step")
             row = layout.row()
-            row.enabled = not settings.create_sequence_is_running
+            row.enabled = enable_rows
             row.operator("tbb.preview", text="Preview", icon="HIDE_OFF")
         
         # If the file_path is not empty, it means that there is an error with temp data. Need to reload.

@@ -14,6 +14,7 @@ class TBB_OT_CreateSequence(Operator):
 
     timer = None
     sequence_object_name = ""
+    user_sequence_name = ""
     start_time_step = 0
     current_time_step = 0
     end_time_step = 0
@@ -42,6 +43,7 @@ class TBB_OT_CreateSequence(Operator):
         self.current_time_step = settings["start_time"]
         self.end_time_step = settings["end_time"]
         self.current_frame = context.scene.frame_current
+        self.user_sequence_name = settings.sequence_name
 
         settings.create_sequence_is_running = True
 
@@ -56,7 +58,7 @@ class TBB_OT_CreateSequence(Operator):
             if self.current_time_step <= self.end_time_step:
                 self.chrono_start = time.time()
                 try:
-                    mesh = generate_mesh_for_sequence(context, self.current_time_step)
+                    mesh = generate_mesh_for_sequence(context, self.current_time_step, name=self.user_sequence_name)
                 except Exception as error:
                     print("ERROR::TBB_OT_CreateSequence: " + str(error))
                     self.report({"ERROR"}, "An error occured when creating the sequence, (time_step = " + str(self.current_time_step) + ")")
@@ -66,7 +68,7 @@ class TBB_OT_CreateSequence(Operator):
                 # First time step, create the sequence object
                 if self.current_time_step == self.start_time_step:
                     # Create the blender object (which will contain the sequence)
-                    sequence_object = bpy.data.objects.new("TBB", mesh)
+                    sequence_object = bpy.data.objects.new(self.user_sequence_name, mesh)
                     # The object created from the convert_to_mesh_sequence() method adds "_sequence" at the end of the name
                     self.sequence_object_name = sequence_object.name + "_sequence"
                     context.collection.objects.link(sequence_object)
@@ -195,8 +197,6 @@ def generate_vertex_colors(mesh, blender_mesh, list_point_data, time_step):
 # Code taken from the Stop-motion-OBJ addon
 # Link: https://github.com/neverhood311/Stop-motion-OBJ/blob/rename-module-name/src/stop_motion_obj.py
 # 'mesh' is a Blender mesh
-# TODO: write another version that accepts a list of vertices and triangles
-#       and creates a new Blender mesh
 def addMeshToSequence(seqObj, mesh):
     mesh.inMeshSequence = True
     mss = seqObj.mesh_sequence_settings

@@ -1,3 +1,4 @@
+import bpy
 from bpy.types import Panel
 
 class TBB_PT_CreateSequence(Panel):
@@ -16,21 +17,41 @@ class TBB_PT_CreateSequence(Panel):
         layout = self.layout
         settings = context.scene.tbb_settings
 
-        if settings.file_path != "":
-            row = layout.row()
-            row.enabled = not settings.create_sequence_is_running
-            row.prop(settings, '["start_time"]', text="Start")
-            row = layout.row()
-            row.enabled = not settings.create_sequence_is_running
-            row.prop(settings, '["end_time"]', text="End")
-            row = layout.row()
-            row.enabled = not settings.create_sequence_is_running
-            row.prop(settings, "import_point_data")
+        # Check if we need to lock the ui
+        enable_rows = not settings.create_sequence_is_running
+        snae = sequence_name_already_exist(settings.sequence_name) # snae = sequence_name_already_exist
 
-            if settings.import_point_data:
-                row = layout.row()
-                row.enabled = not settings.create_sequence_is_running
-                row.prop(settings, "list_point_data", text="List")
-                
+        row = layout.row()
+        row.enabled = enable_rows
+        row.prop(settings, "sequence_name", text="Name")
+        row = layout.row()
+        row.enabled = enable_rows
+        row.prop(settings, '["start_time"]', text="Start")
+        row = layout.row()
+        row.enabled = enable_rows
+        row.prop(settings, '["end_time"]', text="End")
+        row = layout.row()
+        row.enabled = enable_rows
+        row.prop(settings, "import_point_data")
+
+        if settings.import_point_data:
             row = layout.row()
-            row.operator("tbb.create_sequence", text="Create sequence", icon="RENDER_ANIMATION")
+            row.enabled = enable_rows
+            row.prop(settings, "list_point_data", text="List")
+            
+        row = layout.row()
+        row.enabled = not snae
+        row.operator("tbb.create_sequence", text="Create sequence", icon="RENDER_ANIMATION")
+
+        # Lock the create_sequence operator if the sequence name is already taken
+        if snae:
+            row = layout.row()
+            row.label(text="Sequence name already taken.", icon="ERROR")
+
+
+def sequence_name_already_exist(user_sequence_name):
+    for object in bpy.data.objects:
+        if user_sequence_name + "_sequence" == object.name:
+            return True
+
+    return False
