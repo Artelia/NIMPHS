@@ -1,5 +1,6 @@
 from bpy.types import Operator
 
+from .utils import clip_mesh
 from .import_foam_file import load_openfoam_file, generate_preview_object
 
 class TBB_OT_Preview(Operator):
@@ -66,13 +67,3 @@ class TBB_OT_Preview(Operator):
         self.report({"INFO"}, "Mesh successfully built: checkout the viewport.")
         
         return {"FINISHED"}
-
-def clip_mesh(clip, mesh):
-    if clip.type == "scalar":
-        scal = clip.scalars_props.scalars
-        val = clip.scalars_props["value"]
-        inv = clip.scalars_props.invert
-        mesh.set_active_scalars(name=scal, preference="point")
-        clipped_mesh = mesh.clip_scalar(scalars=scal, invert=inv, value=val)
-    
-    return clipped_mesh

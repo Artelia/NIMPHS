@@ -1,5 +1,6 @@
-import bpy
 from bpy.types import Panel
+
+from .utils import sequence_name_already_exist
 
 class TBB_PT_CreateSequence(Panel):
     bl_label = "Create sequence"
@@ -47,11 +48,3 @@ class TBB_PT_CreateSequence(Panel):
         if snae:
             row = layout.row()
             row.label(text="Sequence name already taken.", icon="ERROR")
-
-
-def sequence_name_already_exist(user_sequence_name):
-    for object in bpy.data.objects:
-        if user_sequence_name + "_sequence" == object.name:
-            return True
-
-    return False
