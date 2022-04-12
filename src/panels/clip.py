@@ -16,29 +16,34 @@ class TBB_PT_Clip(Panel):
         layout = self.layout
         settings = context.scene.tbb_settings
         clip = context.scene.tbb_clip
-        temp_mesh_data = context.scene.tbb_temp_data.mesh_data
-        # Check if temp mesh data is loaded. If not, do not show clip settings and show a message asking to reload the file.
-        if temp_mesh_data != None:
-            is_vector_scalars = len(temp_mesh_data.get_array(clip.scalars_props.scalars, preference="point").shape) == 2
+        temp_data = context.scene.tbb_temp_data
+        # Check if temp mesh data is loaded. If not, do not show clip settings and show a message asking to hit preview.
+        if temp_data.is_ok() != None and temp_data.time_step == settings["preview_time_step"]:
+            is_vector_scalars = len(temp_data.mesh_data.get_array(clip.scalars_props.scalars, preference="point").shape) == 2
             show_clip_settings = True
         else: show_clip_settings = False
 
-        row = layout.row()
-        row.enabled = not settings.create_sequence_is_running
-        row.prop(clip, "type")
-
-        if show_clip_settings and clip.type == "scalar":
+        if show_clip_settings:
             row = layout.row()
             row.enabled = not settings.create_sequence_is_running
-            row.prop(clip.scalars_props, "scalars")
+            row.prop(clip, "type")
 
-            row = layout.row()
-            row.enabled = not settings.create_sequence_is_running
-            if is_vector_scalars:
-                row.prop(clip.scalars_props, '["vector_value"]', text="Value")
-            else:
-                row.prop(clip.scalars_props, '["value"]', text="Value")
+            if clip.type == "scalar":
+                row = layout.row()
+                row.enabled = not settings.create_sequence_is_running
+                row.prop(clip.scalars_props, "scalars")
 
+                row = layout.row()
+                row.enabled = not settings.create_sequence_is_running
+                if is_vector_scalars:
+                    row.prop(clip.scalars_props, '["vector_value"]', text="Value")
+                else:
+                    row.prop(clip.scalars_props, '["value"]', text="Value")
+
+                row = layout.row()
+                row.enabled = not settings.create_sequence_is_running
+                row.prop(clip.scalars_props, "invert")
+        
+        else:
             row = layout.row()
-            row.enabled = not settings.create_sequence_is_running
-            row.prop(clip.scalars_props, "invert")
+            row.label(text="Error: no data available at this time step. Please reload.", icon="ERROR")

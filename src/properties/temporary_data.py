@@ -2,6 +2,7 @@ class TBB_temporary_data():
     file_reader = None
     file_data = None
     mesh_data = None
+    time_step = 0
 
     def __init__(self, file_reader=None, file_data=None, mesh_data=None):
         self.file_reader = file_reader
@@ -10,6 +11,7 @@ class TBB_temporary_data():
 
     def update(self, new_file_reader, time_step=0, new_file_data=None, new_mesh_data=None):
         self.file_reader = new_file_reader
+        self.time_step = time_step
         try:
             self.file_reader.set_active_time_point(time_step)
         except ValueError as error:

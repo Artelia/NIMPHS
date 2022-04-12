@@ -41,10 +41,10 @@ def update_scalar_value_prop(self, context):
 
     # 2D array
     elif len(values.shape) == 2:
-        new_max = np.max(values)
-        new_min = np.min(values)
-        if new_max < np.max(default) or new_min > np.min(default): default = (new_min, new_min, new_min)
-        prop.update(default=default, min=new_min, soft_min=new_min, max=new_max, soft_max=new_max)
+        new_max = [np.max(values[:, 0]), np.max(values[:, 1]), np.max(values[:, 2])]
+        new_min = [np.min(values[:, 0]), np.min(values[:, 1]), np.min(values[:, 2])]
+        if new_max < default.to_list() or new_min > default.to_list(): default = np.min(new_min)
+        prop.update(default=default, min=np.min(new_min), soft_min=np.min(new_min), max=np.min(new_max), soft_max=np.min(new_max))
 
 
 class TBB_clip_scalar(PropertyGroup):

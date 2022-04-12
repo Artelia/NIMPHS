@@ -38,6 +38,7 @@ class TBB_PT_MainPanel(Panel):
             row.enabled = not settings.create_sequence_is_running
             row.operator("tbb.preview", text="Preview", icon="HIDE_OFF")
         
-        else:
+        # If the file_path is not empty, it means that there is an error with temp data. Need to reload.
+        elif settings.file_path != "":
             row = layout.row()
             row.label(text="Error: please reload the file.", icon="ERROR")
