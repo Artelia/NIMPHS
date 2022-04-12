@@ -1,6 +1,8 @@
 from bpy.types import PropertyGroup
 from bpy.props import BoolProperty, EnumProperty, PointerProperty
 
+import numpy as np
+
 # Dynamically load enum items for the scalars property
 def scalar_items(self, context):
     items = []
@@ -13,25 +15,33 @@ def update_scalar_value_prop(self, context):
     scalars_props = context.scene.tbb_clip.scalars_props
     scalars = scalars_props.scalars
 
+    values = context.scene.tbb_temp_data.mesh_data[scalars]
+    if len(values.shape) == 1: prop_name = "value"
+    elif len(values.shape) == 2: prop_name = "vector_value"
+    else:
+        print("ERROR::update_scalar_value_prop: invalid values shape for data named '" + str(scalars) + "' (shape = " + str(values.shape) + ")")
+        return
+
     try:
-        prop = scalars_props.id_properties_ui("value")
+        prop = scalars_props.id_properties_ui(prop_name)
     except Exception as error:
         print("ERROR::update_scalar_value_prop: " + str(error))
         return
     
-    default = scalars_props["value"]
+    default = scalars_props[prop_name]
 
-    values = context.scene.tbb_temp_data.mesh_data[scalars]
-    # TODO: not working with vector values
-    # Find a way to modify the ui property to accept vector values
-    if len(values.shape) > 1:
-        print("ERROR::update_scalar_value_prop: vector scalars are not managed yet.")
-        return
+    if len(values.shape) == 1:
+        new_max = np.max(values)
+        new_min = np.min(values)
+        if new_max < default or new_min > default: default = new_min
+        prop.update(default=default, min=new_min, soft_min=new_min, max=new_max, soft_max=new_max)
 
-    new_max = max(values)
-    new_min = min(values)
-    if new_max < default or new_min > default: default = new_min
-    prop.update(default=default, min=new_min, soft_min=new_min, max=new_max, soft_max=new_max)
+    elif len(values.shape) == 2:
+        new_max = np.max(values)
+        new_min = np.min(values)
+        if new_max < default or new_min > default: default = new_min
+        prop.update(default=default, min=new_min, soft_min=new_min, max=new_max, soft_max=new_max)
+
 
 class TBB_clip_scalar(PropertyGroup):
     scalars: EnumProperty(
@@ -42,6 +52,8 @@ class TBB_clip_scalar(PropertyGroup):
     )
 
     # value: FloatProperty Dynamically created
+
+    # vector_value: FloatVectorProperty Dynamically created
 
     invert: BoolProperty(
         name="Invert",

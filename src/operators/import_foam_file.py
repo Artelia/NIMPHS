@@ -8,7 +8,6 @@ from pyvista import OpenFOAMReader
 from pathlib import Path
 
 from ..properties.settings import settings_dynamic_properties
-from ..properties.clip import update_scalar_value_prop
 
 class TBB_OT_ImportFoamFile(Operator, ImportHelper):
     bl_idname="tbb.import_foam_file"
@@ -89,6 +88,17 @@ def update_properties_values(settings, clip, file_reader):
             clip.scalars_props,
             "value",
             default=0.5,
+            min=0.0,
+            soft_min=0.0,
+            max=1.0,
+            soft_max=1.0,
+            description="Set the clipping value"
+        )
+    if clip.scalars_props.get("vector_value") == None:
+        rna_idprop_ui_create(
+            clip.scalars_props,
+            "vector_value",
+            default=(0.5, 0.5, 0.5),
             min=0.0,
             soft_min=0.0,
             max=1.0,
