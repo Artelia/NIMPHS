@@ -23,29 +23,69 @@ class TBB_OT_CreateSequence(Operator):
     @classmethod
     def poll(cls, context):
         settings = context.scene.tbb_settings
-        return not settings.create_sequence_is_running and settings["start_time"] < settings["end_time"]
+        if settings.sequence_type == "mesh_sequence":
+            return not settings.create_sequence_is_running and settings["start_time"] < settings["end_time"]
+        elif settings.sequence_type == "on_frame_change":
+            return not settings.create_sequence_is_running and settings["frame_start"] < settings["frame_end"]
+        else: # Lock ui by default
+            return False
 
     def execute(self, context):
         wm = context.window_manager
         settings = context.scene.tbb_settings
-        # Create timer event
-        self.timer = wm.event_timer_add(time_step=1e-3, window=context.window)
-        wm.modal_handler_add(self)
 
-        # Setup prograss bar
-        context.scene.tbb_progress_label = "Create sequence"
-        context.scene.tbb_progress_value = -1.0
+        if settings.sequence_type == "mesh_sequence":
+            # Create timer event
+            self.timer = wm.event_timer_add(time_step=1e-3, window=context.window)
+            wm.modal_handler_add(self)
 
-        # Setup for creating the sequence
-        self.start_time_step = settings["start_time"]
-        self.current_time_step = settings["start_time"]
-        self.end_time_step = settings["end_time"]
-        self.current_frame = context.scene.frame_current
-        self.user_sequence_name = settings.sequence_name
+            # Setup prograss bar
+            context.scene.tbb_progress_label = "Create sequence"
+            context.scene.tbb_progress_value = -1.0
 
-        settings.create_sequence_is_running = True
+            # Setup for creating the sequence
+            self.start_time_step = settings["start_time"]
+            self.current_time_step = settings["start_time"]
+            self.end_time_step = settings["end_time"]
+            self.current_frame = context.scene.frame_current
+            self.user_sequence_name = settings.sequence_name
 
-        return {"RUNNING_MODAL"}
+            settings.create_sequence_is_running = True
+
+            return {"RUNNING_MODAL"}
+
+        elif settings.sequence_type == "on_frame_change":
+            min_frame = context.scene.frame_start
+            max_frame = context.scene.frame_end
+
+            # Check if the selected time frame is ok
+            if settings["frame_start"] > settings["frame_end"]:
+                self.report({"ERROR"}, "Frame start is greater than frame end...")
+                return {"FINISHED"}
+
+            if settings["frame_start"] < min_frame or settings["frame_start"] > max_frame:
+                self.report({"ERROR"}, "Frame start is not in the selected time frame. See 'Output properties' > 'Frame range'")
+                return {"FINISHED"}
+
+            if settings["frame_end"] < min_frame or settings["frame_end"] > max_frame:
+                self.report({"ERROR"}, "Frame end is not in the selected time frame. See 'Output properties' > 'Frame range'")
+                return {"FINISHED"}
+
+            # Set the selected time frame
+            settings.on_frame_change_start = settings["frame_start"]
+            settings.on_frame_change_end = settings["frame_end"]
+
+            # As mentionned here, lock the interface because the custom handler will alter data on frame change
+            # https://docs.blender.org/api/current/bpy.app.handlers.html?highlight=app%20handlers#module-bpy.app.handlers
+            bpy.types.RenderSettings.use_lock_interface = True
+
+            self.report({"INFO"}, "Sequence properly set")
+
+            return {"FINISHED"}
+
+        else:
+            self.report({"ERROR"}, "Unknown sequence type (type = " + str(settings.sequence_type) + ")")
+            return {"FINISHED"}
 
     def modal(self, context, event):
         if event.type == "ESC":

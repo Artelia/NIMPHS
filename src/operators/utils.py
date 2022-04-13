@@ -1,4 +1,5 @@
 import bpy
+from bpy.app.handlers import persistent
 from rna_prop_ui import rna_idprop_ui_create
 
 from pyvista import OpenFOAMReader
@@ -298,3 +299,13 @@ def remap_array(input, out_min=0.0, out_max=1.0):
         return np.ones(shape=input.shape)
 
     return out_min + (out_max - out_min) * ((input - in_min) / (in_max - in_min))
+
+
+
+@persistent
+def update_sequence_on_frame_change(scene):
+    settings = scene.tbb_settings
+
+    if settings.sequence_type == "on_frame_change":
+        if settings.on_frame_change_start >= scene.frame_current and settings.on_frame_change_end <= scene.frame_current:
+            print("YES")

@@ -1,7 +1,7 @@
 from bpy.types import PropertyGroup
-from bpy.props import StringProperty, BoolProperty, EnumProperty
+from bpy.props import StringProperty, BoolProperty, EnumProperty, IntProperty
 
-from .utils import scalar_items, update_sequence_type
+from .utils import scalar_items
 
 class TBB_settings(PropertyGroup):
     file_path: StringProperty(
@@ -27,8 +27,7 @@ class TBB_settings(PropertyGroup):
             ("on_frame_change", "On frame change", "Make a sequence by changing the mesh on each frame change (it only keeps the last created mesh, good option for large meshes)")
         ],
         name="Sequence type",
-        description="Select a sequence type",
-        update=update_sequence_type
+        description="Select a sequence type"
     )
 
     # frame_start: IntProperty dynamically created
