@@ -45,7 +45,8 @@ panels = (
 properties = (
     TBB_settings,
     TBB_clip_scalar,
-    TBB_clip
+    TBB_clip,
+    TBB_sequence
 )
 
 classes = [operators, panels, properties]

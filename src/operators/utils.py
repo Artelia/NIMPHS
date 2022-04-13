@@ -131,9 +131,9 @@ def update_mesh_sequence_frame_settings(settings, scene):
         rna_idprop_ui_create(
             settings,
             "frame_start",
-            default=0,
-            min=0,
-            soft_min=0,
+            default=1,
+            min=1,
+            soft_min=1,
             max=250,
             soft_max=250,
             description="Starting point of the sequence"
@@ -150,9 +150,9 @@ def update_mesh_sequence_frame_settings(settings, scene):
         rna_idprop_ui_create(
             settings,
             "frame_end",
-            default=0,
-            min=0,
-            soft_min=0,
+            default=1,
+            min=1,
+            soft_min=1,
             max=250,
             soft_max=250,
             description="Ending point of the sequence",
@@ -304,8 +304,7 @@ def remap_array(input, out_min=0.0, out_max=1.0):
 
 @persistent
 def update_sequence_on_frame_change(scene):
-    settings = scene.tbb_settings
-
-    if settings.sequence_type == "on_frame_change":
-        if settings.on_frame_change_start >= scene.frame_current and settings.on_frame_change_end <= scene.frame_current:
-            print("YES")
+    for obj in scene.objects:
+        if obj.tbb_sequence.is_tbb_sequence:
+            if obj.tbb_sequence.update_on_frame_change:
+                print("YES")

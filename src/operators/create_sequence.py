@@ -33,6 +33,7 @@ class TBB_OT_CreateSequence(Operator):
     def execute(self, context):
         wm = context.window_manager
         settings = context.scene.tbb_settings
+        clip = context.scene.tbb_clip
 
         if settings.sequence_type == "mesh_sequence":
             # Create timer event
@@ -71,9 +72,26 @@ class TBB_OT_CreateSequence(Operator):
                 self.report({"ERROR"}, "Frame end is not in the selected time frame. See 'Output properties' > 'Frame range'")
                 return {"FINISHED"}
 
+            # Create an empty object
+            obj = bpy.data.objects.new(settings.sequence_name + "_sequence", None)
+            obj.tbb_sequence.is_tbb_sequence = True
+            obj.tbb_sequence.update_on_frame_change = True
+            obj.tbb_sequence.file_path = settings.file_path
+
             # Set the selected time frame
-            settings.on_frame_change_start = settings["frame_start"]
-            settings.on_frame_change_end = settings["frame_end"]
+            obj.tbb_sequence.frame_start = settings["frame_start"]
+            obj.tbb_sequence.frame_end = settings["frame_end"]
+            
+            # Set clip settings
+            obj.tbb_sequence.clip_type = clip.type
+            obj.tbb_sequence.clip_scalars = clip.scalars_props.scalars
+            obj.tbb_sequence.invert = clip.scalars_props.invert
+            obj.tbb_sequence.clip_value = clip.scalars_props["value"]
+            obj.tbb_sequence.clip_vactor_value = clip.scalars_props["vector_value"]
+            obj.tbb_sequence.import_point_data = settings.import_point_data
+            obj.tbb_sequence.list_point_data = settings.list_point_data
+
+            context.collection.objects.link(obj)
 
             # As mentionned here, lock the interface because the custom handler will alter data on frame change
             # https://docs.blender.org/api/current/bpy.app.handlers.html?highlight=app%20handlers#module-bpy.app.handlers
