@@ -8,8 +8,7 @@ from bpy.props import (
     FloatProperty
 )
 
-def scalar_items_sequence(self, context):
-    pass
+from .utils import scalar_items_sequence
 
 class TBB_sequence(PropertyGroup):
     is_tbb_sequence: BoolProperty(

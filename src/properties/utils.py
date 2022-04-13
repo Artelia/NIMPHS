@@ -1,4 +1,5 @@
 import numpy as np
+from pyvista import OpenFOAMReader
 
 # Dynamically load enum items for the scalars property
 def scalar_items(self, context):
@@ -6,6 +7,31 @@ def scalar_items(self, context):
     if context.scene.tbb_temp_data.mesh_data != None:
         for key in context.scene.tbb_temp_data.mesh_data.point_data.keys():
             items.append((key, key, "Undocumented"))
+    return items
+
+
+
+def scalar_items_sequence(self, context):
+    items = []
+
+    # If the saved list in empty, recreate it
+    if self.clip_scalars_list == "":
+        file_reader = OpenFOAMReader(self.file_path)
+        file_reader.set_active_time_point(0)
+        data = file_reader.read()
+        mesh = data["internalMesh"]
+
+        point_data_list = ""
+        for key in mesh.point_data.keys():
+            point_data_list += key + ";"
+
+        self.clip_scalars_list = point_data_list
+
+    # Read from the saved list
+    for scalar in self.clip_scalars_list.split(";"):
+        if scalar != "":
+            items.append((scalar, scalar, "Undocumented"))
+
     return items
 
 
