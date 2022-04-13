@@ -35,9 +35,9 @@ class TBB_sequence(PropertyGroup):
         default=-1
     )
 
-    frame_end: IntProperty(
-        name="Frame end",
-        description="Ending frame for the 'on frame change' sequence type",
+    anim_length: IntProperty(
+        name="Animation length",
+        description="Length of the animation",
         default=-1
     )
 

@@ -91,9 +91,9 @@ def update_properties_values(context, file_reader):
     clip = context.scene.tbb_clip
 
     # Settings
-    max_time_step =  file_reader.number_time_points - 1
-    update_settings_props(settings, max_time_step)
-    update_mesh_sequence_frame_settings(settings, context.scene)
+    max_time_step =  file_reader.number_time_points
+    update_settings_props(settings, max_time_step - 1)
+    update_mesh_sequence_frame_settings(settings, context.scene, max_time_step)
 
     # Scalar value prop
     # TODO: find a better way to create these properties
@@ -122,9 +122,9 @@ def update_properties_values(context, file_reader):
 
 
 
-def update_mesh_sequence_frame_settings(settings, scene):
+def update_mesh_sequence_frame_settings(settings, scene, max_length):
     frame_start_prop = settings.get("frame_start")
-    frame_end_prop = settings.get("frame_end")
+    anim_length_prop = settings.get("anim_length")
 
     # Create the properties if they do not exist
     if frame_start_prop == None:
@@ -146,24 +146,23 @@ def update_mesh_sequence_frame_settings(settings, scene):
         if new_min > default or new_max < default: default = new_min
         prop.update(default=default, min=new_min, soft_min=new_min, max=new_max, soft_max=new_max)
 
-    if frame_end_prop == None:
+    if anim_length_prop == None:
         rna_idprop_ui_create(
             settings,
-            "frame_end",
+            "anim_length",
             default=1,
             min=1,
             soft_min=1,
-            max=250,
-            soft_max=250,
-            description="Ending point of the sequence",
+            max=max_length,
+            soft_max=max_length,
+            description="Length of the animation",
         )
     else:
-        prop = settings.id_properties_ui("frame_end")
-        new_min = scene.frame_start
-        new_max = scene.frame_end
-        default = settings["frame_end"]
+        prop = settings.id_properties_ui("anim_length")
+        new_max = max_length
+        default = settings["anim_length"]
         if new_min > default or new_max < default: default = new_min
-        prop.update(default=default, min=new_min, soft_min=new_min, max=new_max, soft_max=new_max)
+        prop.update(default=default, max=new_max, soft_max=new_max)
 
 
 
@@ -307,23 +306,28 @@ def remap_array(input, out_min=0.0, out_max=1.0):
 
 @persistent
 def update_sequence_on_frame_change(scene):
+    frame = scene.frame_current
+
     for obj in scene.objects:
         if obj.tbb_sequence.is_tbb_sequence:
             if obj.tbb_sequence.update_on_frame_change:
                 settings = obj.tbb_sequence
-                if scene.frame_current >= settings.frame_start and scene.frame_current <= settings.frame_end:
+                time_point = frame - settings.frame_start
+
+                if time_point >= 0 and time_point < settings.anim_length:
                     update_sequence_mesh(obj, settings, scene.frame_current)
 
 
 
-def update_sequence_mesh(obj, settings, frame):
-    # Read file at the current time point
+def update_sequence_mesh(obj, settings, time_point):
     file_reader = OpenFOAMReader(settings.file_path)
-    time_point = frame - settings.frame_start
+    
+    # Check if time point is ok
     if time_point >= file_reader.number_time_points:
         print("WARNING::update_sequence_mesh: time point '" + str(time_point) + "' does not exist. Available time points: " + str(file_reader.number_time_points))
         return
 
+    # Read file at the current time point
     file_reader.set_active_time_point(time_point)
     data = file_reader.read()
     raw_mesh = data["internalMesh"]

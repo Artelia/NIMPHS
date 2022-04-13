@@ -32,7 +32,7 @@ class TBB_settings(PropertyGroup):
 
     # frame_start: IntProperty dynamically created
 
-    # frame_end: IntProperty dynamically created
+    # anim_length: IntProperty dynamically created
 
     preview_point_data: EnumProperty(
         items=scalar_items,

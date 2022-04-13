@@ -42,7 +42,7 @@ class TBB_PT_CreateSequence(Panel):
             row.prop(settings, '["frame_start"]', text="Frame start")
             row = layout.row()
             row.enabled = enable_rows
-            row.prop(settings, '["frame_end"]', text="Frame end")
+            row.prop(settings, '["anim_length"]', text="Length")
         else:
             row = layout.row()
             row.label(text="Error: unknown sequence type...", icon="ERROR")

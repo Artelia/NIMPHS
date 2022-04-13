@@ -26,7 +26,7 @@ class TBB_OT_CreateSequence(Operator):
         if settings.sequence_type == "mesh_sequence":
             return not settings.create_sequence_is_running and settings["start_time"] < settings["end_time"]
         elif settings.sequence_type == "on_frame_change":
-            return not settings.create_sequence_is_running and settings["frame_start"] < settings["frame_end"]
+            return not settings.create_sequence_is_running
         else: # Lock ui by default
             return False
 
@@ -60,16 +60,8 @@ class TBB_OT_CreateSequence(Operator):
             max_frame = context.scene.frame_end
 
             # Check if the selected time frame is ok
-            if settings["frame_start"] > settings["frame_end"]:
-                self.report({"ERROR"}, "Frame start is greater than frame end...")
-                return {"FINISHED"}
-
             if settings["frame_start"] < min_frame or settings["frame_start"] > max_frame:
                 self.report({"ERROR"}, "Frame start is not in the selected time frame. See 'Output properties' > 'Frame range'")
-                return {"FINISHED"}
-
-            if settings["frame_end"] < min_frame or settings["frame_end"] > max_frame:
-                self.report({"ERROR"}, "Frame end is not in the selected time frame. See 'Output properties' > 'Frame range'")
                 return {"FINISHED"}
 
             # Create an empty object
@@ -81,7 +73,7 @@ class TBB_OT_CreateSequence(Operator):
 
             # Set the selected time frame
             obj.tbb_sequence.frame_start = settings["frame_start"]
-            obj.tbb_sequence.frame_end = settings["frame_end"]
+            obj.tbb_sequence.anim_length = settings["anim_length"]
             
             # Set clip settings
             obj.tbb_sequence.clip_type = clip.type
