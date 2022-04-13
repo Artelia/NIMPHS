@@ -23,6 +23,12 @@ class TBB_sequence(PropertyGroup):
         default=False
     )
 
+    name: StringProperty(
+        name="Name",
+        description="Name of the sequence",
+        default="TBB_sequence"
+    )
+
     frame_start: IntProperty(
         name="Frame start",
         description="Starting frame for the 'on frame change' sequence type",

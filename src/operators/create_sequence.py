@@ -73,7 +73,8 @@ class TBB_OT_CreateSequence(Operator):
                 return {"FINISHED"}
 
             # Create an empty object
-            obj = bpy.data.objects.new(settings.sequence_name + "_sequence", None)
+            blender_mesh = bpy.data.meshes.new(name=settings.sequence_name + "_mesh")
+            obj = bpy.data.objects.new(settings.sequence_name + "_sequence", blender_mesh)
             obj.tbb_sequence.is_tbb_sequence = True
             obj.tbb_sequence.update_on_frame_change = True
             obj.tbb_sequence.file_path = settings.file_path

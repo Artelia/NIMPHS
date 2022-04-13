@@ -310,4 +310,50 @@ def update_sequence_on_frame_change(scene):
     for obj in scene.objects:
         if obj.tbb_sequence.is_tbb_sequence:
             if obj.tbb_sequence.update_on_frame_change:
-                print("YES")
+                settings = obj.tbb_sequence
+                if scene.frame_current >= settings.frame_start and scene.frame_current <= settings.frame_end:
+                    update_sequence_mesh(obj, settings, scene.frame_current)
+
+
+
+def update_sequence_mesh(obj, settings, frame):
+    # Read file at the current time point
+    file_reader = OpenFOAMReader(settings.file_path)
+    time_point = frame - settings.frame_start
+    if time_point >= file_reader.number_time_points:
+        print("WARNING::update_sequence_mesh: time point '" + str(time_point) + "' does not exist. Available time points: " + str(file_reader.number_time_points))
+        return
+
+    file_reader.set_active_time_point(time_point)
+    data = file_reader.read()
+    raw_mesh = data["internalMesh"]
+    
+    # Prepare the mesh for Blender
+    if settings.clip_type == "scalar":
+        mesh = clip_scalars_mesh(raw_mesh, settings.clip_scalars.split("@")[0], settings.clip_value, settings.clip_invert)
+        mesh = mesh.extract_surface()
+    else:
+        mesh = raw_mesh.extract_surface()
+
+    mesh = mesh.triangulate()
+    mesh = mesh.compute_normals(consistent_normals=False, split_vertices=True)
+
+    # Prepare data to create the mesh into blender
+    vertices = mesh.points
+    faces = mesh.faces.reshape((-1, 4))[:, 1:4]
+
+    blender_mesh = obj.data
+    blender_mesh.clear_geometry()
+    blender_mesh.from_pydata(vertices, [], faces)
+
+    # Import point data as vertex colors
+    if settings.import_point_data:
+        blender_mesh = generate_vertex_colors(mesh, blender_mesh, settings.list_point_data, time_point)
+
+
+
+def clip_scalars_mesh(mesh, scalars, value, invert):
+    mesh.set_active_scalars(name=scalars, preference="point")
+    clipped_mesh = mesh.clip_scalar(scalars=scalars, invert=invert, value=value)
+    
+    return clipped_mesh
