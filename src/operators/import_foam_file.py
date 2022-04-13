@@ -16,7 +16,6 @@ class TBB_OT_ImportFoamFile(Operator, ImportHelper):
 
     def execute(self, context):
         settings = context.scene.tbb_settings
-        clip = context.scene.tbb_clip
         success, file_reader = load_openfoam_file(self.filepath)
         if not success:
             self.report({"ERROR"}, "The choosen file does not exist")
@@ -25,7 +24,7 @@ class TBB_OT_ImportFoamFile(Operator, ImportHelper):
         settings.file_path = self.filepath
 
         # Update properties values
-        update_properties_values(settings, clip, file_reader)
+        update_properties_values(context, file_reader)
 
         # Update temp data
         context.scene.tbb_temp_data.update(file_reader, settings["preview_time_step"])
@@ -44,6 +43,8 @@ class TBB_OT_ImportFoamFile(Operator, ImportHelper):
 
         return {"FINISHED"}
 
+
+
 class TBB_OT_ReloadFoamFile(Operator):
     bl_idname="tbb.reload_foam_file"
     bl_label="Reload"
@@ -51,7 +52,6 @@ class TBB_OT_ReloadFoamFile(Operator):
 
     def execute(self, context):
         settings = context.scene.tbb_settings
-        clip = context.scene.tbb_clip
         if settings.file_path == "":
             self.report({"ERROR"}, "Please select a file first")
             return {"FINISHED"}
@@ -62,10 +62,11 @@ class TBB_OT_ReloadFoamFile(Operator):
             return {"FINISHED"}
 
         # Update properties values
-        update_properties_values(settings, clip, file_reader)
+        update_properties_values(context, file_reader)
 
         # Update temp data
         context.scene.tbb_temp_data.update(file_reader, settings["preview_time_step"])
+
         settings.create_sequence_is_running = False
 
         self.report({"INFO"}, "Reload successfull")

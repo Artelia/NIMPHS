@@ -44,3 +44,8 @@ def update_scalar_value_prop(self, context):
         new_min = [np.min(values[:, 0]), np.min(values[:, 1]), np.min(values[:, 2])]
         if new_max < default.to_list() or new_min > default.to_list(): default = np.min(new_min)
         prop.update(default=default, min=np.min(new_min), soft_min=np.min(new_min), max=np.min(new_max), soft_max=np.min(new_max))
+
+
+
+def update_sequence_type(self, context):
+    pass

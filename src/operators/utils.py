@@ -85,13 +85,17 @@ def create_preview_material(object, scalar_to_preview, name="TBB_preview_materia
 
 
 
+def update_properties_values(context, file_reader):
+    settings = context.scene.tbb_settings
+    clip = context.scene.tbb_clip
 
-def update_properties_values(settings, clip, file_reader):
     # Settings
     max_time_step =  file_reader.number_time_points - 1
     update_settings_props(settings, max_time_step)
+    update_mesh_sequence_frame_settings(settings, context.scene)
+
     # Scalar value prop
-    # TODO: find a better way to create this property
+    # TODO: find a better way to create these properties
     if clip.scalars_props.get("value") == None:
         rna_idprop_ui_create(
             clip.scalars_props,
@@ -114,6 +118,51 @@ def update_properties_values(settings, clip, file_reader):
             soft_max=1.0,
             description="Set the clipping value"
         )
+
+
+
+def update_mesh_sequence_frame_settings(settings, scene):
+    frame_start_prop = settings.get("frame_start")
+    frame_end_prop = settings.get("frame_end")
+
+    # Create the properties if they do not exist
+    if frame_start_prop == None:
+        rna_idprop_ui_create(
+            settings,
+            "frame_start",
+            default=0,
+            min=0,
+            soft_min=0,
+            max=250,
+            soft_max=250,
+            description="Starting point of the sequence"
+        )
+    else:
+        prop = settings.id_properties_ui("frame_start")
+        new_min = scene.frame_start
+        new_max = scene.frame_end
+        default = settings["frame_start"]
+        if new_min > default or new_max < default: default = new_min
+        prop.update(default=default, min=new_min, soft_min=new_min, max=new_max, soft_max=new_max)
+
+    if frame_end_prop == None:
+        rna_idprop_ui_create(
+            settings,
+            "frame_end",
+            default=0,
+            min=0,
+            soft_min=0,
+            max=250,
+            soft_max=250,
+            description="Ending point of the sequence",
+        )
+    else:
+        prop = settings.id_properties_ui("frame_end")
+        new_min = scene.frame_start
+        new_max = scene.frame_end
+        default = settings["frame_end"]
+        if new_min > default or new_max < default: default = new_min
+        prop.update(default=default, min=new_min, soft_min=new_min, max=new_max, soft_max=new_max)
 
 
 

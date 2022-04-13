@@ -27,10 +27,26 @@ class TBB_PT_CreateSequence(Panel):
         row.prop(settings, "sequence_name", text="Name")
         row = layout.row()
         row.enabled = enable_rows
-        row.prop(settings, '["start_time"]', text="Start")
-        row = layout.row()
-        row.enabled = enable_rows
-        row.prop(settings, '["end_time"]', text="End")
+        row.prop(settings, "sequence_type", text="Type")
+
+        if settings.sequence_type == "mesh_sequence":
+            row = layout.row()
+            row.enabled = enable_rows
+            row.prop(settings, '["start_time"]', text="Start")
+            row = layout.row()
+            row.enabled = enable_rows
+            row.prop(settings, '["end_time"]', text="End")
+        elif settings.sequence_type == "on_frame_change":
+            row = layout.row()
+            row.enabled = enable_rows
+            row.prop(settings, '["frame_start"]', text="Frame start")
+            row = layout.row()
+            row.enabled = enable_rows
+            row.prop(settings, '["frame_end"]', text="Frame end")
+        else:
+            row = layout.row()
+            row.label(text="Error: unknown sequence type...", icon="ERROR")
+
         row = layout.row()
         row.enabled = enable_rows
         row.prop(settings, "import_point_data")

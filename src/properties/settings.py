@@ -1,7 +1,7 @@
 from bpy.types import PropertyGroup
 from bpy.props import StringProperty, BoolProperty, EnumProperty
 
-from .utils import scalar_items
+from .utils import scalar_items, update_sequence_type
 
 class TBB_settings(PropertyGroup):
     file_path: StringProperty(
@@ -11,6 +11,7 @@ class TBB_settings(PropertyGroup):
 
     create_sequence_is_running: BoolProperty(
         name="Create sequence is running",
+        description="Describes the state of the create sequence operator",
         default=False
     )
 
@@ -19,6 +20,20 @@ class TBB_settings(PropertyGroup):
     # start_time: IntProperty dynamically created
 
     # end_time: IntProperty dynamically created
+
+    sequence_type: EnumProperty(
+        items=[
+            ("mesh_sequence", "Mesh sequence", "Make a sequence by creating a mesh for each time step (good option for small meshes)"),
+            ("on_frame_change", "On frame change", "Make a sequence by changing the mesh on each frame change (it only keeps the last created mesh, good option for large meshes)")
+        ],
+        name="Sequence type",
+        description="Select a sequence type",
+        update=update_sequence_type
+    )
+
+    # frame_start: IntProperty dynamically created
+
+    # frame_end: IntProperty dynamically created
 
     preview_point_data: EnumProperty(
         items=scalar_items,
