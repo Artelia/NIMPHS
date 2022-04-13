@@ -65,7 +65,7 @@ class TBB_OT_Preview(Operator):
         temp_data.update(file_reader, settings["preview_time_step"], data, raw_mesh)
 
         try:
-            scalars_to_preview = str(settings.preview_point_data) # Field array name
+            scalars_to_preview = str(settings.preview_point_data.split("@")[0]) # Field array name
             blender_mesh, obj, preview_mesh = generate_preview_object(preview_mesh, context)
             blender_mesh = generate_vertex_colors(preview_mesh, blender_mesh, scalars_to_preview, settings["preview_time_step"])
             create_preview_material(obj, scalars_to_preview)

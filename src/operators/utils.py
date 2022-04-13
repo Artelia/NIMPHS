@@ -21,7 +21,7 @@ def load_openfoam_file(file_path):
 
 def clip_mesh(clip, mesh):
     if clip.type == "scalar":
-        scal = clip.scalars_props.scalars
+        scal = clip.scalars_props.scalars.split("@")[0]
         val = clip.scalars_props["value"]
         inv = clip.scalars_props.invert
         mesh.set_active_scalars(name=scal, preference="point")
@@ -235,10 +235,11 @@ def generate_vertex_colors(mesh, blender_mesh, list_point_data, time_step):
     keys = list_point_data.split(";")
     filtered_keys = []
     for raw_key in keys:
-        if raw_key not in mesh.point_data.keys():
-            print("WARNING::generate_vertex_colors: the field array named '" + raw_key + "' do not exist (time step = " + str(time_step) + ")")
+        key = raw_key.split("@")[0]
+        if key not in mesh.point_data.keys():
+            print("WARNING::generate_vertex_colors: the field array named '" + key + "' do not exist (time step = " + str(time_step) + ")")
         else:
-            filtered_keys.append(raw_key)
+            filtered_keys.append(key)
 
     for field_array in filtered_keys:
         # Get field array
@@ -251,11 +252,13 @@ def generate_vertex_colors(mesh, blender_mesh, list_point_data, time_step):
         colors = 1.0 - colors
         # 1D scalars
         if len(colors.shape) == 1:
+            # Copy values to the B and G color channels
             data = np.tile(np.array([colors[vertex_ids]]).transpose(), (1, 3))
         # 2D scalars
         if len(colors.shape) == 2:
             data = colors[vertex_ids]
         
+        # Add a one for the 'alpha' color channel
         ones = np.ones((len(vertex_ids), 1))
         data = np.hstack((data, ones))
 
@@ -293,7 +296,7 @@ def remap_array(input, out_min=0.0, out_max=1.0):
     in_min = np.min(input)
     in_max = np.max(input)
 
-    if out_min == 0.0 and out_max == 0.0:
+    if out_min < np.finfo(np.float).eps and out_max < np.finfo(np.float).eps:
         return np.zeros(shape=input.shape)
     elif out_min == 1.0 and out_max == 1.0:
         return np.ones(shape=input.shape)

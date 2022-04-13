@@ -52,7 +52,7 @@ def scalar_items_sequence(self, context):
 
 def update_scalar_value_prop(self, context):
     scalars_props = context.scene.tbb_clip.scalars_props
-    scalars = scalars_props.scalars
+    scalars = scalars_props.scalars.split("@")[0]
 
     values = context.scene.tbb_temp_data.mesh_data[scalars]
     # 1D array
