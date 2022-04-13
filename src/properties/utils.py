@@ -3,10 +3,17 @@ from pyvista import OpenFOAMReader
 
 # Dynamically load enum items for the scalars property
 def scalar_items(self, context):
+    temp_data = context.scene.tbb_temp_data
     items = []
-    if context.scene.tbb_temp_data.mesh_data != None:
-        for key in context.scene.tbb_temp_data.mesh_data.point_data.keys():
-            items.append((key, key, "Undocumented"))
+    if temp_data.mesh_data != None:
+        for key in temp_data.mesh_data.point_data.keys():
+            value_type = len(temp_data.mesh_data.get_array(name=key, preference="point").shape)
+            # Vector value
+            if value_type == 2:
+                items.append((key + "@vector_value", key, "Undocumented"))
+            # Normal value
+            elif value_type == 1:
+                items.append((key + "@value", key, "Undocumented"))
     return items
 
 
@@ -23,14 +30,21 @@ def scalar_items_sequence(self, context):
 
         point_data_list = ""
         for key in mesh.point_data.keys():
-            point_data_list += key + ";"
+            value_type = len(mesh.get_array(name=key, preference="point").shape)
+            # Vector value
+            if value_type == 2:
+                point_data_list += key + "@vector_value" + ";"
+            # Normal value
+            elif value_type == 1:
+                point_data_list += key + "@value" + ";"
 
         self.clip_scalars_list = point_data_list
 
     # Read from the saved list
     for scalar in self.clip_scalars_list.split(";"):
         if scalar != "":
-            items.append((scalar, scalar, "Undocumented"))
+            name = scalar.split("@")[0]
+            items.append((scalar, name, "Undocumented"))
 
     return items
 

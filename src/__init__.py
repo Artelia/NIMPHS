@@ -11,6 +11,8 @@ from .panels.main_panel import TBB_PT_MainPanel
 from .panels.clip import TBB_PT_Clip
 from .panels.create_sequence import TBB_PT_CreateSequence
 from .panels.progress_bar_create_sequence import register_custom_progress_bar
+from .panels.sequence import TBB_PT_Sequence
+from .panels.sequence_clip import TBB_PT_SequenceClip
 from .properties.settings import TBB_settings
 from .properties.clip import TBB_clip_scalar, TBB_clip
 from .properties.temporary_data import TBB_temporary_data
@@ -39,7 +41,9 @@ operators = (
 panels = (
     TBB_PT_MainPanel,
     TBB_PT_Clip,
-    TBB_PT_CreateSequence
+    TBB_PT_CreateSequence,
+    TBB_PT_Sequence,
+    TBB_PT_SequenceClip
 )
 
 properties = (

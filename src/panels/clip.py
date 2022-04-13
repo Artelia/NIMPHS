@@ -17,11 +17,8 @@ class TBB_PT_Clip(Panel):
         settings = context.scene.tbb_settings
         clip = context.scene.tbb_clip
         temp_data = context.scene.tbb_temp_data
-        
-        # Check if temp mesh data is loaded. If not, do not show clip settings and show a message asking to hit preview.
-        if temp_data.is_ok():
-            is_vector_scalars = len(temp_data.mesh_data.get_array(clip.scalars_props.scalars, preference="point").shape) == 2
 
+        # Check if temp mesh data is loaded. If not, do not show clip settings and show a message asking to hit preview.
         if temp_data.time_step != settings["preview_time_step"]: lock_clip_settings = True
         else: lock_clip_settings = False
 
@@ -39,6 +36,8 @@ class TBB_PT_Clip(Panel):
 
             row = layout.row()
             row.enabled = enable_rows
+
+            is_vector_scalars = clip.scalars_props.scalars.split("@")[1] == "vector_value"
             if is_vector_scalars:
                 row.prop(clip.scalars_props, '["vector_value"]', text="Value")
             else:
