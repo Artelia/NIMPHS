@@ -5,6 +5,7 @@ from rna_prop_ui import rna_idprop_ui_create
 from pyvista import OpenFOAMReader
 from pathlib import Path
 import numpy as np
+import time
 
 from ..properties.settings import settings_dynamic_properties
 
@@ -234,11 +235,12 @@ def generate_vertex_colors(mesh, blender_mesh, list_point_data, time_step):
     keys = list_point_data.split(";")
     filtered_keys = []
     for raw_key in keys:
-        key = raw_key.split("@")[0]
-        if key not in mesh.point_data.keys():
-            print("WARNING::generate_vertex_colors: the field array named '" + key + "' do not exist (time step = " + str(time_step) + ")")
-        else:
-            filtered_keys.append(key)
+        if raw_key != "":
+            key = raw_key.split("@")[0]
+            if key not in mesh.point_data.keys():
+                print("WARNING::generate_vertex_colors: the field array named '" + key + "' do not exist (time step = " + str(time_step) + ")")
+            else:
+                filtered_keys.append(key)
 
     for field_array in filtered_keys:
         # Get field array
@@ -315,7 +317,9 @@ def update_sequence_on_frame_change(scene):
                 time_point = frame - settings.frame_start
 
                 if time_point >= 0 and time_point < settings.anim_length:
-                    update_sequence_mesh(obj, settings, scene.frame_current)
+                    start = time.time()
+                    update_sequence_mesh(obj, settings, time_point)
+                    print("Update::" + settings.name + " : " + "{:.4f}".format(time.time() - start) + "s")
 
 
 

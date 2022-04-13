@@ -23,7 +23,7 @@ class TBB_PT_Sequence(Panel):
             row = layout.row()
             row.prop(tbb_sequence, "frame_start", text="Frame start")
             row = layout.row()
-            row.prop(tbb_sequence, "frame_end", text="Frame end")
+            row.prop(tbb_sequence, "anim_length", text="Length")
 
             row = layout.row()
             row.prop(tbb_sequence, "import_point_data", text="Import point data")
