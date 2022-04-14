@@ -13,9 +13,9 @@ class TBB_OT_CreateSequence(Operator):
     timer = None
     sequence_object_name = ""
     user_sequence_name = ""
-    start_time_step = 0
-    current_time_step = 0
-    end_time_step = 0
+    start_time_point = 0
+    current_time_point = 0
+    end_time_point = 0
     current_frame = 0
 
     chrono_start = 0
@@ -45,9 +45,9 @@ class TBB_OT_CreateSequence(Operator):
             context.scene.tbb_progress_value = -1.0
 
             # Setup for creating the sequence
-            self.start_time_step = settings["start_time"]
-            self.current_time_step = settings["start_time"]
-            self.end_time_step = settings["end_time"]
+            self.start_time_point = settings["start_time"]
+            self.current_time_point = settings["start_time"]
+            self.end_time_point = settings["end_time"]
             self.current_frame = context.scene.frame_current
             self.user_sequence_name = settings.sequence_name
 
@@ -114,18 +114,18 @@ class TBB_OT_CreateSequence(Operator):
             return {"CANCELLED"}
 
         if event.type == "TIMER":
-            if self.current_time_step <= self.end_time_step:
+            if self.current_time_point <= self.end_time_point:
                 self.chrono_start = time.time() 
                 try:
-                    mesh = generate_mesh_for_sequence(context, self.current_time_step, name=self.user_sequence_name)
+                    mesh = generate_mesh_for_sequence(context, self.current_time_point, name=self.user_sequence_name)
                 except Exception as error:
                     print("ERROR::TBB_OT_CreateSequence: " + str(error))
-                    self.report({"ERROR"}, "An error occured creating the sequence, (time_step = " + str(self.current_time_step) + ")")
+                    self.report({"ERROR"}, "An error occured creating the sequence, (time_step = " + str(self.current_time_point) + ")")
                     self.stop(context)
                     return {"CANCELLED"}
 
                 # First time step, create the sequence object
-                if self.current_time_step == self.start_time_step:
+                if self.current_time_point == self.start_time_point:
                     # Create the blender object (which will contain the sequence)
                     sequence_object = bpy.data.objects.new(self.user_sequence_name, mesh)
                     # The object created from the convert_to_mesh_sequence() method adds "_sequence" at the end of the name
@@ -156,15 +156,15 @@ class TBB_OT_CreateSequence(Operator):
                     newKeyAtFrame = next((keyframe for keyframe in meshIdxCurve.keyframe_points if keyframe.co.x == context.scene.frame_current), None)
                     newKeyAtFrame.interpolation = 'CONSTANT'
 
-                print("Create sequence (time_step = " + str(self.current_time_step) + "), elapsed time = " + "{:.4f}".format(time.time() - self.chrono_start) + "s")
+                print("CreateSequence::openfoam: " + "{:.4f}".format(time.time() - self.chrono_start) + "s, " + "time_point = " + str(self.current_time_point))
 
             else:
                 self.stop(context)
                 self.report({"INFO"}, "Create sequence finished")
                 return {"FINISHED"}
 
-            context.scene.tbb_progress_value = self.current_time_step / (self.end_time_step - self.start_time_step) * 100
-            self.current_time_step += 1
+            context.scene.tbb_progress_value = self.current_time_point / (self.end_time_point - self.start_time_point) * 100
+            self.current_time_point += 1
             self.current_frame += 1
 
         return {"PASS_THROUGH"}

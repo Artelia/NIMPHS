@@ -1,5 +1,7 @@
 from bpy.types import Operator
 
+import time
+
 from .utils import (
     clip_mesh,
     load_openfoam_file,
@@ -22,6 +24,7 @@ class TBB_OT_Preview(Operator):
             self.report({"ERROR"}, "Please import a file first.")
             return {"FINISHED"}
 
+        start = time.time()
         # TODO: changing time point does not work if we do not load the file again... We would like to use the file_reader from TBB_temp_data.
         success, file_reader = load_openfoam_file(settings.file_path)
         if not success:
@@ -74,6 +77,7 @@ class TBB_OT_Preview(Operator):
             self.report({"ERROR"}, "Something went wrong building the mesh")
             return {"FINISHED"}
 
+        print("Preview::openfoam: " + "{:.4f}".format(time.time() - start) + "s")
         self.report({"INFO"}, "Mesh successfully built: checkout the viewport.")
         
         return {"FINISHED"}
