@@ -20,7 +20,7 @@ class TBB_OT_OpenFOAMPreview(Operator):
     def execute(self, context):
         settings = context.scene.tbb_openfoam_settings
         clip = context.scene.tbb_clip
-        temp_data = context.scene.tbb_tmp_data
+        tmp_data = context.scene.tbb_openfoam_tmp_data
 
         if settings.file_path == "":
             self.report({"ERROR"}, "Please import a file first.")
@@ -28,7 +28,7 @@ class TBB_OT_OpenFOAMPreview(Operator):
 
         start = time.time()
         # TODO: changing time point does not work if we do not load the file
-        # again... We would like to use the file_reader from tbb_tmp_data.
+        # again... We would like to use the file_reader from tbb_openfoam_tmp_data.
         success, file_reader = load_openopenfoam_file(settings.file_path)
         if not success:
             self.report({"ERROR"}, "The choosen file does not exist.")
@@ -60,7 +60,7 @@ class TBB_OT_OpenFOAMPreview(Operator):
                             str(clip.scalars_props.scalars) +
                             "'. This field array can't be active.")
                 # Update temporary data, please read the comment below.
-                temp_data.update(file_reader, settings["preview_time_point"], data, raw_mesh)
+                tmp_data.update(file_reader, settings["preview_time_point"], data, raw_mesh)
                 return {"FINISHED"}
 
             preview_mesh = preview_mesh.extract_surface()
@@ -71,7 +71,7 @@ class TBB_OT_OpenFOAMPreview(Operator):
         # This line will update the list of available scalars. If the choosen scalar is not available at
         # the selected time step, the program will automatically choose another scalar due to the update function
         # of the enum property. This is surely not what the user was expecting.
-        temp_data.update(file_reader, settings["preview_time_point"], data, raw_mesh)
+        tmp_data.update(file_reader, settings["preview_time_point"], data, raw_mesh)
 
         try:
             scalars_to_preview = str(settings.preview_point_data.split("@")[0])  # Field array name

@@ -65,7 +65,7 @@ def register():
             register_class(cls)
 
     # Register custom properties
-    Scene.tbb_tmp_data = TBB_OpenFOAMTemporaryData()
+    Scene.tbb_openfoam_tmp_data = TBB_OpenFOAMTemporaryData()
     Scene.tbb_openfoam_settings = PointerProperty(type=TBB_OpenFOAMSettings)
     Scene.tbb_clip = PointerProperty(type=TBB_OpenFOAMClipProperty)
     Object.tbb_openfoam_sequence = PointerProperty(type=TBB_OpenFOAMSequenceProperty)

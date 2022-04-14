@@ -9,7 +9,7 @@ DEV_MODE = True
 # Update function to tag all info areas for redraw
 
 
-def update(self, context):
+def update(_self, context):
     areas = context.window.screen.areas
     for area in areas:
         if area.type == 'INFO':
@@ -20,7 +20,7 @@ def update(self, context):
 def info_header_draw(s, c): return None
 
 
-def register_custom_progress_bar():
+def register_custom_progress_bar() -> None:
     # Use values between 0 and 100 to show the progress bar
     Scene.tbb_progress_value = FloatProperty(
         name="Progress value",
@@ -31,14 +31,14 @@ def register_custom_progress_bar():
         soft_max=100.0,
         precision=1,
         subtype="PERCENTAGE",
-        update=update
+        update=update,
     )
 
     # Label in front of the slider
     Scene.tbb_progress_label = StringProperty(
         name="Progress label",
         default="Progress",
-        update=update
+        update=update,
     )
 
     # Save the original draw method of Info header

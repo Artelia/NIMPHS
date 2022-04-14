@@ -11,6 +11,7 @@ class TBB_OT_OpenFOAMReloadFile(Operator):
 
     def execute(self, context):
         settings = context.scene.tbb_openfoam_settings
+
         if settings.file_path == "":
             self.report({"ERROR"}, "Please select a file first")
             return {"FINISHED"}
@@ -24,8 +25,7 @@ class TBB_OT_OpenFOAMReloadFile(Operator):
         update_properties_values(context, file_reader)
 
         # Update temp data
-        context.scene.tbb_tmp_data.update(file_reader, settings["preview_time_point"])
-
+        context.scene.tbb_openfoam_tmp_data.update(file_reader, settings["preview_time_point"])
         settings.create_sequence_is_running = False
 
         self.report({"INFO"}, "Reload successfull")

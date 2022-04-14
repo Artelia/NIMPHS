@@ -25,13 +25,13 @@ class TBB_OpenFOAMSettings(PropertyGroup):
 
     file_path: StringProperty(
         name="OpenFoam file",
-        description="Path to the .foam file"
+        description="Path to the .foam file",
     )
 
     create_sequence_is_running: BoolProperty(
         name="Create sequence is running",
         description="Describes the state of the create sequence operator",
-        default=False
+        default=False,
     )
 
     sequence_type: EnumProperty(
@@ -41,30 +41,32 @@ class TBB_OpenFOAMSettings(PropertyGroup):
              "Make a sequence by creating a mesh for each time step (good option for small meshes)"),
             ("on_frame_change",
              "On frame change",
-             "Make a sequence by changing the mesh on each frame change (it only keeps the last created mesh, good option for large meshes)")],
+             "Make a sequence by changing the mesh on each frame change (it only keeps the last created mesh, good option for large meshes)"),
+        ],
         name="Sequence type",
-        description="Select a sequence type")
+        description="Select a sequence type",
+    )
 
     preview_point_data: EnumProperty(
         items=clip_scalar_items,
         name="Point data",
-        description="Name of point data to preview"
+        description="Name of point data to preview",
     )
 
     sequence_name: StringProperty(
         name="Sequence name",
         description="Name of the sequence object",
-        default="TBB"
+        default="OpenFOAM",
     )
 
     import_point_data: BoolProperty(
         name="Import point data",
         description="Import point data as vertex color groups",
-        default=False
+        default=False,
     )
 
     list_point_data: StringProperty(
         name="Point data list",
         description="List of point data to import as vertex color groups. Separate each with a semicolon",
-        default=""
+        default="",
     )

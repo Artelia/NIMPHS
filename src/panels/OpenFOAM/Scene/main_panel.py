@@ -38,7 +38,7 @@ class TBB_PT_OpenFOAMMainPanel(Panel):
 
         if obj is None or not obj.tbb_openfoam_sequence.is_on_frame_change_sequence:
 
-            if context.scene.tbb_tmp_data.is_ok():
+            if context.scene.tbb_openfoam_tmp_data.is_ok():
                 # Preview section
                 row = layout.row()
                 row.enabled = enable_rows
@@ -62,6 +62,6 @@ class TBB_PT_OpenFOAMMainPanel(Panel):
             row = layout.row()
             row.label(text="Edit settings of this sequence in the object properties panel", icon="INFO")
             # If the file_path is not empty, it means that there is an error with temp data. Need to reload.
-            if not context.scene.tbb_tmp_data.is_ok() and settings.file_path != "":
+            if not context.scene.tbb_openfoam_tmp_data.is_ok() and settings.file_path != "":
                 row = layout.row()
                 row.label(text="Error: please reload the file.", icon="ERROR")

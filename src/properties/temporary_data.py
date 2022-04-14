@@ -16,6 +16,7 @@ class TBB_OpenFOAMTemporaryData():
     def update(self, new_file_reader: OpenFOAMReader, time_point: int = 0, new_data=None, new_mesh=None) -> None:
         self.file_reader = new_file_reader
         self.time_point = time_point
+
         try:
             self.file_reader.set_active_time_point(time_point)
         except ValueError as error:

@@ -19,6 +19,7 @@ class TBB_OT_OpenFOAMImportFile(Operator, ImportHelper):
     def execute(self, context):
         settings = context.scene.tbb_openfoam_settings
         success, file_reader = load_openopenfoam_file(self.filepath)
+
         if not success:
             self.report({"ERROR"}, "The choosen file does not exist")
             return {"FINISHED"}
@@ -29,12 +30,12 @@ class TBB_OT_OpenFOAMImportFile(Operator, ImportHelper):
         update_properties_values(context, file_reader)
 
         # Update temp data
-        context.scene.tbb_tmp_data.update(file_reader, settings["preview_time_point"])
+        context.scene.tbb_openfoam_tmp_data.update(file_reader, settings["preview_time_point"])
 
         # Generate the preview mesh. This step is not present in the reload operator because
         # the preview mesh may already be loaded. Moreover, this step takes a while on large meshes.
         try:
-            preview_mesh = context.scene.tbb_tmp_data.mesh.extract_surface()
+            preview_mesh = context.scene.tbb_openfoam_tmp_data.mesh.extract_surface()
             generate_preview_object(preview_mesh, context)
         except Exception as error:
             print("ERROR::TBB_OT_OpenFOAMImportFile: " + str(error))

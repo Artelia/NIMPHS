@@ -18,15 +18,15 @@ class TBB_PT_OpenFOAMClip(Panel):
             obj = None
 
         if obj is None:
-            return context.scene.tbb_tmp_data.is_ok()
+            return context.scene.tbb_openfoam_tmp_data.is_ok()
         else:
-            return context.scene.tbb_tmp_data.is_ok() and not obj.tbb_openfoam_sequence.is_on_frame_change_sequence
+            return context.scene.tbb_openfoam_tmp_data.is_ok() and not obj.tbb_openfoam_sequence.is_on_frame_change_sequence
 
     def draw(self, context):
         layout = self.layout
         settings = context.scene.tbb_openfoam_settings
         clip = context.scene.tbb_clip
-        tmp_data = context.scene.tbb_tmp_data
+        tmp_data = context.scene.tbb_openfoam_tmp_data
 
         # Check if temp mesh data is loaded. If not, do not show clip settings and show a message asking to hit preview.
         if tmp_data.time_point != settings["preview_time_point"]:

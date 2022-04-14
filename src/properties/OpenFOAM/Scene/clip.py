@@ -14,13 +14,13 @@ class TBB_OpenFOAMClipScalarProperty(PropertyGroup):
         items=clip_scalar_items,
         name="Scalars",
         description="Name of scalars to clip on",
-        update=update_scalar_value_prop
+        update=update_scalar_value_prop,
     )
 
     invert: BoolProperty(
         name="Invert",
         description="Flag on whether to flip/invert the clip. When True, only the mesh below value will be kept. When False, only values above value will be kept",
-        default=False
+        default=False,
     )
 
 
@@ -29,7 +29,7 @@ class TBB_OpenFOAMClipProperty(PropertyGroup):
         items=[
             ("no_clip", "None", "Do not clip"),
             ("scalar", "Scalars", "Clip a dataset by a scalar"),
-            # ("box", "Box", "Clip a dataset by a bounding box defined by the bounds")
+            # ("box", "Box", "Clip a dataset by a bounding box defined by the bounds"),
         ],
         name="Type",
         description="Choose the clipping method",

@@ -20,9 +20,9 @@ class TBB_PT_OpenFOAMCreateSequence(Panel):
             obj = None
 
         if obj is None:
-            return context.scene.tbb_tmp_data.is_ok()
+            return context.scene.tbb_openfoam_tmp_data.is_ok()
         else:
-            return context.scene.tbb_tmp_data.is_ok() and not obj.tbb_openfoam_sequence.is_on_frame_change_sequence
+            return context.scene.tbb_openfoam_tmp_data.is_ok() and not obj.tbb_openfoam_sequence.is_on_frame_change_sequence
 
     def draw(self, context):
         layout = self.layout
@@ -32,9 +32,6 @@ class TBB_PT_OpenFOAMCreateSequence(Panel):
         enable_rows = not settings.create_sequence_is_running
         snae = sequence_name_already_exist(settings.sequence_name)  # snae = sequence_name_already_exist
 
-        row = layout.row()
-        row.enabled = enable_rows
-        row.prop(settings, "sequence_name", text="Name")
         row = layout.row()
         row.enabled = enable_rows
         row.prop(settings, "sequence_type", text="Type")
@@ -66,6 +63,10 @@ class TBB_PT_OpenFOAMCreateSequence(Panel):
             row.enabled = enable_rows
             row.prop(settings, "list_point_data", text="List")
 
+        layout.row().separator()
+        row = layout.row()
+        row.enabled = enable_rows
+        row.prop(settings, "sequence_name", text="Name")
         row = layout.row()
         row.enabled = not snae
         row.operator("tbb.create_sequence", text="Create sequence", icon="RENDER_ANIMATION")

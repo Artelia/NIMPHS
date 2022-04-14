@@ -25,6 +25,7 @@ class TBB_OT_OpenFOAMCreateSequence(Operator):
     @classmethod
     def poll(cls, context):
         settings = context.scene.tbb_openfoam_settings
+
         if settings.sequence_type == "mesh_sequence":
             return not settings.create_sequence_is_running and settings["start_time_point"] < settings["end_time_point"]
         elif settings.sequence_type == "on_frame_change":
