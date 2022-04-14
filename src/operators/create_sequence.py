@@ -1,5 +1,5 @@
 import bpy
-from bpy.types import Operator
+from bpy.types import Operator, RenderSettings
 
 import time
 
@@ -65,11 +65,13 @@ class TBB_OT_CreateSequence(Operator):
                 return {"FINISHED"}
 
             # Create an empty object
+            obj_name = settings.sequence_name + "_sequence"
             blender_mesh = bpy.data.meshes.new(name=settings.sequence_name + "_mesh")
-            obj = bpy.data.objects.new(settings.sequence_name + "_sequence", blender_mesh)
+            obj = bpy.data.objects.new(obj_name, blender_mesh)
             obj.tbb_sequence.is_tbb_sequence = True
             obj.tbb_sequence.update_on_frame_change = True
             obj.tbb_sequence.file_path = settings.file_path
+            obj.tbb_sequence.name = obj_name
 
             # Set the selected time frame
             obj.tbb_sequence.frame_start = settings["frame_start"]
@@ -77,7 +79,15 @@ class TBB_OT_CreateSequence(Operator):
             
             # Set clip settings
             obj.tbb_sequence.clip_type = clip.type
-            obj.tbb_sequence.clip_scalars = clip.scalars_props.scalars
+
+            # Sometimes, the selected scalar may not correspond to ones available in the EnumProperty.
+            # This happens when the selected scalar is not available at time point 0 (the EnumProperty only reads data at time point 0 to create the list of available items)
+            try:
+                obj.tbb_sequence.clip_scalars = clip.scalars_props.scalars
+            except TypeError as error:
+                print("ERROR::TBB_OT_CreateSequence: " + str(error))
+                self.report({"WARNING"}, "the selected scalar does not exist at time point 0 (selected from time point " + str(settings["preview_time_step"]) + ")")
+
             obj.tbb_sequence.invert = clip.scalars_props.invert
             obj.tbb_sequence.clip_value = clip.scalars_props["value"]
             obj.tbb_sequence.clip_vactor_value = clip.scalars_props["vector_value"]
@@ -88,7 +98,7 @@ class TBB_OT_CreateSequence(Operator):
 
             # As mentionned here, lock the interface because the custom handler will alter data on frame change
             # https://docs.blender.org/api/current/bpy.app.handlers.html?highlight=app%20handlers#module-bpy.app.handlers
-            bpy.types.RenderSettings.use_lock_interface = True
+            RenderSettings.use_lock_interface = True
 
             self.report({"INFO"}, "Sequence properly set")
 

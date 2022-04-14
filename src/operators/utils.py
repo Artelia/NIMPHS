@@ -238,7 +238,7 @@ def generate_vertex_colors(mesh, blender_mesh, list_point_data, time_step):
         if raw_key != "":
             key = raw_key.split("@")[0]
             if key not in mesh.point_data.keys():
-                print("WARNING::generate_vertex_colors: the field array named '" + key + "' do not exist (time step = " + str(time_step) + ")")
+                print("WARNING::generate_vertex_colors: the field array named '" + key + "' does not exist (time step = " + str(time_step) + ")")
             else:
                 filtered_keys.append(key)
 
