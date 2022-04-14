@@ -43,7 +43,7 @@ class TBB_PT_MainPanel(Panel):
                 row.label(text="Preview")
                 row = layout.row()
                 row.enabled = enable_rows
-                row.prop(settings, '["preview_time_step"]', text="Time step")
+                row.prop(settings, '["preview_time_point"]', text="Time step")
                 row = layout.row()
                 row.enabled = enable_rows
                 row.prop(settings, "preview_point_data", text="Points")

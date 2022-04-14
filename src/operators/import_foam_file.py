@@ -27,7 +27,7 @@ class TBB_OT_ImportFoamFile(Operator, ImportHelper):
         update_properties_values(context, file_reader)
 
         # Update temp data
-        context.scene.tbb_temp_data.update(file_reader, settings["preview_time_step"])
+        context.scene.tbb_temp_data.update(file_reader, settings["preview_time_point"])
 
         # Generate the preview mesh. This step is not present in the reload operator because
         # the preview mesh may already be loaded. Moreover, this step takes a while on large meshes.
@@ -65,7 +65,7 @@ class TBB_OT_ReloadFoamFile(Operator):
         update_properties_values(context, file_reader)
 
         # Update temp data
-        context.scene.tbb_temp_data.update(file_reader, settings["preview_time_step"])
+        context.scene.tbb_temp_data.update(file_reader, settings["preview_time_point"])
 
         settings.create_sequence_is_running = False
 

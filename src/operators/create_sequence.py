@@ -86,7 +86,7 @@ class TBB_OT_CreateSequence(Operator):
                 obj.tbb_openfoam_sequence.clip_scalars = clip.scalars_props.scalars
             except TypeError as error:
                 print("ERROR::TBB_OT_CreateSequence: " + str(error))
-                self.report({"WARNING"}, "the selected scalar does not exist at time point 0 (selected from time point " + str(settings["preview_time_step"]) + ")")
+                self.report({"WARNING"}, "the selected scalar does not exist at time point 0 (selected from time point " + str(settings["preview_time_point"]) + ")")
 
             obj.tbb_openfoam_sequence.invert = clip.scalars_props.invert
             obj.tbb_openfoam_sequence.clip_value = clip.scalars_props["value"]
@@ -120,7 +120,7 @@ class TBB_OT_CreateSequence(Operator):
                     mesh = generate_mesh_for_sequence(context, self.current_time_step, name=self.user_sequence_name)
                 except Exception as error:
                     print("ERROR::TBB_OT_CreateSequence: " + str(error))
-                    self.report({"ERROR"}, "An error occured when creating the sequence, (time_step = " + str(self.current_time_step) + ")")
+                    self.report({"ERROR"}, "An error occured creating the sequence, (time_step = " + str(self.current_time_step) + ")")
                     self.stop(context)
                     return {"CANCELLED"}
 

@@ -34,10 +34,10 @@ class TBB_OT_Preview(Operator):
         
         # Read data at the choosen time step
         try:
-            file_reader.set_active_time_point(settings["preview_time_step"])
+            file_reader.set_active_time_point(settings["preview_time_point"])
         except ValueError as error:
             print("ERROR::TBB_OT_Preview: " + str(error))
-            self.report({"ERROR"}, "The selected time step is not defined (" + str(settings["preview_time_step"]) + ").")
+            self.report({"ERROR"}, "The selected time step is not defined (" + str(settings["preview_time_point"]) + ").")
             return {"FINISHED"}
         
         data = file_reader.read()
@@ -51,7 +51,7 @@ class TBB_OT_Preview(Operator):
                 print("ERROR::TBB_OT_Preview: " + str(error))
                 self.report({"ERROR"}, "Can't clip on data named '" + str(clip.scalars_props.scalars) + "'. This field array can't be active.")
                 # Update temporary data, please read the comment below.
-                temp_data.update(file_reader, settings["preview_time_step"], data, raw_mesh)
+                temp_data.update(file_reader, settings["preview_time_point"], data, raw_mesh)
                 return {"FINISHED"}
 
             preview_mesh = preview_mesh.extract_surface()
@@ -62,12 +62,12 @@ class TBB_OT_Preview(Operator):
         # This line will update the list of available scalars. If the choosen scalar is not available at
         # the selected time step, the program will automatically choose another scalar due to the update function
         # of the enum property. This is surely not what the user was expecting.
-        temp_data.update(file_reader, settings["preview_time_step"], data, raw_mesh)
+        temp_data.update(file_reader, settings["preview_time_point"], data, raw_mesh)
 
         try:
             scalars_to_preview = str(settings.preview_point_data.split("@")[0]) # Field array name
             blender_mesh, obj, preview_mesh = generate_preview_object(preview_mesh, context)
-            blender_mesh = generate_vertex_colors(preview_mesh, blender_mesh, scalars_to_preview, settings["preview_time_step"])
+            blender_mesh = generate_vertex_colors(preview_mesh, blender_mesh, scalars_to_preview, settings["preview_time_point"])
             create_preview_material(obj, scalars_to_preview)
         except Exception as error:
             print("ERROR::TBB_OT_Preview: " + str(error))

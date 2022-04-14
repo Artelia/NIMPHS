@@ -15,7 +15,7 @@ class TBB_settings(PropertyGroup):
         default=False
     )
 
-    # preview_time_step: IntProperty dynamically created
+    # preview_time_point: IntProperty dynamically created
 
     # start_time: IntProperty dynamically created
 
@@ -59,7 +59,7 @@ class TBB_settings(PropertyGroup):
     )
 
 settings_dynamic_properties = [
-    ("preview_time_step", "Time step used for the preview section"),
+    ("preview_time_point", "Time step used for the preview section"),
     ("start_time", "Starting point of the sequence"),
     ("end_time", "Ending point of the sequence")
 ]

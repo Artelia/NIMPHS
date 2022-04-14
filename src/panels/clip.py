@@ -27,7 +27,7 @@ class TBB_PT_Clip(Panel):
         temp_data = context.scene.tbb_temp_data
 
         # Check if temp mesh data is loaded. If not, do not show clip settings and show a message asking to hit preview.
-        if temp_data.time_step != settings["preview_time_step"]: lock_clip_settings = True
+        if temp_data.time_step != settings["preview_time_point"]: lock_clip_settings = True
         else: lock_clip_settings = False
 
         # Check if we need to lock the ui
