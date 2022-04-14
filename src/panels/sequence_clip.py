@@ -12,27 +12,27 @@ class TBB_PT_SequenceClip(Panel):
     @classmethod
     def poll(self, context):
         obj = context.active_object
-        return obj.tbb_sequence.update_on_frame_change
+        return obj.tbb_openfoam_sequence.update_on_frame_change
 
     def draw(self, context):
         layout = self.layout
         obj = context.active_object
-        tbb_sequence = obj.tbb_sequence
+        tbb_openfoam_sequence = obj.tbb_openfoam_sequence
 
         row = layout.row()
-        row.prop(tbb_sequence, "clip_type", text="Type")
+        row.prop(tbb_openfoam_sequence, "clip_type", text="Type")
 
-        if tbb_sequence.clip_type != "no_clip":
+        if tbb_openfoam_sequence.clip_type != "no_clip":
             row = layout.row()
-            row.prop(tbb_sequence, "clip_scalars", text="Scalars")
+            row.prop(tbb_openfoam_sequence, "clip_scalars", text="Scalars")
 
-            value_type = tbb_sequence.clip_scalars.split("@")[1]
+            value_type = tbb_openfoam_sequence.clip_scalars.split("@")[1]
             if value_type  == "vector_value":
                 row = layout.row()
-                row.prop(tbb_sequence, "clip_vector_value", text="Value")
+                row.prop(tbb_openfoam_sequence, "clip_vector_value", text="Value")
             elif value_type == "value":
                 row = layout.row()
-                row.prop(tbb_sequence, "clip_value", text="Value")
+                row.prop(tbb_openfoam_sequence, "clip_value", text="Value")
 
             row = layout.row()
-            row.prop(tbb_sequence, "clip_invert", text="Invert")
+            row.prop(tbb_openfoam_sequence, "clip_invert", text="Invert")

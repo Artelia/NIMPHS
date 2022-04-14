@@ -68,31 +68,31 @@ class TBB_OT_CreateSequence(Operator):
             obj_name = settings.sequence_name + "_sequence"
             blender_mesh = bpy.data.meshes.new(name=settings.sequence_name + "_mesh")
             obj = bpy.data.objects.new(obj_name, blender_mesh)
-            obj.tbb_sequence.is_tbb_sequence = True
-            obj.tbb_sequence.update_on_frame_change = True
-            obj.tbb_sequence.file_path = settings.file_path
-            obj.tbb_sequence.name = obj_name
+            obj.tbb_openfoam_sequence.is_on_frame_change_sequence = True
+            obj.tbb_openfoam_sequence.update_on_frame_change = True
+            obj.tbb_openfoam_sequence.file_path = settings.file_path
+            obj.tbb_openfoam_sequence.name = obj_name
 
             # Set the selected time frame
-            obj.tbb_sequence.frame_start = settings["frame_start"]
-            obj.tbb_sequence.anim_length = settings["anim_length"]
+            obj.tbb_openfoam_sequence.frame_start = settings["frame_start"]
+            obj.tbb_openfoam_sequence.anim_length = settings["anim_length"]
             
             # Set clip settings
-            obj.tbb_sequence.clip_type = clip.type
+            obj.tbb_openfoam_sequence.clip_type = clip.type
 
             # Sometimes, the selected scalar may not correspond to ones available in the EnumProperty.
             # This happens when the selected scalar is not available at time point 0 (the EnumProperty only reads data at time point 0 to create the list of available items)
             try:
-                obj.tbb_sequence.clip_scalars = clip.scalars_props.scalars
+                obj.tbb_openfoam_sequence.clip_scalars = clip.scalars_props.scalars
             except TypeError as error:
                 print("ERROR::TBB_OT_CreateSequence: " + str(error))
                 self.report({"WARNING"}, "the selected scalar does not exist at time point 0 (selected from time point " + str(settings["preview_time_step"]) + ")")
 
-            obj.tbb_sequence.invert = clip.scalars_props.invert
-            obj.tbb_sequence.clip_value = clip.scalars_props["value"]
-            obj.tbb_sequence.clip_vactor_value = clip.scalars_props["vector_value"]
-            obj.tbb_sequence.import_point_data = settings.import_point_data
-            obj.tbb_sequence.list_point_data = settings.list_point_data
+            obj.tbb_openfoam_sequence.invert = clip.scalars_props.invert
+            obj.tbb_openfoam_sequence.clip_value = clip.scalars_props["value"]
+            obj.tbb_openfoam_sequence.clip_vactor_value = clip.scalars_props["vector_value"]
+            obj.tbb_openfoam_sequence.import_point_data = settings.import_point_data
+            obj.tbb_openfoam_sequence.list_point_data = settings.list_point_data
 
             context.collection.objects.link(obj)
 

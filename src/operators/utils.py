@@ -311,9 +311,9 @@ def update_sequence_on_frame_change(scene):
     frame = scene.frame_current
 
     for obj in scene.objects:
-        if obj.tbb_sequence.is_tbb_sequence:
-            if obj.tbb_sequence.update_on_frame_change:
-                settings = obj.tbb_sequence
+        if obj.tbb_openfoam_sequence.is_on_frame_change_sequence:
+            if obj.tbb_openfoam_sequence.update_on_frame_change:
+                settings = obj.tbb_openfoam_sequence
                 time_point = frame - settings.frame_start
 
                 if time_point >= 0 and time_point < settings.anim_length:

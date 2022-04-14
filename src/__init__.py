@@ -16,7 +16,7 @@ from .panels.sequence_clip import TBB_PT_SequenceClip
 from .properties.settings import TBB_settings
 from .properties.clip import TBB_clip_scalar, TBB_clip
 from .properties.temporary_data import TBB_temporary_data
-from .properties.sequence import TBB_sequence
+from .properties.openfoam_sequence import TBB_openfoam_sequence
 
 bl_info = {
     "name": "Toolsbox Blender ",
@@ -50,7 +50,7 @@ properties = (
     TBB_settings,
     TBB_clip_scalar,
     TBB_clip,
-    TBB_sequence
+    TBB_openfoam_sequence
 )
 
 classes = [operators, panels, properties]
@@ -64,7 +64,7 @@ def register():
     Scene.tbb_settings = PointerProperty(type=TBB_settings)
     Scene.tbb_clip = PointerProperty(type=TBB_clip)
     Scene.tbb_temp_data = TBB_temporary_data()
-    Object.tbb_sequence = PointerProperty(type=TBB_sequence)
+    Object.tbb_openfoam_sequence = PointerProperty(type=TBB_openfoam_sequence)
 
     # Custom progress bar
     register_custom_progress_bar()

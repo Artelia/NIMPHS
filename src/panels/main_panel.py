@@ -34,7 +34,7 @@ class TBB_PT_MainPanel(Panel):
         if len(context.selected_objects) == 0:
             obj = None
             
-        if obj == None or not obj.tbb_sequence.is_tbb_sequence:
+        if obj == None or not obj.tbb_openfoam_sequence.is_on_frame_change_sequence:
 
             if context.scene.tbb_temp_data.is_ok():
                 # Preview section

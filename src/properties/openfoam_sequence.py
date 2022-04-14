@@ -10,23 +10,23 @@ from bpy.props import (
 
 from .utils import scalar_items_sequence
 
-class TBB_sequence(PropertyGroup):
-    is_tbb_sequence: BoolProperty(
-        name="Is a TBB sequence",
-        description="Describes if this object is a sequence created with TBB",
+class TBB_openfoam_sequence(PropertyGroup):
+    is_on_frame_change_sequence: BoolProperty(
+        name="Is on frame change sequence",
+        description="Describes if this object is a sequence which updates when the frame changes",
         default=False
     )
 
     update_on_frame_change: BoolProperty(
         name="Update on frame change",
-        description="Update this sequence whenever the current frame changes",
+        description="Update this sequence whenever the frame changes",
         default=False
     )
 
     name: StringProperty(
         name="Name",
         description="Name of the sequence",
-        default="TBB_sequence"
+        default="Openfoam_sequence"
     )
 
     frame_start: IntProperty(

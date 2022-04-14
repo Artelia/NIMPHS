@@ -10,24 +10,24 @@ class TBB_PT_Sequence(Panel):
     @classmethod
     def poll(self, context):
         obj = context.active_object
-        return obj.tbb_sequence.is_tbb_sequence
+        return obj.tbb_openfoam_sequence.is_on_frame_change_sequence
 
     def draw(self, context):
         layout = self.layout
         obj = context.active_object
-        tbb_sequence = obj.tbb_sequence
+        tbb_openfoam_sequence = obj.tbb_openfoam_sequence
 
         row = layout.row()
-        row.prop(tbb_sequence, "update_on_frame_change", text="Update")
-        if tbb_sequence.update_on_frame_change:
+        row.prop(tbb_openfoam_sequence, "update_on_frame_change", text="Update")
+        if tbb_openfoam_sequence.update_on_frame_change:
             row = layout.row()
-            row.prop(tbb_sequence, "frame_start", text="Frame start")
+            row.prop(tbb_openfoam_sequence, "frame_start", text="Frame start")
             row = layout.row()
-            row.prop(tbb_sequence, "anim_length", text="Length")
+            row.prop(tbb_openfoam_sequence, "anim_length", text="Length")
 
             row = layout.row()
-            row.prop(tbb_sequence, "import_point_data", text="Import point data")
+            row.prop(tbb_openfoam_sequence, "import_point_data", text="Import point data")
 
-            if tbb_sequence.import_point_data:
+            if tbb_openfoam_sequence.import_point_data:
                 row = layout.row()
-                row.prop(tbb_sequence, "list_point_data", text="List")
+                row.prop(tbb_openfoam_sequence, "list_point_data", text="List")

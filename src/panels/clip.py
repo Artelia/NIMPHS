@@ -18,7 +18,7 @@ class TBB_PT_Clip(Panel):
         if obj == None:
             return context.scene.tbb_temp_data.is_ok()
         else:
-            return context.scene.tbb_temp_data.is_ok() and not obj.tbb_sequence.is_tbb_sequence
+            return context.scene.tbb_temp_data.is_ok() and not obj.tbb_openfoam_sequence.is_on_frame_change_sequence
 
     def draw(self,context):
         layout = self.layout
