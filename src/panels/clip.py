@@ -10,7 +10,15 @@ class TBB_PT_Clip(Panel):
 
     @classmethod
     def poll(cls, context):
-        return context.scene.tbb_temp_data.is_ok()
+        obj = context.active_object
+        # Even if no objects are selected, the last selected object remains in the active_objects variable
+        if len(context.selected_objects) == 0:
+            obj = None
+            
+        if obj == None:
+            return context.scene.tbb_temp_data.is_ok()
+        else:
+            return context.scene.tbb_temp_data.is_ok() and not obj.tbb_sequence.is_tbb_sequence
 
     def draw(self,context):
         layout = self.layout
