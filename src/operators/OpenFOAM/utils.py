@@ -160,7 +160,7 @@ def update_mesh_sequence_frame_settings(settings, scene, max_length):
         prop = settings.id_properties_ui("anim_length")
         new_max = max_length
         default = settings["anim_length"]
-        if new_min > default or new_max < default:
+        if new_max < default:
             default = new_min
         prop.update(default=default, max=new_max, soft_max=new_max)
 

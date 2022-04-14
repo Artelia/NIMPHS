@@ -18,7 +18,7 @@ from .panels.OpenFOAM.Object.sequence_settings import TBB_PT_OpenFOAMSequenceSet
 from .panels.OpenFOAM.Object.sequence_clip_settings import TBB_PT_OpenFOAMSequenceClipSettings
 from .properties.OpenFOAM.Scene.settings import TBB_OpenFOAMSettings
 from .properties.OpenFOAM.Scene.clip import TBB_OpenFOAMClipProperty, TBB_OpenFOAMClipScalarProperty
-from .properties.temporary_data import TBB_TemporaryData
+from .properties.temporary_data import TBB_OpenFOAMTemporaryData
 from .properties.OpenFOAM.Object.sequence import TBB_OpenFOAMSequenceProperty
 
 bl_info = {
@@ -65,7 +65,7 @@ def register():
             register_class(cls)
 
     # Register custom properties
-    Scene.tbb_tmp_data = TBB_TemporaryData()
+    Scene.tbb_tmp_data = TBB_OpenFOAMTemporaryData()
     Scene.tbb_openfoam_settings = PointerProperty(type=TBB_OpenFOAMSettings)
     Scene.tbb_clip = PointerProperty(type=TBB_OpenFOAMClipProperty)
     Object.tbb_openfoam_sequence = PointerProperty(type=TBB_OpenFOAMSequenceProperty)

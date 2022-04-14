@@ -42,10 +42,10 @@ class TBB_PT_OpenFOAMCreateSequence(Panel):
         if settings.sequence_type == "mesh_sequence":
             row = layout.row()
             row.enabled = enable_rows
-            row.prop(settings, '["start_time"]', text="Start")
+            row.prop(settings, '["start_time_point"]', text="Start")
             row = layout.row()
             row.enabled = enable_rows
-            row.prop(settings, '["end_time"]', text="End")
+            row.prop(settings, '["end_time_point"]', text="End")
         elif settings.sequence_type == "on_frame_change":
             row = layout.row()
             row.enabled = enable_rows

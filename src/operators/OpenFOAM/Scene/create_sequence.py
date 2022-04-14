@@ -26,7 +26,7 @@ class TBB_OT_OpenFOAMCreateSequence(Operator):
     def poll(cls, context):
         settings = context.scene.tbb_openfoam_settings
         if settings.sequence_type == "mesh_sequence":
-            return not settings.create_sequence_is_running and settings["start_time"] < settings["end_time"]
+            return not settings.create_sequence_is_running and settings["start_time_point"] < settings["end_time_point"]
         elif settings.sequence_type == "on_frame_change":
             return not settings.create_sequence_is_running
         else:  # Lock ui by default
@@ -47,9 +47,9 @@ class TBB_OT_OpenFOAMCreateSequence(Operator):
             context.scene.tbb_progress_value = -1.0
 
             # Setup for creating the sequence
-            self.start_time_point = settings["start_time"]
-            self.current_time_point = settings["start_time"]
-            self.end_time_point = settings["end_time"]
+            self.start_time_point = settings["start_time_point"]
+            self.current_time_point = settings["start_time_point"]
+            self.end_time_point = settings["end_time_point"]
             self.current_frame = context.scene.frame_current
             self.user_sequence_name = settings.sequence_name
 

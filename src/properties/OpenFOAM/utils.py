@@ -2,25 +2,24 @@
 import numpy as np
 from pyvista import OpenFOAMReader
 
+
 # Dynamically load enum items for the scalars property
-
-
-def scalar_items(self, context):
-    temp_data = context.scene.tbb_tmp_data
+def clip_scalar_items(_self, context) -> list:
+    tmp_data = context.scene.tbb_tmp_data
     items = []
-    if temp_data.mesh_data is not None:
-        for key in temp_data.mesh_data.point_data.keys():
-            value_type = len(temp_data.mesh_data.get_array(name=key, preference="point").shape)
+    if tmp_data.mesh is not None:
+        for key in tmp_data.mesh.point_data.keys():
+            value_type = len(tmp_data.mesh.get_array(name=key, preference="point").shape)
             # Vector value
             if value_type == 2:
                 items.append((key + "@vector_value", key, "Undocumented"))
-            # Normal value
+            # 'Normal' value
             elif value_type == 1:
                 items.append((key + "@value", key, "Undocumented"))
     return items
 
 
-def scalar_items_sequence(self, context):
+def clip_scalar_items_sequence(self, _context) -> list:
     items = []
 
     # If the saved list in empty, recreate it
@@ -51,11 +50,11 @@ def scalar_items_sequence(self, context):
     return items
 
 
-def update_scalar_value_prop(self, context):
+def update_scalar_value_prop(_self, context) -> None:
     scalars_props = context.scene.tbb_clip.scalars_props
     scalars = scalars_props.scalars.split("@")[0]
 
-    values = context.scene.tbb_tmp_data.mesh_data[scalars]
+    values = context.scene.tbb_tmp_data.mesh[scalars]
     # 1D array
     if len(values.shape) == 1:
         prop_name = "value"

@@ -26,10 +26,10 @@ class TBB_PT_OpenFOAMClip(Panel):
         layout = self.layout
         settings = context.scene.tbb_openfoam_settings
         clip = context.scene.tbb_clip
-        temp_data = context.scene.tbb_tmp_data
+        tmp_data = context.scene.tbb_tmp_data
 
         # Check if temp mesh data is loaded. If not, do not show clip settings and show a message asking to hit preview.
-        if temp_data.time_step != settings["preview_time_point"]:
+        if tmp_data.time_point != settings["preview_time_point"]:
             lock_clip_settings = True
         else:
             lock_clip_settings = False

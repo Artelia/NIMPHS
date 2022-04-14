@@ -9,7 +9,7 @@ from bpy.props import (
     FloatProperty
 )
 
-from ..utils import scalar_items_sequence
+from ..utils import clip_scalar_items_sequence
 
 
 class TBB_OpenFOAMSequenceProperty(PropertyGroup):
@@ -61,7 +61,7 @@ class TBB_OpenFOAMSequenceProperty(PropertyGroup):
     )
 
     clip_scalars: EnumProperty(
-        items=scalar_items_sequence,
+        items=clip_scalar_items_sequence,
         name="Scalars",
         description="Name of scalars to clip on"
     )
@@ -74,8 +74,7 @@ class TBB_OpenFOAMSequenceProperty(PropertyGroup):
 
     clip_invert: BoolProperty(
         name="Invert",
-        description="Flag on whether to flip/invert the clip. When True, only the mesh below value will be kept. \
-When False, only values above value will be kept",
+        description="Flag on whether to flip/invert the clip. When True, only the mesh below value will be kept. When False, only values above value will be kept",
         default=False
     )
 

@@ -2,10 +2,27 @@
 from bpy.types import PropertyGroup
 from bpy.props import StringProperty, BoolProperty, EnumProperty, IntProperty
 
-from ..utils import scalar_items
+from ..utils import clip_scalar_items
+
+
+settings_dynamic_properties = [
+    ("preview_time_point", "Time step used for the preview section"),
+    ("start_time_point", "Starting point of the sequence"),
+    ("end_time_point", "Ending point of the sequence")
+]
 
 
 class TBB_OpenFOAMSettings(PropertyGroup):
+    # preview_time_point: IntProperty dynamically created
+
+    # start_time_point: IntProperty dynamically created
+
+    # end_time_point: IntProperty dynamically created
+
+    # frame_start: IntProperty dynamically created
+
+    # anim_length: IntProperty dynamically created
+
     file_path: StringProperty(
         name="OpenFoam file",
         description="Path to the .foam file"
@@ -16,12 +33,6 @@ class TBB_OpenFOAMSettings(PropertyGroup):
         description="Describes the state of the create sequence operator",
         default=False
     )
-
-    # preview_time_point: IntProperty dynamically created
-
-    # start_time: IntProperty dynamically created
-
-    # end_time: IntProperty dynamically created
 
     sequence_type: EnumProperty(
         items=[
@@ -34,12 +45,8 @@ class TBB_OpenFOAMSettings(PropertyGroup):
         name="Sequence type",
         description="Select a sequence type")
 
-    # frame_start: IntProperty dynamically created
-
-    # anim_length: IntProperty dynamically created
-
     preview_point_data: EnumProperty(
-        items=scalar_items,
+        items=clip_scalar_items,
         name="Point data",
         description="Name of point data to preview"
     )
@@ -61,10 +68,3 @@ class TBB_OpenFOAMSettings(PropertyGroup):
         description="List of point data to import as vertex color groups. Separate each with a semicolon",
         default=""
     )
-
-
-settings_dynamic_properties = [
-    ("preview_time_point", "Time step used for the preview section"),
-    ("start_time", "Starting point of the sequence"),
-    ("end_time", "Ending point of the sequence")
-]

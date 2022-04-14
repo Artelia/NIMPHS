@@ -1,32 +1,35 @@
 # <pep8 compliant>
-class TBB_TemporaryData():
+from pyvista import OpenFOAMReader
+
+
+class TBB_OpenFOAMTemporaryData():
     file_reader = None
-    file_data = None
-    mesh_data = None
-    time_step = 0
+    data = None
+    mesh = None
+    time_point = 0
 
-    def __init__(self, file_reader=None, file_data=None, mesh_data=None):
+    def __init__(self, file_reader: OpenFOAMReader = None, new_data=None, new_mesh=None):
         self.file_reader = file_reader
-        self.file_data = file_data
-        self.mesh_data = mesh_data
+        self.data = new_data
+        self.mesh = new_mesh
 
-    def update(self, new_file_reader, time_step=0, new_file_data=None, new_mesh_data=None):
+    def update(self, new_file_reader: OpenFOAMReader, time_point: int = 0, new_data=None, new_mesh=None) -> None:
         self.file_reader = new_file_reader
-        self.time_step = time_step
+        self.time_point = time_point
         try:
-            self.file_reader.set_active_time_point(time_step)
+            self.file_reader.set_active_time_point(time_point)
         except ValueError as error:
-            print("ERROR::TBB_temporary_data: " + error)
+            print("ERROR::TBB_OpenFOAMTemporaryData: " + str(error))
 
-        if new_file_data is None:
-            self.file_data = self.file_reader.read()
+        if new_data is None:
+            self.data = self.file_reader.read()
         else:
-            self.file_data = new_file_data
+            self.data = new_data
 
-        if new_mesh_data is None:
-            self.mesh_data = self.file_data["internalMesh"]
+        if new_mesh is None:
+            self.mesh = self.data["internalMesh"]
         else:
-            self.mesh_data = new_mesh_data
+            self.mesh = new_mesh
 
-    def is_ok(self):
-        return self.file_reader is not None and self.file_data is not None and self.mesh_data is not None
+    def is_ok(self) -> bool:
+        return self.file_reader is not None and self.data is not None and self.mesh is not None

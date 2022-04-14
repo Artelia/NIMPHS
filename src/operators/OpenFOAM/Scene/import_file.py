@@ -34,7 +34,7 @@ class TBB_OT_OpenFOAMImportFile(Operator, ImportHelper):
         # Generate the preview mesh. This step is not present in the reload operator because
         # the preview mesh may already be loaded. Moreover, this step takes a while on large meshes.
         try:
-            preview_mesh = context.scene.tbb_tmp_data.mesh_data.extract_surface()
+            preview_mesh = context.scene.tbb_tmp_data.mesh.extract_surface()
             generate_preview_object(preview_mesh, context)
         except Exception as error:
             print("ERROR::TBB_OT_OpenFOAMImportFile: " + str(error))
