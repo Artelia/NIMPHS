@@ -4,7 +4,7 @@ from bpy.types import Mesh
 from bpy.app.handlers import persistent
 from rna_prop_ui import rna_idprop_ui_create
 
-from pyvista import OpenFOAMReader, UnstructuredGrid
+from pyvista import OpenFOAMReader, UnstructuredGrid, DataSet
 from pathlib import Path
 import numpy as np
 import time
@@ -23,19 +23,20 @@ def load_openopenfoam_file(file_path: str) -> tuple[bool, OpenFOAMReader]:
 
 
 def generate_mesh(file_reader: OpenFOAMReader, time_point: int,
-                  clip: dict = None) -> tuple[np.array, np.array, UnstructuredGrid]:
+                  clip: dict = None, raw_mesh: UnstructuredGrid = None) -> tuple[np.array, np.array, UnstructuredGrid]:
     # Read data from the given OpenFoam file
-    file_reader.set_active_time_point(time_point)
-    data = file_reader.read()
-    raw_mesh = data["internalMesh"]
+    if raw_mesh is None:
+        file_reader.set_active_time_point(time_point)
+        data = file_reader.read()
+        raw_mesh = data["internalMesh"]
 
     # Apply clip
-    if clip is not None and clip.type == "scalar":
-        raw_mesh.set_active_scalars(name=clip.scalars, preference="point")
+    if clip is not None and clip["type"] == "scalar":
+        raw_mesh.set_active_scalars(name=clip["scalars"], preference="point")
         mesh = raw_mesh.clip_scalar(
-            scalars=clip.scalars,
-            invert=clip.invert,
-            value=clip.value)
+            scalars=clip["scalars"],
+            invert=clip["invert"],
+            value=clip["value"])
         mesh = mesh.extract_surface()
     else:
         mesh = raw_mesh.extract_surface()
@@ -226,7 +227,7 @@ def generate_mesh_for_sequence(context, time_point, name="TBB"):
     return blender_mesh
 
 
-def generate_vertex_colors(mesh, blender_mesh, list_point_data, time_step):
+def generate_vertex_colors(mesh, blender_mesh, list_point_data, time_point):
     # Prepare the mesh to loop over all its triangles
     blender_mesh.calc_loop_triangles()
     vertex_ids = np.array([triangle.vertices for triangle in blender_mesh.loop_triangles]).flatten()
@@ -239,7 +240,7 @@ def generate_vertex_colors(mesh, blender_mesh, list_point_data, time_step):
             key = raw_key.split("@")[0]
             if key not in mesh.point_data.keys():
                 print("WARNING::generate_vertex_colors: the field array named '" +
-                      key + "' does not exist (time step = " + str(time_step) + ")")
+                      key + "' does not exist (time step = " + str(time_point) + ")")
             else:
                 filtered_keys.append(key)
 
@@ -342,7 +343,7 @@ def update_sequence_mesh(obj, settings, time_point):
 
 def get_clip_from_scene_clip(clip) -> dict:
     return {"type": clip.type,
-            "scalars": clip.clip_scalars.split("@")[0],
+            "scalars": clip.scalars_props.scalars.split("@")[0],
             "value": clip.scalars_props["value"],
             "invert": clip.scalars_props.invert}
 
