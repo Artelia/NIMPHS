@@ -67,7 +67,7 @@ def register():
     # Register custom properties
     Scene.tbb_openfoam_tmp_data = TBB_OpenFOAMTemporaryData()
     Scene.tbb_openfoam_settings = PointerProperty(type=TBB_OpenFOAMSettings)
-    Scene.tbb_clip = PointerProperty(type=TBB_OpenFOAMClipProperty)
+    Scene.tbb_openfoam_clip = PointerProperty(type=TBB_OpenFOAMClipProperty)
     Object.tbb_openfoam_sequence = PointerProperty(type=TBB_OpenFOAMSequenceProperty)
 
     # Custom progress bar

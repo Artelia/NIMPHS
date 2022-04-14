@@ -36,7 +36,7 @@ class TBB_OT_OpenFOAMCreateSequence(Operator):
     def execute(self, context):
         wm = context.window_manager
         settings = context.scene.tbb_openfoam_settings
-        clip = context.scene.tbb_clip
+        clip = context.scene.tbb_openfoam_clip
 
         if settings.sequence_type == "mesh_sequence":
             # Create timer event

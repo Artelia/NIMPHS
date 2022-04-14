@@ -1,9 +1,10 @@
 # <pep8 compliant>
 import bpy
+from bpy.types import Mesh
 from bpy.app.handlers import persistent
 from rna_prop_ui import rna_idprop_ui_create
 
-from pyvista import OpenFOAMReader
+from pyvista import OpenFOAMReader, UnstructuredGrid
 from pathlib import Path
 import numpy as np
 import time
@@ -11,7 +12,7 @@ import time
 from ...properties.OpenFOAM.Scene.settings import settings_dynamic_properties
 
 
-def load_openopenfoam_file(file_path):
+def load_openopenfoam_file(file_path: str) -> tuple[bool, OpenFOAMReader]:
     file = Path(file_path)
     if not file.exists():
         return False, None
@@ -21,15 +22,31 @@ def load_openopenfoam_file(file_path):
     return True, file_reader
 
 
-def clip_mesh(clip, mesh):
-    if clip.type == "scalar":
-        scal = clip.scalars_props.scalars.split("@")[0]
-        val = clip.scalars_props["value"]
-        inv = clip.scalars_props.invert
-        mesh.set_active_scalars(name=scal, preference="point")
-        clipped_mesh = mesh.clip_scalar(scalars=scal, invert=inv, value=val)
+def generate_mesh(file_reader: OpenFOAMReader, time_point: int,
+                  clip: dict = None) -> tuple[np.array, np.array, UnstructuredGrid]:
+    # Read data from the given OpenFoam file
+    file_reader.set_active_time_point(time_point)
+    data = file_reader.read()
+    raw_mesh = data["internalMesh"]
 
-    return clipped_mesh
+    # Apply clip
+    if clip is not None and clip.type == "scalar":
+        raw_mesh.set_active_scalars(name=clip.scalars, preference="point")
+        mesh = raw_mesh.clip_scalar(
+            scalars=clip.scalars,
+            invert=clip.invert,
+            value=clip.value)
+        mesh = mesh.extract_surface()
+    else:
+        mesh = raw_mesh.extract_surface()
+
+    mesh.triangulate(inplace=True)
+    mesh.compute_normals(inplace=True, consistent_normals=False, split_vertices=True)
+
+    vertices = np.array(mesh.points)
+    faces = np.array(mesh.faces.reshape((-1, 4))[:, 1:4])
+
+    return vertices, faces, mesh
 
 
 # The preview_mesh should be some extracted surface
@@ -87,7 +104,7 @@ def create_preview_material(object, scalar_to_preview, name="TBB_preview_materia
 
 def update_properties_values(context, file_reader):
     settings = context.scene.tbb_openfoam_settings
-    clip = context.scene.tbb_clip
+    clip = context.scene.tbb_openfoam_clip
 
     # Settings
     max_time_step = file_reader.number_time_points
@@ -186,29 +203,15 @@ def update_settings_props(settings, new_max):
         prop.update(default=default, min=0, soft_min=0, max=new_max, soft_max=new_max)
 
 
-def generate_mesh_for_sequence(context, time_step, name="TBB"):
+def generate_mesh_for_sequence(context, time_point, name="TBB"):
     settings = context.scene.tbb_openfoam_settings
-    clip = context.scene.tbb_clip
 
     # Read data from the given OpenFoam file
     file_reader = OpenFOAMReader(settings.file_path)
-    file_reader.set_active_time_point(time_step)
-    data = file_reader.read()
-    raw_mesh = data["internalMesh"]
-
-    # Prepare the mesh for Blender
-    if clip.type != "no_clip":
-        mesh = clip_mesh(clip, raw_mesh)
-        mesh = mesh.extract_surface()
-    else:
-        mesh = raw_mesh.extract_surface()
-
-    mesh = mesh.triangulate()
-    mesh = mesh.compute_normals(consistent_normals=False, split_vertices=True)
-
-    # Prepare data to create the mesh into blender
-    vertices = mesh.points
-    faces = mesh.faces.reshape((-1, 4))[:, 1:4]
+    vertices, faces, mesh = generate_mesh(
+        file_reader,
+        time_point,
+        get_clip_from_scene_clip(context.scene.tbb_openfoam_clip))
 
     # Create mesh from python data
     blender_mesh = bpy.data.meshes.new(name + "_mesh")
@@ -218,7 +221,7 @@ def generate_mesh_for_sequence(context, time_step, name="TBB"):
 
     # Import point data as vertex colors
     if settings.import_point_data:
-        blender_mesh = generate_vertex_colors(mesh, blender_mesh, settings.list_point_data, time_step)
+        blender_mesh = generate_vertex_colors(mesh, blender_mesh, settings.list_point_data, time_point)
 
     return blender_mesh
 
@@ -326,28 +329,7 @@ def update_sequence_mesh(obj, settings, time_point):
               "' does not exist. Available time points: " + str(file_reader.number_time_points))
         return
 
-    # Read file at the current time point
-    file_reader.set_active_time_point(time_point)
-    data = file_reader.read()
-    raw_mesh = data["internalMesh"]
-
-    # Prepare the mesh for Blender
-    if settings.clip_type == "scalar":
-        mesh = clip_scalars_mesh(
-            raw_mesh,
-            settings.clip_scalars.split("@")[0],
-            settings.clip_value,
-            settings.clip_invert)
-        mesh = mesh.extract_surface()
-    else:
-        mesh = raw_mesh.extract_surface()
-
-    mesh = mesh.triangulate()
-    mesh = mesh.compute_normals(consistent_normals=False, split_vertices=True)
-
-    # Prepare data to create the mesh into blender
-    vertices = mesh.points
-    faces = mesh.faces.reshape((-1, 4))[:, 1:4]
+    vertices, faces, mesh = generate_mesh(file_reader, time_point, get_clip_from_sequence_settings(settings))
 
     blender_mesh = obj.data
     blender_mesh.clear_geometry()
@@ -358,8 +340,15 @@ def update_sequence_mesh(obj, settings, time_point):
         blender_mesh = generate_vertex_colors(mesh, blender_mesh, settings.list_point_data, time_point)
 
 
-def clip_scalars_mesh(mesh, scalars, value, invert):
-    mesh.set_active_scalars(name=scalars, preference="point")
-    clipped_mesh = mesh.clip_scalar(scalars=scalars, invert=invert, value=value)
+def get_clip_from_scene_clip(clip) -> dict:
+    return {"type": clip.type,
+            "scalars": clip.clip_scalars.split("@")[0],
+            "value": clip.scalars_props["value"],
+            "invert": clip.scalars_props.invert}
 
-    return clipped_mesh
+
+def get_clip_from_sequence_settings(settings) -> dict:
+    return {"type": settings.clip_type,
+            "scalars": settings.clip_scalars.split("@")[0],
+            "value": settings.clip_value,
+            "invert": settings.clip_invert}

@@ -25,7 +25,7 @@ class TBB_PT_OpenFOAMClip(Panel):
     def draw(self, context):
         layout = self.layout
         settings = context.scene.tbb_openfoam_settings
-        clip = context.scene.tbb_clip
+        clip = context.scene.tbb_openfoam_clip
         tmp_data = context.scene.tbb_openfoam_tmp_data
 
         # Check if temp mesh data is loaded. If not, do not show clip settings and show a message asking to hit preview.

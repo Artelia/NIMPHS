@@ -19,11 +19,15 @@ class TBB_OT_OpenFOAMPreview(Operator):
 
     def execute(self, context):
         settings = context.scene.tbb_openfoam_settings
-        clip = context.scene.tbb_clip
+        clip = context.scene.tbb_openfoam_clip
         tmp_data = context.scene.tbb_openfoam_tmp_data
 
         if settings.file_path == "":
             self.report({"ERROR"}, "Please import a file first.")
+            return {"FINISHED"}
+
+        if clip.type != "" and clip.scalars_props.scalars == "":
+            self.report({"ERROR"}, "Please select a scalar to clip on. You may need to reload the file if none are shown.")
             return {"FINISHED"}
 
         start = time.time()
@@ -32,10 +36,6 @@ class TBB_OT_OpenFOAMPreview(Operator):
         success, file_reader = load_openopenfoam_file(settings.file_path)
         if not success:
             self.report({"ERROR"}, "The choosen file does not exist.")
-            return {"FINISHED"}
-
-        if clip.type != "" and clip.scalars_props.scalars == "":
-            self.report({"ERROR"}, "Please select a scalar to clip on. You may need to reload the file if none are shown.")
             return {"FINISHED"}
 
         # Read data at the choosen time step

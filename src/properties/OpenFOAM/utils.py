@@ -52,7 +52,7 @@ def clip_scalar_items_sequence(self, _context) -> list:
 
 
 def update_scalar_value_prop(_self, context) -> None:
-    scalars_props = context.scene.tbb_clip.scalars_props
+    scalars_props = context.scene.tbb_openfoam_clip.scalars_props
     scalars = scalars_props.scalars.split("@")[0]
 
     values = context.scene.tbb_openfoam_tmp_data.mesh[scalars]
