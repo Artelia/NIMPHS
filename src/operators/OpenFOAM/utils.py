@@ -1,3 +1,4 @@
+# <pep8 compliant>
 import bpy
 from bpy.app.handlers import persistent
 from rna_prop_ui import rna_idprop_ui_create
@@ -7,9 +8,10 @@ from pathlib import Path
 import numpy as np
 import time
 
-from ..properties.settings import settings_dynamic_properties
+from ...properties.OpenFOAM.Scene.settings import settings_dynamic_properties
 
-def load_openfoam_file(file_path):
+
+def load_openopenfoam_file(file_path):
     file = Path(file_path)
     if not file.exists():
         return False, None
@@ -19,7 +21,6 @@ def load_openfoam_file(file_path):
     return True, file_reader
 
 
-
 def clip_mesh(clip, mesh):
     if clip.type == "scalar":
         scal = clip.scalars_props.scalars.split("@")[0]
@@ -27,9 +28,8 @@ def clip_mesh(clip, mesh):
         inv = clip.scalars_props.invert
         mesh.set_active_scalars(name=scal, preference="point")
         clipped_mesh = mesh.clip_scalar(scalars=scal, invert=inv, value=val)
-    
-    return clipped_mesh
 
+    return clipped_mesh
 
 
 # The preview_mesh should be some extracted surface
@@ -51,13 +51,12 @@ def generate_preview_object(preview_mesh, context, name="TBB_preview"):
         blender_mesh = bpy.data.meshes.new(name + "_mesh")
         obj = bpy.data.objects.new(name, blender_mesh)
         context.collection.objects.link(obj)
-    
+
     context.view_layer.objects.active = obj
     blender_mesh.clear_geometry()
     blender_mesh.from_pydata(vertices, [], faces)
 
     return blender_mesh, obj, preview_mesh
-
 
 
 def create_preview_material(object, scalar_to_preview, name="TBB_preview_material"):
@@ -72,7 +71,7 @@ def create_preview_material(object, scalar_to_preview, name="TBB_preview_materia
     # Get node tree
     mat_node_tree = material.node_tree
     vertex_color_node = mat_node_tree.nodes.get("TBB_vertex_color_node")
-    if vertex_color_node == None:
+    if vertex_color_node is None:
         # If the node does not exist, create it and link it to the shader
         vertex_color_node = mat_node_tree.nodes.new(type="ShaderNodeVertexColor")
         vertex_color_node.name = "TBB_vertex_color_node"
@@ -86,19 +85,18 @@ def create_preview_material(object, scalar_to_preview, name="TBB_preview_materia
     object.active_material = material
 
 
-
 def update_properties_values(context, file_reader):
-    settings = context.scene.tbb_settings
+    settings = context.scene.tbb_openfoam_settings
     clip = context.scene.tbb_clip
 
     # Settings
-    max_time_step =  file_reader.number_time_points
+    max_time_step = file_reader.number_time_points
     update_settings_props(settings, max_time_step - 1)
     update_mesh_sequence_frame_settings(settings, context.scene, max_time_step)
 
     # Scalar value prop
     # TODO: find a better way to create these properties
-    if clip.scalars_props.get("value") == None:
+    if clip.scalars_props.get("value") is None:
         rna_idprop_ui_create(
             clip.scalars_props,
             "value",
@@ -109,7 +107,7 @@ def update_properties_values(context, file_reader):
             soft_max=1.0,
             description="Set the clipping value"
         )
-    if clip.scalars_props.get("vector_value") == None:
+    if clip.scalars_props.get("vector_value") is None:
         rna_idprop_ui_create(
             clip.scalars_props,
             "vector_value",
@@ -122,13 +120,12 @@ def update_properties_values(context, file_reader):
         )
 
 
-
 def update_mesh_sequence_frame_settings(settings, scene, max_length):
     frame_start_prop = settings.get("frame_start")
     anim_length_prop = settings.get("anim_length")
 
     # Create the properties if they do not exist
-    if frame_start_prop == None:
+    if frame_start_prop is None:
         rna_idprop_ui_create(
             settings,
             "frame_start",
@@ -144,10 +141,11 @@ def update_mesh_sequence_frame_settings(settings, scene, max_length):
         new_min = scene.frame_start
         new_max = scene.frame_end
         default = settings["frame_start"]
-        if new_min > default or new_max < default: default = new_min
+        if new_min > default or new_max < default:
+            default = new_min
         prop.update(default=default, min=new_min, soft_min=new_min, max=new_max, soft_max=new_max)
 
-    if anim_length_prop == None:
+    if anim_length_prop is None:
         rna_idprop_ui_create(
             settings,
             "anim_length",
@@ -162,14 +160,14 @@ def update_mesh_sequence_frame_settings(settings, scene, max_length):
         prop = settings.id_properties_ui("anim_length")
         new_max = max_length
         default = settings["anim_length"]
-        if new_min > default or new_max < default: default = new_min
+        if new_min > default or new_max < default:
+            default = new_min
         prop.update(default=default, max=new_max, soft_max=new_max)
-
 
 
 def update_settings_props(settings, new_max):
     for prop_id, prop_desc in settings_dynamic_properties:
-        if settings.get(prop_id) == None:
+        if settings.get(prop_id) is None:
             rna_idprop_ui_create(
                 settings,
                 prop_id,
@@ -183,13 +181,13 @@ def update_settings_props(settings, new_max):
 
         prop = settings.id_properties_ui(prop_id)
         default = settings[prop_id]
-        if new_max < default: default = 0
+        if new_max < default:
+            default = 0
         prop.update(default=default, min=0, soft_min=0, max=new_max, soft_max=new_max)
 
 
-
 def generate_mesh_for_sequence(context, time_step, name="TBB"):
-    settings = context.scene.tbb_settings
+    settings = context.scene.tbb_openfoam_settings
     clip = context.scene.tbb_clip
 
     # Read data from the given OpenFoam file
@@ -197,7 +195,7 @@ def generate_mesh_for_sequence(context, time_step, name="TBB"):
     file_reader.set_active_time_point(time_step)
     data = file_reader.read()
     raw_mesh = data["internalMesh"]
-    
+
     # Prepare the mesh for Blender
     if clip.type != "no_clip":
         mesh = clip_mesh(clip, raw_mesh)
@@ -225,7 +223,6 @@ def generate_mesh_for_sequence(context, time_step, name="TBB"):
     return blender_mesh
 
 
-
 def generate_vertex_colors(mesh, blender_mesh, list_point_data, time_step):
     # Prepare the mesh to loop over all its triangles
     blender_mesh.calc_loop_triangles()
@@ -238,7 +235,8 @@ def generate_vertex_colors(mesh, blender_mesh, list_point_data, time_step):
         if raw_key != "":
             key = raw_key.split("@")[0]
             if key not in mesh.point_data.keys():
-                print("WARNING::generate_vertex_colors: the field array named '" + key + "' does not exist (time step = " + str(time_step) + ")")
+                print("WARNING::generate_vertex_colors: the field array named '" +
+                      key + "' does not exist (time step = " + str(time_step) + ")")
             else:
                 filtered_keys.append(key)
 
@@ -249,7 +247,7 @@ def generate_vertex_colors(mesh, blender_mesh, list_point_data, time_step):
         vertex_colors = blender_mesh.vertex_colors.new(name=field_array, do_init=True)
         # Normalize data
         colors = remap_array(colors)
-        
+
         colors = 1.0 - colors
         # 1D scalars
         if len(colors.shape) == 1:
@@ -258,7 +256,7 @@ def generate_vertex_colors(mesh, blender_mesh, list_point_data, time_step):
         # 2D scalars
         if len(colors.shape) == 2:
             data = colors[vertex_ids]
-        
+
         # Add a one for the 'alpha' color channel
         ones = np.ones((len(vertex_ids), 1))
         data = np.hstack((data, ones))
@@ -267,7 +265,6 @@ def generate_vertex_colors(mesh, blender_mesh, list_point_data, time_step):
         vertex_colors.data.foreach_set("color", data)
 
     return blender_mesh
-
 
 
 # Code taken from the Stop-motion-OBJ addon
@@ -292,7 +289,6 @@ def add_mesh_to_sequence(seqObj, mesh):
     return mss.numMeshes - 1
 
 
-
 def remap_array(input, out_min=0.0, out_max=1.0):
     in_min = np.min(input)
     in_max = np.max(input)
@@ -303,7 +299,6 @@ def remap_array(input, out_min=0.0, out_max=1.0):
         return np.ones(shape=input.shape)
 
     return out_min + (out_max - out_min) * ((input - in_min) / (in_max - in_min))
-
 
 
 @persistent
@@ -322,23 +317,27 @@ def update_sequence_on_frame_change(scene):
                     print("Update::" + settings.name + " : " + "{:.4f}".format(time.time() - start) + "s")
 
 
-
 def update_sequence_mesh(obj, settings, time_point):
     file_reader = OpenFOAMReader(settings.file_path)
-    
+
     # Check if time point is ok
     if time_point >= file_reader.number_time_points:
-        print("WARNING::update_sequence_mesh: time point '" + str(time_point) + "' does not exist. Available time points: " + str(file_reader.number_time_points))
+        print("WARNING::update_sequence_mesh: time point '" + str(time_point) +
+              "' does not exist. Available time points: " + str(file_reader.number_time_points))
         return
 
     # Read file at the current time point
     file_reader.set_active_time_point(time_point)
     data = file_reader.read()
     raw_mesh = data["internalMesh"]
-    
+
     # Prepare the mesh for Blender
     if settings.clip_type == "scalar":
-        mesh = clip_scalars_mesh(raw_mesh, settings.clip_scalars.split("@")[0], settings.clip_value, settings.clip_invert)
+        mesh = clip_scalars_mesh(
+            raw_mesh,
+            settings.clip_scalars.split("@")[0],
+            settings.clip_value,
+            settings.clip_invert)
         mesh = mesh.extract_surface()
     else:
         mesh = raw_mesh.extract_surface()
@@ -359,9 +358,8 @@ def update_sequence_mesh(obj, settings, time_point):
         blender_mesh = generate_vertex_colors(mesh, blender_mesh, settings.list_point_data, time_point)
 
 
-
 def clip_scalars_mesh(mesh, scalars, value, invert):
     mesh.set_active_scalars(name=scalars, preference="point")
     clipped_mesh = mesh.clip_scalar(scalars=scalars, invert=invert, value=value)
-    
+
     return clipped_mesh

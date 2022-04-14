@@ -1,4 +1,5 @@
-class TBB_temporary_data():
+# <pep8 compliant>
+class TBB_TemporaryData():
     file_reader = None
     file_data = None
     mesh_data = None
@@ -17,15 +18,15 @@ class TBB_temporary_data():
         except ValueError as error:
             print("ERROR::TBB_temporary_data: " + error)
 
-        if new_file_data == None:
+        if new_file_data is None:
             self.file_data = self.file_reader.read()
         else:
             self.file_data = new_file_data
 
-        if new_mesh_data == None:
+        if new_mesh_data is None:
             self.mesh_data = self.file_data["internalMesh"]
         else:
             self.mesh_data = new_mesh_data
 
     def is_ok(self):
-        return self.file_reader != None and self.file_data != None and self.mesh_data != None
+        return self.file_reader is not None and self.file_data is not None and self.mesh_data is not None

@@ -1,32 +1,35 @@
+# <pep8 compliant>
 from bpy.types import Operator
 
 import time
 
-from .utils import (
+from ..utils import (
     clip_mesh,
-    load_openfoam_file,
+    load_openopenfoam_file,
     generate_preview_object,
     generate_vertex_colors,
     create_preview_material
 )
 
-class TBB_OT_Preview(Operator):
-    bl_idname="tbb.preview"
-    bl_label="Preview"
-    bl_description="Preview the current loaded file"
+
+class TBB_OT_OpenFOAMPreview(Operator):
+    bl_idname = "tbb.preview"
+    bl_label = "Preview"
+    bl_description = "Preview the current loaded file"
 
     def execute(self, context):
-        settings = context.scene.tbb_settings
+        settings = context.scene.tbb_openfoam_settings
         clip = context.scene.tbb_clip
-        temp_data = context.scene.tbb_temp_data
+        temp_data = context.scene.tbb_tmp_data
 
         if settings.file_path == "":
             self.report({"ERROR"}, "Please import a file first.")
             return {"FINISHED"}
 
         start = time.time()
-        # TODO: changing time point does not work if we do not load the file again... We would like to use the file_reader from TBB_temp_data.
-        success, file_reader = load_openfoam_file(settings.file_path)
+        # TODO: changing time point does not work if we do not load the file
+        # again... We would like to use the file_reader from tbb_tmp_data.
+        success, file_reader = load_openopenfoam_file(settings.file_path)
         if not success:
             self.report({"ERROR"}, "The choosen file does not exist.")
             return {"FINISHED"}
@@ -34,15 +37,16 @@ class TBB_OT_Preview(Operator):
         if clip.type != "" and clip.scalars_props.scalars == "":
             self.report({"ERROR"}, "Please select a scalar to clip on. You may need to reload the file if none are shown.")
             return {"FINISHED"}
-        
+
         # Read data at the choosen time step
         try:
             file_reader.set_active_time_point(settings["preview_time_point"])
         except ValueError as error:
-            print("ERROR::TBB_OT_Preview: " + str(error))
-            self.report({"ERROR"}, "The selected time step is not defined (" + str(settings["preview_time_point"]) + ").")
+            print("ERROR::TBB_OT_OpenFOAMPreview: " + str(error))
+            self.report({"ERROR"}, "The selected time step is not defined (" +
+                        str(settings["preview_time_point"]) + ").")
             return {"FINISHED"}
-        
+
         data = file_reader.read()
         raw_mesh = data["internalMesh"]
 
@@ -51,8 +55,10 @@ class TBB_OT_Preview(Operator):
             try:
                 preview_mesh = clip_mesh(clip, raw_mesh)
             except KeyError as error:
-                print("ERROR::TBB_OT_Preview: " + str(error))
-                self.report({"ERROR"}, "Can't clip on data named '" + str(clip.scalars_props.scalars) + "'. This field array can't be active.")
+                print("ERROR::TBB_OT_OpenFOAMPreview: " + str(error))
+                self.report({"ERROR"}, "Can't clip on data named '" +
+                            str(clip.scalars_props.scalars) +
+                            "'. This field array can't be active.")
                 # Update temporary data, please read the comment below.
                 temp_data.update(file_reader, settings["preview_time_point"], data, raw_mesh)
                 return {"FINISHED"}
@@ -68,16 +74,20 @@ class TBB_OT_Preview(Operator):
         temp_data.update(file_reader, settings["preview_time_point"], data, raw_mesh)
 
         try:
-            scalars_to_preview = str(settings.preview_point_data.split("@")[0]) # Field array name
+            scalars_to_preview = str(settings.preview_point_data.split("@")[0])  # Field array name
             blender_mesh, obj, preview_mesh = generate_preview_object(preview_mesh, context)
-            blender_mesh = generate_vertex_colors(preview_mesh, blender_mesh, scalars_to_preview, settings["preview_time_point"])
+            blender_mesh = generate_vertex_colors(
+                preview_mesh,
+                blender_mesh,
+                scalars_to_preview,
+                settings["preview_time_point"])
             create_preview_material(obj, scalars_to_preview)
         except Exception as error:
-            print("ERROR::TBB_OT_Preview: " + str(error))
+            print("ERROR::TBB_OT_OpenFOAMPreview: " + str(error))
             self.report({"ERROR"}, "Something went wrong building the mesh")
             return {"FINISHED"}
 
         print("Preview::openfoam: " + "{:.4f}".format(time.time() - start) + "s")
         self.report({"INFO"}, "Mesh successfully built: checkout the viewport.")
-        
+
         return {"FINISHED"}

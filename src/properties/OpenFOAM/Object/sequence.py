@@ -1,3 +1,4 @@
+# <pep8 compliant>
 from bpy.types import PropertyGroup
 from bpy.props import (
     BoolProperty,
@@ -8,9 +9,10 @@ from bpy.props import (
     FloatProperty
 )
 
-from .utils import scalar_items_sequence
+from ..utils import scalar_items_sequence
 
-class TBB_openfoam_sequence(PropertyGroup):
+
+class TBB_OpenFOAMSequenceProperty(PropertyGroup):
     is_on_frame_change_sequence: BoolProperty(
         name="Is on frame change sequence",
         description="Describes if this object is a sequence which updates when the frame changes",

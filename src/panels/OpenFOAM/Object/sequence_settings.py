@@ -1,12 +1,14 @@
+# <pep8 compliant>
 from bpy.types import Panel
 
-class TBB_PT_Sequence(Panel):
-    bl_label = "Toolsbox blender sequence"
-    bl_idname = "TBB_PT_Sequence"
+
+class TBB_PT_OpenFOAMSequenceSettings(Panel):
+    bl_label = "OpenFOAM sequence settings"
+    bl_idname = "TBB_PT_OpenFOAMSequenceSettings"
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
     bl_context = "object"
-    
+
     @classmethod
     def poll(self, context):
         obj = context.active_object

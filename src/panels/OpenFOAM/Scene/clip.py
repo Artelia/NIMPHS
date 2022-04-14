@@ -1,9 +1,11 @@
+# <pep8 compliant>
 from bpy.types import Panel
 
-class TBB_PT_Clip(Panel):
+
+class TBB_PT_OpenFOAMClip(Panel):
     bl_label = "Clip"
-    bl_idname = "TBB_PT_Clip"
-    bl_parent_id = "TBB_PT_MainPanel"
+    bl_idname = "TBB_PT_OpenFOAMClip"
+    bl_parent_id = "TBB_PT_OpenFOAMMainPanel"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_options = {"DEFAULT_CLOSED"}
@@ -14,21 +16,23 @@ class TBB_PT_Clip(Panel):
         # Even if no objects are selected, the last selected object remains in the active_objects variable
         if len(context.selected_objects) == 0:
             obj = None
-            
-        if obj == None:
-            return context.scene.tbb_temp_data.is_ok()
-        else:
-            return context.scene.tbb_temp_data.is_ok() and not obj.tbb_openfoam_sequence.is_on_frame_change_sequence
 
-    def draw(self,context):
+        if obj is None:
+            return context.scene.tbb_tmp_data.is_ok()
+        else:
+            return context.scene.tbb_tmp_data.is_ok() and not obj.tbb_openfoam_sequence.is_on_frame_change_sequence
+
+    def draw(self, context):
         layout = self.layout
-        settings = context.scene.tbb_settings
+        settings = context.scene.tbb_openfoam_settings
         clip = context.scene.tbb_clip
-        temp_data = context.scene.tbb_temp_data
+        temp_data = context.scene.tbb_tmp_data
 
         # Check if temp mesh data is loaded. If not, do not show clip settings and show a message asking to hit preview.
-        if temp_data.time_step != settings["preview_time_point"]: lock_clip_settings = True
-        else: lock_clip_settings = False
+        if temp_data.time_step != settings["preview_time_point"]:
+            lock_clip_settings = True
+        else:
+            lock_clip_settings = False
 
         # Check if we need to lock the ui
         enable_rows = not settings.create_sequence_is_running and not lock_clip_settings
@@ -54,7 +58,7 @@ class TBB_PT_Clip(Panel):
             row = layout.row()
             row.enabled = enable_rows
             row.prop(clip.scalars_props, "invert")
-        
+
         if lock_clip_settings:
             row = layout.row()
             row.label(text="Error: no data available at this time step. Please reload of hit 'preview'.", icon="ERROR")

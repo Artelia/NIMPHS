@@ -1,9 +1,11 @@
+# <pep8 compliant>
 from bpy.types import PropertyGroup
 from bpy.props import BoolProperty, EnumProperty, PointerProperty
 
-from .utils import scalar_items, update_scalar_value_prop
+from ..utils import scalar_items, update_scalar_value_prop
 
-class TBB_clip_scalar(PropertyGroup):
+
+class TBB_OpenFOAMClipScalarProperty(PropertyGroup):
     scalars: EnumProperty(
         items=scalar_items,
         name="Scalars",
@@ -23,7 +25,7 @@ When False, only values above value will be kept",
     )
 
 
-class TBB_clip(PropertyGroup):
+class TBB_OpenFOAMClipProperty(PropertyGroup):
     type: EnumProperty(
         items=[
             ("no_clip", "None", "Do not clip"),
@@ -35,4 +37,4 @@ class TBB_clip(PropertyGroup):
         default="no_clip",
     )
 
-    scalars_props: PointerProperty(type=TBB_clip_scalar)
+    scalars_props: PointerProperty(type=TBB_OpenFOAMClipScalarProperty)

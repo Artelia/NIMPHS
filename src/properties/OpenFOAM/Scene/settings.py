@@ -1,9 +1,11 @@
+# <pep8 compliant>
 from bpy.types import PropertyGroup
 from bpy.props import StringProperty, BoolProperty, EnumProperty, IntProperty
 
-from .utils import scalar_items
+from ..utils import scalar_items
 
-class TBB_settings(PropertyGroup):
+
+class TBB_OpenFOAMSettings(PropertyGroup):
     file_path: StringProperty(
         name="OpenFoam file",
         description="Path to the .foam file"
@@ -23,12 +25,14 @@ class TBB_settings(PropertyGroup):
 
     sequence_type: EnumProperty(
         items=[
-            ("mesh_sequence", "Mesh sequence", "Make a sequence by creating a mesh for each time step (good option for small meshes)"),
-            ("on_frame_change", "On frame change", "Make a sequence by changing the mesh on each frame change (it only keeps the last created mesh, good option for large meshes)")
-        ],
+            ("mesh_sequence",
+             "Mesh sequence",
+             "Make a sequence by creating a mesh for each time step (good option for small meshes)"),
+            ("on_frame_change",
+             "On frame change",
+             "Make a sequence by changing the mesh on each frame change (it only keeps the last created mesh, good option for large meshes)")],
         name="Sequence type",
-        description="Select a sequence type"
-    )
+        description="Select a sequence type")
 
     # frame_start: IntProperty dynamically created
 
@@ -57,6 +61,7 @@ class TBB_settings(PropertyGroup):
         description="List of point data to import as vertex color groups. Separate each with a semicolon",
         default=""
     )
+
 
 settings_dynamic_properties = [
     ("preview_time_point", "Time step used for the preview section"),

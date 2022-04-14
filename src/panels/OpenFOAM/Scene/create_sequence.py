@@ -1,11 +1,13 @@
+# <pep8 compliant>
 from bpy.types import Panel
 
-from .utils import sequence_name_already_exist
+from ..utils import sequence_name_already_exist
 
-class TBB_PT_CreateSequence(Panel):
+
+class TBB_PT_OpenFOAMCreateSequence(Panel):
     bl_label = "Create sequence"
-    bl_idname = "TBB_PT_CreateSequence"
-    bl_parent_id = "TBB_PT_MainPanel"
+    bl_idname = "TBB_PT_OpenFOAMCreateSequence"
+    bl_parent_id = "TBB_PT_OpenFOAMMainPanel"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_options = {"DEFAULT_CLOSED"}
@@ -16,19 +18,19 @@ class TBB_PT_CreateSequence(Panel):
         # Even if no objects are selected, the last selected object remains in the active_objects variable
         if len(context.selected_objects) == 0:
             obj = None
-            
-        if obj == None:
-            return context.scene.tbb_temp_data.is_ok()
+
+        if obj is None:
+            return context.scene.tbb_tmp_data.is_ok()
         else:
-            return context.scene.tbb_temp_data.is_ok() and not obj.tbb_openfoam_sequence.is_on_frame_change_sequence
+            return context.scene.tbb_tmp_data.is_ok() and not obj.tbb_openfoam_sequence.is_on_frame_change_sequence
 
     def draw(self, context):
         layout = self.layout
-        settings = context.scene.tbb_settings
+        settings = context.scene.tbb_openfoam_settings
 
         # Check if we need to lock the ui
         enable_rows = not settings.create_sequence_is_running
-        snae = sequence_name_already_exist(settings.sequence_name) # snae = sequence_name_already_exist
+        snae = sequence_name_already_exist(settings.sequence_name)  # snae = sequence_name_already_exist
 
         row = layout.row()
         row.enabled = enable_rows
@@ -63,7 +65,7 @@ class TBB_PT_CreateSequence(Panel):
             row = layout.row()
             row.enabled = enable_rows
             row.prop(settings, "list_point_data", text="List")
-            
+
         row = layout.row()
         row.enabled = not snae
         row.operator("tbb.create_sequence", text="Create sequence", icon="RENDER_ANIMATION")

@@ -1,3 +1,4 @@
+# <pep8 compliant>
 from bpy.types import Scene, VIEW3D_HT_tool_header
 from bpy.props import FloatProperty, StringProperty
 
@@ -6,14 +7,18 @@ DEV_MODE = True
 # Inspired by: https://blog.michelanders.nl/2017/04/how-to-add-progress-indicator-to-the-info-header-in-blender.html
 
 # Update function to tag all info areas for redraw
+
+
 def update(self, context):
     areas = context.window.screen.areas
     for area in areas:
         if area.type == 'INFO':
             area.tag_redraw()
 
-# A variable where we can store the original draw funtion  
-info_header_draw = lambda s, c: None
+
+# A variable where we can store the original draw funtion
+def info_header_draw(s, c): return None
+
 
 def register_custom_progress_bar():
     # Use values between 0 and 100 to show the progress bar
