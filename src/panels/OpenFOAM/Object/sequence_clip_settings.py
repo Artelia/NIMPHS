@@ -26,7 +26,7 @@ class TBB_PT_OpenFOAMSequenceClipSettings(Panel):
 
         if clip.type == "scalar":
             row = layout.row()
-            row.prop(clip.scalar, "item", text="Scalars")
+            row.prop(clip.scalar, "name", text="Scalars")
 
             value_type = clip.scalar.name.split("@")[1]
             if value_type == "vector_value":

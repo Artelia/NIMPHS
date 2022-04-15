@@ -22,6 +22,42 @@ def load_openopenfoam_file(file_path: str) -> tuple[bool, OpenFOAMReader]:
     return True, file_reader
 
 
+def generate_sequence_object(operator, settings, clip) -> Object:
+    obj_name = settings.sequence_name + "_sequence"
+    blender_mesh = bpy.data.meshes.new(name=settings.sequence_name + "_mesh")
+    obj = bpy.data.objects.new(obj_name, blender_mesh)
+    obj.tbb_openfoam_sequence.name = obj_name
+    obj.tbb_openfoam_sequence.file_path = settings.file_path
+    obj.tbb_openfoam_sequence.update_on_frame_change = True
+    obj.tbb_openfoam_sequence.is_on_frame_change_sequence = True
+
+    # Set the selected time frame
+    obj.tbb_openfoam_sequence.frame_start = settings["frame_start"]
+    obj.tbb_openfoam_sequence.anim_length = settings["anim_length"]
+
+    # Set clip settings
+    obj.tbb_openfoam_sequence.clip.type = clip.type
+
+    # Sometimes, the selected scalar may not correspond to ones available in the EnumProperty.
+    # This happens when the selected scalar is not available at time point 0
+    # (the EnumProperty only reads data at time point 0 to create the list of
+    # available items)
+    try:
+        obj.tbb_openfoam_sequence.clip.scalar.name = clip.scalar.name
+    except TypeError as error:
+        print("ERROR::TBB_OT_OpenFOAMCreateSequence: " + str(error))
+        operator.report({"WARNING"}, "the selected scalar does not exist at time point 0 (selected from time point " +
+                        str(settings["preview_time_point"]) + ")")
+
+    obj.tbb_openfoam_sequence.clip.invert = clip.scalar.invert
+    obj.tbb_openfoam_sequence.clip.value = clip.scalar.value
+    obj.tbb_openfoam_sequence.clip.vector_value = clip.scalar.vector_value
+    obj.tbb_openfoam_sequence.import_point_data = settings.import_point_data
+    obj.tbb_openfoam_sequence.list_point_data = settings.list_point_data
+
+    return obj
+
+
 def generate_mesh(file_reader: OpenFOAMReader, time_point: int, clip=None,
                   mesh: UnstructuredGrid = None) -> tuple[np.array, np.array, UnstructuredGrid]:
     # Read data from the given OpenFoam file
@@ -127,7 +163,7 @@ def generate_vertex_colors(mesh: UnstructuredGrid, blender_mesh: Mesh, list_poin
             key = raw_key.split("@")[0]
             if key not in mesh.point_data.keys():
                 print("WARNING::generate_vertex_colors: the field array named '" +
-                      key + "' does not exist (time step = " + str(time_point) + ")")
+                      key + "' does not exist (time point = " + str(time_point) + ")")
             else:
                 filtered_keys.append(key)
 
@@ -191,7 +227,10 @@ def update_sequence_on_frame_change(scene: Scene) -> None:
 
                 if time_point >= 0 and time_point < settings.anim_length:
                     start = time.time()
-                    update_sequence_mesh(obj, settings, time_point)
+                    try:
+                        update_sequence_mesh(obj, settings, time_point)
+                    except Exception as error:
+                        print("ERROR::update_sequence_on_frame_change: " + settings.name + ", " + str(error))
                     print("Update::" + settings.name + " : " + "{:.4f}".format(time.time() - start) + "s")
 
 

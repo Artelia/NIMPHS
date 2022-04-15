@@ -61,4 +61,4 @@ class TBB_PT_OpenFOAMClip(Panel):
 
         if lock_clip_settings:
             row = layout.row()
-            row.label(text="Error: no data available at this time step. Please reload of hit 'preview'.", icon="ERROR")
+            row.label(text="Error: no data available at this time point. Please reload of hit 'preview'.", icon="ERROR")

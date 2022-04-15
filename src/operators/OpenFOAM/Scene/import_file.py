@@ -3,6 +3,8 @@ from bpy_extras.io_utils import ImportHelper
 from bpy.types import Operator
 from bpy.props import StringProperty
 
+import time
+
 from ..utils import load_openopenfoam_file, update_properties_values, generate_preview_object, generate_mesh
 
 
@@ -18,6 +20,7 @@ class TBB_OT_OpenFOAMImportFile(Operator, ImportHelper):
 
     def execute(self, context):
         settings = context.scene.tbb_openfoam_settings
+        start = time.time()
         success, file_reader = load_openopenfoam_file(self.filepath)
 
         if not success:
@@ -43,6 +46,7 @@ class TBB_OT_OpenFOAMImportFile(Operator, ImportHelper):
             self.report({"ERROR"}, "Something went wrong building the mesh")
             return {"FINISHED"}
 
+        print("Import::OpenFOAM: " + "{:.4f}".format(time.time() - start) + "s")
         self.report({"INFO"}, "File successfully imported")
 
         return {"FINISHED"}

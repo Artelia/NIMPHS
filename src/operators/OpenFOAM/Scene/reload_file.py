@@ -1,5 +1,6 @@
 # <pep8 compliant>
 from bpy.types import Operator
+import time
 
 from ..utils import load_openopenfoam_file, update_properties_values
 
@@ -16,6 +17,7 @@ class TBB_OT_OpenFOAMReloadFile(Operator):
             self.report({"ERROR"}, "Please select a file first")
             return {"FINISHED"}
 
+        start = time.time()
         success, file_reader = load_openopenfoam_file(settings.file_path)
         if not success:
             self.report({"ERROR"}, "The choosen file does not exist")
@@ -28,6 +30,7 @@ class TBB_OT_OpenFOAMReloadFile(Operator):
         context.scene.tbb_openfoam_tmp_data.update(file_reader, settings["preview_time_point"])
         settings.create_sequence_is_running = False
 
+        print("Reload::OpenFOAM: " + "{:.4f}".format(time.time() - start) + "s")
         self.report({"INFO"}, "Reload successfull")
 
         return {"FINISHED"}
