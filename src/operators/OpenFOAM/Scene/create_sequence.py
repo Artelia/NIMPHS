@@ -140,7 +140,7 @@ class TBB_OT_OpenFOAMCreateSequence(Operator):
                         (keyframe for keyframe in meshIdxCurve.keyframe_points if keyframe.co.x == context.scene.frame_current), None)
                     newKeyAtFrame.interpolation = 'CONSTANT'
 
-                print("CreateSequence::openfoam: " + "{:.4f}".format(time.time() - self.chrono_start) + "s, time_point = "
+                print("CreateSequence::OpenFOAM: " + "{:.4f}".format(time.time() - self.chrono_start) + "s, time_point = "
                       + str(self.current_time_point))
 
             else:

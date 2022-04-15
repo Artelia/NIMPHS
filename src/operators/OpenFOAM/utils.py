@@ -1,4 +1,5 @@
 # <pep8 compliant>
+from multiprocessing.sharedctypes import Value
 import bpy
 from bpy.types import Mesh, Object, Scene, Context
 from bpy.app.handlers import persistent
@@ -219,10 +220,11 @@ def add_mesh_to_sequence(seqObj: Object, blender_mesh: Mesh) -> int:
 def update_sequence_on_frame_change(scene: Scene) -> None:
     frame = scene.frame_current
 
-    for obj in scene.objects:
-        if obj.tbb_openfoam_sequence.is_on_frame_change_sequence:
-            if obj.tbb_openfoam_sequence.update_on_frame_change:
-                settings = obj.tbb_openfoam_sequence
+    if not scene.tbb_openfoam_settings.create_sequence_is_running:
+        for obj in scene.objects:
+            settings = obj.tbb_openfoam_sequence
+
+            if settings.is_on_frame_change_sequence and settings.update_on_frame_change:
                 time_point = frame - settings.frame_start
 
                 if time_point >= 0 and time_point < settings.anim_length:
@@ -231,7 +233,8 @@ def update_sequence_on_frame_change(scene: Scene) -> None:
                         update_sequence_mesh(obj, settings, time_point)
                     except Exception as error:
                         print("ERROR::update_sequence_on_frame_change: " + settings.name + ", " + str(error))
-                    print("Update::" + settings.name + " : " + "{:.4f}".format(time.time() - start) + "s")
+
+                    print("Update::OpenFOAM: " + settings.name + ", " + "{:.4f}".format(time.time() - start) + "s")
 
 
 def update_sequence_mesh(obj: Object, settings, time_point: int) -> None:
@@ -239,9 +242,8 @@ def update_sequence_mesh(obj: Object, settings, time_point: int) -> None:
 
     # Check if time point is ok
     if time_point >= file_reader.number_time_points:
-        print("WARNING::update_sequence_mesh: time point '" + str(time_point) +
-              "' does not exist. Available time points: " + str(file_reader.number_time_points))
-        return
+        raise ValueError("time point '" + str(time_point) + "' does not exist. Available time points: " +
+                         str(file_reader.number_time_points))
 
     vertices, faces, mesh = generate_mesh(file_reader, time_point, settings.clip)
 
