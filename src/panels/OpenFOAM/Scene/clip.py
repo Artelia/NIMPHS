@@ -25,7 +25,7 @@ class TBB_PT_OpenFOAMClip(Panel):
     def draw(self, context):
         layout = self.layout
         settings = context.scene.tbb_openfoam_settings
-        clip = context.scene.tbb_openfoam_clip
+        clip = context.scene.tbb_openfoam_settings.clip
         tmp_data = context.scene.tbb_openfoam_tmp_data
 
         # Check if temp mesh data is loaded. If not, do not show clip settings and show a message asking to hit preview.
@@ -44,20 +44,20 @@ class TBB_PT_OpenFOAMClip(Panel):
         if clip.type == "scalar":
             row = layout.row()
             row.enabled = enable_rows
-            row.prop(clip.scalars_props, "scalars")
+            row.prop(clip.scalar, "name")
 
             row = layout.row()
             row.enabled = enable_rows
 
-            is_vector_scalars = clip.scalars_props.scalars.split("@")[1] == "vector_value"
+            is_vector_scalars = clip.scalar.name.split("@")[1] == "vector_value"
             if is_vector_scalars:
-                row.prop(clip.scalars_props, '["vector_value"]', text="Value")
+                row.prop(clip.scalar, "vector_value", text="Value")
             else:
-                row.prop(clip.scalars_props, '["value"]', text="Value")
+                row.prop(clip.scalar, "value", text="Value")
 
             row = layout.row()
             row.enabled = enable_rows
-            row.prop(clip.scalars_props, "invert")
+            row.prop(clip.scalar, "invert")
 
         if lock_clip_settings:
             row = layout.row()

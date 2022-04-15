@@ -23,7 +23,7 @@ def load_openopenfoam_file(file_path: str) -> tuple[bool, OpenFOAMReader]:
 
 
 def generate_mesh(file_reader: OpenFOAMReader, time_point: int,
-                  clip: dict = None, raw_mesh: UnstructuredGrid = None) -> tuple[np.array, np.array, UnstructuredGrid]:
+                  clip=None, raw_mesh: UnstructuredGrid = None) -> tuple[np.array, np.array, UnstructuredGrid]:
     # Read data from the given OpenFoam file
     if raw_mesh is None:
         file_reader.set_active_time_point(time_point)
@@ -31,12 +31,10 @@ def generate_mesh(file_reader: OpenFOAMReader, time_point: int,
         raw_mesh = data["internalMesh"]
 
     # Apply clip
-    if clip is not None and clip["type"] == "scalar":
-        raw_mesh.set_active_scalars(name=clip["scalars"], preference="point")
-        mesh = raw_mesh.clip_scalar(
-            scalars=clip["scalars"],
-            invert=clip["invert"],
-            value=clip["value"])
+    if clip is not None and clip.type == "scalar":
+        name = clip.scalar.name.split("@")[0]
+        raw_mesh.set_active_scalars(name=name, preference="point")
+        mesh = raw_mesh.clip_scalar(scalars=name, invert=clip.scalar.invert, value=clip.scalar.value)
         mesh = mesh.extract_surface()
     else:
         mesh = raw_mesh.extract_surface()
@@ -105,37 +103,11 @@ def create_preview_material(object, scalar_to_preview, name="TBB_preview_materia
 
 def update_properties_values(context, file_reader):
     settings = context.scene.tbb_openfoam_settings
-    clip = context.scene.tbb_openfoam_clip
 
     # Settings
     max_time_step = file_reader.number_time_points
     update_settings_props(settings, max_time_step - 1)
     update_mesh_sequence_frame_settings(settings, context.scene, max_time_step)
-
-    # Scalar value prop
-    # TODO: find a better way to create these properties
-    if clip.scalars_props.get("value") is None:
-        rna_idprop_ui_create(
-            clip.scalars_props,
-            "value",
-            default=0.5,
-            min=0.0,
-            soft_min=0.0,
-            max=1.0,
-            soft_max=1.0,
-            description="Set the clipping value"
-        )
-    if clip.scalars_props.get("vector_value") is None:
-        rna_idprop_ui_create(
-            clip.scalars_props,
-            "vector_value",
-            default=(0.5, 0.5, 0.5),
-            min=0.0,
-            soft_min=0.0,
-            max=1.0,
-            soft_max=1.0,
-            description="Set the clipping value"
-        )
 
 
 def update_mesh_sequence_frame_settings(settings, scene, max_length):
@@ -209,10 +181,7 @@ def generate_mesh_for_sequence(context, time_point, name="TBB"):
 
     # Read data from the given OpenFoam file
     file_reader = OpenFOAMReader(settings.file_path)
-    vertices, faces, mesh = generate_mesh(
-        file_reader,
-        time_point,
-        get_clip_from_scene_clip(context.scene.tbb_openfoam_clip))
+    vertices, faces, mesh = generate_mesh(file_reader, time_point, settings.clip)
 
     # Create mesh from python data
     blender_mesh = bpy.data.meshes.new(name + "_mesh")

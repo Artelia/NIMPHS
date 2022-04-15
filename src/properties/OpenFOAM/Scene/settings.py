@@ -1,8 +1,9 @@
 # <pep8 compliant>
 from bpy.types import PropertyGroup
-from bpy.props import StringProperty, BoolProperty, EnumProperty, IntProperty
+from bpy.props import StringProperty, BoolProperty, EnumProperty, PointerProperty
 
 from ..utils import clip_scalar_items
+from ..clip import TBB_OpenFOAMClipProperty
 
 
 settings_dynamic_properties = [
@@ -34,29 +35,10 @@ class TBB_OpenFOAMSettings(PropertyGroup):
         default=False,
     )
 
-    sequence_type: EnumProperty(
-        items=[
-            ("mesh_sequence",
-             "Mesh sequence",
-             "Make a sequence by creating a mesh for each time step (good option for small meshes)"),
-            ("on_frame_change",
-             "On frame change",
-             "Make a sequence by changing the mesh on each frame change (it only keeps the last created mesh, good option for large meshes)"),
-        ],
-        name="Sequence type",
-        description="Select a sequence type",
-    )
-
     preview_point_data: EnumProperty(
         items=clip_scalar_items,
         name="Point data",
         description="Name of point data to preview",
-    )
-
-    sequence_name: StringProperty(
-        name="Sequence name",
-        description="Name of the sequence object",
-        default="OpenFOAM",
     )
 
     import_point_data: BoolProperty(
@@ -70,3 +52,24 @@ class TBB_OpenFOAMSettings(PropertyGroup):
         description="List of point data to import as vertex color groups. Separate each with a semicolon",
         default="",
     )
+
+    sequence_type: EnumProperty(
+        items=[
+            ("mesh_sequence",
+             "Mesh sequence",
+             "Make a sequence by creating a mesh for each time step (good option for small meshes)"),
+            ("on_frame_change",
+             "On frame change",
+             "Make a sequence by changing the mesh on each frame change (it only keeps the last created mesh, good option for large meshes)"),
+        ],
+        name="Sequence type",
+        description="Select a sequence type",
+    )
+
+    sequence_name: StringProperty(
+        name="Sequence name",
+        description="Name of the sequence object",
+        default="OpenFOAM",
+    )
+
+    clip: PointerProperty(type=TBB_OpenFOAMClipProperty)

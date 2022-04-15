@@ -17,9 +17,9 @@ from .panels.custom_progress_bar import register_custom_progress_bar
 from .panels.OpenFOAM.Object.sequence_settings import TBB_PT_OpenFOAMSequenceSettings
 from .panels.OpenFOAM.Object.sequence_clip_settings import TBB_PT_OpenFOAMSequenceClipSettings
 from .properties.OpenFOAM.Scene.settings import TBB_OpenFOAMSettings
-from .properties.OpenFOAM.Scene.clip import TBB_OpenFOAMClipProperty, TBB_OpenFOAMClipScalarProperty
-from .properties.temporary_data import TBB_OpenFOAMTemporaryData
+from .properties.OpenFOAM.clip import TBB_OpenFOAMClipProperty, TBB_OpenFOAMClipScalarProperty
 from .properties.OpenFOAM.Object.sequence import TBB_OpenFOAMSequenceProperty
+from .properties.temporary_data import TBB_OpenFOAMTemporaryData
 
 bl_info = {
     "name": "Toolsbox OpenFOAM/TELEMAC",
@@ -38,7 +38,7 @@ operators = (
     TBB_OT_OpenFOAMImportFile,
     TBB_OT_OpenFOAMReloadFile,
     TBB_OT_OpenFOAMPreview,
-    TBB_OT_OpenFOAMCreateSequence
+    TBB_OT_OpenFOAMCreateSequence,
 )
 
 panels = (
@@ -46,14 +46,14 @@ panels = (
     TBB_PT_OpenFOAMClip,
     TBB_PT_OpenFOAMCreateSequence,
     TBB_PT_OpenFOAMSequenceSettings,
-    TBB_PT_OpenFOAMSequenceClipSettings
+    TBB_PT_OpenFOAMSequenceClipSettings,
 )
 
 properties = (
-    TBB_OpenFOAMSettings,
     TBB_OpenFOAMClipScalarProperty,
     TBB_OpenFOAMClipProperty,
-    TBB_OpenFOAMSequenceProperty
+    TBB_OpenFOAMSettings,
+    TBB_OpenFOAMSequenceProperty,
 )
 
 classes = [operators, panels, properties]
@@ -67,7 +67,6 @@ def register():
     # Register custom properties
     Scene.tbb_openfoam_tmp_data = TBB_OpenFOAMTemporaryData()
     Scene.tbb_openfoam_settings = PointerProperty(type=TBB_OpenFOAMSettings)
-    Scene.tbb_openfoam_clip = PointerProperty(type=TBB_OpenFOAMClipProperty)
     Object.tbb_openfoam_sequence = PointerProperty(type=TBB_OpenFOAMSequenceProperty)
 
     # Custom progress bar

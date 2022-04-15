@@ -17,19 +17,19 @@ class TBB_PT_OpenFOAMSequenceSettings(Panel):
     def draw(self, context):
         layout = self.layout
         obj = context.active_object
-        tbb_openfoam_sequence = obj.tbb_openfoam_sequence
+        settings = obj.tbb_openfoam_sequence
 
         row = layout.row()
-        row.prop(tbb_openfoam_sequence, "update_on_frame_change", text="Update")
-        if tbb_openfoam_sequence.update_on_frame_change:
+        row.prop(settings, "update_on_frame_change", text="Update")
+        if settings.update_on_frame_change:
             row = layout.row()
-            row.prop(tbb_openfoam_sequence, "frame_start", text="Frame start")
+            row.prop(settings, "frame_start", text="Frame start")
             row = layout.row()
-            row.prop(tbb_openfoam_sequence, "anim_length", text="Length")
+            row.prop(settings, "anim_length", text="Length")
 
             row = layout.row()
-            row.prop(tbb_openfoam_sequence, "import_point_data", text="Import point data")
+            row.prop(settings, "import_point_data", text="Import point data")
 
-            if tbb_openfoam_sequence.import_point_data:
+            if settings.import_point_data:
                 row = layout.row()
-                row.prop(tbb_openfoam_sequence, "list_point_data", text="List")
+                row.prop(settings, "list_point_data", text="List")

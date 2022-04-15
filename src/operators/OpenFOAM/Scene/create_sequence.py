@@ -36,7 +36,7 @@ class TBB_OT_OpenFOAMCreateSequence(Operator):
     def execute(self, context):
         wm = context.window_manager
         settings = context.scene.tbb_openfoam_settings
-        clip = context.scene.tbb_openfoam_clip
+        clip = settings.clip
 
         if settings.sequence_type == "mesh_sequence":
             # Create timer event
@@ -73,32 +73,32 @@ class TBB_OT_OpenFOAMCreateSequence(Operator):
             obj_name = settings.sequence_name + "_sequence"
             blender_mesh = bpy.data.meshes.new(name=settings.sequence_name + "_mesh")
             obj = bpy.data.objects.new(obj_name, blender_mesh)
-            obj.tbb_openfoam_sequence.is_on_frame_change_sequence = True
-            obj.tbb_openfoam_sequence.update_on_frame_change = True
-            obj.tbb_openfoam_sequence.file_path = settings.file_path
             obj.tbb_openfoam_sequence.name = obj_name
+            obj.tbb_openfoam_sequence.file_path = settings.file_path
+            obj.tbb_openfoam_sequence.update_on_frame_change = True
+            obj.tbb_openfoam_sequence.is_on_frame_change_sequence = True
 
             # Set the selected time frame
             obj.tbb_openfoam_sequence.frame_start = settings["frame_start"]
             obj.tbb_openfoam_sequence.anim_length = settings["anim_length"]
 
             # Set clip settings
-            obj.tbb_openfoam_sequence.clip_type = clip.type
+            obj.tbb_openfoam_sequence.clip.type = clip.type
 
             # Sometimes, the selected scalar may not correspond to ones available in the EnumProperty.
             # This happens when the selected scalar is not available at time point 0
             # (the EnumProperty only reads data at time point 0 to create the list of
             # available items)
             try:
-                obj.tbb_openfoam_sequence.clip_scalars = clip.scalars_props.scalars
+                obj.tbb_openfoam_sequence.clip.scalar.name = clip.scalar.name
             except TypeError as error:
                 print("ERROR::TBB_OT_OpenFOAMCreateSequence: " + str(error))
                 self.report({"WARNING"}, "the selected scalar does not exist at time point 0 (selected from time point " +
                             str(settings["preview_time_point"]) + ")")
 
-            obj.tbb_openfoam_sequence.invert = clip.scalars_props.invert
-            obj.tbb_openfoam_sequence.clip_value = clip.scalars_props["value"]
-            obj.tbb_openfoam_sequence.clip_vactor_value = clip.scalars_props["vector_value"]
+            obj.tbb_openfoam_sequence.clip.invert = clip.scalar.invert
+            obj.tbb_openfoam_sequence.clip.value = clip.scalar.value
+            obj.tbb_openfoam_sequence.clip.vector_value = clip.scalar.vector_value
             obj.tbb_openfoam_sequence.import_point_data = settings.import_point_data
             obj.tbb_openfoam_sequence.list_point_data = settings.list_point_data
 

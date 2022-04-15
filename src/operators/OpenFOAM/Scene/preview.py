@@ -8,7 +8,6 @@ from ..utils import (
     generate_mesh,
     get_clip_from_scene_clip,
     load_openopenfoam_file,
-    generate_preview_object,
     generate_vertex_colors,
     create_preview_material
 )
@@ -21,14 +20,15 @@ class TBB_OT_OpenFOAMPreview(Operator):
 
     def execute(self, context):
         settings = context.scene.tbb_openfoam_settings
-        clip = context.scene.tbb_openfoam_clip
+        clip = settings.clip
         tmp_data = context.scene.tbb_openfoam_tmp_data
+        prw_time_point = settings["preview_time_point"]
 
         if settings.file_path == "":
             self.report({"ERROR"}, "Please import a file first.")
             return {"FINISHED"}
 
-        if clip.type != "" and clip.scalars_props.scalars == "":
+        if clip.type != "" and clip.scalar.name == "":
             self.report({"ERROR"}, "Please select a scalar to clip on. You may need to reload the file if none are shown.")
             return {"FINISHED"}
 
@@ -42,24 +42,22 @@ class TBB_OT_OpenFOAMPreview(Operator):
 
         # Read data at the choosen time step
         try:
-            file_reader.set_active_time_point(settings["preview_time_point"])
+            file_reader.set_active_time_point(prw_time_point)
         except ValueError as error:
             print("ERROR::TBB_OT_OpenFOAMPreview: " + str(error))
             self.report({"ERROR"}, "The selected time step is not defined (" +
-                        str(settings["preview_time_point"]) + ").")
+                        str(prw_time_point) + ").")
             return {"FINISHED"}
 
         data = file_reader.read()
         raw_mesh = data["internalMesh"]
 
         try:
-            clip_formatted = get_clip_from_scene_clip(clip)
-            time_point = settings["preview_time_point"]
-            vertices, faces, mesh = generate_mesh(file_reader, time_point, clip_formatted, raw_mesh)
+            vertices, faces, mesh = generate_mesh(file_reader, prw_time_point, clip, raw_mesh)
         except Exception as error:
             print("ERROR::TBB_OT_OpenFOAMPreview: " + str(error))
             # Update temporary data, please read the comment below.
-            tmp_data.update(file_reader, settings["preview_time_point"], data, raw_mesh)
+            tmp_data.update(file_reader, prw_time_point, data, raw_mesh)
             self.report({"ERROR"}, "Something went wrong building the mesh")
             return {"FINISHED"}
 
@@ -67,10 +65,10 @@ class TBB_OT_OpenFOAMPreview(Operator):
         # This line will update the list of available scalars. If the choosen scalar is not available at
         # the selected time step, the program will automatically choose another scalar due to the update function
         # of the enum property. This is surely not what the user was expecting.
-        tmp_data.update(file_reader, settings["preview_time_point"], data, raw_mesh)
+        tmp_data.update(file_reader, prw_time_point, data, raw_mesh)
 
         # Create the preview mesh (or write over it if it already exists)
-        name = "Preview"
+        name = "TBB_preview"
         try:
             blender_mesh = bpy.data.meshes[name + "_mesh"]
             obj = bpy.data.objects[name]
@@ -85,7 +83,7 @@ class TBB_OT_OpenFOAMPreview(Operator):
         blender_mesh.from_pydata(vertices, [], faces)
 
         scalars_to_preview = str(settings.preview_point_data.split("@")[0])
-        blender_mesh = generate_vertex_colors(mesh, blender_mesh, scalars_to_preview, time_point)
+        blender_mesh = generate_vertex_colors(mesh, blender_mesh, scalars_to_preview, prw_time_point)
         create_preview_material(obj, scalars_to_preview)
 
         print("Preview::openfoam: " + "{:.4f}".format(time.time() - start) + "s")

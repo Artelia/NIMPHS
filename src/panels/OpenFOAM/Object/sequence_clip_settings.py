@@ -19,22 +19,22 @@ class TBB_PT_OpenFOAMSequenceClipSettings(Panel):
     def draw(self, context):
         layout = self.layout
         obj = context.active_object
-        tbb_openfoam_sequence = obj.tbb_openfoam_sequence
+        clip = obj.tbb_openfoam_sequence.clip
 
         row = layout.row()
-        row.prop(tbb_openfoam_sequence, "clip_type", text="Type")
+        row.prop(clip, "type", text="Type")
 
-        if tbb_openfoam_sequence.clip_type != "no_clip":
+        if clip.type == "scalar":
             row = layout.row()
-            row.prop(tbb_openfoam_sequence, "clip_scalars", text="Scalars")
+            row.prop(clip.scalar, "item", text="Scalars")
 
-            value_type = tbb_openfoam_sequence.clip_scalars.split("@")[1]
+            value_type = clip.scalar.name.split("@")[1]
             if value_type == "vector_value":
                 row = layout.row()
-                row.prop(tbb_openfoam_sequence, "clip_vector_value", text="Value")
+                row.prop(clip.scalar, "vector_value", text="Value")
             elif value_type == "value":
                 row = layout.row()
-                row.prop(tbb_openfoam_sequence, "clip_value", text="Value")
+                row.prop(clip.scalar, "value", text="Value")
 
             row = layout.row()
-            row.prop(tbb_openfoam_sequence, "clip_invert", text="Invert")
+            row.prop(clip.scalar, "invert", text="Invert")
