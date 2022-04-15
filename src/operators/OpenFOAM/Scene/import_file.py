@@ -6,6 +6,7 @@ from bpy.props import StringProperty
 import time
 
 from ..utils import load_openopenfoam_file, update_properties_values, generate_preview_object, generate_mesh
+from ....properties.OpenFOAM.utils import encode_value_ranges
 
 
 class TBB_OT_OpenFOAMImportFile(Operator, ImportHelper):
@@ -20,6 +21,7 @@ class TBB_OT_OpenFOAMImportFile(Operator, ImportHelper):
 
     def execute(self, context):
         settings = context.scene.tbb_openfoam_settings
+        tmp_data = context.scene.tbb_openfoam_tmp_data
         start = time.time()
         success, file_reader = load_openopenfoam_file(self.filepath)
 
@@ -34,7 +36,8 @@ class TBB_OT_OpenFOAMImportFile(Operator, ImportHelper):
         time_point = settings["preview_time_point"]
 
         # Update temp data
-        context.scene.tbb_openfoam_tmp_data.update(file_reader, time_point)
+        tmp_data.update(file_reader, time_point)
+        settings.clip.scalar.value_ranges = encode_value_ranges(tmp_data.mesh)
 
         # Generate the preview mesh. This step is not present in the reload operator because
         # the preview mesh may already be loaded. Moreover, this step takes a while for large meshes.

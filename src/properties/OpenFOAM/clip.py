@@ -2,20 +2,34 @@
 from bpy.types import PropertyGroup
 from bpy.props import BoolProperty, EnumProperty, PointerProperty, FloatProperty, FloatVectorProperty, StringProperty
 
-from .utils import clip_scalar_items
+from .utils import clip_scalar_items, set_clip_values, get_clip_values
 
 
 class TBB_OpenFOAMClipScalarProperty(PropertyGroup):
     value: FloatProperty(
         name="Value",
         description="Set the clipping value",
-        default=0.5
+        default=0.5,
+        precision=6,
+        step=1,
+        set=set_clip_values,
+        get=get_clip_values,
     )
 
     vector_value: FloatVectorProperty(
         name="Value",
         description="Set the clipping value",
-        default=(0.5, 0.5, 0.5)
+        default=(0.5, 0.5, 0.5),
+        precision=6,
+        step=1,
+        set=set_clip_values,
+        get=get_clip_values,
+    )
+
+    value_ranges: StringProperty(
+        name="Value ranges",
+        description="Save the value ranges of each scalar",
+        default="",
     )
 
     name: EnumProperty(

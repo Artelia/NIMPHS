@@ -19,7 +19,7 @@ from .panels.OpenFOAM.Object.sequence_clip_settings import TBB_PT_OpenFOAMSequen
 from .properties.OpenFOAM.Scene.settings import TBB_OpenFOAMSettings
 from .properties.OpenFOAM.clip import TBB_OpenFOAMClipProperty, TBB_OpenFOAMClipScalarProperty
 from .properties.OpenFOAM.Object.sequence import TBB_OpenFOAMSequenceProperty
-from .properties.temporary_data import TBB_OpenFOAMTemporaryData
+from .properties.OpenFOAM.temporary_data import TBB_OpenFOAMTemporaryData
 
 bl_info = {
     "name": "Toolsbox OpenFOAM/TELEMAC",

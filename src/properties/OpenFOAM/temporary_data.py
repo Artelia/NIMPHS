@@ -1,5 +1,5 @@
 # <pep8 compliant>
-from pyvista import OpenFOAMReader
+from pyvista import OpenFOAMReader, DataSet, UnstructuredGrid
 
 
 class TBB_OpenFOAMTemporaryData():
@@ -8,12 +8,13 @@ class TBB_OpenFOAMTemporaryData():
     mesh = None
     time_point = 0
 
-    def __init__(self, file_reader: OpenFOAMReader = None, new_data=None, new_mesh=None):
+    def __init__(self, file_reader: OpenFOAMReader = None, new_data: DataSet = None, new_mesh: UnstructuredGrid = None):
         self.file_reader = file_reader
         self.data = new_data
         self.mesh = new_mesh
 
-    def update(self, new_file_reader: OpenFOAMReader, time_point: int = 0, new_data=None, new_mesh=None) -> None:
+    def update(self, new_file_reader: OpenFOAMReader, time_point: int = 0, new_data: DataSet = None,
+               new_mesh: UnstructuredGrid = None) -> None:
         self.file_reader = new_file_reader
         self.time_point = time_point
 

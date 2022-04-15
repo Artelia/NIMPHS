@@ -1,5 +1,4 @@
 # <pep8 compliant>
-import bpy
 from bpy.types import Operator
 
 import time
@@ -12,6 +11,8 @@ from ..utils import (
     load_openopenfoam_file,
 )
 
+from ....properties.OpenFOAM.utils import encode_value_ranges
+
 
 class TBB_OT_OpenFOAMPreview(Operator):
     bl_idname = "tbb.preview"
@@ -20,9 +21,9 @@ class TBB_OT_OpenFOAMPreview(Operator):
 
     def execute(self, context):
         settings = context.scene.tbb_openfoam_settings
-        clip = settings.clip
         tmp_data = context.scene.tbb_openfoam_tmp_data
         prw_time_point = settings["preview_time_point"]
+        clip = settings.clip
 
         if settings.file_path == "":
             self.report({"ERROR"}, "Please import a file first.")
@@ -51,6 +52,7 @@ class TBB_OT_OpenFOAMPreview(Operator):
 
         data = file_reader.read()
         raw_mesh = data["internalMesh"]
+        clip.scalar.value_ranges = encode_value_ranges(raw_mesh)
 
         try:
             vertices, faces, mesh = generate_mesh(file_reader, prw_time_point, clip, raw_mesh)
