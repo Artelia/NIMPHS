@@ -6,10 +6,10 @@ import time
 
 from ..utils import (
     generate_mesh,
-    get_clip_from_scene_clip,
-    load_openopenfoam_file,
+    generate_preview_object,
     generate_vertex_colors,
-    create_preview_material
+    generate_preview_material,
+    load_openopenfoam_file,
 )
 
 
@@ -67,24 +67,11 @@ class TBB_OT_OpenFOAMPreview(Operator):
         # of the enum property. This is surely not what the user was expecting.
         tmp_data.update(file_reader, prw_time_point, data, raw_mesh)
 
-        # Create the preview mesh (or write over it if it already exists)
-        name = "TBB_preview"
-        try:
-            blender_mesh = bpy.data.meshes[name + "_mesh"]
-            obj = bpy.data.objects[name]
-        except KeyError as error:
-            print("ERROR::generate_preview_mesh: " + str(error))
-            blender_mesh = bpy.data.meshes.new(name + "_mesh")
-            obj = bpy.data.objects.new(name, blender_mesh)
-            context.collection.objects.link(obj)
-
-        context.view_layer.objects.active = obj
-        blender_mesh.clear_geometry()
-        blender_mesh.from_pydata(vertices, [], faces)
+        blender_mesh, obj = generate_preview_object(vertices, faces, context)
 
         scalars_to_preview = str(settings.preview_point_data.split("@")[0])
         blender_mesh = generate_vertex_colors(mesh, blender_mesh, scalars_to_preview, prw_time_point)
-        create_preview_material(obj, scalars_to_preview)
+        generate_preview_material(obj, scalars_to_preview)
 
         print("Preview::openfoam: " + "{:.4f}".format(time.time() - start) + "s")
         self.report({"INFO"}, "Mesh successfully built: checkout the viewport.")

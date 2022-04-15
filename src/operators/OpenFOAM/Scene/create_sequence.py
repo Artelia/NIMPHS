@@ -171,8 +171,7 @@ class TBB_OT_OpenFOAMCreateSequence(Operator):
                     newKeyAtFrame.interpolation = 'CONSTANT'
 
                 print("CreateSequence::openfoam: " +
-                      "{:.4f}".format(time.time() -
-                                      self.chrono_start) +
+                      "{:.4f}".format(time.time() - self.chrono_start) +
                       "s, " +
                       "time_point = " +
                       str(self.current_time_point))

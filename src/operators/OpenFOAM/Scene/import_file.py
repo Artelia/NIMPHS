@@ -3,7 +3,7 @@ from bpy_extras.io_utils import ImportHelper
 from bpy.types import Operator
 from bpy.props import StringProperty
 
-from ..utils import load_openopenfoam_file, update_properties_values, generate_preview_object
+from ..utils import load_openopenfoam_file, update_properties_values, generate_preview_object, generate_mesh
 
 
 class TBB_OT_OpenFOAMImportFile(Operator, ImportHelper):
@@ -28,15 +28,16 @@ class TBB_OT_OpenFOAMImportFile(Operator, ImportHelper):
 
         # Update properties values
         update_properties_values(context, file_reader)
+        time_point = settings["preview_time_point"]
 
         # Update temp data
-        context.scene.tbb_openfoam_tmp_data.update(file_reader, settings["preview_time_point"])
+        context.scene.tbb_openfoam_tmp_data.update(file_reader, time_point)
 
         # Generate the preview mesh. This step is not present in the reload operator because
-        # the preview mesh may already be loaded. Moreover, this step takes a while on large meshes.
+        # the preview mesh may already be loaded. Moreover, this step takes a while for large meshes.
         try:
-            preview_mesh = context.scene.tbb_openfoam_tmp_data.mesh.extract_surface()
-            generate_preview_object(preview_mesh, context)
+            vertices, faces, preview_mesh = generate_mesh(file_reader, time_point)
+            blender_mesh, obj = generate_preview_object(vertices, faces, context)
         except Exception as error:
             print("ERROR::TBB_OT_OpenFOAMImportFile: " + str(error))
             self.report({"ERROR"}, "Something went wrong building the mesh")
