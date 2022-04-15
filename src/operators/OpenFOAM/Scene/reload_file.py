@@ -3,6 +3,7 @@ from bpy.types import Operator
 import time
 
 from ..utils import load_openopenfoam_file, update_properties_values
+from ....properties.OpenFOAM.utils import encode_value_ranges, encode_scalar_names
 
 
 class TBB_OT_OpenFOAMReloadFile(Operator):
@@ -12,6 +13,7 @@ class TBB_OT_OpenFOAMReloadFile(Operator):
 
     def execute(self, context):
         settings = context.scene.tbb_openfoam_settings
+        tmp_data = context.scene.tbb_openfoam_tmp_data
 
         if settings.file_path == "":
             self.report({"ERROR"}, "Please select a file first")
@@ -27,7 +29,9 @@ class TBB_OT_OpenFOAMReloadFile(Operator):
         update_properties_values(context, file_reader)
 
         # Update temp data
-        context.scene.tbb_openfoam_tmp_data.update(file_reader, settings["preview_time_point"])
+        tmp_data.update(file_reader, settings["preview_time_point"])
+        settings.clip.scalar.value_ranges = encode_value_ranges(tmp_data.mesh)
+        settings.clip.scalar.list = encode_scalar_names(tmp_data.mesh)
         settings.create_sequence_is_running = False
 
         print("Reload::OpenFOAM: " + "{:.4f}".format(time.time() - start) + "s")

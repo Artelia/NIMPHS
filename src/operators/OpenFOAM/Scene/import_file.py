@@ -6,7 +6,7 @@ from bpy.props import StringProperty
 import time
 
 from ..utils import load_openopenfoam_file, update_properties_values, generate_preview_object, generate_mesh
-from ....properties.OpenFOAM.utils import encode_value_ranges
+from ....properties.OpenFOAM.utils import encode_value_ranges, encode_scalar_names
 
 
 class TBB_OT_OpenFOAMImportFile(Operator, ImportHelper):
@@ -38,6 +38,7 @@ class TBB_OT_OpenFOAMImportFile(Operator, ImportHelper):
         # Update temp data
         tmp_data.update(file_reader, time_point)
         settings.clip.scalar.value_ranges = encode_value_ranges(tmp_data.mesh)
+        settings.clip.scalar.list = encode_scalar_names(tmp_data.mesh)
 
         # Generate the preview mesh. This step is not present in the reload operator because
         # the preview mesh may already be loaded. Moreover, this step takes a while for large meshes.

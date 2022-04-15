@@ -2,50 +2,38 @@
 from bpy.types import Context
 
 import numpy as np
-from pyvista import OpenFOAMReader, UnstructuredGrid
+from pyvista import UnstructuredGrid
 
 
-# Dynamically load enum items for the scalars property
-def clip_scalar_items(_self, context: Context) -> list:
-    tmp_data = context.scene.tbb_openfoam_tmp_data
+def encode_scalar_names(mesh: UnstructuredGrid) -> str:
+    output = ""
+
+    for value in mesh.point_data.keys():
+        array = mesh.get_array(name=value, preference="point")
+
+        # 'Normal' value (1D)
+        if len(array.shape) == 1:
+            output += value + "@" + "value"
+
+        # 'Vector' value (2D)
+        if len(array.shape) == 2:
+            output += value + "@vector_value"
+
+        output += ";"
+
+    return output
+
+
+def update_scalar_names(self, _context: Context) -> list:
     items = []
-
-    if tmp_data.mesh is not None:
-        for key in tmp_data.mesh.point_data.keys():
-            value_type = len(tmp_data.mesh.get_array(name=key, preference="point").shape)
-            # Vector value
-            if value_type == 2:
-                items.append((key + "@vector_value", key, "Undocumented"))
-            # 'Normal' value
-            elif value_type == 1:
-                items.append((key + "@value", key, "Undocumented"))
-    return items
-
-
-def clip_scalar_items_sequence(self, _context: Context) -> list:
-    items = []
-
-    # If the saved list is empty, recreate it
-    if self.clip.scalar.list == "":
-        file_reader = OpenFOAMReader(self.file_path)
-        file_reader.set_active_time_point(0)
-        data = file_reader.read()
-        mesh = data["internalMesh"]
-
-        point_data_list = ""
-        for key in mesh.point_data.keys():
-            value_type = len(mesh.get_array(name=key, preference="point").shape)
-            # Vector value
-            if value_type == 2:
-                point_data_list += key + "@vector_value" + ";"
-            # Normal value
-            elif value_type == 1:
-                point_data_list += key + "@value" + ";"
-
-        self.clip.scalar.list = point_data_list
+    try:
+        # Raises an AttributeError when this call comes from TBB_OpenFOAMSettings.preview_point_data
+        scalar_list = self.clip.scalar.list
+    except AttributeError:
+        scalar_list = self.list
 
     # Read from the saved list
-    for scalar in self.clip.scalar.list.split(";"):
+    for scalar in scalar_list.split(";"):
         if scalar != "":
             name = scalar.split("@")[0]
             items.append((scalar, name, "Undocumented"))
@@ -57,7 +45,7 @@ def encode_value_ranges(mesh: UnstructuredGrid) -> str:
     output = ""
 
     for value in mesh.point_data.keys():
-        array = mesh.get_array(name=value, preference="points")
+        array = mesh.get_array(name=value, preference="point")
 
         # 'Normal' value (1D)
         if len(array.shape) == 1:
@@ -126,7 +114,7 @@ def set_clip_values(self, value: float) -> None:
 
 def get_clip_values(self):
     # This is ugly, but it works. In fact, self["value"] and self["vector_value"] do not exist until they are manipulated (get/set).
-    # Then, when the exception raises, we set the default value and this fixes the error.
+    # Thus, when the exception raises, we set the default value and this fixes the error.
     try:
         value = self["value"]
         vector_value = self["vector_value"]

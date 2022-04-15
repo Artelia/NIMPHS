@@ -11,7 +11,7 @@ from ..utils import (
     load_openopenfoam_file,
 )
 
-from ....properties.OpenFOAM.utils import encode_value_ranges
+from ....properties.OpenFOAM.utils import encode_value_ranges, encode_scalar_names
 
 
 class TBB_OT_OpenFOAMPreview(Operator):
@@ -53,6 +53,7 @@ class TBB_OT_OpenFOAMPreview(Operator):
         data = file_reader.read()
         raw_mesh = data["internalMesh"]
         clip.scalar.value_ranges = encode_value_ranges(raw_mesh)
+        clip.scalar.list = encode_scalar_names(raw_mesh)
 
         try:
             vertices, faces, mesh = generate_mesh(file_reader, prw_time_point, clip, raw_mesh)

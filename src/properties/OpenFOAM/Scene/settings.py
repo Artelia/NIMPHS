@@ -2,7 +2,7 @@
 from bpy.types import PropertyGroup
 from bpy.props import StringProperty, BoolProperty, EnumProperty, PointerProperty
 
-from ..utils import clip_scalar_items
+from ..utils import update_scalar_names
 from ..clip import TBB_OpenFOAMClipProperty
 
 
@@ -36,7 +36,7 @@ class TBB_OpenFOAMSettings(PropertyGroup):
     )
 
     preview_point_data: EnumProperty(
-        items=clip_scalar_items,
+        items=update_scalar_names,
         name="Point data",
         description="Name of point data to preview",
     )
