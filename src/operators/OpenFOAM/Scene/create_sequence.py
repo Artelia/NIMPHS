@@ -65,9 +65,8 @@ class TBB_OT_OpenFOAMCreateSequence(Operator):
 
             # Check if the selected time frame is ok
             if settings["frame_start"] < min_frame or settings["frame_start"] > max_frame:
-                self.report(
-                    {"ERROR"},
-                    "Frame start is not in the selected time frame. See 'Output properties' > 'Frame range'")
+                self.report({"ERROR"},
+                            "Frame start is not in the selected time frame. See 'Output properties' > 'Frame range'")
                 return {"FINISHED"}
 
             obj = generate_sequence_object(self, settings, clip)

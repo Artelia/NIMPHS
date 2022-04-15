@@ -27,6 +27,7 @@ def generate_sequence_object(operator, settings, clip) -> Object:
     obj_name = settings.sequence_name + "_sequence"
     blender_mesh = bpy.data.meshes.new(name=settings.sequence_name + "_mesh")
     obj = bpy.data.objects.new(obj_name, blender_mesh)
+
     obj.tbb_openfoam_sequence.name = obj_name
     obj.tbb_openfoam_sequence.file_path = settings.file_path
     obj.tbb_openfoam_sequence.update_on_frame_change = True
@@ -38,6 +39,7 @@ def generate_sequence_object(operator, settings, clip) -> Object:
 
     # Set clip settings
     obj.tbb_openfoam_sequence.clip.type = clip.type
+    obj.tbb_openfoam_sequence.clip.scalar.value_ranges = clip.scalar.value_ranges
 
     # Sometimes, the selected scalar may not correspond to ones available in the EnumProperty.
     # This happens when the selected scalar is not available at time point 0
@@ -50,9 +52,9 @@ def generate_sequence_object(operator, settings, clip) -> Object:
         operator.report({"WARNING"}, "the selected scalar does not exist at time point 0 (selected from time point " +
                         str(settings["preview_time_point"]) + ")")
 
-    obj.tbb_openfoam_sequence.clip.invert = clip.scalar.invert
-    obj.tbb_openfoam_sequence.clip.value = clip.scalar.value
-    obj.tbb_openfoam_sequence.clip.vector_value = clip.scalar.vector_value
+    obj.tbb_openfoam_sequence.clip.scalar.invert = clip.scalar.invert
+    obj.tbb_openfoam_sequence.clip.scalar["value"] = clip.scalar["value"]
+    obj.tbb_openfoam_sequence.clip.scalar["vector_value"] = clip.scalar["vector_value"]
     obj.tbb_openfoam_sequence.import_point_data = settings.import_point_data
     obj.tbb_openfoam_sequence.list_point_data = settings.list_point_data
 
@@ -69,9 +71,13 @@ def generate_mesh(file_reader: OpenFOAMReader, time_point: int, clip=None,
 
     # Apply clip
     if clip is not None and clip.type == "scalar":
-        name = clip.scalar.name.split("@")[0]
+        name, value_type = clip.scalar.name.split("@")[0], clip.scalar.name.split("@")[1]
         mesh.set_active_scalars(name=name, preference="point")
-        mesh.clip_scalar(inplace=True, scalars=name, invert=clip.scalar.invert, value=clip.scalar.value)
+        if value_type == "value":
+            mesh.clip_scalar(inplace=True, scalars=name, invert=clip.scalar.invert, value=clip.scalar.value)
+        if value_type == "vector_value":
+            value = np.linalg.norm(clip.scalar.vector_value)
+            mesh.clip_scalar(inplace=True, scalars=name, invert=clip.scalar.invert, value=value)
         mesh = mesh.extract_surface()
     else:
         mesh = mesh.extract_surface()
