@@ -1,5 +1,4 @@
 # <pep8 compliant>
-from multiprocessing.sharedctypes import Value
 import bpy
 from bpy.types import Mesh, Object, Scene, Context
 from bpy.app.handlers import persistent
@@ -23,7 +22,7 @@ def load_openopenfoam_file(file_path: str) -> tuple[bool, OpenFOAMReader]:
     return True, file_reader
 
 
-def generate_sequence_object(operator, settings, clip) -> Object:
+def generate_sequence_object(operator, settings, clip, time_points: int) -> Object:
     obj_name = settings.sequence_name + "_sequence"
     blender_mesh = bpy.data.meshes.new(name=settings.sequence_name + "_mesh")
     obj = bpy.data.objects.new(obj_name, blender_mesh)
@@ -35,7 +34,8 @@ def generate_sequence_object(operator, settings, clip) -> Object:
     obj_settings.is_on_frame_change_sequence = True
 
     # Set the selected time frame
-    obj_settings.frame_start = settings["frame_start"]
+    obj_settings.frame_start = settings.frame_start
+    obj_settings.max_length = time_points
     obj_settings.anim_length = settings["anim_length"]
 
     # Set clip settings
@@ -55,8 +55,9 @@ def generate_sequence_object(operator, settings, clip) -> Object:
                         str(settings["preview_time_point"]) + ")")
 
     obj_settings.clip.scalar.invert = clip.scalar.invert
-    obj_settings.clip.scalar["value"] = clip.scalar["value"]
-    obj_settings.clip.scalar["vector_value"] = clip.scalar["vector_value"]
+    # 'value' and 'vector_value' may not be defined, so use .get(prop, default_returned_value)
+    obj_settings.clip.scalar["value"] = clip.scalar.get("value", 0.5)
+    obj_settings.clip.scalar["vector_value"] = clip.scalar.get("vector_value", (0.5, 0.5, 0.5))
     obj_settings.import_point_data = settings.import_point_data
     obj_settings.list_point_data = settings.list_point_data
 
@@ -269,74 +270,35 @@ def update_properties_values(context: Context, file_reader: OpenFOAMReader) -> N
 
     # Settings
     max_time_step = file_reader.number_time_points
-    update_settings_props(settings, max_time_step - 1)
-    update_mesh_sequence_frame_settings(settings, context.scene, max_time_step)
+    new_maxima = {
+        "preview_time_point": max_time_step - 1,
+        "start_time_point": max_time_step - 1,
+        "end_time_point": max_time_step - 1,
+        "anim_length": max_time_step,
+    }
+    update_settings_props(settings, new_maxima)
 
 
-def update_mesh_sequence_frame_settings(settings, scene: Scene, max_length: int) -> None:
-    frame_start_prop = settings.get("frame_start")
-    anim_length_prop = settings.get("anim_length")
-
-    # Create the properties if they do not exist
-    if frame_start_prop is None:
-        rna_idprop_ui_create(
-            settings,
-            "frame_start",
-            default=1,
-            min=1,
-            soft_min=1,
-            max=250,
-            soft_max=250,
-            description="Starting point of the sequence"
-        )
-    else:
-        prop = settings.id_properties_ui("frame_start")
-        new_min = scene.frame_start
-        new_max = scene.frame_end
-        default = settings["frame_start"]
-        if new_min > default or new_max < default:
-            default = new_min
-        prop.update(default=default, min=new_min, soft_min=new_min, max=new_max, soft_max=new_max)
-
-    if anim_length_prop is None:
-        rna_idprop_ui_create(
-            settings,
-            "anim_length",
-            default=1,
-            min=1,
-            soft_min=1,
-            max=max_length,
-            soft_max=max_length,
-            description="Length of the animation",
-        )
-    else:
-        prop = settings.id_properties_ui("anim_length")
-        new_max = max_length
-        default = settings["anim_length"]
-        if new_max < default:
-            default = new_min
-        prop.update(default=default, max=new_max, soft_max=new_max)
-
-
-def update_settings_props(settings, new_max) -> None:
+def update_settings_props(settings, new_maxima) -> None:
     for prop_id, prop_desc in settings_dynamic_properties:
         if settings.get(prop_id) is None:
+            default = 0 if prop_id != "anim_length" else 1
             rna_idprop_ui_create(
                 settings,
                 prop_id,
-                default=0,
-                min=0,
-                soft_min=0,
-                max=0,
-                soft_max=0,
+                default=default,
+                min=default,
+                soft_min=default,
+                max=default,
+                soft_max=default,
                 description=prop_desc
             )
 
         prop = settings.id_properties_ui(prop_id)
         default = settings[prop_id]
-        if new_max < default:
-            default = 0
-        prop.update(default=default, min=0, soft_min=0, max=new_max, soft_max=new_max)
+        if new_maxima[prop_id] < default:
+            default = 0 if prop_id != "anim_length" else 1
+        prop.update(default=default, max=new_maxima[prop_id], soft_max=new_maxima[prop_id])
 
 
 def remap_array(input: np.array, out_min=0.0, out_max=1.0) -> np.array:

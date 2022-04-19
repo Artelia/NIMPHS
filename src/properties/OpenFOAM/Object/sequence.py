@@ -3,6 +3,7 @@ from bpy.types import PropertyGroup
 from bpy.props import BoolProperty, IntProperty, StringProperty, PointerProperty
 
 from ..clip import TBB_OpenFOAMClipProperty
+from ..utils import set_sequence_anim_length, get_sequence_anim_length
 
 
 class TBB_OpenFOAMSequenceProperty(PropertyGroup):
@@ -39,7 +40,15 @@ class TBB_OpenFOAMSequenceProperty(PropertyGroup):
     anim_length: IntProperty(
         name="Animation length",
         description="Length of the animation",
-        default=-1,
+        default=0,
+        set=set_sequence_anim_length,
+        get=get_sequence_anim_length,
+    )
+
+    max_length: IntProperty(
+        name="Maximum sequence length",
+        description="Maximum length of the sequence (available time steps)",
+        default=1,
     )
 
     import_point_data: BoolProperty(

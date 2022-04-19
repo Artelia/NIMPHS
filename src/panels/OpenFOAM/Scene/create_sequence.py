@@ -46,7 +46,7 @@ class TBB_PT_OpenFOAMCreateSequence(Panel):
         elif settings.sequence_type == "on_frame_change":
             row = layout.row()
             row.enabled = enable_rows
-            row.prop(settings, '["frame_start"]', text="Frame start")
+            row.prop(settings, "frame_start", text="Frame start")
             row = layout.row()
             row.enabled = enable_rows
             row.prop(settings, '["anim_length"]', text="Length")

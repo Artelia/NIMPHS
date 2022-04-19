@@ -102,6 +102,10 @@ def set_clip_values(self, value: float) -> None:
                 self[value_type] = value
 
         if value_type == "vector_value":
+            # This is ugly, but it works. In fact, self["value"] and self["vector_value"] do not exist until they are manipulated (get/set).
+            # Thus, when the exception raises, we set the default value and this fixes the error.
+            self[value_type] = (0.5, 0.5, 0.5)
+
             dim = len(ranges["min"])
             for i in range(dim):
                 if value[i] < ranges["min"][i]:
@@ -113,23 +117,27 @@ def set_clip_values(self, value: float) -> None:
 
 
 def get_clip_values(self):
-    # This is ugly, but it works. In fact, self["value"] and self["vector_value"] do not exist until they are manipulated (get/set).
-    # Thus, when the exception raises, we set the default value and this fixes the error.
-    try:
-        value = self["value"]
-        vector_value = self["vector_value"]
-    except BaseException:
-        self["value"] = 0.5
-        self["vector_value"] = (0.5, 0.5, 0.5)
-
     if self.name is not None:
         value_type = self.name.split("@")[1]
 
         if value_type == "value":
-            return self[value_type]
+            return self.get(value_type, 0.5)  # returns a default value (0.5) if it has no been set
 
         if value_type == "vector_value":
-            return [val for val in self[value_type]]
+            return [val for val in self.get(value_type, (0.5, 0.5, 0.5))]
 
     print("ERROR::get_clip_values: unknown value type '" + str(self.name) + "'")
     return None
+
+
+def set_sequence_anim_length(self, value: int) -> None:
+    if value > self.max_length:
+        self["anim_length"] = self.max_length
+    elif value < 0:
+        self["anim_length"] = 0
+    else:
+        self["anim_length"] = value
+
+
+def get_sequence_anim_length(self) -> int:
+    return self.get("anim_length", 0)

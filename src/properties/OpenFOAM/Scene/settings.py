@@ -1,6 +1,6 @@
 # <pep8 compliant>
 from bpy.types import PropertyGroup
-from bpy.props import StringProperty, BoolProperty, EnumProperty, PointerProperty
+from bpy.props import StringProperty, BoolProperty, EnumProperty, PointerProperty, IntProperty
 
 from ..utils import update_scalar_names
 from ..clip import TBB_OpenFOAMClipProperty
@@ -9,7 +9,8 @@ from ..clip import TBB_OpenFOAMClipProperty
 settings_dynamic_properties = [
     ("preview_time_point", "Time step used for the preview section"),
     ("start_time_point", "Starting point of the sequence"),
-    ("end_time_point", "Ending point of the sequence")
+    ("end_time_point", "Ending point of the sequence"),
+    ("anim_length", "Length of the animation"),
 ]
 
 
@@ -20,12 +21,16 @@ class TBB_OpenFOAMSettings(PropertyGroup):
 
     # end_time_point: IntProperty dynamically created
 
-    # frame_start: IntProperty dynamically created
-
     # anim_length: IntProperty dynamically created
 
+    frame_start: IntProperty(
+        name="Frame start",
+        description="Starting point of the sequence",
+        default=1
+    )
+
     file_path: StringProperty(
-        name="OpenFoam file",
+        name="OpenFoam file path",
         description="Path to the .foam file",
     )
 

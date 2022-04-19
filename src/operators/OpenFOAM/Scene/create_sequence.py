@@ -38,6 +38,7 @@ class TBB_OT_OpenFOAMCreateSequence(Operator):
         wm = context.window_manager
         settings = context.scene.tbb_openfoam_settings
         clip = settings.clip
+        tmp_data = context.scene.tbb_openfoam_tmp_data
 
         if settings.sequence_type == "mesh_sequence":
             # Create timer event
@@ -60,16 +61,12 @@ class TBB_OT_OpenFOAMCreateSequence(Operator):
             return {"RUNNING_MODAL"}
 
         elif settings.sequence_type == "on_frame_change":
-            min_frame = context.scene.frame_start
-            max_frame = context.scene.frame_end
-
             # Check if the selected time frame is ok
-            if settings["frame_start"] < min_frame or settings["frame_start"] > max_frame:
-                self.report({"ERROR"},
+            if settings.frame_start < context.scene.frame_start or settings.frame_start > context.scene.frame_end:
+                self.report({"WARNING"},
                             "Frame start is not in the selected time frame. See 'Output properties' > 'Frame range'")
-                return {"FINISHED"}
 
-            obj = generate_sequence_object(self, settings, clip)
+            obj = generate_sequence_object(self, settings, clip, tmp_data.file_reader.number_time_points)
 
             context.collection.objects.link(obj)
 
@@ -77,7 +74,7 @@ class TBB_OT_OpenFOAMCreateSequence(Operator):
             # https://docs.blender.org/api/current/bpy.app.handlers.html?highlight=app%20handlers#module-bpy.app.handlers
             RenderSettings.use_lock_interface = True
 
-            self.report({"INFO"}, "Sequence properly set")
+            self.report({"INFO"}, "Sequence successfully created")
 
             return {"FINISHED"}
 
