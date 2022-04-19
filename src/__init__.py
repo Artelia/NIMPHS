@@ -9,7 +9,7 @@ from .operators.OpenFOAM.Scene.import_file import TBB_OT_OpenFOAMImportFile
 from .operators.OpenFOAM.Scene.reload_file import TBB_OT_OpenFOAMReloadFile
 from .operators.OpenFOAM.Scene.preview import TBB_OT_OpenFOAMPreview
 from .operators.OpenFOAM.Scene.create_sequence import TBB_OT_OpenFOAMCreateSequence
-from .operators.OpenFOAM.utils import update_sequence_on_frame_change
+from .operators.OpenFOAM.utils import update_streaming_sequence
 from .panels.OpenFOAM.Scene.main_panel import TBB_PT_OpenFOAMMainPanel
 from .panels.OpenFOAM.Scene.clip import TBB_PT_OpenFOAMClip
 from .panels.OpenFOAM.Scene.create_sequence import TBB_PT_OpenFOAMCreateSequence
@@ -73,7 +73,7 @@ def register():
     register_custom_progress_bar()
 
     # Custom app handlers
-    frame_change_pre.append(update_sequence_on_frame_change)
+    frame_change_pre.append(update_streaming_sequence)
 
 
 def unregister():

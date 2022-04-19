@@ -22,7 +22,7 @@ class TBB_PT_OpenFOAMCreateSequence(Panel):
         if obj is None:
             return context.scene.tbb_openfoam_tmp_data.is_ok()
         else:
-            return context.scene.tbb_openfoam_tmp_data.is_ok() and not obj.tbb_openfoam_sequence.is_on_frame_change_sequence
+            return context.scene.tbb_openfoam_tmp_data.is_ok() and not obj.tbb_openfoam_sequence.is_streaming_sequence
 
     def draw(self, context):
         layout = self.layout
@@ -43,7 +43,7 @@ class TBB_PT_OpenFOAMCreateSequence(Panel):
             row = layout.row()
             row.enabled = enable_rows
             row.prop(settings, '["end_time_point"]', text="End")
-        elif settings.sequence_type == "on_frame_change":
+        elif settings.sequence_type == "streaming_sequence":
             row = layout.row()
             row.enabled = enable_rows
             row.prop(settings, "frame_start", text="Frame start")

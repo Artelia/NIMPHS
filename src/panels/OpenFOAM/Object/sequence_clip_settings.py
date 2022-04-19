@@ -14,7 +14,7 @@ class TBB_PT_OpenFOAMSequenceClipSettings(Panel):
     @classmethod
     def poll(self, context):
         obj = context.active_object
-        return obj.tbb_openfoam_sequence.update_on_frame_change
+        return obj.tbb_openfoam_sequence.update
 
     def draw(self, context):
         layout = self.layout

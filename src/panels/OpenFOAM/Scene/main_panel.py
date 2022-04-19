@@ -36,7 +36,7 @@ class TBB_PT_OpenFOAMMainPanel(Panel):
         if len(context.selected_objects) == 0:
             obj = None
 
-        if obj is None or not obj.tbb_openfoam_sequence.is_on_frame_change_sequence:
+        if obj is None or not obj.tbb_openfoam_sequence.is_streaming_sequence:
 
             if context.scene.tbb_openfoam_tmp_data.is_ok():
                 # Preview section

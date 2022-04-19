@@ -20,7 +20,7 @@ class TBB_PT_OpenFOAMClip(Panel):
         if obj is None:
             return context.scene.tbb_openfoam_tmp_data.is_ok()
         else:
-            return context.scene.tbb_openfoam_tmp_data.is_ok() and not obj.tbb_openfoam_sequence.is_on_frame_change_sequence
+            return context.scene.tbb_openfoam_tmp_data.is_ok() and not obj.tbb_openfoam_sequence.is_streaming_sequence
 
     def draw(self, context):
         layout = self.layout

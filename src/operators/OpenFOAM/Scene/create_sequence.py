@@ -29,7 +29,7 @@ class TBB_OT_OpenFOAMCreateSequence(Operator):
 
         if settings.sequence_type == "mesh_sequence":
             return not settings.create_sequence_is_running and settings["start_time_point"] < settings["end_time_point"]
-        elif settings.sequence_type == "on_frame_change":
+        elif settings.sequence_type == "streaming_sequence":
             return not settings.create_sequence_is_running
         else:  # Lock ui by default
             return False
@@ -60,7 +60,7 @@ class TBB_OT_OpenFOAMCreateSequence(Operator):
 
             return {"RUNNING_MODAL"}
 
-        elif settings.sequence_type == "on_frame_change":
+        elif settings.sequence_type == "streaming_sequence":
             # Check if the selected time frame is ok
             if settings.frame_start < context.scene.frame_start or settings.frame_start > context.scene.frame_end:
                 self.report({"WARNING"},

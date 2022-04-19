@@ -30,8 +30,8 @@ def generate_sequence_object(operator, settings, clip, time_points: int) -> Obje
 
     obj_settings.name = obj_name
     obj_settings.file_path = settings.file_path
-    obj_settings.update_on_frame_change = True
-    obj_settings.is_on_frame_change_sequence = True
+    obj_settings.update = True
+    obj_settings.is_streaming_sequence = True
 
     # Set the selected time frame
     obj_settings.frame_start = settings.frame_start
@@ -226,14 +226,14 @@ def add_mesh_to_sequence(seqObj: Object, blender_mesh: Mesh) -> int:
 
 
 @persistent
-def update_sequence_on_frame_change(scene: Scene) -> None:
+def update_streaming_sequence(scene: Scene) -> None:
     frame = scene.frame_current
 
     if not scene.tbb_openfoam_settings.create_sequence_is_running:
         for obj in scene.objects:
             settings = obj.tbb_openfoam_sequence
 
-            if settings.is_on_frame_change_sequence and settings.update_on_frame_change:
+            if settings.is_streaming_sequence and settings.update:
                 time_point = frame - settings.frame_start
 
                 if time_point >= 0 and time_point < settings.anim_length:
@@ -241,7 +241,7 @@ def update_sequence_on_frame_change(scene: Scene) -> None:
                     try:
                         update_sequence_mesh(obj, settings, time_point)
                     except Exception as error:
-                        print("ERROR::update_sequence_on_frame_change: " + settings.name + ", " + str(error))
+                        print("ERROR::update_streaming_sequence: " + settings.name + ", " + str(error))
 
                     print("Update::OpenFOAM: " + settings.name + ", " + "{:.4f}".format(time.time() - start) + "s")
 
@@ -265,10 +265,9 @@ def update_sequence_mesh(obj: Object, settings, time_point: int) -> None:
         blender_mesh = generate_vertex_colors(mesh, blender_mesh, settings.list_point_data, time_point)
 
 
-def update_properties_values(context: Context, file_reader: OpenFOAMReader) -> None:
+def update_settings_dynamic_props(context: Context, file_reader: OpenFOAMReader) -> None:
     settings = context.scene.tbb_openfoam_settings
 
-    # Settings
     max_time_step = file_reader.number_time_points
     new_maxima = {
         "preview_time_point": max_time_step - 1,
@@ -282,22 +281,21 @@ def update_properties_values(context: Context, file_reader: OpenFOAMReader) -> N
 def update_settings_props(settings, new_maxima) -> None:
     for prop_id, prop_desc in settings_dynamic_properties:
         if settings.get(prop_id) is None:
-            default = 0 if prop_id != "anim_length" else 1
             rna_idprop_ui_create(
                 settings,
                 prop_id,
-                default=default,
-                min=default,
-                soft_min=default,
-                max=default,
-                soft_max=default,
+                default=0,
+                min=0,
+                soft_min=0,
+                max=0,
+                soft_max=0,
                 description=prop_desc
             )
 
         prop = settings.id_properties_ui(prop_id)
         default = settings[prop_id]
         if new_maxima[prop_id] < default:
-            default = 0 if prop_id != "anim_length" else 1
+            default = 0
         prop.update(default=default, max=new_maxima[prop_id], soft_max=new_maxima[prop_id])
 
 

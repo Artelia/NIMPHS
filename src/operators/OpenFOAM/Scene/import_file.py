@@ -5,7 +5,7 @@ from bpy.props import StringProperty
 
 import time
 
-from ..utils import load_openopenfoam_file, update_properties_values, generate_preview_object, generate_mesh
+from ..utils import load_openopenfoam_file, update_settings_dynamic_props, generate_preview_object, generate_mesh
 from ....properties.OpenFOAM.utils import encode_value_ranges, encode_scalar_names
 
 
@@ -32,7 +32,7 @@ class TBB_OT_OpenFOAMImportFile(Operator, ImportHelper):
         settings.file_path = self.filepath
 
         # Update properties values
-        update_properties_values(context, file_reader)
+        update_settings_dynamic_props(context, file_reader)
         time_point = settings["preview_time_point"]
 
         # Update temp data

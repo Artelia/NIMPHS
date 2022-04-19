@@ -19,13 +19,13 @@ class TBB_OpenFOAMSequenceProperty(PropertyGroup):
         default="",
     )
 
-    is_on_frame_change_sequence: BoolProperty(
+    is_streaming_sequence: BoolProperty(
         name="Is on frame change sequence",
         description="Describes if this object is a sequence which updates when the frame changes",
         default=False,
     )
 
-    update_on_frame_change: BoolProperty(
+    update: BoolProperty(
         name="Update on frame change",
         description="Update this sequence whenever the frame changes",
         default=False,
