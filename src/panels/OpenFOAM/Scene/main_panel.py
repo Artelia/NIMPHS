@@ -29,7 +29,7 @@ class TBB_PT_OpenFOAMMainPanel(Panel):
             row.operator("tbb.import_openfoam_file", text="Import", icon="IMPORT")
             row.operator("tbb.reload_openfoam_file", text="Reload", icon="FILE_REFRESH")
         else:
-            row.operator("tbb.import_openfoam_file", text="Import OpenFoam file", icon="IMPORT")
+            row.operator("tbb.import_openfoam_file", text="Import OpenFOAM file", icon="IMPORT")
 
         obj = context.active_object
         # Even if no objects are selected, the last selected object remains in the active_objects variable

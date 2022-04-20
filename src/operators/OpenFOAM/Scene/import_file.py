@@ -12,7 +12,7 @@ from ....properties.OpenFOAM.utils import encode_value_ranges, encode_scalar_nam
 class TBB_OT_OpenFOAMImportFile(Operator, ImportHelper):
     bl_idname = "tbb.import_openfoam_file"
     bl_label = "Import"
-    bl_description = "Import an OpenFoam file"
+    bl_description = "Import an OpenFOAM file"
 
     filter_glob: StringProperty(
         default="*.foam",  # multiple allowed types: "*.foam;*.[];*.[]" etc ...
