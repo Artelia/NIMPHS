@@ -58,3 +58,14 @@ Development environment
         "120",
         "--aggressive"
     ],
+
+| Using VSCode also let you to choose a custum python interpreter, which can be handy.
+| You will also probably need the following python packages to develop:
+
+* `fake-bpy-module <https://pypi.org/project/fake-bpy-module-latest/>`_
+* `sphinx <https://pypi.org/project/Sphinx/>`_, install using ``pip install sphinx`` or ``apt install sphinx`` (for Ubuntu)
+* `sphinxemoji <https://pypi.org/project/sphinxemoji/>`_
+* `sphinx_rtd_theme <https://pypi.org/project/sphinx-rtd-theme/>`_
+
+.. important::
+    The ``sphinxemoji`` and ``sphinx_rtd_theme`` packages should be installed in the same python environment as where the ``sphinx`` package is installed.
