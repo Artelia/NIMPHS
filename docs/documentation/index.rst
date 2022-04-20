@@ -6,4 +6,4 @@ Documentation
     :glob:
 
     installation_guide/index
-    openfoam_module/index
+    openfoam/index

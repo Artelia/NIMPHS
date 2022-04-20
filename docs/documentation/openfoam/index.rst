@@ -21,7 +21,7 @@ Import a file
 .. important:: 
     For large meshes (> 100k vertices), this operation can take several seconds to complete.
 
-.. image:: /images/OpenFOAM/import_file.png
+.. image:: /images/openfoam/import_file.png
     :width: 35%
     :alt: Import an OpenFOAM file (button)
     :align: center
@@ -36,7 +36,7 @@ Previewing tools
 | Once you have imported a file, you should see the mesh in the viewport.
 | You can select the ``TBB_preview`` object and hit ``.`` on your numpad to center the view on it.
 
-.. image:: /images/OpenFOAM/preview_panel.png
+.. image:: /images/openfoam/preview_panel.png
     :width: 35%
     :alt: Preview panel
     :align: center
@@ -56,7 +56,7 @@ Clip
 
 | You can clip a mesh as you would do in ParaView.
 
-.. image:: /images/OpenFOAM/clip_panel.png
+.. image:: /images/openfoam/clip_panel.png
     :width: 35%
     :alt: Preview panel
     :align: center
@@ -84,7 +84,7 @@ Mesh sequence
 | That is why it is not recommended to use this sequence for large meshes.
 | It is built using the `Stop-motion-OBJ <https://github.com/neverhood311/Stop-motion-OBJ/wiki>`_. Thus you can use the features associated for this sequence.
 
-.. image:: /images/OpenFOAM/create_mesh_sequence.png
+.. image:: /images/openfoam/create_mesh_sequence.png
     :width: 35%
     :alt: Preview panel
     :align: center
@@ -103,7 +103,7 @@ Streaming sequence
 | This type of sequence holds only one mesh in memory. It is recommended to use for large meshes.
 | The mesh automatically updates when the frame changes.
 
-.. image:: /images/OpenFOAM/create_streaming_sequence.png
+.. image:: /images/openfoam/create_streaming_sequence.png
     :width: 35%
     :alt: Preview panel
     :align: center
