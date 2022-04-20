@@ -70,3 +70,44 @@ Clip
 
 Create a sequence
 #################
+
+| You can create sequences to automatically switch between time steps using the timeline.
+
+Mesh sequence
+-------------
+
+| This type of sequence holds every time step in memory (a mesh is built for each time step).
+| That is why it is not recommended to use this sequence for large meshes.
+| It is built using the `Stop-motion-OBJ <https://github.com/neverhood311/Stop-motion-OBJ/releases>`_. Thus you can use the features associated for this sequence.
+
+.. image:: /images/OpenFOAM/create_mesh_sequence.png
+    :width: 35%
+    :alt: Preview panel
+    :align: center
+
+|
+
+* **Start**: starting point of the sequence (time step)
+* **End**: ending point of the sequence (time step)
+* **Import point data**: flag to indicate that it must import some point data as vertex colors
+* **List**: list of point data to import (separate each with a ``;``)
+* **Name**: name of the sequence
+
+Streaming sequence
+------------------
+
+| This type of sequence holds only one mesh in memory. It is recommended to use for large meshes.
+| The mesh automatically updates when the frame changes.
+
+.. image:: /images/OpenFOAM/create_streaming_sequence.png
+    :width: 35%
+    :alt: Preview panel
+    :align: center
+
+|
+
+* **Frame start**: starting point of the sequence (frame)
+* **Length**: length of the animation (time steps)
+* **Import point data**: flag to indicate that it must import some point data as vertex colors
+* **List**: list of point data to import (separate each with a ``;``)
+* **Name**: name of the sequence
