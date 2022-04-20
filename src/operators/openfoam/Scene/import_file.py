@@ -1,6 +1,6 @@
 # <pep8 compliant>
 from bpy_extras.io_utils import ImportHelper
-from bpy.types import Operator
+from bpy.types import Operator, Context
 from bpy.props import StringProperty
 
 import time
@@ -10,16 +10,28 @@ from ....properties.openfoam.utils import encode_value_ranges, encode_scalar_nam
 
 
 class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
+    """
+    Import an OpenFOAM file. This operator manages the file browser and its filtering options.
+    """
+
     bl_idname = "tbb.import_openfoam_file"
     bl_label = "Import"
     bl_description = "Import an OpenFOAM file"
 
+    #: bpy.props.StringProperty: List of allowed file extensions
     filter_glob: StringProperty(
         default="*.foam",  # multiple allowed types: "*.foam;*.[];*.[]" etc ...
         options={"HIDDEN"}
     )
 
-    def execute(self, context):
+    def execute(self, context: Context) -> set:
+        """Import the selected file. It also generates the preview object.
+
+        :type context: Context
+        :return: state of the operator
+        :rtype: set
+        """
+
         settings = context.scene.tbb_openfoam_settings
         tmp_data = context.scene.tbb_openfoam_tmp_data
         start = time.time()

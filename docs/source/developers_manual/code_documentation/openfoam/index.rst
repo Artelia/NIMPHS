@@ -1,10 +1,8 @@
 OpenFOAM
 ========
 
-The ``TBB_OT_OpenfoamCreateSequence`` class
-*********************************************
+.. toctree:: 
+   :maxdepth: 1
+   :glob:
 
-.. autoclass:: src.operators.openfoam.Scene.create_sequence.TBB_OT_OpenfoamCreateSequence
-   :members:
-   :show-inheritance:
-   :private-members:
+   operators

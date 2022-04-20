@@ -1,5 +1,5 @@
 # <pep8 compliant>
-from bpy.types import Operator
+from bpy.types import Operator, Context
 
 import time
 
@@ -15,11 +15,21 @@ from ....properties.openfoam.utils import encode_value_ranges, encode_scalar_nam
 
 
 class TBB_OT_OpenfoamPreview(Operator):
+    """
+    Preview the mesh using the loaded file and selected parameters.
+    """
     bl_idname = "tbb.preview"
     bl_label = "Preview"
     bl_description = "Preview the current loaded file"
 
-    def execute(self, context):
+    def execute(self, context: Context) -> set:
+        """Preview the mesh. It also updates temporary data with this new preview.
+
+        :type context: Context
+        :return: state of the operator
+        :rtype: set
+        """
+
         settings = context.scene.tbb_openfoam_settings
         tmp_data = context.scene.tbb_openfoam_tmp_data
         prw_time_point = settings["preview_time_point"]

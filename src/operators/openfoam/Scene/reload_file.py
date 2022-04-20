@@ -1,5 +1,5 @@
 # <pep8 compliant>
-from bpy.types import Operator
+from bpy.types import Operator, Context
 import time
 
 from ..utils import load_openopenfoam_file, update_settings_dynamic_props
@@ -7,11 +7,20 @@ from ....properties.openfoam.utils import encode_value_ranges, encode_scalar_nam
 
 
 class TBB_OT_OpenfoamReloadFile(Operator):
+    """
+    Reload the selected file (update properties and temporary data)
+    """
     bl_idname = "tbb.reload_openfoam_file"
     bl_label = "Reload"
     bl_description = "Reload the selected file"
 
-    def execute(self, context):
+    def execute(self, context: Context) -> set:
+        """Reload the selected file.
+
+        :type context: Context
+        :return: state of the operator
+        :rtype: set
+        """
         settings = context.scene.tbb_openfoam_settings
         tmp_data = context.scene.tbb_openfoam_tmp_data
 
