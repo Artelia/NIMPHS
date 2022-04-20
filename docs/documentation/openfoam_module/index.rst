@@ -5,6 +5,10 @@ OpenFOAM
 * :ref:`openfoam_previewing_tools`
 * :ref:`openfoam_create_sequence`
 
+.. important::
+    Useful information are printed in the console (times, errors, warnings, etc). Do not hesitate to open it. On Windows, ``Window ‣ Toggle System Console``
+
+
 .. _openfoam_import_file:
 
 Import a file
@@ -78,7 +82,7 @@ Mesh sequence
 
 | This type of sequence holds every time step in memory (a mesh is built for each time step).
 | That is why it is not recommended to use this sequence for large meshes.
-| It is built using the `Stop-motion-OBJ <https://github.com/neverhood311/Stop-motion-OBJ/releases>`_. Thus you can use the features associated for this sequence.
+| It is built using the `Stop-motion-OBJ <https://github.com/neverhood311/Stop-motion-OBJ/wiki>`_. Thus you can use the features associated for this sequence.
 
 .. image:: /images/OpenFOAM/create_mesh_sequence.png
     :width: 35%
