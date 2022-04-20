@@ -1,5 +1,4 @@
 # <pep8 compliant>
-from pydoc import cli
 import bpy
 from bpy.types import Operator, RenderSettings
 
