@@ -2,7 +2,7 @@
 from pyvista import OpenFOAMReader, DataSet, UnstructuredGrid
 
 
-class TBB_OpenFOAMTemporaryData():
+class TBB_OpenfoamTemporaryData():
     file_reader = None
     data = None
     mesh = None
@@ -21,7 +21,7 @@ class TBB_OpenFOAMTemporaryData():
         try:
             self.file_reader.set_active_time_point(time_point)
         except ValueError as error:
-            print("ERROR::TBB_OpenFOAMTemporaryData: " + str(error))
+            print("ERROR::TBB_OpenfoamTemporaryData: " + str(error))
 
         if new_data is None:
             self.data = self.file_reader.read()

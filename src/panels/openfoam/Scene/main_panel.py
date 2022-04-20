@@ -2,9 +2,9 @@
 from bpy.types import Panel
 
 
-class TBB_PT_OpenFOAMMainPanel(Panel):
+class TBB_PT_OpenfoamMainPanel(Panel):
     bl_label = "Toolsbox OpenFOAM/TELEMAC"
-    bl_idname = "TBB_PT_OpenFOAMMainPanel"
+    bl_idname = "TBB_PT_OpenfoamMainPanel"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = "Toolsbox blender"

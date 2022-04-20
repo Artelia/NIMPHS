@@ -2,11 +2,11 @@
 from bpy.types import PropertyGroup
 from bpy.props import BoolProperty, IntProperty, StringProperty, PointerProperty
 
-from ..clip import TBB_OpenFOAMClipProperty
+from ..clip import TBB_OpenfoamClipProperty
 from ..utils import set_sequence_anim_length, get_sequence_anim_length
 
 
-class TBB_OpenFOAMSequenceProperty(PropertyGroup):
+class TBB_OpenfoamSequenceProperty(PropertyGroup):
     name: StringProperty(
         name="Name",
         description="Name of the sequence",
@@ -63,4 +63,4 @@ class TBB_OpenFOAMSequenceProperty(PropertyGroup):
         default="",
     )
 
-    clip: PointerProperty(type=TBB_OpenFOAMClipProperty)
+    clip: PointerProperty(type=TBB_OpenfoamClipProperty)

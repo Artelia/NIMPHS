@@ -9,7 +9,7 @@ from pathlib import Path
 import numpy as np
 import time
 
-from ...properties.OpenFOAM.Scene.settings import settings_dynamic_properties
+from ...properties.openfoam.Scene.settings import settings_dynamic_properties
 
 
 def load_openopenfoam_file(file_path: str) -> tuple[bool, OpenFOAMReader]:
@@ -50,7 +50,7 @@ def generate_sequence_object(operator, settings, clip, time_points: int) -> Obje
     try:
         obj_settings.clip.scalar.name = clip.scalar.name
     except TypeError as error:
-        print("ERROR::TBB_OT_OpenFOAMCreateSequence: " + str(error))
+        print("ERROR::TBB_OT_OpenfoamCreateSequence: " + str(error))
         operator.report({"WARNING"}, "the selected scalar does not exist at time point 0 (selected from time point " +
                         str(settings["preview_time_point"]) + ")")
 

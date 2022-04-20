@@ -9,3 +9,4 @@ Developers manual
     :glob:
 
     introduction
+    code_documentation/index

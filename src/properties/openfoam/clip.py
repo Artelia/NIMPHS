@@ -5,7 +5,7 @@ from bpy.props import BoolProperty, EnumProperty, PointerProperty, FloatProperty
 from .utils import update_scalar_names, set_clip_values, get_clip_values
 
 
-class TBB_OpenFOAMClipScalarProperty(PropertyGroup):
+class TBB_OpenfoamClipScalarProperty(PropertyGroup):
     value: FloatProperty(
         name="Value",
         description="Set the clipping value",
@@ -51,7 +51,7 @@ class TBB_OpenFOAMClipScalarProperty(PropertyGroup):
     )
 
 
-class TBB_OpenFOAMClipProperty(PropertyGroup):
+class TBB_OpenfoamClipProperty(PropertyGroup):
     type: EnumProperty(
         items=[
             ("no_clip", "None", "Do not clip"),
@@ -63,4 +63,4 @@ class TBB_OpenFOAMClipProperty(PropertyGroup):
         default="no_clip",
     )
 
-    scalar: PointerProperty(type=TBB_OpenFOAMClipScalarProperty)
+    scalar: PointerProperty(type=TBB_OpenfoamClipScalarProperty)

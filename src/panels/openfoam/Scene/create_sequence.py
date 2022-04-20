@@ -4,10 +4,10 @@ from bpy.types import Panel
 from ..utils import sequence_name_already_exist
 
 
-class TBB_PT_OpenFOAMCreateSequence(Panel):
+class TBB_PT_OpenfoamCreateSequence(Panel):
     bl_label = "Create sequence"
-    bl_idname = "TBB_PT_OpenFOAMCreateSequence"
-    bl_parent_id = "TBB_PT_OpenFOAMMainPanel"
+    bl_idname = "TBB_PT_OpenfoamCreateSequence"
+    bl_parent_id = "TBB_PT_OpenfoamMainPanel"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_options = {"DEFAULT_CLOSED"}

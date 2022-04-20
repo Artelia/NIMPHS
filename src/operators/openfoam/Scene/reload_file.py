@@ -3,10 +3,10 @@ from bpy.types import Operator
 import time
 
 from ..utils import load_openopenfoam_file, update_settings_dynamic_props
-from ....properties.OpenFOAM.utils import encode_value_ranges, encode_scalar_names
+from ....properties.openfoam.utils import encode_value_ranges, encode_scalar_names
 
 
-class TBB_OT_OpenFOAMReloadFile(Operator):
+class TBB_OT_OpenfoamReloadFile(Operator):
     bl_idname = "tbb.reload_openfoam_file"
     bl_label = "Reload"
     bl_description = "Reload the selected file"

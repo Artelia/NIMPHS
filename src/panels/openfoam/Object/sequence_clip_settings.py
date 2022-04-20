@@ -2,10 +2,10 @@
 from bpy.types import Panel
 
 
-class TBB_PT_OpenFOAMSequenceClipSettings(Panel):
+class TBB_PT_OpenfoamSequenceClipSettings(Panel):
     bl_label = "Clip"
-    bl_idname = "TBB_PT_OpenFOAMSequenceClipSettings"
-    bl_parent_id = "TBB_PT_OpenFOAMSequenceSettings"
+    bl_idname = "TBB_PT_OpenfoamSequenceClipSettings"
+    bl_parent_id = "TBB_PT_OpenfoamSequenceSettings"
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
     bl_context = "object"

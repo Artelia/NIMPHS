@@ -11,10 +11,10 @@ from ..utils import (
     load_openopenfoam_file,
 )
 
-from ....properties.OpenFOAM.utils import encode_value_ranges, encode_scalar_names
+from ....properties.openfoam.utils import encode_value_ranges, encode_scalar_names
 
 
-class TBB_OT_OpenFOAMPreview(Operator):
+class TBB_OT_OpenfoamPreview(Operator):
     bl_idname = "tbb.preview"
     bl_label = "Preview"
     bl_description = "Preview the current loaded file"
@@ -45,7 +45,7 @@ class TBB_OT_OpenFOAMPreview(Operator):
         try:
             file_reader.set_active_time_point(prw_time_point)
         except ValueError as error:
-            print("ERROR::TBB_OT_OpenFOAMPreview: " + str(error))
+            print("ERROR::TBB_OT_OpenfoamPreview: " + str(error))
             self.report({"ERROR"}, "The selected time point is not defined (" +
                         str(prw_time_point) + ").")
             return {"FINISHED"}
@@ -58,7 +58,7 @@ class TBB_OT_OpenFOAMPreview(Operator):
         try:
             vertices, faces, mesh = generate_mesh(file_reader, prw_time_point, clip, raw_mesh)
         except Exception as error:
-            print("ERROR::TBB_OT_OpenFOAMPreview: " + str(error))
+            print("ERROR::TBB_OT_OpenfoamPreview: " + str(error))
             # Update temporary data, please read the comment below.
             tmp_data.update(file_reader, prw_time_point, data, raw_mesh)
             self.report({"ERROR"}, "Something went wrong building the mesh")

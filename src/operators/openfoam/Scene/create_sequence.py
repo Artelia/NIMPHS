@@ -7,7 +7,7 @@ import time
 from ..utils import generate_mesh_for_sequence, add_mesh_to_sequence, generate_sequence_object
 
 
-class TBB_OT_OpenFOAMCreateSequence(Operator):
+class TBB_OT_OpenfoamCreateSequence(Operator):
     bl_idname = "tbb.create_sequence"
     bl_label = "Create sequence"
     bl_description = "Create a mesh sequence using the selected parameters. Press 'esc' to cancel"
@@ -92,7 +92,7 @@ class TBB_OT_OpenFOAMCreateSequence(Operator):
                 try:
                     mesh = generate_mesh_for_sequence(context, self.current_time_point, name=self.user_sequence_name)
                 except Exception as error:
-                    print("ERROR::TBB_OT_OpenFOAMCreateSequence: " + str(error))
+                    print("ERROR::TBB_OT_OpenfoamCreateSequence: " + str(error))
                     self.report({"ERROR"}, "An error occured creating the sequence, (time_step = " +
                                 str(self.current_time_point) + ")")
                     self.stop(context)

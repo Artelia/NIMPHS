@@ -2,9 +2,9 @@
 from bpy.types import Panel
 
 
-class TBB_PT_OpenFOAMSequenceSettings(Panel):
+class TBB_PT_OpenfoamSequenceSettings(Panel):
     bl_label = "OpenFOAM Streaming sequence"
-    bl_idname = "TBB_PT_OpenFOAMSequenceSettings"
+    bl_idname = "TBB_PT_OpenfoamSequenceSettings"
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
     bl_context = "object"

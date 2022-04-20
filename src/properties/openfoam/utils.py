@@ -27,7 +27,7 @@ def encode_scalar_names(mesh: UnstructuredGrid) -> str:
 def update_scalar_names(self, _context: Context) -> list:
     items = []
     try:
-        # Raises an AttributeError when this call comes from TBB_OpenFOAMSettings.preview_point_data
+        # Raises an AttributeError when this call comes from TBB_OpenfoamSettings.preview_point_data
         scalar_list = self.clip.scalar.list
     except AttributeError:
         scalar_list = self.list

@@ -6,10 +6,10 @@ from bpy.props import StringProperty
 import time
 
 from ..utils import load_openopenfoam_file, update_settings_dynamic_props, generate_preview_object, generate_mesh
-from ....properties.OpenFOAM.utils import encode_value_ranges, encode_scalar_names
+from ....properties.openfoam.utils import encode_value_ranges, encode_scalar_names
 
 
-class TBB_OT_OpenFOAMImportFile(Operator, ImportHelper):
+class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
     bl_idname = "tbb.import_openfoam_file"
     bl_label = "Import"
     bl_description = "Import an OpenFOAM file"
@@ -46,7 +46,7 @@ class TBB_OT_OpenFOAMImportFile(Operator, ImportHelper):
             vertices, faces, preview_mesh = generate_mesh(file_reader, time_point)
             blender_mesh, obj = generate_preview_object(vertices, faces, context)
         except Exception as error:
-            print("ERROR::TBB_OT_OpenFOAMImportFile: " + str(error))
+            print("ERROR::TBB_OT_OpenfoamImportFile: " + str(error))
             self.report({"ERROR"}, "Something went wrong building the mesh")
             return {"FINISHED"}
 

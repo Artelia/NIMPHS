@@ -3,7 +3,7 @@ from bpy.types import PropertyGroup
 from bpy.props import StringProperty, BoolProperty, EnumProperty, PointerProperty, IntProperty
 
 from ..utils import update_scalar_names
-from ..clip import TBB_OpenFOAMClipProperty
+from ..clip import TBB_OpenfoamClipProperty
 
 
 settings_dynamic_properties = [
@@ -14,7 +14,7 @@ settings_dynamic_properties = [
 ]
 
 
-class TBB_OpenFOAMSettings(PropertyGroup):
+class TBB_OpenfoamSettings(PropertyGroup):
     # preview_time_point: IntProperty dynamically created
 
     # start_time_point: IntProperty dynamically created
@@ -77,4 +77,4 @@ class TBB_OpenFOAMSettings(PropertyGroup):
         default="OpenFOAM",
     )
 
-    clip: PointerProperty(type=TBB_OpenFOAMClipProperty)
+    clip: PointerProperty(type=TBB_OpenfoamClipProperty)

@@ -2,10 +2,10 @@
 from bpy.types import Panel
 
 
-class TBB_PT_OpenFOAMClip(Panel):
+class TBB_PT_OpenfoamClip(Panel):
     bl_label = "Clip"
-    bl_idname = "TBB_PT_OpenFOAMClip"
-    bl_parent_id = "TBB_PT_OpenFOAMMainPanel"
+    bl_idname = "TBB_PT_OpenfoamClip"
+    bl_parent_id = "TBB_PT_OpenfoamMainPanel"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_options = {"DEFAULT_CLOSED"}
