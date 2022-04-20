@@ -5,7 +5,7 @@ from bpy.props import StringProperty
 
 import time
 
-from ..utils import load_openopenfoam_file, update_settings_dynamic_props, generate_preview_object, generate_mesh
+from ..utils import load_openfoam_file, update_settings_dynamic_props, generate_preview_object, generate_mesh
 from ....properties.openfoam.utils import encode_value_ranges, encode_scalar_names
 
 
@@ -35,7 +35,7 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         settings = context.scene.tbb_openfoam_settings
         tmp_data = context.scene.tbb_openfoam_tmp_data
         start = time.time()
-        success, file_reader = load_openopenfoam_file(self.filepath)
+        success, file_reader = load_openfoam_file(self.filepath)
 
         if not success:
             self.report({"ERROR"}, "The choosen file does not exist")

@@ -2,7 +2,7 @@
 from bpy.types import Operator, Context
 import time
 
-from ..utils import load_openopenfoam_file, update_settings_dynamic_props
+from ..utils import load_openfoam_file, update_settings_dynamic_props
 from ....properties.openfoam.utils import encode_value_ranges, encode_scalar_names
 
 
@@ -29,7 +29,7 @@ class TBB_OT_OpenfoamReloadFile(Operator):
             return {"FINISHED"}
 
         start = time.time()
-        success, file_reader = load_openopenfoam_file(settings.file_path)
+        success, file_reader = load_openfoam_file(settings.file_path)
         if not success:
             self.report({"ERROR"}, "The choosen file does not exist")
             return {"FINISHED"}

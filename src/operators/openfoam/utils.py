@@ -12,7 +12,15 @@ import time
 from ...properties.openfoam.Scene.settings import settings_dynamic_properties
 
 
-def load_openopenfoam_file(file_path: str) -> tuple[bool, OpenFOAMReader]:
+def load_openfoam_file(file_path: str) -> tuple[bool, OpenFOAMReader]:
+    """Load an OpenFOAM file and return the file_reader.
+
+    :param file_path: path to the file
+    :type file_path: str
+    :return: success, the file_reader
+    :rtype: tuple[bool, OpenFOAMReader]
+    """
+
     file = Path(file_path)
     if not file.exists():
         return False, None
@@ -23,6 +31,20 @@ def load_openopenfoam_file(file_path: str) -> tuple[bool, OpenFOAMReader]:
 
 
 def generate_sequence_object(operator, settings, clip, time_points: int) -> Object:
+    """Generate a sequence object using the given parameters.
+
+    :param operator: Source operator
+    :type operator: bpy.types.Operator
+    :param settings: OpenFOAM main panel settings
+    :type settings: TBB_OpenfoamSettings
+    :param clip: OpenFOAM main panel clip settings
+    :type clip: TBB_OpenfoamClipProperty
+    :param time_points: number of time points
+    :type time_points: int
+    :return: Generated sequence (Blender object)
+    :rtype: Object
+    """
+
     obj_name = settings.sequence_name + "_sequence"
     blender_mesh = bpy.data.meshes.new(name=settings.sequence_name + "_mesh")
     obj = bpy.data.objects.new(obj_name, blender_mesh)

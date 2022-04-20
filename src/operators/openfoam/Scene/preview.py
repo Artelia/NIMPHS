@@ -8,7 +8,7 @@ from ..utils import (
     generate_preview_object,
     generate_vertex_colors,
     generate_preview_material,
-    load_openopenfoam_file,
+    load_openfoam_file,
 )
 
 from ....properties.openfoam.utils import encode_value_ranges, encode_scalar_names
@@ -46,7 +46,7 @@ class TBB_OT_OpenfoamPreview(Operator):
         start = time.time()
         # TODO: changing time point does not work if we do not load the file
         # again... We would like to use the file_reader from tbb_openfoam_tmp_data.
-        success, file_reader = load_openopenfoam_file(settings.file_path)
+        success, file_reader = load_openfoam_file(settings.file_path)
         if not success:
             self.report({"ERROR"}, "The choosen file does not exist.")
             return {"FINISHED"}
