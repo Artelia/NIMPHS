@@ -4,8 +4,8 @@
 # You can set these variables from the command line, and also
 # from the environment for the first two.
 SPHINXOPTS    ?=
-SPHINXBUILD   ?= sphinx-build
-SOURCEDIR     = .
+SPHINXBUILD   ?= ~/OLART/Apps/blender-3.1.1-stable+v31.d91843f3b6c6-linux.x86_64-release/3.1/python/bin/sphinx-build
+SOURCEDIR     = source
 BUILDDIR      = _build
 
 # Put it first so that "make" without argument is like "make help".

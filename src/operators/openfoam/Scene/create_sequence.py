@@ -1,6 +1,6 @@
 # <pep8 compliant>
 import bpy
-from bpy.types import Operator, RenderSettings
+from bpy.types import Operator, RenderSettings, Context, Event
 
 import time
 
@@ -8,6 +8,10 @@ from ..utils import generate_mesh_for_sequence, add_mesh_to_sequence, generate_s
 
 
 class TBB_OT_OpenfoamCreateSequence(Operator):
+    """
+    Create a sequence using the settings defined in the main panel and the create sequence panel.
+    """
+
     bl_idname = "tbb.create_sequence"
     bl_label = "Create sequence"
     bl_description = "Create a mesh sequence using the selected parameters. Press 'esc' to cancel"
@@ -23,7 +27,13 @@ class TBB_OT_OpenfoamCreateSequence(Operator):
     chrono_start = 0
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context: Context) -> bool:
+        """Determine whether to let the user use the operator or not.
+
+        :type context: Context
+        :rtype: bool
+        """
+
         settings = context.scene.tbb_openfoam_settings
 
         if settings.sequence_type == "mesh_sequence":
@@ -33,7 +43,13 @@ class TBB_OT_OpenfoamCreateSequence(Operator):
         else:  # Lock ui by default
             return False
 
-    def execute(self, context):
+    def execute(self, context: Context) -> set:
+        """Create the sequence asked by the user. Its behaviour depends on the sequence type.
+
+        :type context: Context
+        :return: state of the operator
+        :rtype: set
+        """
         wm = context.window_manager
         settings = context.scene.tbb_openfoam_settings
         clip = settings.clip
@@ -81,7 +97,15 @@ class TBB_OT_OpenfoamCreateSequence(Operator):
             self.report({"ERROR"}, "Unknown sequence type (type = " + str(settings.sequence_type) + ")")
             return {"FINISHED"}
 
-    def modal(self, context, event):
+    def modal(self, context: Context, event: Event) -> set:
+        """Runs one step of the "Create Mesh Sequence" process.
+
+        :type context: Context
+        :type event: Event
+        :return: state of the operator
+        :rtype: set
+        """
+
         if event.type == "ESC":
             self.stop(context, cancelled=True)
             return {"CANCELLED"}
@@ -150,7 +174,13 @@ class TBB_OT_OpenfoamCreateSequence(Operator):
 
         return {"PASS_THROUGH"}
 
-    def stop(self, context, cancelled=False):
+    def stop(self, context: Context, cancelled: bool = False) -> None:
+        """Stops the "Create Mesh Sequence" process.
+
+        :type context: Context
+        :param cancelled: ask to report "Create sequence cancelled", defaults to False
+        :type cancelled: bool, optional
+        """
         wm = context.window_manager
         wm.event_timer_remove(self.timer)
         self.timer = None
