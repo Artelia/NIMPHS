@@ -1,8 +1,12 @@
 # <pep8 compliant>
-from bpy.types import Panel
+from bpy.types import Panel, Context
 
 
 class TBB_PT_OpenfoamSequenceSettings(Panel):
+    """
+    Main panel of the Streaming sequence settings. This is the 'parent' panel.
+    """
+
     bl_label = "OpenFOAM Streaming sequence"
     bl_idname = "TBB_PT_OpenfoamSequenceSettings"
     bl_space_type = "PROPERTIES"
@@ -10,11 +14,24 @@ class TBB_PT_OpenfoamSequenceSettings(Panel):
     bl_context = "object"
 
     @classmethod
-    def poll(self, context):
+    def poll(self, context: Context) -> bool:
+        """
+        Determine whether to let the user access the panel or not.
+
+        :type context: Context
+        :rtype: bool
+        """
+
         obj = context.active_object
         return obj.tbb_openfoam_sequence.is_streaming_sequence
 
-    def draw(self, context):
+    def draw(self, context: Context) -> None:
+        """
+        Layout of the panel.
+
+        :type context: Context
+        """
+
         layout = self.layout
         obj = context.active_object
         settings = obj.tbb_openfoam_sequence

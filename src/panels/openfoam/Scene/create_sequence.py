@@ -1,10 +1,14 @@
 # <pep8 compliant>
-from bpy.types import Panel
+from bpy.types import Panel, Context
 
 from ..utils import sequence_name_already_exist
 
 
 class TBB_PT_OpenfoamCreateSequence(Panel):
+    """
+    UI panel to manage the creation of new sequences.
+    """
+
     bl_label = "Create sequence"
     bl_idname = "TBB_PT_OpenfoamCreateSequence"
     bl_parent_id = "TBB_PT_OpenfoamMainPanel"
@@ -13,7 +17,14 @@ class TBB_PT_OpenfoamCreateSequence(Panel):
     bl_options = {"DEFAULT_CLOSED"}
 
     @classmethod
-    def poll(cls, context):
+    def poll(cls, context: Context) -> bool:
+        """
+        Determine whether to let the user access the panel or not.
+
+        :type context: Context
+        :rtype: bool
+        """
+
         obj = context.active_object
         # Even if no objects are selected, the last selected object remains in the active_objects variable
         if len(context.selected_objects) == 0:
@@ -24,7 +35,13 @@ class TBB_PT_OpenfoamCreateSequence(Panel):
         else:
             return context.scene.tbb_openfoam_tmp_data.is_ok() and not obj.tbb_openfoam_sequence.is_streaming_sequence
 
-    def draw(self, context):
+    def draw(self, context: Context):
+        """
+        Layout of the panel.
+
+        :type context: Context
+        """
+
         layout = self.layout
         settings = context.scene.tbb_openfoam_settings
 

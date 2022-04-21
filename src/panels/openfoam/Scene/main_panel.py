@@ -1,15 +1,25 @@
 # <pep8 compliant>
-from bpy.types import Panel
+from bpy.types import Panel, Context
 
 
 class TBB_PT_OpenfoamMainPanel(Panel):
+    """
+    Main panel of the OpenFOAM module. This is the 'parent' panel.
+    """
+
     bl_label = "Toolsbox OpenFOAM/TELEMAC"
     bl_idname = "TBB_PT_OpenfoamMainPanel"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = "Toolsbox blender"
 
-    def draw(self, context):
+    def draw(self, context: Context) -> None:
+        """
+        Layout of the panel.
+
+        :type context: Context
+        """
+
         layout = self.layout
         settings = context.scene.tbb_openfoam_settings
 

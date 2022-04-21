@@ -1,8 +1,12 @@
 # <pep8 compliant>
-from bpy.types import Panel
+from bpy.types import Panel, Context
 
 
 class TBB_PT_OpenfoamSequenceClipSettings(Panel):
+    """
+    UI panel to manage clip settings of the Streaming sequence.
+    """
+
     bl_label = "Clip"
     bl_idname = "TBB_PT_OpenfoamSequenceClipSettings"
     bl_parent_id = "TBB_PT_OpenfoamSequenceSettings"
@@ -12,11 +16,24 @@ class TBB_PT_OpenfoamSequenceClipSettings(Panel):
     bl_options = {"DEFAULT_CLOSED"}
 
     @classmethod
-    def poll(self, context):
+    def poll(self, context: Context) -> bool:
+        """
+        Determine whether to let the user access the panel or not.
+
+        :type context: Context
+        :rtype: bool
+        """
+
         obj = context.active_object
         return obj.tbb_openfoam_sequence.update
 
-    def draw(self, context):
+    def draw(self, context: Context) -> None:
+        """
+        Layout of the panel.
+
+        :type context: Context
+        """
+
         layout = self.layout
         obj = context.active_object
         clip = obj.tbb_openfoam_sequence.clip
