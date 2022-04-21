@@ -9,7 +9,7 @@ from ..utils import generate_mesh_for_sequence, add_mesh_to_sequence, generate_s
 
 class TBB_OT_OpenfoamCreateSequence(Operator):
     """
-    Create a sequence using the settings defined in the main panel and the create sequence panel.
+    Create a sequence using the settings defined in the main panel and the 'create sequence' panel.
     """
 
     bl_idname = "tbb.create_sequence"
@@ -28,7 +28,8 @@ class TBB_OT_OpenfoamCreateSequence(Operator):
 
     @classmethod
     def poll(cls, context: Context) -> bool:
-        """Determine whether to let the user use the operator or not.
+        """
+        Determine whether to let the user use the operator or not.
 
         :type context: Context
         :rtype: bool
@@ -44,7 +45,8 @@ class TBB_OT_OpenfoamCreateSequence(Operator):
             return False
 
     def execute(self, context: Context) -> set:
-        """Create the sequence asked by the user. Its behaviour depends on the sequence type.
+        """
+        Create the sequence asked by the user. Its behaviour depends on the sequence type.
 
         :type context: Context
         :return: state of the operator
@@ -98,7 +100,8 @@ class TBB_OT_OpenfoamCreateSequence(Operator):
             return {"FINISHED"}
 
     def modal(self, context: Context, event: Event) -> set:
-        """Runs one step of the "Create Mesh Sequence" process.
+        """
+        Run one step of the "Create Mesh Sequence" process.
 
         :type context: Context
         :type event: Event
@@ -175,7 +178,8 @@ class TBB_OT_OpenfoamCreateSequence(Operator):
         return {"PASS_THROUGH"}
 
     def stop(self, context: Context, cancelled: bool = False) -> None:
-        """Stops the "Create Mesh Sequence" process.
+        """
+        Stop the "Create Mesh Sequence" process.
 
         :type context: Context
         :param cancelled: ask to report "Create sequence cancelled", defaults to False

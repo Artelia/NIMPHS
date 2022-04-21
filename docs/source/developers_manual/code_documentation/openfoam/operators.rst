@@ -9,29 +9,17 @@ Operators
 Scene
 #####
 
-The ``TBB_OT_OpenfoamCreateSequence`` class
--------------------------------------------
-
 .. autoclass:: src.operators.openfoam.Scene.create_sequence.TBB_OT_OpenfoamCreateSequence
    :members:
    :show-inheritance:
-
-The ``TBB_OT_OpenfoamImportFile`` class
----------------------------------------
 
 .. autoclass:: src.operators.openfoam.Scene.import_file.TBB_OT_OpenfoamImportFile
    :members:
    :show-inheritance:
 
-The ``TBB_OT_OpenfoamPreview`` class
-------------------------------------
-
 .. autoclass:: src.operators.openfoam.Scene.preview.TBB_OT_OpenfoamPreview
    :members:
    :show-inheritance:
-
-The ``TBB_OT_OpenfoamReloadFile`` class
----------------------------------------
 
 .. autoclass:: src.operators.openfoam.Scene.reload_file.TBB_OT_OpenfoamReloadFile
    :members:
@@ -42,6 +30,28 @@ The ``TBB_OT_OpenfoamReloadFile`` class
 Utils
 #####
 
-.. autofunction:: src.operators.openfoam.utils.load_openfoam_file
+.. currentmodule:: src.operators.openfoam.utils
 
-.. autofunction:: src.operators.openfoam.utils.generate_sequence_object
+.. autofunction:: load_openfoam_file
+
+.. autofunction:: generate_sequence_object
+
+.. autofunction:: generate_mesh
+
+.. autofunction:: generate_preview_object
+
+.. autofunction:: generate_preview_material
+
+.. autofunction:: generate_mesh_for_sequence
+
+.. autofunction:: generate_vertex_colors
+
+.. autofunction:: add_mesh_to_sequence
+
+.. autofunction:: update_streaming_sequence
+
+.. autofunction:: update_sequence_mesh
+
+.. autofunction:: update_settings_dynamic_props
+
+.. autofunction:: remap_array

@@ -23,7 +23,8 @@ class TBB_OT_OpenfoamPreview(Operator):
     bl_description = "Preview the current loaded file"
 
     def execute(self, context: Context) -> set:
-        """Preview the mesh. It also updates temporary data with this new preview.
+        """
+        Preview the mesh. It also updates temporary data with this new preview.
 
         :type context: Context
         :return: state of the operator

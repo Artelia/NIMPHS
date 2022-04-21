@@ -18,14 +18,15 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
     bl_label = "Import"
     bl_description = "Import an OpenFOAM file"
 
-    #: bpy.props.StringProperty: List of allowed file extensions
+    #: bpy.props.StringProperty: List of allowed file extensions.
     filter_glob: StringProperty(
         default="*.foam",  # multiple allowed types: "*.foam;*.[];*.[]" etc ...
         options={"HIDDEN"}
     )
 
     def execute(self, context: Context) -> set:
-        """Import the selected file. It also generates the preview object.
+        """
+        Import the selected file. It also generates the preview object.
 
         :type context: Context
         :return: state of the operator

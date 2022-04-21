@@ -49,6 +49,7 @@ Development environment
     | reStructuredText language support (RST/ReST linter, preview, IntelliSense and more)
 * `Run on save <https://marketplace.visualstudio.com/items?itemName=emeraldwalk.RunOnSave>`_
     | Run commands when a file is saved in vscode. You can use the following configuration:
+    
     .. code-block:: json
 
         "emeraldwalk.runonsave": {

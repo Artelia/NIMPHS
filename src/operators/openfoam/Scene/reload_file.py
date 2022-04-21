@@ -8,14 +8,15 @@ from ....properties.openfoam.utils import encode_value_ranges, encode_scalar_nam
 
 class TBB_OT_OpenfoamReloadFile(Operator):
     """
-    Reload the selected file (update properties and temporary data)
+    Reload the selected file (update properties and temporary data).
     """
     bl_idname = "tbb.reload_openfoam_file"
     bl_label = "Reload"
     bl_description = "Reload the selected file"
 
     def execute(self, context: Context) -> set:
-        """Reload the selected file.
+        """
+        Reload the selected file.
 
         :type context: Context
         :return: state of the operator
