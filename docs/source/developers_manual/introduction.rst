@@ -53,6 +53,7 @@ Development environment
     .. code-block:: json
 
         "emeraldwalk.runonsave": {
+            "autoClearConsole": true,
             "commands": [
                 {
                     "match": "\\.rst$",

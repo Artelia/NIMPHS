@@ -15,6 +15,15 @@ settings_dynamic_properties = [
 
 
 class TBB_OpenfoamSettings(PropertyGroup):
+    """
+    Main panel settings. Contains 4 'dynamic' properties:
+
+    | **preview_time_point**: *bpy.types.IntProperty*, time step used for the preview section
+    | **start_time_point**: *bpy.types.IntProperty*, starting point of the sequence
+    | **end_time_point**: *bpy.types.IntProperty*, ending point of the sequence
+    | **anim_length**: *bpy.types.IntProperty*, length of the animation
+    """
+
     # preview_time_point: IntProperty dynamically created
 
     # start_time_point: IntProperty dynamically created
@@ -23,41 +32,48 @@ class TBB_OpenfoamSettings(PropertyGroup):
 
     # anim_length: IntProperty dynamically created
 
+    #: bpy.types.IntProperty: Starting point of the sequence
     frame_start: IntProperty(
         name="Frame start",
         description="Starting point of the sequence",
         default=1
     )
 
+    #: bpy.types.StringProperty: Path to the .foam file
     file_path: StringProperty(
         name="OpenFoam file path",
         description="Path to the .foam file",
     )
 
+    #: bpy.types.BoolProperty: State of the 'create sequence' operator
     create_sequence_is_running: BoolProperty(
         name="Create sequence is running",
-        description="Describes the state of the create sequence operator",
+        description="State of the 'create sequence' operator",
         default=False,
     )
 
+    #: bpy.types.EnumProperty: Name of point data to preview
     preview_point_data: EnumProperty(
         items=update_scalar_names,
         name="Point data",
         description="Name of point data to preview",
     )
 
+    #: bpy.types.BoolProperty: Import point data as vertex color groups
     import_point_data: BoolProperty(
         name="Import point data",
         description="Import point data as vertex color groups",
         default=False,
     )
 
+    #: bpy.types.StringProperty: List of point data to import as vertex color groups. Separate each with a semicolon
     list_point_data: StringProperty(
         name="Point data list",
         description="List of point data to import as vertex color groups. Separate each with a semicolon",
         default="",
     )
 
+    #: bpy.types.EnumProperty: Select a sequence type
     sequence_type: EnumProperty(
         items=[
             ("mesh_sequence",
@@ -71,10 +87,12 @@ class TBB_OpenfoamSettings(PropertyGroup):
         description="Select a sequence type",
     )
 
+    #: bpy.types.StringProperty: Name of the sequence object
     sequence_name: StringProperty(
         name="Sequence name",
         description="Name of the sequence object",
         default="OpenFOAM",
     )
 
+    #: TBB_OpenfoamClipProperty: Clip settings
     clip: PointerProperty(type=TBB_OpenfoamClipProperty)

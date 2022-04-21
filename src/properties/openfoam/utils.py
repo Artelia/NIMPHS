@@ -6,6 +6,14 @@ from pyvista import UnstructuredGrid
 
 
 def encode_scalar_names(mesh: UnstructuredGrid) -> str:
+    """
+    Encode scalar names for the *list* attribute of TBB_OpenfoamClipProperty.
+
+    :param mesh: mesh data read from the OpenFOAM file
+    :type mesh: UnstructuredGrid
+    :rtype: str
+    """
+
     output = ""
 
     for value in mesh.point_data.keys():
@@ -25,6 +33,13 @@ def encode_scalar_names(mesh: UnstructuredGrid) -> str:
 
 
 def update_scalar_names(self, _context: Context) -> list:
+    """
+    Update the list of scalar names for EnumProperties.
+
+    :type _context: Context
+    :rtype: list
+    """
+
     items = []
     try:
         # Raises an AttributeError when this call comes from TBB_OpenfoamSettings.preview_point_data
@@ -42,6 +57,14 @@ def update_scalar_names(self, _context: Context) -> list:
 
 
 def encode_value_ranges(mesh: UnstructuredGrid) -> str:
+    """
+    Encode values ranges for the *value_ranges* attribute of TBB_OpenfoamClipProperty.
+
+    :param mesh: mesh data read from the OpenFOAM file
+    :type mesh: UnstructuredGrid
+    :rtype: str
+    """
+
     output = ""
 
     for value in mesh.point_data.keys():
@@ -68,6 +91,24 @@ def encode_value_ranges(mesh: UnstructuredGrid) -> str:
 
 
 def get_value_range_from_name(value_ranges: str, name: str, value_type: str) -> dict | None:
+    """
+    Return the value range corresponding to the given scalar name.
+
+    .. code-block:: text
+
+        Return a dict with the following members:
+        "min": contains min values
+        "max": contains max values
+
+    :param value_ranges: encoded value ranges
+    :type value_ranges: str
+    :param name: name of the scalar to retrieve
+    :type name: str
+    :param value_type: type of the scalar ("value" or "vector_value_dim")
+    :type value_type: str
+    :rtype: dict | None
+    """
+
     values = value_ranges.split(";")
 
     for value in values:
@@ -89,6 +130,14 @@ def get_value_range_from_name(value_ranges: str, name: str, value_type: str) -> 
 
 
 def set_clip_values(self, value: float) -> None:
+    """
+    Function triggered when the user sets a new clip value. This let us to make sure the new value
+    is in the value range of the selected scalar. Set the value to the nearest bound if outside the range.
+
+    :param value: new value
+    :type value: float
+    """
+
     if self.name is not None:
         value_type = self.name.split("@")[1]
         ranges = get_value_range_from_name(self.value_ranges, self.name, value_type)
@@ -102,8 +151,8 @@ def set_clip_values(self, value: float) -> None:
                 self[value_type] = value
 
         if value_type == "vector_value":
-            # This is ugly, but it works. In fact, self["value"] and self["vector_value"] do not exist until they are manipulated (get/set).
-            # Thus, when the exception raises, we set the default value and this fixes the error.
+            # This is ugly, but it works. In fact, self["value"] and
+            # self["vector_value"] do not exist until they are manipulated (get/set).
             self[value_type] = (0.5, 0.5, 0.5)
 
             dim = len(ranges["min"])
@@ -116,7 +165,14 @@ def set_clip_values(self, value: float) -> None:
                     self[value_type][i] = value[i]
 
 
-def get_clip_values(self):
+def get_clip_values(self) -> float | list | None:
+    """
+    Function triggered when the UI fetches a clip value.
+
+    :return: value
+    :rtype: float | list | None
+    """
+
     if self.name is not None:
         value_type = self.name.split("@")[1]
 
@@ -131,6 +187,14 @@ def get_clip_values(self):
 
 
 def set_sequence_anim_length(self, value: int) -> None:
+    """
+    Function triggered when the user sets a new animation length. This let us to make sure the new value
+    is not higher than the available time steps.
+
+    :param value: new value
+    :type value: int
+    """
+
     if value > self.max_length:
         self["anim_length"] = self.max_length
     elif value < 0:
@@ -140,4 +204,11 @@ def set_sequence_anim_length(self, value: int) -> None:
 
 
 def get_sequence_anim_length(self) -> int:
+    """
+    Return the animation length value.
+
+    :return: value
+    :rtype: int
+    """
+
     return self.get("anim_length", 0)
