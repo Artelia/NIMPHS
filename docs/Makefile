@@ -16,5 +16,8 @@ help:
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
+# Comment '@persistent' decorator because fake-bpy-module defines it at 'None', which is not callable and causes errors during 'sphinx-build'
 %: Makefile
+	sed -i "s,@persistent,#@persistent," ../src/operators/openfoam/utils.py
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	sed -i "s,#@persistent,@persistent," ../src/operators/openfoam/utils.py

@@ -47,6 +47,19 @@ Development environment
     | Generates python docstrings automatically
 * `reStructuredText <https://marketplace.visualstudio.com/items?itemName=lextudio.restructuredtext>`_
     | reStructuredText language support (RST/ReST linter, preview, IntelliSense and more)
+* `Run on save <https://marketplace.visualstudio.com/items?itemName=emeraldwalk.RunOnSave>`_
+    | Run commands when a file is saved in vscode. You can use the following configuration:
+    .. code-block:: json
+
+        "emeraldwalk.runonsave": {
+            "commands": [
+                {
+                    "match": "\\.rst$",
+                    "isAsync": true,
+                    "cmd": "cd docs && make html"
+                }
+            ]
+        }
 
 | You can also setup the `autopep8 <https://code.visualstudio.com/docs/python/editing#_formatting>`_ tool which will automatically format your code.
 | We use the following autopep8 arguments:
