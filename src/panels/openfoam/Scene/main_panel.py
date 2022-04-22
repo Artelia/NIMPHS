@@ -7,11 +7,11 @@ class TBB_PT_OpenfoamMainPanel(Panel):
     Main panel of the OpenFOAM module. This is the 'parent' panel.
     """
 
-    bl_label = "Toolsbox OpenFOAM/TELEMAC"
+    bl_label = "OpenFOAM"
     bl_idname = "TBB_PT_OpenfoamMainPanel"
+    bl_parent_id = "TBB_PT_MainPanel"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
-    bl_category = "Toolsbox blender"
 
     def draw(self, context: Context) -> None:
         """

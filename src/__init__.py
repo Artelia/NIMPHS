@@ -23,7 +23,11 @@ from .properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 
 # TELEMAC imports
 from .operators.telemac.Scene.import_file import TBB_OT_TelemacImportFile
+from .panels.telemac.Scene.main_panel import TBB_PT_TelemacMainPanel
 from .properties.telemac.temporary_data import TBB_TelemacTemporaryData
+
+# Other imports
+from .panels.main_panel import TBB_PT_MainPanel
 
 bl_info = {
     "name": "Toolsbox OpenFOAM/TELEMAC",
@@ -47,11 +51,13 @@ operators = (
 )
 
 panels = (
+    TBB_PT_MainPanel,
     TBB_PT_OpenfoamMainPanel,
     TBB_PT_OpenfoamClip,
     TBB_PT_OpenfoamCreateSequence,
     TBB_PT_OpenfoamSequenceSettings,
     TBB_PT_OpenfoamSequenceClipSettings,
+    TBB_PT_TelemacMainPanel,
 )
 
 properties = (
