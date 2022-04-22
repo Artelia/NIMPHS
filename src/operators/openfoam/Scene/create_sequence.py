@@ -12,7 +12,7 @@ class TBB_OT_OpenfoamCreateSequence(Operator):
     Create a sequence using the settings defined in the main panel and the 'create sequence' panel.
     """
 
-    bl_idname = "tbb.create_sequence"
+    bl_idname = "tbb.openfoam_create_sequence"
     bl_label = "Create sequence"
     bl_description = "Create a mesh sequence using the selected parameters. Press 'esc' to cancel"
 

@@ -1,7 +1,7 @@
 # <pep8 compliant>
 from bpy.types import Panel, Context
 
-from ..utils import sequence_name_already_exist
+from ...utils import sequence_name_already_exist
 
 
 class TBB_PT_OpenfoamCreateSequence(Panel):
@@ -86,7 +86,7 @@ class TBB_PT_OpenfoamCreateSequence(Panel):
         row.prop(settings, "sequence_name", text="Name")
         row = layout.row()
         row.enabled = not snae
-        row.operator("tbb.create_sequence", text="Create sequence", icon="RENDER_ANIMATION")
+        row.operator("tbb.openfoam_create_sequence", text="Create sequence", icon="RENDER_ANIMATION")
 
         # Lock the create_sequence operator if the sequence name is already taken
         if snae:

@@ -26,6 +26,7 @@ from .operators.telemac.Scene.import_file import TBB_OT_TelemacImportFile
 from .operators.telemac.Scene.reload_file import TBB_OT_TelemacReloadFile
 from .operators.telemac.Scene.preview import TBB_OT_TelemacPreview
 from .panels.telemac.Scene.main_panel import TBB_PT_TelemacMainPanel
+from .panels.telemac.Scene.create_sequence import TBB_PT_TelemacCreateSequence
 from .properties.telemac.Scene.settings import TBB_TelemacSettings
 from .properties.telemac.temporary_data import TBB_TelemacTemporaryData
 
@@ -63,6 +64,7 @@ panels = (
     TBB_PT_OpenfoamSequenceSettings,
     TBB_PT_OpenfoamSequenceClipSettings,
     TBB_PT_TelemacMainPanel,
+    TBB_PT_TelemacCreateSequence,
 )
 
 properties = (

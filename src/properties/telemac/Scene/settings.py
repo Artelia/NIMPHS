@@ -65,5 +65,5 @@ class TBB_TelemacSettings(PropertyGroup):
     sequence_name: StringProperty(
         name="Sequence name",
         description="Name of the sequence object",
-        default="OpenFOAM",
+        default="TELEMAC",
     )
