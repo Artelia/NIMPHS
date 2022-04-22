@@ -52,7 +52,8 @@ class TBB_TelemacTemporaryData():
         self.vertices = np.hstack((self.vertices, np.zeros((nb_vertices, 1))))
 
         # Construct faces array
-        self.faces = np.array(self.file.ikle).reshape((nb_triangles, 3))
+        # '-1' to remove the '+1' offset in the ikle array
+        self.faces = (np.array(self.file.ikle) - 1).reshape((nb_triangles, 3))
 
         # Clear old variables information
         self.variables_info["names"].clear()
