@@ -10,6 +10,7 @@ class TBB_OT_OpenfoamReloadFile(Operator):
     """
     Reload the selected file (update properties and temporary data).
     """
+
     bl_idname = "tbb.reload_openfoam_file"
     bl_label = "Reload"
     bl_description = "Reload the selected file"

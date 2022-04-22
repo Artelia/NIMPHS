@@ -17,6 +17,6 @@ def update_var_names(self, context: Context) -> list:
 
     items = []
     for name, unit, id in zip(names, units, range(tmp_data.nb_vars)):
-        items.append((id, name + ", (" + unit + ")", "Undocumented"))
+        items.append((str(id), name + ", (" + unit + ")", "Undocumented"))
 
     return items

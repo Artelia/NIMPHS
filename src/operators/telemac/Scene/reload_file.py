@@ -9,6 +9,7 @@ class TBB_OT_TelemacReloadFile(Operator):
     """
     Reload the selected file (update properties and temporary data).
     """
+
     bl_idname = "tbb.reload_telemac_file"
     bl_label = "Reload"
     bl_description = "Reload the selected file"

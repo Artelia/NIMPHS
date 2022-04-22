@@ -12,7 +12,7 @@ def update_settings_dynamic_props(context: Context) -> None:
     :type context: Context
     """
 
-    settings = context.scene.tbb_openfoam_settings
+    settings = context.scene.tbb_telemac_settings
     tmp_data = context.scene.tbb_telemac_tmp_data
 
     max_time_step = tmp_data.nb_time_points
