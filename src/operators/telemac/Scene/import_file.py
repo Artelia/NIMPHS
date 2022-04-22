@@ -30,4 +30,23 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         :rtype: set
         """
 
+        settings = context.scene.tbb_telemac_settings
+        tmp_data = context.scene.tbb_telemac_tmp_data
+        start = time.time()
+
+        # Read the file and update temporary data
+        try:
+            tmp_data.update(self.filepath)
+        except Exception as error:
+            print("ERROR::TBB_OT_TelemacImportFile: " + str(error))
+            self.report({"ERROR"}, "An error occurred during import")
+            return {"FINISHED"}
+
+        settings.file_path = self.filepath
+
+        # Update properties values
+
+        print("Import::TELEMAC: " + "{:.4f}".format(time.time() - start) + "s")
+        self.report({"INFO"}, "File successfully imported")
+
         return {"FINISHED"}

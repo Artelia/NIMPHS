@@ -120,7 +120,7 @@ class TBB_OT_OpenfoamCreateSequence(Operator):
                     mesh = generate_mesh_for_sequence(context, self.current_time_point, name=self.user_sequence_name)
                 except Exception as error:
                     print("ERROR::TBB_OT_OpenfoamCreateSequence: " + str(error))
-                    self.report({"ERROR"}, "An error occured creating the sequence, (time_step = " +
+                    self.report({"ERROR"}, "An error occurred creating the sequence, (time_step = " +
                                 str(self.current_time_point) + ")")
                     self.stop(context)
                     return {"CANCELLED"}

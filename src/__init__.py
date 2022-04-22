@@ -24,6 +24,7 @@ from .properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 # TELEMAC imports
 from .operators.telemac.Scene.import_file import TBB_OT_TelemacImportFile
 from .panels.telemac.Scene.main_panel import TBB_PT_TelemacMainPanel
+from .properties.telemac.Scene.settings import TBB_TelemacSettings
 from .properties.telemac.temporary_data import TBB_TelemacTemporaryData
 
 # Other imports
@@ -65,6 +66,7 @@ properties = (
     TBB_OpenfoamClipProperty,
     TBB_OpenfoamSettings,
     TBB_OpenfoamSequenceProperty,
+    TBB_TelemacSettings,
 )
 
 classes = [operators, panels, properties]
@@ -79,6 +81,7 @@ def register():
     Scene.tbb_openfoam_tmp_data = TBB_OpenfoamTemporaryData()
     Scene.tbb_telemac_tmp_data = TBB_TelemacTemporaryData()
     Scene.tbb_openfoam_settings = PointerProperty(type=TBB_OpenfoamSettings)
+    Scene.tbb_telemac_settings = PointerProperty(type=TBB_TelemacSettings)
     Object.tbb_openfoam_sequence = PointerProperty(type=TBB_OpenfoamSequenceProperty)
 
     # Custom progress bar
