@@ -50,6 +50,9 @@ class TBB_PT_TelemacCreateSequence(Panel):
 
         row = layout.row()
         row.enabled = enable_rows
+        row.prop(settings, "normalize_coordinates_sequence", text="Normalize")
+        row = layout.row()
+        row.enabled = enable_rows
         row.prop(settings, "import_point_data")
 
         if settings.import_point_data:

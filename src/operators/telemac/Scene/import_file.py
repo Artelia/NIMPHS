@@ -1,9 +1,11 @@
 # <pep8 compliant>
+import bpy
 from bpy_extras.io_utils import ImportHelper
 from bpy.types import Operator, Context
 from bpy.props import StringProperty
 
 import time
+import numpy as np
 
 from ..utils import update_settings_dynamic_props
 from ...utils import generate_preview_object
@@ -55,6 +57,15 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         try:
             blender_mesh, obj = generate_preview_object(
                 tmp_data.vertices, tmp_data.faces, context, "TBB_TELEMAC_preview")
+            # Set the object a the origin of the scene
+            obj.select_set(state=True, view_layer=context.view_layer)
+            bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN')
+
+            if settings.normalize_coordinates_preview:
+                obj.scale[0] = 1.0 / obj.dimensions[0]
+                obj.scale[1] = 1.0 / obj.dimensions[1]
+                bpy.ops.object.transform_apply(location=False)
+
         except Exception as error:
             print("ERROR::TBB_OT_OpenfoamImportFile: " + str(error))
             self.report({"ERROR"}, "Something went wrong building the mesh")

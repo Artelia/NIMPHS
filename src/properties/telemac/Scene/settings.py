@@ -33,6 +33,18 @@ class TBB_TelemacSettings(PropertyGroup):
         description="Path to the .slf file",
     )
 
+    normalize_coordinates_preview: BoolProperty(
+        name="Normalize coordinates",
+        description="Option to normalize vertices coordinates (remap values in [-1;1])",
+        default=True
+    )
+
+    normalize_coordinates_sequence: BoolProperty(
+        name="Normalize coordinates",
+        description="Option to normalize vertices coordinates (remap values in [-1;1])",
+        default=True
+    )
+
     #: bpy.types.EnumProperty: Name of point data to preview
     preview_point_data: EnumProperty(
         items=update_var_names,

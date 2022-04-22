@@ -55,6 +55,9 @@ class TBB_PT_TelemacMainPanel(Panel):
             row.prop(settings, "preview_point_data", text="Points")
             row = layout.row()
             row.enabled = enable_rows
+            row.prop(settings, "normalize_coordinates_preview", text="Normalize")
+            row = layout.row()
+            row.enabled = enable_rows
             row.operator("tbb.telemac_preview", text="Preview", icon="HIDE_OFF")
 
         # If the file_path is not empty, it means that there is an error with temp data. Need to reload.
