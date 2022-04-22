@@ -5,6 +5,8 @@ from bpy.props import StringProperty
 
 import time
 
+from ..utils import update_settings_dynamic_props
+
 
 class TBB_OT_TelemacImportFile(Operator, ImportHelper):
     """
@@ -45,6 +47,7 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         settings.file_path = self.filepath
 
         # Update properties values
+        update_settings_dynamic_props(context)
 
         print("Import::TELEMAC: " + "{:.4f}".format(time.time() - start) + "s")
         self.report({"INFO"}, "File successfully imported")

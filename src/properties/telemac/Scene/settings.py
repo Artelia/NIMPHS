@@ -5,7 +5,7 @@ from bpy.props import StringProperty, BoolProperty, EnumProperty
 from ..utils import update_var_names
 
 
-settings_dynamic_properties = [
+telemac_settings_dynamic_props = [
     ("preview_time_point", "Time step used for the preview section"),
     ("start_time_point", "Starting point of the sequence"),
     ("end_time_point", "Ending point of the sequence"),

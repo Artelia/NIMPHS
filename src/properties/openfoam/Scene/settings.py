@@ -6,7 +6,7 @@ from ..utils import update_scalar_names
 from ..clip import TBB_OpenfoamClipProperty
 
 
-settings_dynamic_properties = [
+openfoam_settings_dynamic_props = [
     ("preview_time_point", "Time step used for the preview section"),
     ("start_time_point", "Starting point of the sequence"),
     ("end_time_point", "Ending point of the sequence"),

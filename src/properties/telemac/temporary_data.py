@@ -18,6 +18,8 @@ class TBB_TelemacTemporaryData():
     faces = None
     #: int: Number of variables
     nb_vars = 0
+    #: int: Number of time points
+    nb_time_points = 0
     #: dict: Information on variables (names and units)
     variables_info = {"names": [], "units": []}
 
@@ -26,6 +28,7 @@ class TBB_TelemacTemporaryData():
         self.vertices = None
         self.faces = None
         self.nb_vars = 0
+        self.nb_time_points = 0
         self.variables_info = {"names": [], "units": []}
 
     def update(self, file_path: str) -> None:
@@ -42,6 +45,7 @@ class TBB_TelemacTemporaryData():
         nb_vertices = len(self.file.x)
         nb_triangles = int(len(self.file.ikle) / 3)
         self.nb_vars = self.file.nbvar
+        self.nb_time_points = len(self.file.temps)
 
         # Construct vertices array
         self.vertices = np.vstack((self.file.x, self.file.y)).T
