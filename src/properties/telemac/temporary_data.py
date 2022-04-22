@@ -12,9 +12,9 @@ class TBB_TelemacTemporaryData():
 
     #: Serafin: TELEMAC file
     file = None
-    #: np.array: Vertices of the mesh
+    #: np.ndarray: Vertices of the mesh
     vertices = None
-    #: np.array: Faces of the mesh
+    #: np.ndarray: Faces of the mesh
     faces = None
     #: int: Number of variables
     nb_vars = 0
@@ -40,7 +40,7 @@ class TBB_TelemacTemporaryData():
         """
 
         self.file = Serafin(file_path, read_time=True)
-        self.file.read(0)
+        self.file.read(self.file.temps[0])
 
         nb_vertices = len(self.file.x)
         nb_triangles = int(len(self.file.ikle) / 3)
@@ -73,3 +73,9 @@ class TBB_TelemacTemporaryData():
         :rtype: bool
         """
         return self.file is not None and self.vertices is not None and self.faces is not None
+
+    def read(self, time_point: int = 0) -> np.ndarray:
+        if time_point > self.nb_time_points or time_point < 0:
+            raise ValueError("Undefined time point (" + str(time_point) + ")")
+
+        return self.file.read(self.file.temps[time_point])
