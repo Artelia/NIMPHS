@@ -38,7 +38,7 @@ class TBB_PT_TelemacCreateSequence(Panel):
         settings = context.scene.tbb_telemac_settings
 
         # Check if we need to lock the ui
-        enable_rows = not settings.create_sequence_is_running
+        enable_rows = not context.scene.tbb_create_sequence_is_running
         snae = sequence_name_already_exist(settings.sequence_name)  # snae = sequence_name_already_exist
 
         row = layout.row()
@@ -61,9 +61,9 @@ class TBB_PT_TelemacCreateSequence(Panel):
         row = layout.row()
         row.enabled = enable_rows
         row.prop(settings, "sequence_name", text="Name")
-        # row = layout.row()
-        # row.enabled = not snae
-        # row.operator("tbb.telemac_create_sequence", text="Create sequence", icon="RENDER_ANIMATION")
+        row = layout.row()
+        row.enabled = not snae
+        row.operator("tbb.telemac_create_sequence", text="Create sequence", icon="RENDER_ANIMATION")
 
         # Lock the create_sequence operator if the sequence name is already taken
         if snae:

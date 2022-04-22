@@ -338,7 +338,7 @@ def update_streaming_sequence(scene: Scene) -> None:
 
     frame = scene.frame_current
 
-    if not scene.tbb_openfoam_settings.create_sequence_is_running:
+    if not scene.tbb_create_sequence_is_running:
         for obj in scene.objects:
             settings = obj.tbb_openfoam_sequence
 

@@ -46,7 +46,7 @@ class TBB_PT_OpenfoamCreateSequence(Panel):
         settings = context.scene.tbb_openfoam_settings
 
         # Check if we need to lock the ui
-        enable_rows = not settings.create_sequence_is_running
+        enable_rows = not context.scene.tbb_create_sequence_is_running
         snae = sequence_name_already_exist(settings.sequence_name)  # snae = sequence_name_already_exist
 
         row = layout.row()

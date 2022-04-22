@@ -33,13 +33,6 @@ class TBB_TelemacSettings(PropertyGroup):
         description="Path to the .slf file",
     )
 
-    #: bpy.types.BoolProperty: State of the 'create sequence' operator
-    create_sequence_is_running: BoolProperty(
-        name="Create sequence is running",
-        description="State of the 'create sequence' operator",
-        default=False,
-    )
-
     #: bpy.types.EnumProperty: Name of point data to preview
     preview_point_data: EnumProperty(
         items=update_var_names,

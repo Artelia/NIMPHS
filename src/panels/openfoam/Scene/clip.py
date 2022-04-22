@@ -52,7 +52,7 @@ class TBB_PT_OpenfoamClip(Panel):
             lock_clip_settings = False
 
         # Check if we need to lock the ui
-        enable_rows = not settings.create_sequence_is_running and not lock_clip_settings
+        enable_rows = not context.scene.tbb_create_sequence_is_running and not lock_clip_settings
 
         row = layout.row()
         row.enabled = enable_rows

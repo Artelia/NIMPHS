@@ -1,7 +1,7 @@
 # <pep8 compliant>
 from bpy.utils import unregister_class, register_class
 from bpy.types import Scene, Object
-from bpy.props import PointerProperty
+from bpy.props import PointerProperty, BoolProperty
 from bpy.app.handlers import frame_change_pre
 
 # OpenFOAM imports
@@ -25,6 +25,7 @@ from .properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 from .operators.telemac.Scene.import_file import TBB_OT_TelemacImportFile
 from .operators.telemac.Scene.reload_file import TBB_OT_TelemacReloadFile
 from .operators.telemac.Scene.preview import TBB_OT_TelemacPreview
+from .operators.telemac.Scene.create_sequence import TBB_OT_TelemacCreateSequence
 from .panels.telemac.Scene.main_panel import TBB_PT_TelemacMainPanel
 from .panels.telemac.Scene.create_sequence import TBB_PT_TelemacCreateSequence
 from .properties.telemac.Scene.settings import TBB_TelemacSettings
@@ -54,6 +55,7 @@ operators = (
     TBB_OT_TelemacImportFile,
     TBB_OT_TelemacReloadFile,
     TBB_OT_TelemacPreview,
+    TBB_OT_TelemacCreateSequence,
 )
 
 panels = (
@@ -92,6 +94,11 @@ def register():
 
     # Custom progress bar
     register_custom_progress_bar()
+    Scene.tbb_create_sequence_is_running = BoolProperty(
+        name="Create sequence state",
+        description="State of the 'create_sequence' operation (used by all the 'create_sequence' operators",
+        default=False,
+    )
 
     # Custom app handlers
     frame_change_pre.append(update_streaming_sequence)

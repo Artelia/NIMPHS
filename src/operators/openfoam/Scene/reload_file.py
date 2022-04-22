@@ -44,7 +44,7 @@ class TBB_OT_OpenfoamReloadFile(Operator):
         tmp_data.update(file_reader, settings["preview_time_point"])
         settings.clip.scalar.value_ranges = encode_value_ranges(tmp_data.mesh)
         settings.clip.scalar.list = encode_scalar_names(tmp_data.mesh)
-        settings.create_sequence_is_running = False
+        context.scene.tbb_create_sequence_is_running = False
 
         print("Reload::OpenFOAM: " + "{:.4f}".format(time.time() - start) + "s")
         self.report({"INFO"}, "Reload successfull")

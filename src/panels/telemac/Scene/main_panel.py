@@ -24,7 +24,7 @@ class TBB_PT_TelemacMainPanel(Panel):
         settings = context.scene.tbb_telemac_settings
 
         # Check if we need to lock the ui
-        enable_rows = not settings.create_sequence_is_running
+        enable_rows = not context.scene.tbb_create_sequence_is_running
 
         row = layout.row()
         row.label(text="Import")
@@ -39,6 +39,7 @@ class TBB_PT_TelemacMainPanel(Panel):
             row.operator("tbb.import_telemac_file", text="Import", icon="IMPORT")
             row.operator("tbb.reload_telemac_file", text="Reload", icon="FILE_REFRESH")
         else:
+            row.enabled = enable_rows
             row.operator("tbb.import_telemac_file", text="Import TELEMAC file", icon="IMPORT")
 
         if context.scene.tbb_telemac_tmp_data.is_ok():

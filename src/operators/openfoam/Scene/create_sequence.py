@@ -14,7 +14,7 @@ class TBB_OT_OpenfoamCreateSequence(Operator):
 
     bl_idname = "tbb.openfoam_create_sequence"
     bl_label = "Create sequence"
-    bl_description = "Create a mesh sequence using the selected parameters. Press 'esc' to cancel"
+    bl_description = "Create a sequence using the selected parameters. Press 'esc' to cancel"
 
     timer = None
     sequence_object_name = ""
@@ -38,9 +38,9 @@ class TBB_OT_OpenfoamCreateSequence(Operator):
         settings = context.scene.tbb_openfoam_settings
 
         if settings.sequence_type == "mesh_sequence":
-            return not settings.create_sequence_is_running and settings["start_time_point"] < settings["end_time_point"]
+            return not context.scene.tbb_create_sequence_is_running and settings["start_time_point"] < settings["end_time_point"]
         elif settings.sequence_type == "streaming_sequence":
-            return not settings.create_sequence_is_running
+            return not context.scene.tbb_create_sequence_is_running
         else:  # Lock ui by default
             return False
 
@@ -73,7 +73,7 @@ class TBB_OT_OpenfoamCreateSequence(Operator):
             self.current_frame = context.scene.frame_current
             self.user_sequence_name = settings.sequence_name
 
-            settings.create_sequence_is_running = True
+            context.scene.tbb_create_sequence_is_running = True
 
             return {"RUNNING_MODAL"}
 
@@ -188,7 +188,7 @@ class TBB_OT_OpenfoamCreateSequence(Operator):
         wm = context.window_manager
         wm.event_timer_remove(self.timer)
         self.timer = None
-        context.scene.tbb_openfoam_settings.create_sequence_is_running = False
+        context.scene.tbb_create_sequence_is_running = False
         context.scene.tbb_progress_value = -1.0
         if cancelled:
             self.report({"INFO"}, "Create sequence cancelled")

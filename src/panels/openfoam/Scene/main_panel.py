@@ -24,7 +24,7 @@ class TBB_PT_OpenfoamMainPanel(Panel):
         settings = context.scene.tbb_openfoam_settings
 
         # Check if we need to lock the ui
-        enable_rows = not settings.create_sequence_is_running
+        enable_rows = not context.scene.tbb_create_sequence_is_running
 
         row = layout.row()
         row.label(text="Import")
