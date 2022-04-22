@@ -1,7 +1,42 @@
 # <pep8 compliant>
+import bpy
+from bpy.types import Context, Mesh, Object
 from rna_prop_ui import rna_idprop_ui_create
 
 import numpy as np
+
+
+def generate_preview_object(vertices: np.array, faces: np.array, context: Context,
+                            name: str) -> tuple[Mesh, Object]:
+    """
+    Generate a preview object from the given data.
+
+    :param vertices: vertices, must have the following shape: (n, 3)
+    :type vertices: np.array
+    :param faces: faces, must have the following shape: (n, 3)
+    :type faces: np.array
+    :type context: Context
+    :param name: name of the preview object
+    :type name: str
+    :return: Blender mesh (of the preview object), generated object
+    :rtype: tuple[Mesh, Object]
+    """
+
+    # Create the preview object (or write over it if it already exists)
+    try:
+        blender_mesh = bpy.data.meshes[name + "_mesh"]
+        obj = bpy.data.objects[name]
+    except KeyError as error:
+        print("ERROR::generate_preview_object: " + str(error))
+        blender_mesh = bpy.data.meshes.new(name + "_mesh")
+        obj = bpy.data.objects.new(name, blender_mesh)
+        context.collection.objects.link(obj)
+
+    context.view_layer.objects.active = obj
+    blender_mesh.clear_geometry()
+    blender_mesh.from_pydata(vertices, [], faces)
+
+    return blender_mesh, obj
 
 
 def update_dynamic_props(settings, new_maxima, props) -> None:

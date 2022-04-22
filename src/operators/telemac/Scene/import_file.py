@@ -6,6 +6,7 @@ from bpy.props import StringProperty
 import time
 
 from ..utils import update_settings_dynamic_props
+from ...utils import generate_preview_object
 
 
 class TBB_OT_TelemacImportFile(Operator, ImportHelper):
@@ -48,6 +49,16 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
 
         # Update properties values
         update_settings_dynamic_props(context)
+
+        # Generate the preview mesh. This step is not present in the reload operator because
+        # the preview mesh may already be loaded. Moreover, this step takes a while for large meshes.
+        try:
+            blender_mesh, obj = generate_preview_object(
+                tmp_data.vertices, tmp_data.faces, context, "TBB_TELEMAC_preview")
+        except Exception as error:
+            print("ERROR::TBB_OT_OpenfoamImportFile: " + str(error))
+            self.report({"ERROR"}, "Something went wrong building the mesh")
+            return {"FINISHED"}
 
         print("Import::TELEMAC: " + "{:.4f}".format(time.time() - start) + "s")
         self.report({"INFO"}, "File successfully imported")

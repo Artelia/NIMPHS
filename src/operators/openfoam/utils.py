@@ -136,39 +136,6 @@ def generate_mesh(file_reader: OpenFOAMReader, time_point: int, clip=None,
     return vertices, faces, mesh
 
 
-def generate_preview_object(vertices: np.array, faces: np.array, context: Context,
-                            name: str = "TBB_OpenFOAM_preview") -> tuple[Mesh, Object]:
-    """
-    Generate a preview object from the given data.
-
-    :param vertices: vertices, must have the following shape: (n, 3)
-    :type vertices: np.array
-    :param faces: faces, must have the following shape: (n, 3)
-    :type faces: np.array
-    :type context: Context
-    :param name: name of the preview object, defaults to "TBB_OpenFOAM_preview"
-    :type name: str, optional
-    :return: Blender mesh (of the preview object), generated object
-    :rtype: tuple[Mesh, Object]
-    """
-
-    # Create the preview object (or write over it if it already exists)
-    try:
-        blender_mesh = bpy.data.meshes[name + "_mesh"]
-        obj = bpy.data.objects[name]
-    except KeyError as error:
-        print("ERROR::generate_preview_object: " + str(error))
-        blender_mesh = bpy.data.meshes.new(name + "_mesh")
-        obj = bpy.data.objects.new(name, blender_mesh)
-        context.collection.objects.link(obj)
-
-    context.view_layer.objects.active = obj
-    blender_mesh.clear_geometry()
-    blender_mesh.from_pydata(vertices, [], faces)
-
-    return blender_mesh, obj
-
-
 def generate_preview_material(obj: Object, scalar: str, name: str = "TBB_OpenFOAM_preview_material") -> None:
     """
     Generate the preview material (if not generated yet). Update it otherwise (with the new scalar).

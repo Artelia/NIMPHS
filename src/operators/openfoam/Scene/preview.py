@@ -3,13 +3,8 @@ from bpy.types import Operator, Context
 
 import time
 
-from ..utils import (
-    generate_mesh,
-    generate_preview_object,
-    generate_vertex_colors,
-    generate_preview_material,
-    load_openfoam_file,
-)
+from ..utils import generate_mesh, generate_vertex_colors, generate_preview_material, load_openfoam_file
+from ...utils import generate_preview_object
 
 from ....properties.openfoam.utils import encode_value_ranges, encode_scalar_names
 

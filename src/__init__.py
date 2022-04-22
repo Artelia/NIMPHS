@@ -36,7 +36,7 @@ from .panels.main_panel import TBB_PT_MainPanel
 
 bl_info = {
     "name": "Toolsbox OpenFOAM/TELEMAC",
-    "description": "Load, visualize and manipulate OpenFOAM files",
+    "description": "Load, visualize and manipulate OpenFOAM/TELEMAC files",
     "author": "",
     "version": (0, 1, 0),
     "blender": (3, 0, 0),
@@ -90,15 +90,15 @@ def register():
     Scene.tbb_telemac_tmp_data = TBB_TelemacTemporaryData()
     Scene.tbb_openfoam_settings = PointerProperty(type=TBB_OpenfoamSettings)
     Scene.tbb_telemac_settings = PointerProperty(type=TBB_TelemacSettings)
+    Scene.tbb_create_sequence_is_running = BoolProperty(
+        name="Create sequence state",
+        description="State of the 'create_sequence' operation (used by all the 'create_sequence' operators)",
+        default=False,
+    )
     Object.tbb_openfoam_sequence = PointerProperty(type=TBB_OpenfoamSequenceProperty)
 
     # Custom progress bar
     register_custom_progress_bar()
-    Scene.tbb_create_sequence_is_running = BoolProperty(
-        name="Create sequence state",
-        description="State of the 'create_sequence' operation (used by all the 'create_sequence' operators",
-        default=False,
-    )
 
     # Custom app handlers
     frame_change_pre.append(update_streaming_sequence)
