@@ -21,11 +21,15 @@ from .properties.openfoam.clip import TBB_OpenfoamClipProperty, TBB_OpenfoamClip
 from .properties.openfoam.Object.sequence import TBB_OpenfoamSequenceProperty
 from .properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 
+# TELEMAC imports
+from .operators.telemac.Scene.import_file import TBB_OT_TelemacImportFile
+from .properties.telemac.temporary_data import TBB_TelemacTemporaryData
+
 bl_info = {
     "name": "Toolsbox OpenFOAM/TELEMAC",
     "description": "Load, visualize and manipulate OpenFOAM files",
     "author": "",
-    "version": (0, 0, 1),
+    "version": (0, 1, 0),
     "blender": (3, 0, 0),
     "location": "View3D",
     "warning": "",
@@ -39,6 +43,7 @@ operators = (
     TBB_OT_OpenfoamReloadFile,
     TBB_OT_OpenfoamPreview,
     TBB_OT_OpenfoamCreateSequence,
+    TBB_OT_TelemacImportFile,
 )
 
 panels = (
@@ -66,6 +71,7 @@ def register():
 
     # Register custom properties
     Scene.tbb_openfoam_tmp_data = TBB_OpenfoamTemporaryData()
+    Scene.tbb_telemac_tmp_data = TBB_TelemacTemporaryData()
     Scene.tbb_openfoam_settings = PointerProperty(type=TBB_OpenfoamSettings)
     Object.tbb_openfoam_sequence = PointerProperty(type=TBB_OpenfoamSequenceProperty)
 
