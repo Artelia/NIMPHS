@@ -37,6 +37,6 @@ class TBB_PT_TelemacMainPanel(Panel):
             row = layout.row()
             row.enabled = enable_rows
             row.operator("tbb.import_telemac_file", text="Import", icon="IMPORT")
-            # row.operator("tbb.reload_telemac_file", text="Reload", icon="FILE_REFRESH")
+            row.operator("tbb.reload_telemac_file", text="Reload", icon="FILE_REFRESH")
         else:
             row.operator("tbb.import_telemac_file", text="Import TELEMAC file", icon="IMPORT")

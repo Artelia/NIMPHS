@@ -22,6 +22,7 @@ class TBB_OT_OpenfoamReloadFile(Operator):
         :return: state of the operator
         :rtype: set
         """
+
         settings = context.scene.tbb_openfoam_settings
         tmp_data = context.scene.tbb_openfoam_tmp_data
 
