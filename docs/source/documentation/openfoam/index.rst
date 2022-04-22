@@ -34,7 +34,7 @@ Previewing tools
 ################
 
 | Once you have imported a file, you should see the mesh in the viewport.
-| You can select the ``TBB_preview`` object and hit ``.`` on your numpad to center the view on it.
+| You can select the ``TBB_OpenFOAM_preview`` object and hit ``.`` on your numpad to center the view on it.
 
 .. image:: /images/openfoam/preview_panel.png
     :width: 35%

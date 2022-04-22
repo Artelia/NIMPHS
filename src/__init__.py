@@ -24,6 +24,7 @@ from .properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 # TELEMAC imports
 from .operators.telemac.Scene.import_file import TBB_OT_TelemacImportFile
 from .operators.telemac.Scene.reload_file import TBB_OT_TelemacReloadFile
+from .operators.telemac.Scene.preview import TBB_OT_TelemacPreview
 from .panels.telemac.Scene.main_panel import TBB_PT_TelemacMainPanel
 from .properties.telemac.Scene.settings import TBB_TelemacSettings
 from .properties.telemac.temporary_data import TBB_TelemacTemporaryData
@@ -51,6 +52,7 @@ operators = (
     TBB_OT_OpenfoamCreateSequence,
     TBB_OT_TelemacImportFile,
     TBB_OT_TelemacReloadFile,
+    TBB_OT_TelemacPreview,
 )
 
 panels = (

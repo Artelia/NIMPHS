@@ -61,7 +61,7 @@ class TBB_PT_OpenfoamMainPanel(Panel):
                 row.prop(settings, "preview_point_data", text="Points")
                 row = layout.row()
                 row.enabled = enable_rows
-                row.operator("tbb.preview", text="Preview", icon="HIDE_OFF")
+                row.operator("tbb.openfoam_preview", text="Preview", icon="HIDE_OFF")
 
             # If the file_path is not empty, it means that there is an error with temp data. Need to reload.
             elif settings.file_path != "":

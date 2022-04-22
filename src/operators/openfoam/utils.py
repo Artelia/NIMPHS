@@ -137,7 +137,7 @@ def generate_mesh(file_reader: OpenFOAMReader, time_point: int, clip=None,
 
 
 def generate_preview_object(vertices: np.array, faces: np.array, context: Context,
-                            name: str = "TBB_preview") -> tuple[Mesh, Object]:
+                            name: str = "TBB_OpenFOAM_preview") -> tuple[Mesh, Object]:
     """
     Generate a preview object from the given data.
 
@@ -146,7 +146,7 @@ def generate_preview_object(vertices: np.array, faces: np.array, context: Contex
     :param faces: faces, must have the following shape: (n, 3)
     :type faces: np.array
     :type context: Context
-    :param name: name of the preview object, defaults to "TBB_preview"
+    :param name: name of the preview object, defaults to "TBB_OpenFOAM_preview"
     :type name: str, optional
     :return: Blender mesh (of the preview object), generated object
     :rtype: tuple[Mesh, Object]
@@ -169,7 +169,7 @@ def generate_preview_object(vertices: np.array, faces: np.array, context: Contex
     return blender_mesh, obj
 
 
-def generate_preview_material(obj: Object, scalar: str, name: str = "TBB_preview_material") -> None:
+def generate_preview_material(obj: Object, scalar: str, name: str = "TBB_OpenFOAM_preview_material") -> None:
     """
     Generate the preview material (if not generated yet). Update it otherwise (with the new scalar).
 
@@ -177,7 +177,7 @@ def generate_preview_material(obj: Object, scalar: str, name: str = "TBB_preview
     :type obj: Object
     :param scalar: Name of the vertex colors group (same as scalar name)
     :type scalar: str
-    :param name: Name of the preview material, defaults to "TBB_preview_material"
+    :param name: Name of the preview material, defaults to "TBB_OpenFOAM_preview_material"
     :type name: str, optional
     """
 
