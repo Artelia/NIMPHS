@@ -77,7 +77,8 @@ def generate_vertex_colors(tmp_data: TBB_TelemacTemporaryData, blender_mesh: Mes
         colors = []
         for var_id in var_id_groups:
             if var_id != -1:
-                colors.append(np.array(data[var_id])[vertex_ids])
+                max_value = np.max(np.array(data[var_id])[vertex_ids])  # Normalize values
+                colors.append(np.array(data[var_id])[vertex_ids] / max_value)
             else:
                 colors.append(zeros)
 
@@ -87,7 +88,5 @@ def generate_vertex_colors(tmp_data: TBB_TelemacTemporaryData, blender_mesh: Mes
         # Reshape data
         colors = np.array(colors).T
 
-        print(colors)
         colors = colors.flatten()
-        print(len(vertex_colors.data), len(vertex_ids), len(colors), len(tmp_data.vertices))
-        # vertex_colors.data.foreach_set("color", data)
+        vertex_colors.data.foreach_set("color", colors)
