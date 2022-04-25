@@ -55,7 +55,7 @@ class TBB_PT_TelemacMainPanel(Panel):
             row.prop(settings, "preview_point_data", text="Points")
             row = layout.row()
             row.enabled = enable_rows
-            row.prop(settings, "normalize_coordinates_preview", text="Normalize")
+            row.prop(settings, "normalize_preview_obj", text="Normalize")
             row = layout.row()
             row.enabled = enable_rows
             row.operator("tbb.telemac_preview", text="Preview", icon="HIDE_OFF")

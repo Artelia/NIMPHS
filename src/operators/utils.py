@@ -6,10 +6,10 @@ from rna_prop_ui import rna_idprop_ui_create
 import numpy as np
 
 
-def generate_preview_object(vertices: np.ndarray, faces: np.ndarray, context: Context,
-                            name: str) -> tuple[Mesh, Object]:
+def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, context: Context,
+                              name: str) -> tuple[Mesh, Object]:
     """
-    Generate a preview object from the given data.
+    Generate an object from the given data.
 
     :param vertices: vertices, must have the following shape: (n, 3)
     :type vertices: np.ndarray
@@ -18,19 +18,21 @@ def generate_preview_object(vertices: np.ndarray, faces: np.ndarray, context: Co
     :type context: Context
     :param name: name of the preview object
     :type name: str
-    :return: Blender mesh (of the preview object), generated object
+    :return: Blender mesh (of the generated object), generated object
     :rtype: tuple[Mesh, Object]
     """
 
-    # Create the preview object (or write over it if it already exists)
-    try:
-        blender_mesh = bpy.data.meshes[name + "_mesh"]
-        obj = bpy.data.objects[name]
-    except KeyError as error:
-        print("ERROR::generate_preview_object: " + str(error))
-        blender_mesh = bpy.data.meshes.new(name + "_mesh")
+    # Create the object (or write over it if it already exists)
+    obj = bpy.data.objects.get(name)
+    if obj is None:
+        blender_mesh = bpy.data.meshes.get(name + "_mesh")
+        if blender_mesh is None:
+            blender_mesh = bpy.data.meshes.new(name + "_mesh")
+
         obj = bpy.data.objects.new(name, blender_mesh)
         context.collection.objects.link(obj)
+    else:
+        blender_mesh = obj.data
 
     context.view_layer.objects.active = obj
     blender_mesh.clear_geometry()

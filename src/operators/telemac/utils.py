@@ -1,9 +1,10 @@
 # <pep8 compliant>
-from bpy.types import Context, Mesh
+import bpy
+from bpy.types import Context, Mesh, Object
 
 import numpy as np
 
-from ..utils import update_dynamic_props
+from ..utils import update_dynamic_props, generate_object_from_data
 from ...properties.telemac.Scene.settings import telemac_settings_dynamic_props
 from ...properties.telemac.temporary_data import TBB_TelemacTemporaryData
 
@@ -28,6 +29,18 @@ def update_settings_dynamic_props(context: Context) -> None:
 
 
 def generate_vertex_colors_name(var_id_groups: list, tmp_data: TBB_TelemacTemporaryData) -> str:
+    """
+    | Generate the name of the vertex colors group which correspond do the given list of ids.
+    | Example: 'FOND, VITESS U, NONE' corresponds to: red channel = FOND, green channel = VITESS U, blue channel = NONE
+
+    :param var_id_groups: ids of varibales names (Serafin.nomvar array)
+    :type var_id_groups: list
+    :param tmp_data: temporary data
+    :type tmp_data: TBB_TelemacTemporaryData
+    :return: vertex colors name
+    :rtype: str
+    """
+
     name = ""
     for var_id, num in zip(var_id_groups, range(3)):
         if var_id != -1:
@@ -40,8 +53,93 @@ def generate_vertex_colors_name(var_id_groups: list, tmp_data: TBB_TelemacTempor
     return name
 
 
+def generate_object(tmp_data: TBB_TelemacTemporaryData, context: Context,
+                    settings, preview: bool = True, time_point: int = 0,
+                    import_point_data: bool = False, name: str = "TBB_TELEMAC_preview",
+                    force_regenerate: bool = False) -> Object:
+    """
+    | Generate an object in function of the given settings and mesh data (3D / 2D).
+    | If the object already exsits, overwrite it.
+
+    :type tmp_data: TBB_TelemacTemporaryData
+    :type context: Context
+    :param preview: use preview settings, defaults to True
+    :type preview: bool, optional
+    :param time_point: custom time point, defaults to 0
+    :type time_point: int, optional
+    :param import_point_data: generate vertex colors, defaults to False
+    :type import_point_data: bool, optional
+    :param name: name of the object, defaults to 'TBB_TELEMAC_preview'
+    :type name: str
+    :param force_regenerate: forces to regenerate the mesh
+    :type force_regenerate: bool, default to False
+    :return: the generated object
+    :rtype: Object
+    """
+
+    obj = bpy.data.objects.get(name)
+    if obj is None or force_regenerate:
+        print(tmp_data.nb_planes)
+        if tmp_data.nb_planes > 1:
+            print("3D")
+            # blender_mesh, obj = generate_object_from_data(tmp_data.vertices, tmp_data.faces, context, "TBB_TELEMAC_preview")
+        else:
+            blender_mesh, obj = generate_object_from_data(tmp_data.vertices, tmp_data.faces, context, name)
+            # Set the object at the origin of the scene
+            obj.select_set(state=True, view_layer=context.view_layer)
+            bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN')
+
+        settings.preview_obj_dimensions = obj.dimensions
+        settings.preview_object_is_normalized = False
+    else:
+        blender_mesh = obj.data
+
+    if preview:
+        ratio = settings.preview_obj_dimensions[0] / settings.preview_obj_dimensions[1]
+        factor_x, factor_y = (1.0 if ratio > 1.0 else ratio), (1.0 if ratio < 1.0 else 1 / ratio)
+        if settings.normalize_preview_obj and not settings.preview_object_is_normalized:
+            print("HELLO")
+            obj.scale[0] = factor_x / settings.preview_obj_dimensions[0]
+            obj.scale[1] = factor_y / settings.preview_obj_dimensions[1]
+            bpy.ops.object.transform_apply(location=False)
+            settings.preview_object_is_normalized = True
+        elif not settings.normalize_preview_obj and settings.preview_object_is_normalized:
+            obj.scale[0] = settings.preview_obj_dimensions[0] / factor_x
+            obj.scale[1] = settings.preview_obj_dimensions[1] / factor_y
+            bpy.ops.object.transform_apply(location=False)
+            settings.preview_object_is_normalized = False
+    else:
+        pass
+
+    if import_point_data:
+        # Prepare list_point_data and time_point
+        if preview:
+            time_point = settings["preview_time_point"]
+            list_point_data = [tmp_data.file.nomvar[int(settings.preview_point_data)]]
+        else:
+            list_point_data = settings.list_point_data.split(";")
+
+        generate_vertex_colors(tmp_data, blender_mesh, list_point_data, time_point)
+
+    return obj
+
+
 def generate_vertex_colors(tmp_data: TBB_TelemacTemporaryData, blender_mesh: Mesh,
-                           list_point_data: str, time_point: int):
+                           list_point_data: str, time_point: int) -> None:
+    """
+    Generate vertex color groups for each point data given in the list. The name given to the groups
+    describe the content of the data contained in the groups.
+
+    :param tmp_data: _description_
+    :type tmp_data: TBB_TelemacTemporaryData
+    :param blender_mesh: _description_
+    :type blender_mesh: Mesh
+    :param list_point_data: _description_
+    :type list_point_data: str
+    :param time_point: _description_
+    :type time_point: int
+    """
+
     # Prepare the mesh to loop over all its triangles
     if len(blender_mesh.loop_triangles) == 0:
         blender_mesh.calc_loop_triangles()
@@ -78,7 +176,11 @@ def generate_vertex_colors(tmp_data: TBB_TelemacTemporaryData, blender_mesh: Mes
         for var_id in var_id_groups:
             if var_id != -1:
                 max_value = np.max(np.array(data[var_id])[vertex_ids])  # Normalize values
-                colors.append(np.array(data[var_id])[vertex_ids] / max_value)
+                array = np.array(data[var_id])[vertex_ids]
+                if max_value > np.finfo(np.float).eps:
+                    colors.append(array / max_value)
+                else:
+                    colors.append(array)
             else:
                 colors.append(zeros)
 

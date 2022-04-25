@@ -4,7 +4,7 @@ from bpy.types import Operator, Context
 
 import time
 
-from ..utils import generate_vertex_colors
+from ..utils import generate_object
 
 
 class TBB_OT_TelemacPreview(Operator):
@@ -27,22 +27,14 @@ class TBB_OT_TelemacPreview(Operator):
 
         settings = context.scene.tbb_telemac_settings
         tmp_data = context.scene.tbb_telemac_tmp_data
-        prw_time_point = settings["preview_time_point"]
         start = time.time()
 
-        preview_obj = bpy.data.objects.get("TBB_TELEMAC_preview")
-        if preview_obj is None:
-            self.report({"ERROR"}, "TBB_TELEMAC_preview object undefined")
+        try:
+            obj = generate_object(tmp_data, context, settings, import_point_data=True)
+        except Exception as error:
+            print("ERROR::TBB_OT_TelemacPreview: " + str(error))
+            self.report({"ERROR"}, "An error occurred during preview")
             return {"FINISHED"}
-
-        # try:
-        blender_mesh = preview_obj.data
-        list_point_data = [tmp_data.file.nomvar[int(settings.preview_point_data)]]
-        generate_vertex_colors(tmp_data, blender_mesh, list_point_data, prw_time_point)
-        # except Exception as error:
-        #     print("ERROR::TBB_OT_TelemacPreview: " + str(error))
-        #     self.report({"ERROR"}, "An error occurred during preview")
-        #     return {"FINISHED"}
 
         print("Preview::TELEMAC: " + "{:.4f}".format(time.time() - start) + "s")
         self.report({"INFO"}, "Mesh successfully built: checkout the viewport.")

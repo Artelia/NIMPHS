@@ -1,6 +1,6 @@
 # <pep8 compliant>
 from bpy.types import PropertyGroup
-from bpy.props import StringProperty, BoolProperty, EnumProperty
+from bpy.props import StringProperty, BoolProperty, EnumProperty, FloatVectorProperty
 
 from ..utils import update_var_names
 
@@ -33,16 +33,28 @@ class TBB_TelemacSettings(PropertyGroup):
         description="Path to the .slf file",
     )
 
-    normalize_coordinates_preview: BoolProperty(
-        name="Normalize coordinates",
-        description="Option to normalize vertices coordinates (remap values in [-1;1])",
-        default=True
+    preview_obj_dimensions: FloatVectorProperty(
+        name="Preview object dimensions",
+        description="Dimensions of the preview object",
+        default=(1.0, 1.0, 1.0),
     )
 
-    normalize_coordinates_sequence: BoolProperty(
+    normalize_preview_obj: BoolProperty(
         name="Normalize coordinates",
         description="Option to normalize vertices coordinates (remap values in [-1;1])",
-        default=True
+        default=False
+    )
+
+    preview_object_is_normalized: BoolProperty(
+        name="Preview object is normalized",
+        description="State of the preview object (is it normalized?)",
+        default=False
+    )
+
+    normalize_sequence_obj: BoolProperty(
+        name="Normalize coordinates",
+        description="Option to normalize vertices coordinates (remap values in [-1;1])",
+        default=False
     )
 
     #: bpy.types.EnumProperty: Name of point data to preview

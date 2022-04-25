@@ -104,7 +104,7 @@ class TBB_OT_TelemacCreateSequence(Operator):
                 else:
                     pass
 
-                print("CreateSequence::OpenFOAM: " + "{:.4f}".format(time.time() - self.chrono_start) + "s, time_point = "
+                print("CreateSequence::TELEMAC: " + "{:.4f}".format(time.time() - self.chrono_start) + "s, time_point = "
                       + str(self.current_time_point))
 
             else:

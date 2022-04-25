@@ -6,7 +6,7 @@ from bpy.props import StringProperty
 import time
 
 from ..utils import load_openfoam_file, update_settings_dynamic_props, generate_mesh
-from ...utils import generate_preview_object
+from ...utils import generate_object_from_data
 from ....properties.openfoam.utils import encode_value_ranges, encode_scalar_names
 
 
@@ -58,7 +58,7 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         # the preview mesh may already be loaded. Moreover, this step takes a while for large meshes.
         try:
             vertices, faces, preview_mesh = generate_mesh(file_reader, time_point)
-            blender_mesh, obj = generate_preview_object(vertices, faces, context, "TBB_OpenFOAM_preview")
+            blender_mesh, obj = generate_object_from_data(vertices, faces, context, "TBB_OpenFOAM_preview")
         except Exception as error:
             print("ERROR::TBB_OT_OpenfoamImportFile: " + str(error))
             self.report({"ERROR"}, "Something went wrong building the mesh")

@@ -4,7 +4,7 @@ from bpy.types import Operator, Context
 import time
 
 from ..utils import generate_mesh, generate_vertex_colors, generate_preview_material, load_openfoam_file
-from ...utils import generate_preview_object
+from ...utils import generate_object_from_data
 
 from ....properties.openfoam.utils import encode_value_ranges, encode_scalar_names
 
@@ -77,7 +77,7 @@ class TBB_OT_OpenfoamPreview(Operator):
         # of the enum property. This is surely not what the user was expecting.
         tmp_data.update(file_reader, prw_time_point, data, raw_mesh)
 
-        blender_mesh, obj = generate_preview_object(vertices, faces, context)
+        blender_mesh, obj = generate_object_from_data(vertices, faces, context)
 
         scalars_to_preview = str(settings.preview_point_data.split("@")[0])
         blender_mesh = generate_vertex_colors(mesh, blender_mesh, scalars_to_preview, prw_time_point)
