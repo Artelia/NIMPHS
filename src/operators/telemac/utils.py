@@ -53,29 +53,23 @@ def generate_vertex_colors_name(var_id_groups: list, tmp_data: TBB_TelemacTempor
     return name
 
 
-def generate_object(tmp_data: TBB_TelemacTemporaryData, context: Context,
-                    settings, preview: bool = True, time_point: int = 0,
-                    import_point_data: bool = False, name: str = "TBB_TELEMAC_preview") -> Object:
+def generate_object(tmp_data: TBB_TelemacTemporaryData, context: Context, settings, rescale: str = 'NONE',
+                    time_point: int = 0, name: str = "TBB_TELEMAC_preview") -> Object:
     """
-    | Generate an object in function of the given settings and mesh data (3D / 2D).
-    | If the object already exsits, overwrite it.
+    Generate an object in function of the given settings and mesh data (3D / 2D).
+    If the object already exsits, overwrite it.
 
     :type tmp_data: TBB_TelemacTemporaryData
     :type context: Context
-    :param preview: use preview settings, defaults to True
-    :type preview: bool, optional
     :param time_point: custom time point, defaults to 0
     :type time_point: int, optional
-    :param import_point_data: generate vertex colors, defaults to False
-    :type import_point_data: bool, optional
+    :param rescale: rescale the object, enum in ['NONE', 'NORMALIZE', 'RESET']
+    :type rescale: bool
     :param name: name of the object, defaults to 'TBB_TELEMAC_preview'
     :type name: str
     :return: the generated object
     :rtype: Object
     """
-
-    if preview:
-        time_point = settings["preview_time_point"]
 
     # Read data at the given time point
     try:
@@ -83,8 +77,10 @@ def generate_object(tmp_data: TBB_TelemacTemporaryData, context: Context,
     except Exception as error:
         raise error
 
+    mesh_id_3d = tmp_data.nb_planes > 1
+
     # Manage 2D / 3D meshes
-    if tmp_data.nb_planes > 1:
+    if mesh_id_3d:
         # data[0] is 'COTE Z'
         z_values = np.array(data[0]).reshape(data[0].shape[0], 1)
         vertices = np.hstack((tmp_data.vertices, z_values))
@@ -96,47 +92,31 @@ def generate_object(tmp_data: TBB_TelemacTemporaryData, context: Context,
     obj.select_set(state=True, view_layer=context.view_layer)
     bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN')
 
-    print(
-        settings.preview_obj_dimensions[0],
-        settings.preview_obj_dimensions[1],
-        settings.preview_obj_dimensions[2])
-
-    if preview:
-        ratio = settings.preview_obj_dimensions[0] / settings.preview_obj_dimensions[1]
-        if settings.normalize_preview_obj and not settings.preview_object_is_normalized:
-            obj.dimensions[0] = 1.0 if ratio > 1.0 else 1.0 / ratio
-            bpy.ops.object.transform_apply(location=False)
-            obj.dimensions[1] = 1.0 if ratio < 1.0 else 1.0 / ratio
-            bpy.ops.object.transform_apply(location=False)
-            if tmp_data.nb_planes > 1:  # For 3D meshes
-                obj.dimensions[2] = 1.0
-                bpy.ops.object.transform_apply(location=False)
-
-            settings.preview_object_is_normalized = True
-
-        elif not settings.normalize_preview_obj and settings.preview_object_is_normalized:
-            obj.dimensions[0] = settings.preview_obj_dimensions[0]
-            bpy.ops.object.transform_apply(location=False)
-            obj.dimensions[1] = settings.preview_obj_dimensions[1]
-            bpy.ops.object.transform_apply(location=False)
-            if tmp_data.nb_planes > 1:  # For 3D meshes
-                obj.dimensions[2] = settings.preview_obj_dimensions[2]
-                bpy.ops.object.transform_apply(location=False)
-
-            settings.preview_object_is_normalized = False
-    else:
-        pass
-
-    if import_point_data:
-        # Prepare list_point_data
-        if preview:
-            list_point_data = [tmp_data.file.nomvar[int(settings.preview_point_data)]]
-        else:
-            list_point_data = settings.list_point_data.split(";")
-
-        generate_vertex_colors(tmp_data, blender_mesh, list_point_data, time_point)
+    if rescale != 'NONE':
+        if rescale == 'NORMALIZE':
+            normalize_object(obj, settings.preview_obj_dimensions, mesh_id_3d)
+        elif rescale == 'RESET':
+            rescale_object(obj, settings.preview_obj_dimensions, mesh_id_3d)
 
     return obj
+
+
+def normalize_object(obj: Object, dimensions: list[float], mesh_3d: bool = False) -> None:
+    ratio = dimensions[0] / dimensions[1]
+    scale_x, scale_y = 1.0 if ratio > 1.0 else 1.0 / ratio, 1.0 if ratio < 1.0 else 1.0 / ratio
+    scale_z = 1.0 / dimensions[2] if dimensions[2] > np.finfo(np.float).eps else 1.0
+    rescale_object(obj, [scale_x, scale_y, scale_z], mesh_3d)
+
+
+def rescale_object(obj: Object, dimensions: list[float], mesh_3d: bool = False) -> None:
+    obj.dimensions[0] = dimensions[0]
+    # Weird but we have to do 'transform_apply' each time we modify the dimensions attribute
+    bpy.ops.object.transform_apply(location=False)
+    obj.dimensions[1] = dimensions[1]
+    bpy.ops.object.transform_apply(location=False)
+    if mesh_3d:
+        obj.dimensions[2] = dimensions[2]
+        bpy.ops.object.transform_apply(location=False)
 
 
 def generate_vertex_colors(tmp_data: TBB_TelemacTemporaryData, blender_mesh: Mesh,

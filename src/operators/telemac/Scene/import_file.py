@@ -36,6 +36,7 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
 
         settings = context.scene.tbb_telemac_settings
         tmp_data = context.scene.tbb_telemac_tmp_data
+        prw_time_point = 0
         start = time.time()
 
         # Read the file and update temporary data
@@ -54,7 +55,7 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         # Generate the preview mesh. This step is not present in the reload operator because
         # the preview mesh may already be loaded. Moreover, this step takes a while for large meshes.
         try:
-            obj = generate_object(tmp_data, context, settings, preview=False)
+            obj = generate_object(tmp_data, context, settings, rescale='NONE', time_point=prw_time_point)
             # Reset some preview settings
             settings.preview_obj_dimensions = obj.dimensions
             settings.preview_object_is_normalized = False
