@@ -34,12 +34,3 @@ Object
 .. autoclass:: src.panels.openfoam.Object.sequence_clip_settings.TBB_PT_OpenfoamSequenceClipSettings
    :members:
    :show-inheritance:
-
-.. _openfoam_panels_utils:
-
-Utils
-#####
-
-.. currentmodule:: src.panels.openfoam.utils
-
-.. autofunction:: sequence_name_already_exist

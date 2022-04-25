@@ -38,8 +38,6 @@ Utils
 
 .. autofunction:: generate_mesh
 
-.. autofunction:: generate_preview_object
-
 .. autofunction:: generate_preview_material
 
 .. autofunction:: generate_mesh_for_sequence

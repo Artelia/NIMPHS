@@ -6,3 +6,4 @@ Code documentation
     :glob:
 
     openfoam/index
+    global_utils
