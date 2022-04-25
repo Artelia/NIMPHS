@@ -55,8 +55,7 @@ def generate_vertex_colors_name(var_id_groups: list, tmp_data: TBB_TelemacTempor
 
 def generate_object(tmp_data: TBB_TelemacTemporaryData, context: Context,
                     settings, preview: bool = True, time_point: int = 0,
-                    import_point_data: bool = False, name: str = "TBB_TELEMAC_preview",
-                    force_regenerate: bool = False) -> Object:
+                    import_point_data: bool = False, name: str = "TBB_TELEMAC_preview") -> Object:
     """
     | Generate an object in function of the given settings and mesh data (3D / 2D).
     | If the object already exsits, overwrite it.
@@ -71,50 +70,66 @@ def generate_object(tmp_data: TBB_TelemacTemporaryData, context: Context,
     :type import_point_data: bool, optional
     :param name: name of the object, defaults to 'TBB_TELEMAC_preview'
     :type name: str
-    :param force_regenerate: forces to regenerate the mesh
-    :type force_regenerate: bool, default to False
     :return: the generated object
     :rtype: Object
     """
 
-    obj = bpy.data.objects.get(name)
-    if obj is None or force_regenerate:
-        print(tmp_data.nb_planes)
-        if tmp_data.nb_planes > 1:
-            print("3D")
-            # blender_mesh, obj = generate_object_from_data(tmp_data.vertices, tmp_data.faces, context, "TBB_TELEMAC_preview")
-        else:
-            blender_mesh, obj = generate_object_from_data(tmp_data.vertices, tmp_data.faces, context, name)
-            # Set the object at the origin of the scene
-            obj.select_set(state=True, view_layer=context.view_layer)
-            bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN')
+    if preview:
+        time_point = settings["preview_time_point"]
 
-        settings.preview_obj_dimensions = obj.dimensions
-        settings.preview_object_is_normalized = False
+    # Read data at the given time point
+    try:
+        data = tmp_data.read(time_point)
+    except Exception as error:
+        raise error
+
+    # Manage 2D / 3D meshes
+    if tmp_data.nb_planes > 1:
+        # data[0] is 'COTE Z'
+        z_values = np.array(data[0]).reshape(data[0].shape[0], 1)
+        vertices = np.hstack((tmp_data.vertices, z_values))
     else:
-        blender_mesh = obj.data
+        vertices = np.hstack((tmp_data.vertices, np.zeros((tmp_data.nb_vertices, 1))))
+
+    blender_mesh, obj = generate_object_from_data(vertices, tmp_data.faces, context, name)
+    # Set the object at the origin of the scene
+    obj.select_set(state=True, view_layer=context.view_layer)
+    bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN')
+
+    print(
+        settings.preview_obj_dimensions[0],
+        settings.preview_obj_dimensions[1],
+        settings.preview_obj_dimensions[2])
 
     if preview:
         ratio = settings.preview_obj_dimensions[0] / settings.preview_obj_dimensions[1]
-        factor_x, factor_y = (1.0 if ratio > 1.0 else ratio), (1.0 if ratio < 1.0 else 1 / ratio)
         if settings.normalize_preview_obj and not settings.preview_object_is_normalized:
-            print("HELLO")
-            obj.scale[0] = factor_x / settings.preview_obj_dimensions[0]
-            obj.scale[1] = factor_y / settings.preview_obj_dimensions[1]
+            obj.dimensions[0] = 1.0 if ratio > 1.0 else 1.0 / ratio
             bpy.ops.object.transform_apply(location=False)
+            obj.dimensions[1] = 1.0 if ratio < 1.0 else 1.0 / ratio
+            bpy.ops.object.transform_apply(location=False)
+            if tmp_data.nb_planes > 1:  # For 3D meshes
+                obj.dimensions[2] = 1.0
+                bpy.ops.object.transform_apply(location=False)
+
             settings.preview_object_is_normalized = True
+
         elif not settings.normalize_preview_obj and settings.preview_object_is_normalized:
-            obj.scale[0] = settings.preview_obj_dimensions[0] / factor_x
-            obj.scale[1] = settings.preview_obj_dimensions[1] / factor_y
+            obj.dimensions[0] = settings.preview_obj_dimensions[0]
             bpy.ops.object.transform_apply(location=False)
+            obj.dimensions[1] = settings.preview_obj_dimensions[1]
+            bpy.ops.object.transform_apply(location=False)
+            if tmp_data.nb_planes > 1:  # For 3D meshes
+                obj.dimensions[2] = settings.preview_obj_dimensions[2]
+                bpy.ops.object.transform_apply(location=False)
+
             settings.preview_object_is_normalized = False
     else:
         pass
 
     if import_point_data:
-        # Prepare list_point_data and time_point
+        # Prepare list_point_data
         if preview:
-            time_point = settings["preview_time_point"]
             list_point_data = [tmp_data.file.nomvar[int(settings.preview_point_data)]]
         else:
             list_point_data = settings.list_point_data.split(";")

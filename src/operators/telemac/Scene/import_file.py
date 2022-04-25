@@ -53,9 +53,11 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
 
         # Generate the preview mesh. This step is not present in the reload operator because
         # the preview mesh may already be loaded. Moreover, this step takes a while for large meshes.
-        settings.preview_object_is_normalized = False
         try:
-            obj = generate_object(tmp_data, context, settings, force_regenerate=True)
+            obj = generate_object(tmp_data, context, settings, preview=False)
+            # Reset some preview settings
+            settings.preview_obj_dimensions = obj.dimensions
+            settings.preview_object_is_normalized = False
         except Exception as error:
             print("ERROR::TBB_OT_OpenfoamImportFile: " + str(error))
             self.report({"ERROR"}, "Something went wrong building the mesh")

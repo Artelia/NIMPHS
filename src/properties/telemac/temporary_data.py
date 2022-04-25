@@ -24,6 +24,10 @@ class TBB_TelemacTemporaryData():
     variables_info = {"names": [], "units": []}
     #: int: Number of planes
     nb_planes = 0
+    #: int: Number of vertices
+    nb_vertices = 0
+    #: int: Number of triangles
+    nb_triangles = 0
 
     def __init__(self) -> None:
         self.file = None
@@ -33,6 +37,8 @@ class TBB_TelemacTemporaryData():
         self.nb_time_points = 0
         self.variables_info = {"names": [], "units": []}
         self.nb_planes = 0
+        self.nb_vertices = 0
+        self.nb_triangles = 0
 
     def update(self, file_path: str) -> None:
         """
@@ -43,21 +49,21 @@ class TBB_TelemacTemporaryData():
         """
 
         self.file = Serafin(file_path, read_time=True)
+        self.file.get_2d()
         self.file.read(self.file.temps[0])
 
-        nb_vertices = len(self.file.x)
-        nb_triangles = int(len(self.file.ikle) / 3)
+        self.nb_vertices = len(self.file.x)
+        self.nb_triangles = int(len(self.file.ikle) / 3)
         self.nb_vars = self.file.nbvar
-        self.nb_time_points = len(self.file.temps)
+        self.nb_time_points = self.file.nb_pdt
         self.nb_planes = self.file.nplan
 
         # Construct vertices array
         self.vertices = np.vstack((self.file.x, self.file.y)).T
-        self.vertices = np.hstack((self.vertices, np.zeros((nb_vertices, 1))))
 
         # Construct faces array
         # '-1' to remove the '+1' offset in the ikle array
-        self.faces = (np.array(self.file.ikle) - 1).reshape((nb_triangles, 3))
+        self.faces = (np.array(self.file.ikle) - 1).reshape((self.nb_triangles, 3))
 
         # Clear old variables information
         self.variables_info["names"].clear()
