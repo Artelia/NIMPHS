@@ -3,7 +3,6 @@ Panels
 
 * :ref:`openfoam_panels_scene`
 * :ref:`openfoam_panels_object`
-* :ref:`openfoam_panels_utils`
 
 .. _openfoam_panels_scene:
 

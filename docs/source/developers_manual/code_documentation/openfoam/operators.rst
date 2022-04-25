@@ -51,5 +51,3 @@ Utils
 .. autofunction:: update_sequence_mesh
 
 .. autofunction:: update_settings_dynamic_props
-
-.. autofunction:: remap_array

@@ -14,7 +14,7 @@ telemac_settings_dynamic_props = [
 
 class TBB_TelemacSettings(PropertyGroup):
     """
-    Main panel settings. Contains 4 'dynamic' properties:
+    Main panel settings. Contains 3 'dynamic' properties:
 
     | **preview_time_point**: *bpy.types.IntProperty*, time step used for the preview section
     | **start_time_point**: *bpy.types.IntProperty*, starting point of the sequence
@@ -33,24 +33,21 @@ class TBB_TelemacSettings(PropertyGroup):
         description="Path to the .slf file",
     )
 
+    #: bpy.types.FloatVectorProperty: Hold original dimensions of the mesh
     preview_obj_dimensions: FloatVectorProperty(
         name="Preview object dimensions",
         description="Dimensions of the preview object",
         default=(1.0, 1.0, 1.0),
     )
 
+    #: bpy.types.BoolProperty: Option to normalize vertices coordinates (remap values in [-1;1])
     normalize_preview_obj: BoolProperty(
         name="Normalize coordinates",
         description="Option to normalize vertices coordinates (remap values in [-1;1])",
         default=False
     )
 
-    preview_object_is_normalized: BoolProperty(
-        name="Preview object is normalized",
-        description="State of the preview object (is it normalized?)",
-        default=False
-    )
-
+    #: bpy.types.BoolProperty: Option to normalize vertices coordinates (remap values in [-1;1])
     normalize_sequence_obj: BoolProperty(
         name="Normalize coordinates",
         description="Option to normalize vertices coordinates (remap values in [-1;1])",

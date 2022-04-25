@@ -31,7 +31,7 @@ def update_settings_dynamic_props(context: Context) -> None:
 def generate_vertex_colors_name(var_id_groups: list, tmp_data: TBB_TelemacTemporaryData) -> str:
     """
     | Generate the name of the vertex colors group which correspond do the given list of ids.
-    | Example: 'FOND, VITESS U, NONE' corresponds to: red channel = FOND, green channel = VITESS U, blue channel = NONE
+    | Example: 'FOND, VITESSE U, NONE' corresponds to: red channel = FOND, green channel = VITESS U, blue channel = NONE
 
     :param var_id_groups: ids of varibales names (Serafin.nomvar array)
     :type var_id_groups: list
@@ -101,37 +101,19 @@ def generate_object(tmp_data: TBB_TelemacTemporaryData, context: Context, settin
     return obj
 
 
-def normalize_object(obj: Object, dimensions: list[float], mesh_3d: bool = False) -> None:
-    ratio = dimensions[0] / dimensions[1]
-    scale_x, scale_y = 1.0 if ratio > 1.0 else 1.0 / ratio, 1.0 if ratio < 1.0 else 1.0 / ratio
-    scale_z = 1.0 / dimensions[2] if dimensions[2] > np.finfo(np.float).eps else 1.0
-    rescale_object(obj, [scale_x, scale_y, scale_z], mesh_3d)
-
-
-def rescale_object(obj: Object, dimensions: list[float], mesh_3d: bool = False) -> None:
-    obj.dimensions[0] = dimensions[0]
-    # Weird but we have to do 'transform_apply' each time we modify the dimensions attribute
-    bpy.ops.object.transform_apply(location=False)
-    obj.dimensions[1] = dimensions[1]
-    bpy.ops.object.transform_apply(location=False)
-    if mesh_3d:
-        obj.dimensions[2] = dimensions[2]
-        bpy.ops.object.transform_apply(location=False)
-
-
 def generate_vertex_colors(tmp_data: TBB_TelemacTemporaryData, blender_mesh: Mesh,
                            list_point_data: str, time_point: int) -> None:
     """
     Generate vertex color groups for each point data given in the list. The name given to the groups
     describe the content of the data contained in the groups.
 
-    :param tmp_data: _description_
+    :param tmp_data: temporary data
     :type tmp_data: TBB_TelemacTemporaryData
-    :param blender_mesh: _description_
+    :param blender_mesh: mesh
     :type blender_mesh: Mesh
-    :param list_point_data: _description_
+    :param list_point_data: list of point data to import as vertex colors groups
     :type list_point_data: str
-    :param time_point: _description_
+    :param time_point: time point
     :type time_point: int
     """
 
@@ -187,3 +169,21 @@ def generate_vertex_colors(tmp_data: TBB_TelemacTemporaryData, blender_mesh: Mes
 
         colors = colors.flatten()
         vertex_colors.data.foreach_set("color", colors)
+
+
+def normalize_object(obj: Object, dimensions: list[float], mesh_3d: bool = False) -> None:
+    ratio = dimensions[0] / dimensions[1]
+    scale_x, scale_y = 1.0 if ratio > 1.0 else 1.0 / ratio, 1.0 if ratio < 1.0 else 1.0 / ratio
+    scale_z = 1.0 / dimensions[2] if dimensions[2] > np.finfo(np.float).eps else 1.0
+    rescale_object(obj, [scale_x, scale_y, scale_z], mesh_3d)
+
+
+def rescale_object(obj: Object, dimensions: list[float], mesh_3d: bool = False) -> None:
+    obj.dimensions[0] = dimensions[0]
+    # Weird but we have to do 'transform_apply' each time we modify the dimensions attribute
+    bpy.ops.object.transform_apply(location=False)
+    obj.dimensions[1] = dimensions[1]
+    bpy.ops.object.transform_apply(location=False)
+    if mesh_3d:
+        obj.dimensions[2] = dimensions[2]
+        bpy.ops.object.transform_apply(location=False)

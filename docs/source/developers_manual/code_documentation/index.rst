@@ -6,4 +6,5 @@ Code documentation
     :glob:
 
     openfoam/index
+    telemac/index
     global_utils

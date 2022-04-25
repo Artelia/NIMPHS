@@ -1,5 +1,5 @@
-OpenFOAM
-========
+TELEMAC
+=======
 
 .. toctree:: 
    :maxdepth: 2

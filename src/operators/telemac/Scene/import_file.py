@@ -58,7 +58,6 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
             obj = generate_object(tmp_data, context, settings, rescale='NONE', time_point=prw_time_point)
             # Reset some preview settings
             settings.preview_obj_dimensions = obj.dimensions
-            settings.preview_object_is_normalized = False
         except Exception as error:
             print("ERROR::TBB_OT_OpenfoamImportFile: " + str(error))
             self.report({"ERROR"}, "Something went wrong building the mesh")
