@@ -55,6 +55,22 @@ def generate_vertex_colors_name(var_id_groups: list, tmp_data: TBB_TelemacTempor
 
 def get_data_from_possible_var_names(tmp_data: TBB_TelemacTemporaryData,
                                      possible_var_names: list[str], time_point: int) -> np.ndarray:
+    """
+    Get data from the Serfain file and check for every possible given names. When one is found,
+    return the associated data.
+
+    :param tmp_data: temporary data
+    :type tmp_data: TBB_TelemacTemporaryData
+    :param possible_var_names: variable names which could probably be defined in the Serafin file
+    :type possible_var_names: list[str]
+    :param time_point: time point to read data
+    :type time_point: int
+    :raises error: if an error occurred reading the Serafin file
+    :raises NameError: if the possible names are not defined
+    :return: read data
+    :rtype: np.ndarray
+    """
+
     z_values = None
     for var_name in possible_var_names:
         if z_values is None:
@@ -74,33 +90,37 @@ def get_data_from_possible_var_names(tmp_data: TBB_TelemacTemporaryData,
         return z_values
 
 
-def generate_object(tmp_data: TBB_TelemacTemporaryData, context: Context, settings, rescale: str = 'NONE',
-                    time_point: int = 0, type: str = 'BOTTOM', name: str = "TBB_TELEMAC_preview") -> Object:
+def generate_object(tmp_data: TBB_TelemacTemporaryData, context: Context, settings, mesh_is_3d: bool,
+                    rescale: str = 'NONE', time_point: int = 0, type: str = 'BOTTOM',
+                    name: str = "TBB_TELEMAC_preview") -> Object:
     """
     Generate an object in function of the given settings and mesh data (2D / 3D).
     If the object already exsits, overwrite it.
 
+    :param tmp_data: temporary data
     :type tmp_data: TBB_TelemacTemporaryData
     :type context: Context
-    :param time_point: custom time point, defaults to 0
+    :type settings: _type_
+    :param mesh_is_3d: if the mesh is a 3D simulation
+    :type mesh_is_3d: bool
+    :param rescale: rescale the object, enum in ['NONE', 'NORMALIZE', 'RESET'], defaults to 'NONE'
+    :type rescale: str, optional
     :type time_point: int, optional
-    :param rescale: rescale the object, enum in ['NONE', 'NORMALIZE', 'RESET']
-    :type rescale: bool
     :param type: type of the object, enum in ['BOTTOM', 'WATER_DEPTH'], defaults to 'BOTTOM'
-    :type type: str
-    :param name: name of the object, defaults to 'TBB_TELEMAC_preview'
-    :type name: str
-    :return: the generated object
+    :type type: str, optional
+    :param name: name of the object, defaults to "TBB_TELEMAC_preview"
+    :type name: str, optional
+    :raises NameError: if the given type is undefined
+    :raises error: if an error occurred reading data
+    :return: generated object
     :rtype: Object
     """
 
     if type not in ['BOTTOM', 'WATER_DEPTH']:
         raise NameError("Undefined type, please use one in ['BOTTOM', 'WATER_DEPTH']")
 
-    mesh_id_3d = tmp_data.nb_planes > 1
-
     # Manage 2D / 3D meshes
-    if mesh_id_3d:
+    if mesh_is_3d:
         possible_var_names = ["ELEVATION Z", "COTE Z"]
         try:
             z_values = get_data_from_possible_var_names(tmp_data, possible_var_names, time_point)
@@ -128,15 +148,16 @@ def generate_object(tmp_data: TBB_TelemacTemporaryData, context: Context, settin
             vertices = np.hstack((tmp_data.vertices, z_values))
 
     blender_mesh, obj = generate_object_from_data(vertices, tmp_data.faces, context, name + "_" + type.lower())
+
     # Set the object at the origin of the scene
-    obj.select_set(state=True, view_layer=context.view_layer)
-    bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN')
+    # obj.select_set(state=True, view_layer=context.view_layer)
+    # bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN')
 
     if rescale != 'NONE':
         if rescale == 'NORMALIZE':
-            normalize_object(obj, settings.preview_obj_dimensions, mesh_id_3d)
+            normalize_object(obj, settings.preview_obj_dimensions, mesh_is_3d)
         elif rescale == 'RESET':
-            rescale_object(obj, settings.preview_obj_dimensions, mesh_id_3d)
+            rescale_object(obj, settings.preview_obj_dimensions, mesh_is_3d)
 
     return obj
 

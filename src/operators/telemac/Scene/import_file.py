@@ -54,10 +54,11 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         # Generate the preview mesh. This step is not present in the reload operator because
         # the preview mesh may already be loaded. Moreover, this step takes a while for large meshes.
         try:
-            obj_bottom = generate_object(tmp_data, context, settings, rescale='NONE',
-                                         time_point=prw_time_point, type='BOTTOM')
-            obj_water_depth = generate_object(tmp_data, context, settings, rescale='NONE',
-                                              time_point=prw_time_point, type='WATER_DEPTH')
+            if not tmp_data.is_3d:
+                obj_bottom = generate_object(tmp_data, context, settings, mesh_is_3d=False,
+                                             rescale='NONE', time_point=prw_time_point, type='BOTTOM')
+                obj_water_depth = generate_object(tmp_data, context, settings, mesh_is_3d=False,
+                                                  rescale='NONE', time_point=prw_time_point, type='WATER_DEPTH')
             # Reset some preview settings
             settings.preview_obj_dimensions = obj_bottom.dimensions
         except Exception as error:

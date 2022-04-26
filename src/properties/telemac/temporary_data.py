@@ -28,6 +28,8 @@ class TBB_TelemacTemporaryData():
     nb_vertices = 0
     #: int: Number of triangles
     nb_triangles = 0
+    # bool: True if the file contains more than one plane
+    is_3d = False
 
     def __init__(self) -> None:
         self.file = None
@@ -57,6 +59,7 @@ class TBB_TelemacTemporaryData():
         self.nb_vars = self.file.nbvar
         self.nb_time_points = self.file.nb_pdt
         self.nb_planes = self.file.nplan
+        self.is_3d = self.file.nplan > 1
 
         # Construct vertices array
         self.vertices = np.vstack((self.file.x, self.file.y)).T

@@ -36,9 +36,17 @@ class TBB_OT_TelemacPreview(Operator):
             else:
                 rescale = 'RESET'
 
-            obj = generate_object(tmp_data, context, settings, rescale=rescale, time_point=prw_time_point)
             list_point_data = [tmp_data.file.nomvar[int(settings.preview_point_data)]]
-            generate_vertex_colors(tmp_data, obj.data, list_point_data, prw_time_point)
+
+            if not tmp_data.is_3d:
+                obj_bottom = generate_object(tmp_data, context, settings, mesh_is_3d=False,
+                                             rescale=rescale, time_point=prw_time_point, type='BOTTOM')
+                obj_water_depth = generate_object(tmp_data, context, settings, mesh_is_3d=False,
+                                                  rescale=rescale, time_point=prw_time_point, type='WATER_DEPTH')
+
+                generate_vertex_colors(tmp_data, obj_bottom.data, list_point_data, prw_time_point)
+                generate_vertex_colors(tmp_data, obj_water_depth.data, list_point_data, prw_time_point)
+
         except Exception as error:
             print("ERROR::TBB_OT_TelemacPreview: " + str(error))
             self.report({"ERROR"}, "An error occurred during preview")
