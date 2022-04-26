@@ -28,7 +28,7 @@ class TBB_TelemacTemporaryData():
     nb_vertices = 0
     #: int: Number of triangles
     nb_triangles = 0
-    # bool: True if the file contains more than one plane
+    #:  bool: True if the file contains more than one plane
     is_3d = False
 
     def __init__(self) -> None:

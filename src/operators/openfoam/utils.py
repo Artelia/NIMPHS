@@ -140,11 +140,11 @@ def generate_preview_material(obj: Object, scalar: str, name: str = "TBB_OpenFOA
     """
     Generate the preview material (if not generated yet). Update it otherwise (with the new scalar).
 
-    :param obj: Preview object
+    :param obj: preview object
     :type obj: Object
-    :param scalar: Name of the vertex colors group (same as scalar name)
+    :param scalar: name of the vertex colors group (same as scalar name)
     :type scalar: str
-    :param name: Name of the preview material, defaults to "TBB_OpenFOAM_preview_material"
+    :param name: name of the preview material, defaults to "TBB_OpenFOAM_preview_material"
     :type name: str, optional
     """
 

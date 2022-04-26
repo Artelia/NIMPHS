@@ -1,4 +1,5 @@
 # <pep8 compliant>
+import bpy
 from bpy_extras.io_utils import ImportHelper
 from bpy.types import Operator, Context
 from bpy.props import StringProperty
@@ -6,7 +7,7 @@ from bpy.props import StringProperty
 import time
 import numpy as np
 
-from ..utils import update_settings_dynamic_props, generate_object
+from ..utils import rescale_object, update_settings_dynamic_props, generate_object, get_object_dimensions_from_mesh
 
 
 class TBB_OT_TelemacImportFile(Operator, ImportHelper):
@@ -54,13 +55,19 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         # Generate the preview mesh. This step is not present in the reload operator because
         # the preview mesh may already be loaded. Moreover, this step takes a while for large meshes.
         try:
+            # Deselect everything
+            bpy.ops.object.select_all(action='DESELECT')
+
             if not tmp_data.is_3d:
                 obj_bottom = generate_object(tmp_data, context, settings, mesh_is_3d=False,
                                              rescale='NONE', time_point=prw_time_point, type='BOTTOM')
                 obj_water_depth = generate_object(tmp_data, context, settings, mesh_is_3d=False,
                                                   rescale='NONE', time_point=prw_time_point, type='WATER_DEPTH')
             # Reset some preview settings
-            settings.preview_obj_dimensions = obj_bottom.dimensions
+            dimensions = get_object_dimensions_from_mesh(obj_bottom)
+            rescale_object(obj_bottom, dimensions)
+            settings.preview_obj_dimensions = dimensions
+
         except Exception as error:
             print("ERROR::TBB_OT_TelemacImportFile: " + str(error))
             self.report({"ERROR"}, "Something went wrong building the mesh")

@@ -34,7 +34,6 @@ def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, context: 
     else:
         blender_mesh = obj.data
 
-    context.view_layer.objects.active = obj
     blender_mesh.clear_geometry()
     blender_mesh.from_pydata(vertices, [], faces)
 

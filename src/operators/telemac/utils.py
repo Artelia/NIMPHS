@@ -155,9 +155,9 @@ def generate_object(tmp_data: TBB_TelemacTemporaryData, context: Context, settin
 
     if rescale != 'NONE':
         if rescale == 'NORMALIZE':
-            normalize_object(obj, settings.preview_obj_dimensions, mesh_is_3d)
+            normalize_object(obj, settings.preview_obj_dimensions)
         elif rescale == 'RESET':
-            rescale_object(obj, settings.preview_obj_dimensions, mesh_is_3d)
+            rescale_object(obj, settings.preview_obj_dimensions)
 
     return obj
 
@@ -233,6 +233,18 @@ def generate_vertex_colors(tmp_data: TBB_TelemacTemporaryData, blender_mesh: Mes
 
 
 def generate_preview_material(obj: Object, var_name: str, name: str = "TBB_TELEMAC_preview_material") -> None:
+    """
+    Generate the preview material (if not generated yet). Update it otherwise (with the new variable).
+
+    :param obj: preview object
+    :type obj: Object
+    :param var_name: name of the variable to preview
+    :type var_name: str
+    :param name: name of the material, defaults to "TBB_TELEMAC_preview_material"
+    :type name: str, optional
+    :raises NameError: if the variable is not found in the vertex colors groups
+    """
+
     # Get the preview material
     material = bpy.data.materials.get(name)
     if material is None:
@@ -276,7 +288,7 @@ def generate_preview_material(obj: Object, var_name: str, name: str = "TBB_TELEM
     obj.active_material = material
 
 
-def normalize_object(obj: Object, dimensions: list[float], mesh_3d: bool = False) -> None:
+def normalize_object(obj: Object, dimensions: list[float]) -> None:
     """
     Rescale the object so its coordinates are now in the range [-1;1].
 
@@ -284,17 +296,15 @@ def normalize_object(obj: Object, dimensions: list[float], mesh_3d: bool = False
     :type obj: Object
     :param dimensions: original dimensions of the object
     :type dimensions: list[float]
-    :param mesh_3d: true if this mesh is from a 3D simulation, defaults to False
-    :type mesh_3d: bool, optional
     """
 
     ratio = dimensions[0] / dimensions[1]
     scale_x, scale_y = 1.0 if ratio > 1.0 else 1.0 / ratio, 1.0 if ratio < 1.0 else 1.0 / ratio
     scale_z = 1.0 / dimensions[2] if dimensions[2] > np.finfo(np.float).eps else 1.0
-    rescale_object(obj, [scale_x, scale_y, scale_z], mesh_3d)
+    rescale_object(obj, [scale_x, scale_y, scale_z])
 
 
-def rescale_object(obj: Object, dimensions: list[float], mesh_3d: bool = False) -> None:
+def rescale_object(obj: Object, dimensions: list[float]) -> None:
     """
     Rescale an object using the given dimensions.
 
@@ -302,15 +312,29 @@ def rescale_object(obj: Object, dimensions: list[float], mesh_3d: bool = False) 
     :type obj: Object
     :param dimensions: target dimensions
     :type dimensions: list[float]
-    :param mesh_3d: true if this mesh is from a 3D simulation, defaults to False
-    :type mesh_3d: bool, optional
     """
 
-    obj.dimensions[0] = dimensions[0]
-    # Weird but we have to do 'transform_apply' each time we modify the dimensions attribute
-    bpy.ops.object.transform_apply(location=False)
-    obj.dimensions[1] = dimensions[1]
-    bpy.ops.object.transform_apply(location=False)
-    if mesh_3d:
-        obj.dimensions[2] = dimensions[2]
-        bpy.ops.object.transform_apply(location=False)
+    obj.select_set(True)
+    obj.dimensions = dimensions
+    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+    obj.select_set(False)
+
+
+def get_object_dimensions_from_mesh(obj: Object) -> list[float]:
+    """
+    Get the dimensions of the object using its mesh.
+
+    :param obj: object
+    :type obj: Object
+    :return: x, y, z dimensions
+    :rtype: list[float]
+    """
+
+    dimensions = []
+    vertices = np.empty(len(obj.data.vertices) * 3, dtype=np.float64)
+    obj.data.vertices.foreach_get("co", vertices)
+    vertices = vertices.reshape((int(len(vertices) / 3)), 3)
+    dimensions.append(np.max(vertices[:, 0]) - np.min(vertices[:, 0]))
+    dimensions.append(np.max(vertices[:, 1]) - np.min(vertices[:, 1]))
+    dimensions.append(np.max(vertices[:, 2]) - np.min(vertices[:, 2]))
+    return dimensions

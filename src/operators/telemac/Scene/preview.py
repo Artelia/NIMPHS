@@ -37,6 +37,8 @@ class TBB_OT_TelemacPreview(Operator):
                 rescale = 'RESET'
 
             list_point_data = tmp_data.variables_info["names"]
+            # Deselect everything
+            bpy.ops.object.select_all(action='DESELECT')
 
             if not tmp_data.is_3d:
                 obj_bottom = generate_object(tmp_data, context, settings, mesh_is_3d=False,
