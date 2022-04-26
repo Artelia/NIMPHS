@@ -13,6 +13,11 @@ Import OpenFOAM files inside Blender and generate astonishing renders!
 * Clip by a scalar
 
 ## Screenshots
-![Main panel of the add-on](https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.1.0/imgs/screenshot_a.png "Main panel")
 
-![Object properties panel for streaming sequences](https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.1.0/imgs/screenshot_b.png "Object properties panel")
+<p align="center">
+  <img alt="Main panel" width="519" height="447" src="https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/dev/docs/source/images/readme/screenshot_a.png"/>
+</p>
+
+<p align="center">
+  <img alt="Object properties panel" width="519" height="679" src="https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/dev/docs/source/images/readme/screenshot_b.png"/>
+</p>
