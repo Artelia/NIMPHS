@@ -53,10 +53,31 @@ def generate_vertex_colors_name(var_id_groups: list, tmp_data: TBB_TelemacTempor
     return name
 
 
+def get_data_from_possible_var_names(tmp_data: TBB_TelemacTemporaryData,
+                                     possible_var_names: list[str], time_point: int) -> np.ndarray:
+    z_values = None
+    for var_name in possible_var_names:
+        if z_values is None:
+            try:
+                z_values = tmp_data.get_data_from_var_name(var_name, time_point)
+            except NameError:
+                pass
+            except Exception as error:
+                raise error
+
+        else:
+            return z_values
+
+    if z_values is None:
+        raise NameError("ERROR::get_data_from_possible_var_names: undefined variables " + str(possible_var_names))
+    else:
+        return z_values
+
+
 def generate_object(tmp_data: TBB_TelemacTemporaryData, context: Context, settings, rescale: str = 'NONE',
-                    time_point: int = 0, name: str = "TBB_TELEMAC_preview") -> Object:
+                    time_point: int = 0, type: str = 'BOTTOM', name: str = "TBB_TELEMAC_preview") -> Object:
     """
-    Generate an object in function of the given settings and mesh data (3D / 2D).
+    Generate an object in function of the given settings and mesh data (2D / 3D).
     If the object already exsits, overwrite it.
 
     :type tmp_data: TBB_TelemacTemporaryData
@@ -65,29 +86,48 @@ def generate_object(tmp_data: TBB_TelemacTemporaryData, context: Context, settin
     :type time_point: int, optional
     :param rescale: rescale the object, enum in ['NONE', 'NORMALIZE', 'RESET']
     :type rescale: bool
+    :param type: type of the object, enum in ['BOTTOM', 'WATER_DEPTH'], defaults to 'BOTTOM'
+    :type type: str
     :param name: name of the object, defaults to 'TBB_TELEMAC_preview'
     :type name: str
     :return: the generated object
     :rtype: Object
     """
 
-    # Read data at the given time point
-    try:
-        data = tmp_data.read(time_point)
-    except Exception as error:
-        raise error
+    if type not in ['BOTTOM', 'WATER_DEPTH']:
+        raise NameError("Undefined type, please use one in ['BOTTOM', 'WATER_DEPTH']")
 
     mesh_id_3d = tmp_data.nb_planes > 1
 
     # Manage 2D / 3D meshes
     if mesh_id_3d:
-        # data[0] is 'COTE Z'
-        z_values = np.array(data[0]).reshape(data[0].shape[0], 1)
+        possible_var_names = ["ELEVATION Z", "COTE Z"]
+        try:
+            z_values = get_data_from_possible_var_names(tmp_data, possible_var_names, time_point)
+        except Exception as error:
+            raise error
+
         vertices = np.hstack((tmp_data.vertices, z_values))
     else:
-        vertices = np.hstack((tmp_data.vertices, np.zeros((tmp_data.nb_vertices, 1))))
+        if type == 'BOTTOM':
+            possible_var_names = ["BOTTOM", "FOND"]
+            try:
+                z_values = get_data_from_possible_var_names(tmp_data, possible_var_names, time_point)
+            except Exception as error:
+                raise error
 
-    blender_mesh, obj = generate_object_from_data(vertices, tmp_data.faces, context, name)
+            vertices = np.hstack((tmp_data.vertices, z_values))
+
+        if type == 'WATER_DEPTH':
+            possible_var_names = ["WATER DEPTH", "HAUTEUR D'EAU", "FREE SURFACE", "SURFACE LIBRE"]
+            try:
+                z_values = get_data_from_possible_var_names(tmp_data, possible_var_names, time_point)
+            except Exception as error:
+                raise error
+
+            vertices = np.hstack((tmp_data.vertices, z_values))
+
+    blender_mesh, obj = generate_object_from_data(vertices, tmp_data.faces, context, name + "_" + type.lower())
     # Set the object at the origin of the scene
     obj.select_set(state=True, view_layer=context.view_layer)
     bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN')

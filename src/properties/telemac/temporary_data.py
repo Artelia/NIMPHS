@@ -85,7 +85,55 @@ class TBB_TelemacTemporaryData():
         return self.file is not None and self.vertices is not None and self.faces is not None
 
     def read(self, time_point: int = 0) -> np.ndarray:
+        """
+        Read and return data at the given time point.
+
+        :param time_point: time point to read data, defaults to 0
+        :type time_point: int, optional
+        :raises ValueError: if the time point does not exist
+        :return: read data
+        :rtype: np.ndarray
+        """
+
         if time_point > self.nb_time_points or time_point < 0:
             raise ValueError("Undefined time point (" + str(time_point) + ")")
 
         return self.file.read(self.file.temps[time_point])
+
+    def get_data_from_var_name(self, var_name: str, time_point: int, output_shape: str = 'COL') -> np.ndarray:
+        """_summary_
+
+        :param var_name: name of the variable
+        :type var_name: str
+        :param time_point: time point to read data
+        :type time_point: int
+        :param output_shape: shape of the output, enum in ['COL', 'ROW']
+        :type output_shape: str
+        :raises error: if something went wrong when reading data
+        :raises ValueError: if the given variable name does not exist
+        :return: read data
+        :rtype: np.ndarray
+        """
+
+        try:
+            data = self.read(time_point)
+        except Exception as error:
+            raise error
+
+        # Get the id of the variable name if Serafin.nomvar
+        var_id = np.inf
+        for name, id in zip(self.variables_info["names"], range(self.nb_vars)):
+            if var_name == name:
+                var_id = id
+
+        if var_id == np.inf:
+            raise NameError("The given variable name '" + str(var_name) + "' is not defined")
+
+        # By default, always output with 'COL' shape, even the given shape is not defined.
+        if output_shape not in ['ROW', 'COL']:
+            print("WARNING::get_data_from_var_name: unknown output_shape '" +
+                  str(output_shape) + "', default output to 'COL' mode.")
+        if output_shape == 'ROW':
+            return data[var_id]
+        else:
+            return np.array(data[var_id]).reshape(data[var_id].shape[0], 1)
