@@ -30,10 +30,10 @@ def update_settings_dynamic_props(context: Context) -> None:
 
 def generate_vertex_colors_name(var_id_groups: list, tmp_data: TBB_TelemacTemporaryData) -> str:
     """
-    | Generate the name of the vertex colors group which correspond do the given list of ids.
-    | Example: 'FOND, VITESSE U, NONE' corresponds to: red channel = FOND, green channel = VITESS U, blue channel = NONE
+    Generate the name of the vertex colors groups which correspond to the given list of ids.
+    Example: 'FOND, VITESSE U, NONE' corresponds to: red channel = FOND, green channel = VITESS U, blue channel = NONE
 
-    :param var_id_groups: ids of varibales names (Serafin.nomvar array)
+    :param var_id_groups: ids of varibales names (from Serafin.nomvar)
     :type var_id_groups: list
     :param tmp_data: temporary data
     :type tmp_data: TBB_TelemacTemporaryData
@@ -172,6 +172,17 @@ def generate_vertex_colors(tmp_data: TBB_TelemacTemporaryData, blender_mesh: Mes
 
 
 def normalize_object(obj: Object, dimensions: list[float], mesh_3d: bool = False) -> None:
+    """
+    Rescale the object so its coordinates are now in the range [-1;1].
+
+    :param obj: object to normalize
+    :type obj: Object
+    :param dimensions: original dimensions of the object
+    :type dimensions: list[float]
+    :param mesh_3d: true if this mesh is from a 3D simulation, defaults to False
+    :type mesh_3d: bool, optional
+    """
+
     ratio = dimensions[0] / dimensions[1]
     scale_x, scale_y = 1.0 if ratio > 1.0 else 1.0 / ratio, 1.0 if ratio < 1.0 else 1.0 / ratio
     scale_z = 1.0 / dimensions[2] if dimensions[2] > np.finfo(np.float).eps else 1.0
@@ -179,6 +190,17 @@ def normalize_object(obj: Object, dimensions: list[float], mesh_3d: bool = False
 
 
 def rescale_object(obj: Object, dimensions: list[float], mesh_3d: bool = False) -> None:
+    """
+    Rescale an object using the given dimensions.
+
+    :param obj: object to rescale
+    :type obj: Object
+    :param dimensions: target dimensions
+    :type dimensions: list[float]
+    :param mesh_3d: true if this mesh is from a 3D simulation, defaults to False
+    :type mesh_3d: bool, optional
+    """
+
     obj.dimensions[0] = dimensions[0]
     # Weird but we have to do 'transform_apply' each time we modify the dimensions attribute
     bpy.ops.object.transform_apply(location=False)

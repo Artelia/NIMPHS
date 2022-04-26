@@ -4,7 +4,7 @@ from bpy.types import Panel, Context
 
 class TBB_PT_OpenfoamSequenceClipSettings(Panel):
     """
-    UI panel to manage clip settings of the Streaming sequence.
+    UI panel to manage clip settings of the 'Streaming sequence'.
     """
 
     bl_label = "Clip"
@@ -18,7 +18,7 @@ class TBB_PT_OpenfoamSequenceClipSettings(Panel):
     @classmethod
     def poll(self, context: Context) -> bool:
         """
-        Determine whether to let the user access the panel or not.
+        If false, hides the panel.
 
         :type context: Context
         :rtype: bool

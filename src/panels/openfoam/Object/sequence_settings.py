@@ -4,7 +4,7 @@ from bpy.types import Panel, Context
 
 class TBB_PT_OpenfoamSequenceSettings(Panel):
     """
-    Main panel of the Streaming sequence settings. This is the 'parent' panel.
+    Main panel of the 'Streaming sequence' settings. This is the 'parent' panel.
     """
 
     bl_label = "OpenFOAM Streaming sequence"
@@ -16,7 +16,7 @@ class TBB_PT_OpenfoamSequenceSettings(Panel):
     @classmethod
     def poll(self, context: Context) -> bool:
         """
-        Determine whether to let the user access the panel or not.
+        If false, hides the panel.
 
         :type context: Context
         :rtype: bool

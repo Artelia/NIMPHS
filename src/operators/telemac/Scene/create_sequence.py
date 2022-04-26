@@ -27,7 +27,7 @@ class TBB_OT_TelemacCreateSequence(Operator):
     @classmethod
     def poll(cls, context: Context) -> bool:
         """
-        Determine whether to let the user use the operator or not.
+        If false, locks the UI button of the operator.
 
         :type context: Context
         :rtype: bool
@@ -39,7 +39,7 @@ class TBB_OT_TelemacCreateSequence(Operator):
 
     def execute(self, context: Context) -> set:
         """
-        Create the sequence asked by the user."
+        Main function of the operator.
 
         :type context: Context
         :return: state of the operator
@@ -71,7 +71,7 @@ class TBB_OT_TelemacCreateSequence(Operator):
 
     def modal(self, context: Context, event: Event) -> set:
         """
-        Run one step of the "Create Mesh Sequence" process.
+        Run one step of the 'Create sequence' process.
 
         :type context: Context
         :type event: Event
@@ -121,10 +121,10 @@ class TBB_OT_TelemacCreateSequence(Operator):
 
     def stop(self, context: Context, cancelled: bool = False) -> None:
         """
-        Stop the "Create Mesh Sequence" process.
+        Stop the 'Create sequence' process.
 
         :type context: Context
-        :param cancelled: ask to report "Create sequence cancelled", defaults to False
+        :param cancelled: ask to report 'Create sequence cancelled', defaults to False
         :type cancelled: bool, optional
         """
 

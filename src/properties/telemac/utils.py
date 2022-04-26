@@ -4,7 +4,7 @@ from bpy.types import Context
 
 def remove_spaces_telemac_var_name(string: str) -> str:
     """
-    Remove spaces at the end of the varialbe name (if the 16 characters are not used).
+    Remove spaces at the end of the variable name (if the 16 characters are not used).
 
     :param string: input string
     :type string: str
@@ -21,7 +21,7 @@ def remove_spaces_telemac_var_name(string: str) -> str:
 
 def update_var_names(self, context: Context) -> list:
     """
-    Update the list of varialbe names for EnumProperties.
+    Update the list of variable names for EnumProperties.
 
     :type context: Context
     :rtype: list

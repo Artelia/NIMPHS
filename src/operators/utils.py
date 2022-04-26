@@ -9,7 +9,7 @@ import numpy as np
 def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, context: Context,
                               name: str) -> tuple[Mesh, Object]:
     """
-    Generate an object from the given data.
+    Generate an object and its mesh using the given vertices and faces.
 
     :param vertices: vertices, must have the following shape: (n, 3)
     :type vertices: np.ndarray
@@ -72,7 +72,7 @@ def remap_array(input: np.ndarray, out_min=0.0, out_max=1.0) -> np.ndarray:
     :type out_min: float, optional
     :param out_max: maximum value to output, defaults to 1.0
     :type out_max: float, optional
-    :return: remapped array
+    :return: output array
     :rtype: np.ndarray
     """
 

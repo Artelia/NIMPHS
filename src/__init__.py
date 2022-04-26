@@ -92,7 +92,7 @@ def register():
     Scene.tbb_telemac_settings = PointerProperty(type=TBB_TelemacSettings)
     Scene.tbb_create_sequence_is_running = BoolProperty(
         name="Create sequence state",
-        description="State of the 'create_sequence' operation (used by all the 'create_sequence' operators)",
+        description="State of the 'create sequence' operation (used by all the 'create sequence' operators)",
         default=False,
     )
     Object.tbb_openfoam_sequence = PointerProperty(type=TBB_OpenfoamSequenceProperty)

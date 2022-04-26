@@ -8,7 +8,7 @@ from ..utils import set_sequence_anim_length, get_sequence_anim_length
 
 class TBB_OpenfoamSequenceProperty(PropertyGroup):
     """
-    Streaming sequence properties.
+    'Streaming sequence' properties.
     """
 
     #: bpy.props.StringProperty: Name of the sequence.

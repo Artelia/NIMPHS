@@ -16,7 +16,7 @@ class TBB_OT_TelemacReloadFile(Operator):
 
     def execute(self, context: Context) -> set:
         """
-        Reload the selected file.
+        Main function of the operator. Reload the selected file.
 
         :type context: Context
         :return: state of the operator

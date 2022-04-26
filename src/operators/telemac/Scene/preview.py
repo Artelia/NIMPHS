@@ -18,7 +18,7 @@ class TBB_OT_TelemacPreview(Operator):
 
     def execute(self, context: Context) -> set:
         """
-        Preview the mesh.
+        Main function of the operator. Preview the mesh.
 
         :type context: Context
         :return: state of the operator

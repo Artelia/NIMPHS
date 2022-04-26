@@ -19,7 +19,7 @@ class TBB_PT_OpenfoamCreateSequence(Panel):
     @classmethod
     def poll(cls, context: Context) -> bool:
         """
-        Determine whether to let the user access the panel or not.
+        If false, hides the panel.
 
         :type context: Context
         :rtype: bool

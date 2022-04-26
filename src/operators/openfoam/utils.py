@@ -206,7 +206,7 @@ def generate_mesh_for_sequence(context: Context, time_point: int, name: str = "T
 
 def generate_vertex_colors(mesh: UnstructuredGrid, blender_mesh: Mesh, list_point_data: str, time_point: int) -> Mesh:
     """
-    Generate vertex color groups for each point data given in the list. The name given to the groups
+    Generate vertex colors groups for each point data given in the list. The name given to the groups
     are the same as in the list.
 
     :type mesh: UnstructuredGrid
@@ -267,7 +267,7 @@ def generate_vertex_colors(mesh: UnstructuredGrid, blender_mesh: Mesh, list_poin
 # Link: https://github.com/neverhood311/Stop-motion-OBJ/blob/rename-module-name/src/stop_motion_obj.py
 def add_mesh_to_sequence(seq_obj: Object, blender_mesh: Mesh) -> int:
     """
-    Add a mesh to a Mesh sequence.
+    Add a mesh to a 'Mesh sequence'.
 
     :param seq_obj: sequence object
     :type seq_obj: Object

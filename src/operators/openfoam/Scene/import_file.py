@@ -27,7 +27,7 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
 
     def execute(self, context: Context) -> set:
         """
-        Import the selected file. It also generates the preview object.
+        Main function of the operator. Import the selected file. It also generates the preview object.
 
         :type context: Context
         :return: state of the operator
