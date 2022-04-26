@@ -7,7 +7,7 @@ from bpy.props import StringProperty
 import time
 import numpy as np
 
-from ..utils import rescale_object, update_settings_dynamic_props, generate_object, get_object_dimensions_from_mesh
+from ..utils import update_settings_dynamic_props, generate_object, get_object_dimensions_from_mesh
 
 
 class TBB_OT_TelemacImportFile(Operator, ImportHelper):
@@ -52,6 +52,12 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         # Update properties values
         update_settings_dynamic_props(context)
 
+        # If the collection does not exists yet, create it
+        collection = bpy.data.collections.get("TBB_TELEMAC_preview")
+        if collection is None:
+            collection = bpy.data.collections.new(name="TBB_TELEMAC_preview")
+            context.scene.collection.children.link(collection)
+
         # Generate the preview mesh. This step is not present in the reload operator because
         # the preview mesh may already be loaded. Moreover, this step takes a while for large meshes.
         try:
@@ -60,13 +66,13 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
 
             if not tmp_data.is_3d:
                 obj_bottom = generate_object(tmp_data, context, settings, mesh_is_3d=False,
-                                             rescale='NONE', time_point=prw_time_point, type='BOTTOM')
+                                             time_point=prw_time_point, type='BOTTOM')
+                collection.objects.link(obj_bottom)
                 obj_water_depth = generate_object(tmp_data, context, settings, mesh_is_3d=False,
-                                                  rescale='NONE', time_point=prw_time_point, type='WATER_DEPTH')
+                                                  time_point=prw_time_point, type='WATER_DEPTH')
+                collection.objects.link(obj_water_depth)
             # Reset some preview settings
-            dimensions = get_object_dimensions_from_mesh(obj_bottom)
-            rescale_object(obj_bottom, dimensions)
-            settings.preview_obj_dimensions = dimensions
+            settings.preview_obj_dimensions = get_object_dimensions_from_mesh(obj_bottom)
 
         except Exception as error:
             print("ERROR::TBB_OT_TelemacImportFile: " + str(error))

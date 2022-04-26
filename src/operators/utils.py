@@ -6,8 +6,7 @@ from rna_prop_ui import rna_idprop_ui_create
 import numpy as np
 
 
-def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, context: Context,
-                              name: str) -> tuple[Mesh, Object]:
+def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, name: str) -> tuple[Mesh, Object]:
     """
     Generate an object and its mesh using the given vertices and faces.
 
@@ -15,7 +14,6 @@ def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, context: 
     :type vertices: np.ndarray
     :param faces: faces, must have the following shape: (n, 3)
     :type faces: np.ndarray
-    :type context: Context
     :param name: name of the preview object
     :type name: str
     :return: Blender mesh (of the generated object), generated object
@@ -30,7 +28,6 @@ def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, context: 
             blender_mesh = bpy.data.meshes.new(name + "_mesh")
 
         obj = bpy.data.objects.new(name, blender_mesh)
-        context.collection.objects.link(obj)
     else:
         blender_mesh = obj.data
 

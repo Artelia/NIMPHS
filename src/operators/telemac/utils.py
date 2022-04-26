@@ -1,6 +1,6 @@
 # <pep8 compliant>
 import bpy
-from bpy.types import Context, Mesh, Object
+from bpy.types import Context, Mesh, Object, Collection
 
 import numpy as np
 
@@ -91,8 +91,7 @@ def get_data_from_possible_var_names(tmp_data: TBB_TelemacTemporaryData,
 
 
 def generate_object(tmp_data: TBB_TelemacTemporaryData, context: Context, settings, mesh_is_3d: bool,
-                    rescale: str = 'NONE', time_point: int = 0, type: str = 'BOTTOM',
-                    name: str = "TBB_TELEMAC_preview") -> Object:
+                    time_point: int = 0, type: str = 'BOTTOM', name: str = "TBB_TELEMAC_preview") -> Object:
     """
     Generate an object in function of the given settings and mesh data (2D / 3D).
     If the object already exsits, overwrite it.
@@ -103,8 +102,6 @@ def generate_object(tmp_data: TBB_TelemacTemporaryData, context: Context, settin
     :type settings: _type_
     :param mesh_is_3d: if the mesh is a 3D simulation
     :type mesh_is_3d: bool
-    :param rescale: rescale the object, enum in ['NONE', 'NORMALIZE', 'RESET'], defaults to 'NONE'
-    :type rescale: str, optional
     :type time_point: int, optional
     :param type: type of the object, enum in ['BOTTOM', 'WATER_DEPTH'], defaults to 'BOTTOM'
     :type type: str, optional
@@ -147,17 +144,11 @@ def generate_object(tmp_data: TBB_TelemacTemporaryData, context: Context, settin
 
             vertices = np.hstack((tmp_data.vertices, z_values))
 
-    blender_mesh, obj = generate_object_from_data(vertices, tmp_data.faces, context, name + "_" + type.lower())
+    blender_mesh, obj = generate_object_from_data(vertices, tmp_data.faces, name + "_" + type.lower())
 
     # Set the object at the origin of the scene
     # obj.select_set(state=True, view_layer=context.view_layer)
     # bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN')
-
-    if rescale != 'NONE':
-        if rescale == 'NORMALIZE':
-            normalize_object(obj, settings.preview_obj_dimensions)
-        elif rescale == 'RESET':
-            rescale_object(obj, settings.preview_obj_dimensions)
 
     return obj
 
@@ -288,36 +279,38 @@ def generate_preview_material(obj: Object, var_name: str, name: str = "TBB_TELEM
     obj.active_material = material
 
 
-def normalize_object(obj: Object, dimensions: list[float]) -> None:
+def normalize_preview(collection: Collection, dimensions: list[float]) -> None:
     """
-    Rescale the object so its coordinates are now in the range [-1;1].
+    Rescale the preview collection so coordinates of all the meshes are now in the range [-1;1].
 
-    :param obj: object to normalize
-    :type obj: Object
-    :param dimensions: original dimensions of the object
+    :param collection: collection to normalize
+    :type collection: Collection
+    :param dimensions: original dimensions
     :type dimensions: list[float]
     """
-
-    ratio = dimensions[0] / dimensions[1]
-    scale_x, scale_y = 1.0 if ratio > 1.0 else 1.0 / ratio, 1.0 if ratio < 1.0 else 1.0 / ratio
-    scale_z = 1.0 / dimensions[2] if dimensions[2] > np.finfo(np.float).eps else 1.0
-    rescale_object(obj, [scale_x, scale_y, scale_z])
+    factor = 1.0 / np.max(dimensions)
+    resize_preview(collection, [factor, factor, factor])
 
 
-def rescale_object(obj: Object, dimensions: list[float]) -> None:
+def resize_preview(collection: Collection, dimensions: list[float]) -> None:
     """
-    Rescale an object using the given dimensions.
+    Resize a collection using the given dimensions.
 
-    :param obj: object to rescale
-    :type obj: Object
+    :param collection: collection to rescale
+    :type collection: Collection
     :param dimensions: target dimensions
     :type dimensions: list[float]
     """
 
-    obj.select_set(True)
-    obj.dimensions = dimensions
+    print(dimensions)
+    for obj in collection.objects:
+        obj.select_set(True)
+
+    bpy.ops.transform.resize(value=dimensions)
     bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
-    obj.select_set(False)
+
+    for obj in collection.objects:
+        obj.select_set(False)
 
 
 def get_object_dimensions_from_mesh(obj: Object) -> list[float]:

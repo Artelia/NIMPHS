@@ -4,7 +4,7 @@ from bpy.types import Operator, Context
 
 import time
 
-from ..utils import generate_object, generate_vertex_colors, generate_preview_material
+from ..utils import generate_object, generate_vertex_colors, generate_preview_material, normalize_preview, resize_preview
 
 
 class TBB_OT_TelemacPreview(Operator):
@@ -30,27 +30,32 @@ class TBB_OT_TelemacPreview(Operator):
         prw_time_point = settings.get("preview_time_point", 0)
         start = time.time()
 
-        try:
-            if settings.normalize_preview_obj:
-                rescale = 'NORMALIZE'
-            else:
-                rescale = 'RESET'
+        collection = bpy.data.collections.get("TBB_TELEMAC_preview")
 
+        try:
             list_point_data = tmp_data.variables_info["names"]
             # Deselect everything
             bpy.ops.object.select_all(action='DESELECT')
 
             if not tmp_data.is_3d:
                 obj_bottom = generate_object(tmp_data, context, settings, mesh_is_3d=False,
-                                             rescale=rescale, time_point=prw_time_point, type='BOTTOM')
+                                             time_point=prw_time_point, type='BOTTOM')
                 obj_water_depth = generate_object(tmp_data, context, settings, mesh_is_3d=False,
-                                                  rescale=rescale, time_point=prw_time_point, type='WATER_DEPTH')
+                                                  time_point=prw_time_point, type='WATER_DEPTH')
 
                 generate_vertex_colors(tmp_data, obj_bottom.data, list_point_data, prw_time_point)
                 generate_vertex_colors(tmp_data, obj_water_depth.data, list_point_data, prw_time_point)
                 var_name = tmp_data.variables_info["names"][int(settings.preview_point_data)]
                 generate_preview_material(obj_bottom, var_name)
                 generate_preview_material(obj_water_depth, var_name)
+
+            # Normalize or reset collection
+            if settings.normalize_preview_obj:
+                normalize_preview(collection, settings.preview_obj_dimensions)
+            else:
+                dimensions = [max(settings.preview_obj_dimensions)] * 3
+                if max(obj_bottom.dimensions) < max(settings.preview_obj_dimensions):
+                    resize_preview(collection, dimensions)
 
         except Exception as error:
             print("ERROR::TBB_OT_TelemacPreview: " + str(error))

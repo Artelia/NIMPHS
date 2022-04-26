@@ -77,7 +77,8 @@ class TBB_OT_OpenfoamPreview(Operator):
         # of the enum property. This is surely not what the user was expecting.
         tmp_data.update(file_reader, prw_time_point, data, raw_mesh)
 
-        blender_mesh, obj = generate_object_from_data(vertices, faces, context)
+        blender_mesh, obj = generate_object_from_data(vertices, faces)
+        context.collection.objects.link(obj)
 
         scalars_to_preview = str(settings.preview_point_data.split("@")[0])
         blender_mesh = generate_vertex_colors(mesh, blender_mesh, scalars_to_preview, prw_time_point)
