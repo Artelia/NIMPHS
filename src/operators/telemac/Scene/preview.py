@@ -4,7 +4,7 @@ from bpy.types import Operator, Context
 
 import time
 
-from ..utils import generate_object, generate_vertex_colors
+from ..utils import generate_object, generate_vertex_colors, generate_preview_material
 
 
 class TBB_OT_TelemacPreview(Operator):
@@ -36,7 +36,7 @@ class TBB_OT_TelemacPreview(Operator):
             else:
                 rescale = 'RESET'
 
-            list_point_data = [tmp_data.file.nomvar[int(settings.preview_point_data)]]
+            list_point_data = tmp_data.variables_info["names"]
 
             if not tmp_data.is_3d:
                 obj_bottom = generate_object(tmp_data, context, settings, mesh_is_3d=False,
@@ -46,6 +46,9 @@ class TBB_OT_TelemacPreview(Operator):
 
                 generate_vertex_colors(tmp_data, obj_bottom.data, list_point_data, prw_time_point)
                 generate_vertex_colors(tmp_data, obj_water_depth.data, list_point_data, prw_time_point)
+                var_name = tmp_data.variables_info["names"][int(settings.preview_point_data)]
+                generate_preview_material(obj_bottom, var_name)
+                generate_preview_material(obj_water_depth, var_name)
 
         except Exception as error:
             print("ERROR::TBB_OT_TelemacPreview: " + str(error))

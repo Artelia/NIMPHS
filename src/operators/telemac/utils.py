@@ -232,6 +232,50 @@ def generate_vertex_colors(tmp_data: TBB_TelemacTemporaryData, blender_mesh: Mes
         vertex_colors.data.foreach_set("color", colors)
 
 
+def generate_preview_material(obj: Object, var_name: str, name: str = "TBB_TELEMAC_preview_material") -> None:
+    # Get the preview material
+    material = bpy.data.materials.get(name)
+    if material is None:
+        material = bpy.data.materials.new(name=name)
+        material.use_nodes = True
+
+    # Get channel and vertex colors group for the given variable name
+    channel_id, group_name = np.inf, np.inf
+    for group in obj.data.vertex_colors:
+        names = group.name.split(", ")
+        for name, chan_id in zip(names, range(len(names))):
+            if name == var_name:
+                channel_id, group_name = chan_id, group.name
+
+    if channel_id == np.inf:
+        raise NameError("Variable " + str(var_name) + " not found in vertex colors data")
+
+    # Get node tree
+    mat_node_tree = material.node_tree
+
+    vertex_color_node = mat_node_tree.nodes.get(name + "_vertex_color")
+    if vertex_color_node is None:
+        vertex_color_node = mat_node_tree.nodes.new(type="ShaderNodeVertexColor")
+        vertex_color_node.name = name + "_vertex_color"
+        vertex_color_node.location = (-500, 250)
+
+    separate_rgb_node = mat_node_tree.nodes.get(name + "_separate_rgb")
+    if separate_rgb_node is None:
+        separate_rgb_node = mat_node_tree.nodes.new(type="ShaderNodeSeparateRGB")
+        separate_rgb_node.name = name + "_separate_rgb"
+        separate_rgb_node.location = (-250, 250)
+        mat_node_tree.links.new(vertex_color_node.outputs[0], separate_rgb_node.inputs[0])
+
+    principled_bsdf_node = mat_node_tree.nodes.get("Principled BSDF")
+    # No need to remove old links thanks to the 'verify limits' argument
+    mat_node_tree.links.new(separate_rgb_node.outputs[channel_id], principled_bsdf_node.inputs[0])
+
+    # Update vertex colors group to preview
+    vertex_color_node.layer_name = group_name
+    # Make sure it is the active material
+    obj.active_material = material
+
+
 def normalize_object(obj: Object, dimensions: list[float], mesh_3d: bool = False) -> None:
     """
     Rescale the object so its coordinates are now in the range [-1;1].

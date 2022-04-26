@@ -149,10 +149,8 @@ def generate_preview_material(obj: Object, scalar: str, name: str = "TBB_OpenFOA
     """
 
     # Get the preview material
-    try:
-        material = bpy.data.materials[name]
-    except KeyError as error:
-        print("ERROR::generate_preview_material: " + str(error))
+    material = bpy.data.materials.get(name)
+    if material is None:
         material = bpy.data.materials.new(name=name)
         material.use_nodes = True
 
