@@ -283,25 +283,26 @@ def generate_preview_material(obj: Object, var_name: str, name: str = "TBB_TELEM
     obj.active_material = material
 
 
-def normalize_preview(collection: Collection, dimensions: list[float]) -> None:
+def normalize_objects(objects: list[Object], dimensions: list[float]) -> None:
     """
-    Rescale the preview collection so coordinates of all the meshes are now in the range [-1;1].
+    Rescale the given list of objects so coordinates of all the meshes are now in the range [-1;1].
 
-    :param collection: collection to normalize
-    :type collection: Collection
+    :param collection: objects to normalize
+    :type collection: list[Object]
     :param dimensions: original dimensions
     :type dimensions: list[float]
     """
+
     factor = 1.0 / np.max(dimensions)
-    resize_preview(collection, [factor, factor, factor])
+    rescale_objects(objects, [factor, factor, factor])
 
 
-def resize_preview(collection: Collection, dimensions: list[float], apply: bool = False) -> None:
+def rescale_objects(objects: list[Object], dimensions: list[float], apply: bool = False) -> None:
     """
     Resize a collection using the given dimensions.
 
-    :param collection: collection to rescale
-    :type collection: Collection
+    :param collection: objects to normalize
+    :type collection: list[Object]
     :param dimensions: target dimensions
     :type dimensions: list[float]
     :param apply: apply the rescale for each object in the collection
@@ -312,7 +313,7 @@ def resize_preview(collection: Collection, dimensions: list[float], apply: bool 
         # Deselect everything
         bpy.ops.object.select_all(action='DESELECT')
 
-    for obj in collection.objects:
+    for obj in objects:
         if apply:
             obj.select_set(True)
         obj.scale = dimensions
@@ -320,7 +321,7 @@ def resize_preview(collection: Collection, dimensions: list[float], apply: bool 
     if apply:
         bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
 
-        for obj in collection.objects:
+        for obj in objects:
             obj.select_set(False)
 
 
