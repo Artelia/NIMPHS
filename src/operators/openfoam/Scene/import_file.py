@@ -1,4 +1,5 @@
 # <pep8 compliant>
+import bpy
 from bpy_extras.io_utils import ImportHelper
 from bpy.types import Operator, Context
 from bpy.props import StringProperty
@@ -36,6 +37,13 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
 
         settings = context.scene.tbb_openfoam_settings
         tmp_data = context.scene.tbb_openfoam_tmp_data
+
+        # Create a custom collection
+        collection = bpy.data.collections.get("TBB_OpenFOAM")
+        if collection is None:
+            collection = bpy.data.collections.new(name="TBB_OpenFOAM")
+            context.scene.collection.children.link(collection)
+
         start = time.time()
         success, file_reader = load_openfoam_file(self.filepath)
 
@@ -59,7 +67,8 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         try:
             vertices, faces, preview_mesh = generate_mesh(file_reader, time_point)
             blender_mesh, obj = generate_object_from_data(vertices, faces, "TBB_OpenFOAM_preview")
-            context.collection.objects.link(obj)
+            if collection.name not in [col.name for col in obj.users_collection]:
+                collection.objects.link(obj)
         except Exception as error:
             print("ERROR::TBB_OT_OpenfoamImportFile: " + str(error))
             self.report({"ERROR"}, "Something went wrong building the mesh")

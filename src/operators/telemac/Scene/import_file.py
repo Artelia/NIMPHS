@@ -52,27 +52,25 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         # Update properties values
         update_settings_dynamic_props(context)
 
-        # If the collection does not exists yet, create it
-        collection = bpy.data.collections.get("TBB_TELEMAC_preview")
+        # Create a custom collection
+        collection = bpy.data.collections.get("TBB_TELEMAC")
         if collection is None:
-            collection = bpy.data.collections.new(name="TBB_TELEMAC_preview")
+            collection = bpy.data.collections.new(name="TBB_TELEMAC")
             context.scene.collection.children.link(collection)
 
         # Generate the preview mesh. This step is not present in the reload operator because
         # the preview mesh may already be loaded. Moreover, this step takes a while for large meshes.
         try:
-            # Deselect everything
-            bpy.ops.object.select_all(action='DESELECT')
-
             if not tmp_data.is_3d:
-                obj_bottom = generate_object(tmp_data, context, settings, mesh_is_3d=False,
-                                             time_point=prw_time_point, type='BOTTOM')
-                collection.objects.link(obj_bottom)
-                obj_water_depth = generate_object(tmp_data, context, settings, mesh_is_3d=False,
-                                                  time_point=prw_time_point, type='WATER_DEPTH')
-                collection.objects.link(obj_water_depth)
+                for obj_type in ['BOTTOM', 'WATER_DEPTH']:
+                    obj = generate_object(tmp_data, context, settings, mesh_is_3d=False,
+                                          time_point=prw_time_point, type=obj_type)
+                    # Add this new object to the collection
+                    if collection.name not in [col.name for col in obj.users_collection]:
+                        collection.objects.link(obj)
+
             # Reset some preview settings
-            settings.preview_obj_dimensions = get_object_dimensions_from_mesh(obj_bottom)
+            settings.preview_obj_dimensions = get_object_dimensions_from_mesh(obj)
 
         except Exception as error:
             print("ERROR::TBB_OT_TelemacImportFile: " + str(error))

@@ -1,4 +1,5 @@
 # <pep8 compliant>
+import bpy
 from bpy.types import Operator, Context
 
 import time
@@ -30,6 +31,7 @@ class TBB_OT_OpenfoamPreview(Operator):
         settings = context.scene.tbb_openfoam_settings
         tmp_data = context.scene.tbb_openfoam_tmp_data
         prw_time_point = settings["preview_time_point"]
+        collection = bpy.data.collections.get("TBB_OpenFOAM")
         clip = settings.clip
 
         if settings.file_path == "":
@@ -77,8 +79,13 @@ class TBB_OT_OpenfoamPreview(Operator):
         # of the enum property. This is surely not what the user was expecting.
         tmp_data.update(file_reader, prw_time_point, data, raw_mesh)
 
-        blender_mesh, obj = generate_object_from_data(vertices, faces)
-        context.collection.objects.link(obj)
+        try:
+            blender_mesh, obj = generate_object_from_data(vertices, faces, "TBB_OpenFOAM_preview")
+            if collection.name not in [col.name for col in obj.users_collection]:
+                collection.objects.link(obj)
+        except Exception as error:
+            print("ERROR::TBB_OT_OpenfoamPreview: " + str(error))
+            self.report({"ERROR"}, "Something went generating the object the object")
 
         scalars_to_preview = str(settings.preview_point_data.split("@")[0])
         blender_mesh = generate_vertex_colors(mesh, blender_mesh, scalars_to_preview, prw_time_point)

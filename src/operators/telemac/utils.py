@@ -292,7 +292,7 @@ def normalize_preview(collection: Collection, dimensions: list[float]) -> None:
     resize_preview(collection, [factor, factor, factor])
 
 
-def resize_preview(collection: Collection, dimensions: list[float]) -> None:
+def resize_preview(collection: Collection, dimensions: list[float], apply: bool = False) -> None:
     """
     Resize a collection using the given dimensions.
 
@@ -300,17 +300,24 @@ def resize_preview(collection: Collection, dimensions: list[float]) -> None:
     :type collection: Collection
     :param dimensions: target dimensions
     :type dimensions: list[float]
+    :param apply: apply the rescale for each object in the collection
+    :type apply: bool
     """
 
-    print(dimensions)
-    for obj in collection.objects:
-        obj.select_set(True)
-
-    bpy.ops.transform.resize(value=dimensions)
-    bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+    if apply:
+        # Deselect everything
+        bpy.ops.object.select_all(action='DESELECT')
 
     for obj in collection.objects:
-        obj.select_set(False)
+        if apply:
+            obj.select_set(True)
+        obj.scale = dimensions
+
+    if apply:
+        bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+
+        for obj in collection.objects:
+            obj.select_set(False)
 
 
 def get_object_dimensions_from_mesh(obj: Object) -> list[float]:
