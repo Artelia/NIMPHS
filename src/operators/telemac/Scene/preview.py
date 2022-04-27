@@ -34,35 +34,38 @@ class TBB_OT_TelemacPreview(Operator):
         list_point_data = tmp_data.variables_info["names"]
         vertex_colors_var_name = tmp_data.variables_info["names"][int(settings.preview_point_data)]
 
-        try:
-            if not tmp_data.is_3d:
-                for obj_type in ['BOTTOM', 'WATER_DEPTH']:
-                    obj = generate_object(tmp_data, mesh_is_3d=False, time_point=prw_time_point, type=obj_type)
-                    generate_vertex_colors(tmp_data, obj.data, list_point_data, prw_time_point)
-                    generate_preview_material(obj, vertex_colors_var_name)
-                    # Reset the scale without applying it
-                    obj.scale = [1.0] * 3
+        # try:
+        if not tmp_data.is_3d:
+            for obj_type in ['BOTTOM', 'WATER_DEPTH']:
+                obj = generate_object(tmp_data, mesh_is_3d=False, time_point=prw_time_point, type=obj_type)
+                generate_vertex_colors(tmp_data, obj.data, list_point_data, prw_time_point)
+                generate_preview_material(obj, vertex_colors_var_name)
+                # Reset the scale without applying it
+                obj.scale = [1.0] * 3
 
-                    if collection.name not in [col.name for col in obj.users_collection]:
-                        collection.objects.link(obj)
-            else:
-                for plane_id in range(tmp_data.nb_planes - 1, -1, -1):
-                    name = "TBB_TELEMAC_preview_plane_" + str(plane_id)
-                    obj = generate_object(tmp_data, mesh_is_3d=True, offset=plane_id,
-                                          time_point=prw_time_point, name=name)
-                    # Reset the scale without applying it
-                    obj.scale = [1.0] * 3
-                    # Add this new object to the collection
-                    if collection.name not in [col.name for col in obj.users_collection]:
-                        collection.objects.link(obj)
+                if collection.name not in [col.name for col in obj.users_collection]:
+                    collection.objects.link(obj)
+        else:
+            for plane_id in range(tmp_data.nb_planes - 1, -1, -1):
+                name = "TBB_TELEMAC_preview_plane_" + str(plane_id)
+                obj = generate_object(tmp_data, mesh_is_3d=True, offset=plane_id,
+                                      time_point=prw_time_point, name=name)
+                generate_vertex_colors(tmp_data, obj.data, list_point_data, prw_time_point,
+                                       mesh_is_3d=True, offset=plane_id)
+                generate_preview_material(obj, vertex_colors_var_name)
+                # Reset the scale without applying it
+                obj.scale = [1.0] * 3
+                # Add this new object to the collection
+                if collection.name not in [col.name for col in obj.users_collection]:
+                    collection.objects.link(obj)
 
-            if settings.normalize_preview_obj:
-                normalize_preview(collection, settings.preview_obj_dimensions)
+        if settings.normalize_preview_obj:
+            normalize_preview(collection, settings.preview_obj_dimensions)
 
-        except Exception as error:
-            print("ERROR::TBB_OT_TelemacPreview: " + str(error))
-            self.report({"ERROR"}, "An error occurred during preview")
-            return {"FINISHED"}
+        # except Exception as error:
+        #     print("ERROR::TBB_OT_TelemacPreview: " + str(error))
+        #     self.report({"ERROR"}, "An error occurred during preview")
+        #     return {"FINISHED"}
 
         print("Preview::TELEMAC: " + "{:.4f}".format(time.time() - start) + "s")
         self.report({"INFO"}, "Mesh successfully built: checkout the viewport.")

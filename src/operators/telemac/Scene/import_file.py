@@ -52,8 +52,6 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         # Update properties values
         update_settings_dynamic_props(context)
 
-        # Generate the preview mesh. This step is not present in the reload operator because
-        # the preview mesh may already be loaded. Moreover, this step takes a while for large meshes.
         try:
             if not tmp_data.is_3d:
                 for obj_type in ['BOTTOM', 'WATER_DEPTH']:

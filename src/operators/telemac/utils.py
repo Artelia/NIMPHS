@@ -155,7 +155,7 @@ def generate_object(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, offset
 
 
 def generate_vertex_colors(tmp_data: TBB_TelemacTemporaryData, blender_mesh: Mesh,
-                           list_point_data: str, time_point: int) -> None:
+                           list_point_data: str, time_point: int, mesh_is_3d: bool = False, offset: int = 0) -> None:
     """
     Generate vertex color groups for each point data given in the list. The name given to the groups
     describe the content of the data contained in the groups.
@@ -184,6 +184,9 @@ def generate_vertex_colors(tmp_data: TBB_TelemacTemporaryData, blender_mesh: Mes
                 filtered_variables_indices.append(id)
 
     data = tmp_data.read(time_point)
+    if mesh_is_3d:
+        start_id, end_id = offset * tmp_data.nb_vertices, offset * tmp_data.nb_vertices + tmp_data.nb_vertices
+        data = data[:, start_id:end_id]
 
     ones = np.ones((len(vertex_ids),))
     zeros = np.zeros((len(vertex_ids),))
