@@ -45,6 +45,16 @@ class TBB_OT_TelemacPreview(Operator):
 
                     if collection.name not in [col.name for col in obj.users_collection]:
                         collection.objects.link(obj)
+            else:
+                for plane_id in range(tmp_data.nb_planes - 1, -1, -1):
+                    name = "TBB_TELEMAC_preview_plane_" + str(plane_id)
+                    obj = generate_object(tmp_data, mesh_is_3d=True, offset=plane_id,
+                                          time_point=prw_time_point, name=name)
+                    # Reset the scale without applying it
+                    obj.scale = [1.0] * 3
+                    # Add this new object to the collection
+                    if collection.name not in [col.name for col in obj.users_collection]:
+                        collection.objects.link(obj)
 
             if settings.normalize_preview_obj:
                 normalize_preview(collection, settings.preview_obj_dimensions)
