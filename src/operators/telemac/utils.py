@@ -54,7 +54,7 @@ def generate_vertex_colors_name(var_id_groups: list, tmp_data: TBB_TelemacTempor
 
 
 def get_data_from_possible_var_names(tmp_data: TBB_TelemacTemporaryData,
-                                     possible_var_names: list[str], time_point: int) -> np.ndarray:
+                                     possible_var_names: list[str], time_point: int) -> tuple[np.ndarray, str]:
     """
     Get data from the Serfain file and check for every possible given names. When one is found,
     return the associated data.
@@ -67,8 +67,8 @@ def get_data_from_possible_var_names(tmp_data: TBB_TelemacTemporaryData,
     :type time_point: int
     :raises error: if an error occurred reading the Serafin file
     :raises NameError: if the possible names are not defined
-    :return: read data
-    :rtype: np.ndarray
+    :return: read data, var_name
+    :rtype: tuple[np.ndarray, str]
     """
 
     z_values = None
@@ -82,12 +82,12 @@ def get_data_from_possible_var_names(tmp_data: TBB_TelemacTemporaryData,
                 raise error
 
         else:
-            return z_values
+            return z_values, var_name
 
     if z_values is None:
         raise NameError("ERROR::get_data_from_possible_var_names: undefined variables " + str(possible_var_names))
     else:
-        return z_values
+        return z_values, var_name
 
 
 def generate_object(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, offset: int = 0,
@@ -121,7 +121,7 @@ def generate_object(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, offset
     if mesh_is_3d:
         possible_var_names = ["ELEVATION Z", "COTE Z"]
         try:
-            z_values = get_data_from_possible_var_names(tmp_data, possible_var_names, time_point)
+            z_values, var_name = get_data_from_possible_var_names(tmp_data, possible_var_names, time_point)
         except Exception as error:
             raise error
 
@@ -131,16 +131,20 @@ def generate_object(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, offset
         if type == 'BOTTOM':
             possible_var_names = ["BOTTOM", "FOND"]
             try:
-                z_values = get_data_from_possible_var_names(tmp_data, possible_var_names, time_point)
+                z_values, var_name = get_data_from_possible_var_names(tmp_data, possible_var_names, time_point)
             except Exception as error:
                 raise error
 
             vertices = np.hstack((tmp_data.vertices, z_values))
 
         if type == 'WATER_DEPTH':
-            possible_var_names = ["WATER DEPTH", "HAUTEUR D'EAU", "FREE SURFACE", "SURFACE LIBRE"]
+            possible_var_names = ["FREE SURFACE", "SURFACE LIBRE", "WATER DEPTH", "HAUTEUR D'EAU"]
             try:
-                z_values = get_data_from_possible_var_names(tmp_data, possible_var_names, time_point)
+                z_values, var_name = get_data_from_possible_var_names(tmp_data, possible_var_names, time_point)
+                if var_name in ["WATER DEPTH", "HAUTEUR D'EAU"]:
+                    bottom, var_name = get_data_from_possible_var_names(tmp_data, ["BOTTOM", "FOND"], time_point)
+                    z_values += bottom
+
             except Exception as error:
                 raise error
 
@@ -169,8 +173,12 @@ def generate_vertex_colors(tmp_data: TBB_TelemacTemporaryData, blender_mesh: Mes
     :type blender_mesh: Mesh
     :param list_point_data: list of point data to import as vertex colors groups
     :type list_point_data: str
-    :param time_point: time point
+    :param time_point: time point to read data
     :type time_point: int
+    :param mesh_is_3d: precise if the mesh is from a 3D simulation
+    :type mesh_is_3d: bool
+    :param offset: for a mesh from a 3D simulation, precise the offset to read data
+    :type offset: int
     """
 
     # Prepare the mesh to loop over all its triangles

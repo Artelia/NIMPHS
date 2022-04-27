@@ -62,15 +62,21 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
                     if collection.name not in [col.name for col in obj.users_collection]:
                         collection.objects.link(obj)
             else:
+                # Create a custom collection for 3D previews
+                collection_3d = get_collection("TBB_TELEMAC_3D", context, link_to_scene=False)
+                if collection_3d.name not in [col.name for col in collection.children]:
+                    collection.children.link(collection_3d)
+
                 for plane_id in range(tmp_data.nb_planes - 1, -1, -1):
                     name = "TBB_TELEMAC_preview_plane_" + str(plane_id)
                     obj = generate_object(tmp_data, mesh_is_3d=True, offset=plane_id,
                                           time_point=prw_time_point, name=name)
                     # Reset the scale without applying it
                     obj.scale = [1.0] * 3
+
                     # Add this new object to the collection
-                    if collection.name not in [col.name for col in obj.users_collection]:
-                        collection.objects.link(obj)
+                    if collection_3d.name not in [col.name for col in obj.users_collection]:
+                        collection_3d.objects.link(obj)
 
             # Reset some preview settings
             settings.preview_obj_dimensions = get_object_dimensions_from_mesh(obj)

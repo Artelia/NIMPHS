@@ -6,13 +6,15 @@ from rna_prop_ui import rna_idprop_ui_create
 import numpy as np
 
 
-def get_collection(name: str, context: Context) -> Collection:
+def get_collection(name: str, context: Context, link_to_scene: bool = True) -> Collection:
     """
     Get the collection named 'name'. If it does not exist, create it.
 
     :param name: name of the collection
     :type name: str
     :type context: Context
+    :param link_to_scene: automatically the collection to the list of scene collections, defaults to True
+    :type link_to_scene: bool
     :return: the collection
     :rtype: Collection
     """
@@ -20,7 +22,8 @@ def get_collection(name: str, context: Context) -> Collection:
     collection = bpy.data.collections.get(name)
     if collection is None:
         collection = bpy.data.collections.new(name=name)
-        context.scene.collection.children.link(collection)
+        if link_to_scene:
+            context.scene.collection.children.link(collection)
 
     return collection
 
