@@ -30,16 +30,5 @@ Scene
 Utils
 #####
 
-.. currentmodule:: src.operators.telemac.utils
-
-.. autofunction:: update_settings_dynamic_props
-
-.. autofunction:: generate_vertex_colors_name
-
-.. autofunction:: generate_vertex_colors
-
-.. autofunction:: generate_object
-
-.. autofunction:: normalize_object
-
-.. autofunction:: rescale_object
+.. automodule:: src.operators.telemac.utils
+   :members:

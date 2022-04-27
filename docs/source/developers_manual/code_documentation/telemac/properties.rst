@@ -31,8 +31,5 @@ Scene
 Utils
 #####
 
-.. currentmodule:: src.properties.telemac.utils
-
-.. autofunction:: remove_spaces_telemac_var_name
-
-.. autofunction:: update_var_names
+.. automodule:: src.properties.telemac.utils
+   :members:

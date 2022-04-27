@@ -72,20 +72,5 @@ Object
 Utils
 #####
 
-.. currentmodule:: src.properties.openfoam.utils
-
-.. autofunction:: encode_scalar_names
-
-.. autofunction:: update_scalar_names
-
-.. autofunction:: encode_value_ranges
-
-.. autofunction:: get_value_range_from_name
-
-.. autofunction:: set_clip_values
-
-.. autofunction:: get_clip_values
-
-.. autofunction:: set_sequence_anim_length
-
-.. autofunction:: get_sequence_anim_length
+.. automodule:: src.properties.openfoam.utils
+   :members:
