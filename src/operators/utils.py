@@ -77,7 +77,8 @@ def update_dynamic_props(settings, new_maxima, props) -> None:
         prop.update(default=default, max=new_maxima[prop_id], soft_max=new_maxima[prop_id])
 
 
-def remap_array(input: np.ndarray, out_min=0.0, out_max=1.0) -> np.ndarray:
+def remap_array(input: np.ndarray, out_min: float = 0.0, out_max: float = 1.0,
+                in_min: float = -np.inf, in_max: float = np.inf) -> np.ndarray:
     """
     Remap values of the given array.
 
@@ -87,12 +88,17 @@ def remap_array(input: np.ndarray, out_min=0.0, out_max=1.0) -> np.ndarray:
     :type out_min: float, optional
     :param out_max: maximum value to output, defaults to 1.0
     :type out_max: float, optional
+    :param in_min: minimum value of the input, defaults to -1.0
+    :type in_min: float, optional
+    :param in_max: maximum value of the input, defaults to 1.0
+    :type in_max: float, optional
     :return: output array
     :rtype: np.ndarray
     """
 
-    in_min = np.min(input)
-    in_max = np.max(input)
+    if in_min == -np.inf or in_max == np.inf:
+        in_min = np.min(input)
+        in_max = np.max(input)
 
     if out_min < np.finfo(np.float).eps and out_max < np.finfo(np.float).eps:
         return np.zeros(shape=input.shape)

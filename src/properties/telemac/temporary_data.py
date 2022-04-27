@@ -3,6 +3,7 @@ from .serafin import Serafin
 from .utils import remove_spaces_telemac_var_name
 
 import numpy as np
+import time
 
 
 class TBB_TelemacTemporaryData():
@@ -20,8 +21,8 @@ class TBB_TelemacTemporaryData():
     nb_vars = 0
     #: int: Number of time points
     nb_time_points = 0
-    #: dict: Information on variables (names and units)
-    variables_info = {"names": [], "units": []}
+    #: dict: Information on variables (names, units and value ranges)
+    variables_info = {"names": [], "units": [], "ranges": []}
     #: int: Number of planes
     nb_planes = 0
     #: int: Number of vertices
@@ -37,7 +38,7 @@ class TBB_TelemacTemporaryData():
         self.faces = None
         self.nb_vars = 0
         self.nb_time_points = 0
-        self.variables_info = {"names": [], "units": []}
+        self.variables_info = {"names": [], "units": [], "ranges": []}
         self.nb_planes = 0
         self.nb_vertices = 0
         self.nb_triangles = 0
@@ -76,6 +77,7 @@ class TBB_TelemacTemporaryData():
         # Clear old variables information
         self.variables_info["names"].clear()
         self.variables_info["units"].clear()
+        self.variables_info["ranges"].clear()
         # Construct variables information data
         for var_info in self.file.nomvar:
             # var_info is always 32 chars long with 16 chars for the name and 16 for the unit name
@@ -83,6 +85,7 @@ class TBB_TelemacTemporaryData():
             unit = remove_spaces_telemac_var_name(var_info[16:])
             self.variables_info["names"].append(name)
             self.variables_info["units"].append(unit)
+            self.variables_info["ranges"].append(None)
 
     def is_ok(self) -> bool:
         """
@@ -145,3 +148,28 @@ class TBB_TelemacTemporaryData():
             return data[var_id]
         else:
             return np.array(data[var_id]).reshape(data[var_id].shape[0], 1)
+
+    def compute_var_value_range(self, var_id: int) -> tuple[float, float]:
+        start = time.time()
+        min, max = np.inf, -np.inf
+        for time_point in range(self.nb_time_points):
+            data = self.read(time_point)[var_id]
+            new_min, new_max = np.min(data), np.max(data)
+            if new_min < min:
+                min = new_min
+            if new_max > max:
+                max = new_max
+
+        self.variables_info["ranges"][var_id] = (min, max)
+        print("TBB_TelemacTemporaryData::compute_var_value_range: " + "{:.4f}".format(time.time() - start) + "s")
+        return (min, max)
+
+    def get_var_value_range(self, var_id: int):
+        if var_id < 0 or var_id > self.nb_vars:
+            raise ValueError("Undefined variable id '" + str(var_id) + "'")
+
+        value_range = self.variables_info["ranges"][var_id]
+        if value_range is None:
+            value_range = self.compute_var_value_range(var_id)
+
+        return value_range

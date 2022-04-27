@@ -4,7 +4,7 @@ from bpy.types import Context, Mesh, Object, Collection
 
 import numpy as np
 
-from ..utils import update_dynamic_props, generate_object_from_data
+from ..utils import update_dynamic_props, generate_object_from_data, remap_array
 from ...properties.telemac.Scene.settings import telemac_settings_dynamic_props
 from ...properties.telemac.temporary_data import TBB_TelemacTemporaryData
 
@@ -100,6 +100,9 @@ def generate_object(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, offset
     :type tmp_data: TBB_TelemacTemporaryData
     :param mesh_is_3d: if the mesh is a 3D simulation
     :type mesh_is_3d: bool
+    :param offset: if the mesh is a 3D simulation, precise the offset in the data to read
+    :type offset: int
+    :param time_point: time point to read
     :type time_point: int, optional
     :param type: type of the object, enum in ['BOTTOM', 'WATER_DEPTH'], defaults to 'BOTTOM'
     :type type: str, optional
@@ -157,7 +160,7 @@ def generate_object(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, offset
 def generate_vertex_colors(tmp_data: TBB_TelemacTemporaryData, blender_mesh: Mesh,
                            list_point_data: str, time_point: int, mesh_is_3d: bool = False, offset: int = 0) -> None:
     """
-    Generate vertex color groups for each point data given in the list. The name given to the groups
+    Generate vertex colors groups for each point data given in the list. The name given to the groups
     describe the content of the data contained in the groups.
 
     :param tmp_data: temporary data
@@ -208,12 +211,9 @@ def generate_vertex_colors(tmp_data: TBB_TelemacTemporaryData, blender_mesh: Mes
         colors = []
         for var_id in var_id_groups:
             if var_id != -1:
-                max_value = np.max(np.array(data[var_id])[vertex_ids])  # Normalize values
-                array = np.array(data[var_id])[vertex_ids]
-                if max_value > np.finfo(np.float).eps:
-                    colors.append(array / max_value)
-                else:
-                    colors.append(array)
+                min, max = tmp_data.get_var_value_range(var_id)
+                colors_data = remap_array(np.array(data[var_id])[vertex_ids], in_min=min, in_max=max)
+                colors.append(colors_data)
             else:
                 colors.append(zeros)
 
