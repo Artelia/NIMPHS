@@ -216,7 +216,7 @@ class Serafin:
         self.date_ref = None
         # self.nelem = 0
         # self.npoin = 0
-        self.ndp = 0  # Nombre de points
+        self.ndp = 0
         self.var_i = 1
         # self.ikle = np.array([], dtype='int32')
         # self.IPOBO = np.array([], dtype='int32')

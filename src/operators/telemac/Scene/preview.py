@@ -37,8 +37,7 @@ class TBB_OT_TelemacPreview(Operator):
         try:
             if not tmp_data.is_3d:
                 for obj_type in ['BOTTOM', 'WATER_DEPTH']:
-                    obj = generate_object(tmp_data, context, settings, mesh_is_3d=False,
-                                          time_point=prw_time_point, type=obj_type)
+                    obj = generate_object(tmp_data, mesh_is_3d=False, time_point=prw_time_point, type=obj_type)
                     generate_vertex_colors(tmp_data, obj.data, list_point_data, prw_time_point)
                     generate_preview_material(obj, vertex_colors_var_name)
                     # Reset the scale without applying it

@@ -54,19 +54,24 @@ class TBB_TelemacTemporaryData():
         self.file.get_2d()
         self.file.read(self.file.temps[0])
 
-        self.nb_vertices = len(self.file.x)
-        self.nb_triangles = int(len(self.file.ikle) / 3)
-        self.nb_vars = self.file.nbvar
-        self.nb_time_points = self.file.nb_pdt
         self.nb_planes = self.file.nplan
         self.is_3d = self.file.nplan > 1
 
+        self.nb_vertices = self.file.npoin2d if self.is_3d else self.file.npoin
+        self.nb_triangles = len(self.file.ikle2d) if self.is_3d else int(len(self.file.ikle) / 3)
+        self.nb_vars = self.file.nbvar
+
+        self.nb_time_points = self.file.nb_pdt
+
         # Construct vertices array
-        self.vertices = np.vstack((self.file.x, self.file.y)).T
+        self.vertices = np.vstack((self.file.x[:self.nb_vertices], self.file.y[:self.nb_vertices])).T
 
         # Construct faces array
         # '-1' to remove the '+1' offset in the ikle array
-        self.faces = (np.array(self.file.ikle) - 1).reshape((self.nb_triangles, 3))
+        if not self.is_3d:
+            self.faces = (np.array(self.file.ikle) - 1).reshape((self.nb_triangles, 3))
+        else:
+            self.faces = self.file.ikle2d
 
         # Clear old variables information
         self.variables_info["names"].clear()

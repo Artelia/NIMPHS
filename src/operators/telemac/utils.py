@@ -90,7 +90,7 @@ def get_data_from_possible_var_names(tmp_data: TBB_TelemacTemporaryData,
         return z_values
 
 
-def generate_object(tmp_data: TBB_TelemacTemporaryData, context: Context, settings, mesh_is_3d: bool,
+def generate_object(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, offset: int = 0,
                     time_point: int = 0, type: str = 'BOTTOM', name: str = "TBB_TELEMAC_preview") -> Object:
     """
     Generate an object in function of the given settings and mesh data (2D / 3D).
@@ -98,8 +98,6 @@ def generate_object(tmp_data: TBB_TelemacTemporaryData, context: Context, settin
 
     :param tmp_data: temporary data
     :type tmp_data: TBB_TelemacTemporaryData
-    :type context: Context
-    :type settings: _type_
     :param mesh_is_3d: if the mesh is a 3D simulation
     :type mesh_is_3d: bool
     :type time_point: int, optional
@@ -124,7 +122,8 @@ def generate_object(tmp_data: TBB_TelemacTemporaryData, context: Context, settin
         except Exception as error:
             raise error
 
-        vertices = np.hstack((tmp_data.vertices, z_values))
+        start_id, end_id = offset * tmp_data.nb_vertices, offset * tmp_data.nb_vertices + tmp_data.nb_vertices
+        vertices = np.hstack((tmp_data.vertices, z_values[start_id:end_id]))
     else:
         if type == 'BOTTOM':
             possible_var_names = ["BOTTOM", "FOND"]
@@ -144,7 +143,9 @@ def generate_object(tmp_data: TBB_TelemacTemporaryData, context: Context, settin
 
             vertices = np.hstack((tmp_data.vertices, z_values))
 
-    blender_mesh, obj = generate_object_from_data(vertices, tmp_data.faces, name + "_" + type.lower())
+        name += "_" + type.lower()
+
+    blender_mesh, obj = generate_object_from_data(vertices, tmp_data.faces, name=name)
 
     # Set the object at the origin of the scene
     # obj.select_set(state=True, view_layer=context.view_layer)
