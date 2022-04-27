@@ -28,8 +28,8 @@ def update_var_names(self, context: Context) -> list:
     """
 
     tmp_data = context.scene.tbb_telemac_tmp_data
-    names = tmp_data.variables_info["names"]
-    units = tmp_data.variables_info["units"]
+    names = tmp_data.vars_info["names"]
+    units = tmp_data.vars_info["units"]
 
     items = []
     for name, unit, id in zip(names, units, range(tmp_data.nb_vars)):

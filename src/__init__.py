@@ -37,7 +37,7 @@ from .panels.main_panel import TBB_PT_MainPanel
 bl_info = {
     "name": "Toolsbox OpenFOAM/TELEMAC",
     "description": "Load, visualize and manipulate OpenFOAM/TELEMAC files",
-    "author": "",
+    "author": "Thibault Oudart, Félix Olart",
     "version": (0, 1, 0),
     "blender": (3, 0, 0),
     "location": "View3D",

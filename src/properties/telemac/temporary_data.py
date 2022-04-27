@@ -22,7 +22,7 @@ class TBB_TelemacTemporaryData():
     #: int: Number of time points
     nb_time_points = 0
     #: dict: Information on variables (names, units and value ranges)
-    variables_info = {"names": [], "units": [], "ranges": []}
+    vars_info = {"names": [], "units": [], "ranges": []}
     #: int: Number of planes
     nb_planes = 0
     #: int: Number of vertices
@@ -38,7 +38,7 @@ class TBB_TelemacTemporaryData():
         self.faces = None
         self.nb_vars = 0
         self.nb_time_points = 0
-        self.variables_info = {"names": [], "units": [], "ranges": []}
+        self.vars_info = {"names": [], "units": [], "ranges": []}
         self.nb_planes = 0
         self.nb_vertices = 0
         self.nb_triangles = 0
@@ -75,17 +75,17 @@ class TBB_TelemacTemporaryData():
             self.faces = self.file.ikle2d
 
         # Clear old variables information
-        self.variables_info["names"].clear()
-        self.variables_info["units"].clear()
-        self.variables_info["ranges"].clear()
+        self.vars_info["names"].clear()
+        self.vars_info["units"].clear()
+        self.vars_info["ranges"].clear()
         # Construct variables information data
         for var_info in self.file.nomvar:
             # var_info is always 32 chars long with 16 chars for the name and 16 for the unit name
             name = remove_spaces_telemac_var_name(var_info[:16])
             unit = remove_spaces_telemac_var_name(var_info[16:])
-            self.variables_info["names"].append(name)
-            self.variables_info["units"].append(unit)
-            self.variables_info["ranges"].append(None)
+            self.vars_info["names"].append(name)
+            self.vars_info["units"].append(unit)
+            self.vars_info["ranges"].append(None)
 
     def is_ok(self) -> bool:
         """
@@ -102,7 +102,7 @@ class TBB_TelemacTemporaryData():
         :param time_point: time point to read data, defaults to 0
         :type time_point: int, optional
         :raises ValueError: if the time point does not exist
-        :return: read data
+        :return: data
         :rtype: np.ndarray
         """
 
@@ -122,7 +122,7 @@ class TBB_TelemacTemporaryData():
         :type output_shape: str
         :raises error: if something went wrong when reading data
         :raises ValueError: if the given variable name does not exist
-        :return: read data
+        :return: data
         :rtype: np.ndarray
         """
 
@@ -133,7 +133,7 @@ class TBB_TelemacTemporaryData():
 
         # Get the id of the variable name if Serafin.nomvar
         var_id = np.inf
-        for name, id in zip(self.variables_info["names"], range(self.nb_vars)):
+        for name, id in zip(self.vars_info["names"], range(self.nb_vars)):
             if var_name == name:
                 var_id = id
 
@@ -160,7 +160,7 @@ class TBB_TelemacTemporaryData():
             if new_max > max:
                 max = new_max
 
-        self.variables_info["ranges"][var_id] = (min, max)
+        self.vars_info["ranges"][var_id] = (min, max)
         print("TBB_TelemacTemporaryData::compute_var_value_range: " + "{:.4f}".format(time.time() - start) + "s")
         return (min, max)
 
@@ -168,7 +168,7 @@ class TBB_TelemacTemporaryData():
         if var_id < 0 or var_id > self.nb_vars:
             raise ValueError("Undefined variable id '" + str(var_id) + "'")
 
-        value_range = self.variables_info["ranges"][var_id]
+        value_range = self.vars_info["ranges"][var_id]
         if value_range is None:
             value_range = self.compute_var_value_range(var_id)
 

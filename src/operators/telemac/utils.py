@@ -44,7 +44,7 @@ def generate_vertex_colors_name(var_id_groups: list, tmp_data: TBB_TelemacTempor
     name = ""
     for var_id, num in zip(var_id_groups, range(3)):
         if var_id != -1:
-            name += tmp_data.variables_info["names"][var_id]
+            name += tmp_data.vars_info["names"][var_id]
         else:
             name += "NONE"
 
@@ -56,7 +56,7 @@ def generate_vertex_colors_name(var_id_groups: list, tmp_data: TBB_TelemacTempor
 def get_data_from_possible_var_names(tmp_data: TBB_TelemacTemporaryData,
                                      possible_var_names: list[str], time_point: int) -> tuple[np.ndarray, str]:
     """
-    Get data from the Serfain file and check for every possible given names. When one is found,
+    Get data from the Serafin file (.slf) and check for every possible given names. When one is found,
     return the associated data.
 
     :param tmp_data: temporary data
@@ -67,21 +67,20 @@ def get_data_from_possible_var_names(tmp_data: TBB_TelemacTemporaryData,
     :type time_point: int
     :raises error: if an error occurred reading the Serafin file
     :raises NameError: if the possible names are not defined
-    :return: read data, var_name
+    :return: data, var_name
     :rtype: tuple[np.ndarray, str]
     """
 
     z_values = None
     for var_name in possible_var_names:
-        if z_values is None:
-            try:
-                z_values = tmp_data.get_data_from_var_name(var_name, time_point)
-            except NameError:
-                pass
-            except Exception as error:
-                raise error
+        try:
+            z_values = tmp_data.get_data_from_var_name(var_name, time_point)
+        except NameError:
+            pass
+        except Exception as error:
+            raise error
 
-        else:
+        if z_values is not None:
             return z_values, var_name
 
     if z_values is None:
@@ -93,8 +92,9 @@ def get_data_from_possible_var_names(tmp_data: TBB_TelemacTemporaryData,
 def generate_object(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, offset: int = 0,
                     time_point: int = 0, type: str = 'BOTTOM', name: str = "TBB_TELEMAC_preview") -> Object:
     """
-    Generate an object in function of the given settings and mesh data (2D / 3D).
-    If the object already exsits, overwrite it.
+    Generate the mesh of the selected file. If the selected file is a 2D simulation, you can precise
+    which part of the mesh you want ('BOTTOM' or 'WATER_DEPTH'). If the file is a 3D simulation, you can
+    precise an offset for data reading (this offsets is somehow the id of the plane to generate).
 
     :param tmp_data: temporary data
     :type tmp_data: TBB_TelemacTemporaryData
@@ -125,6 +125,7 @@ def generate_object(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, offset
         except Exception as error:
             raise error
 
+        # Ids from where to read data in the z_values array
         start_id, end_id = offset * tmp_data.nb_vertices, offset * tmp_data.nb_vertices + tmp_data.nb_vertices
         vertices = np.hstack((tmp_data.vertices, z_values[start_id:end_id]))
     else:
@@ -138,9 +139,11 @@ def generate_object(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, offset
             vertices = np.hstack((tmp_data.vertices, z_values))
 
         if type == 'WATER_DEPTH':
-            possible_var_names = ["FREE SURFACE", "SURFACE LIBRE", "WATER DEPTH", "HAUTEUR D'EAU"]
+            possible_var_names = ["WATER DEPTH", "HAUTEUR D'EAU", "FREE SURFACE", "SURFACE LIBRE"]
             try:
                 z_values, var_name = get_data_from_possible_var_names(tmp_data, possible_var_names, time_point)
+
+                # Compute 'FREE SURFACE' from 'WATER_DEPTH' and 'BOTTOM'
                 if var_name in ["WATER DEPTH", "HAUTEUR D'EAU"]:
                     bottom, var_name = get_data_from_possible_var_names(tmp_data, ["BOTTOM", "FOND"], time_point)
                     z_values += bottom
@@ -238,6 +241,7 @@ def generate_vertex_colors(tmp_data: TBB_TelemacTemporaryData, blender_mesh: Mes
 def generate_preview_material(obj: Object, var_name: str, name: str = "TBB_TELEMAC_preview_material") -> None:
     """
     Generate the preview material (if not generated yet). Update it otherwise (with the new variable).
+    This generates the following node tree: 'Vertex color'[color] >>> [image]'Separate RBG'[R, G, B] >>> [color]'Principled BSDF'
 
     :param obj: preview object
     :type obj: Object
@@ -318,7 +322,7 @@ def rescale_objects(objects: list[Object], dimensions: list[float], apply: bool 
     """
 
     if apply:
-        # Deselect everything
+        # Deselect everything so we make sure the transform_apply will only be applied to our meshes
         bpy.ops.object.select_all(action='DESELECT')
 
     for obj in objects:
@@ -339,7 +343,7 @@ def get_object_dimensions_from_mesh(obj: Object) -> list[float]:
 
     :param obj: object
     :type obj: Object
-    :return: x, y, z dimensions
+    :return: (x, y, z) dimensions
     :rtype: list[float]
     """
 

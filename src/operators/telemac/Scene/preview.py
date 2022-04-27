@@ -31,10 +31,10 @@ class TBB_OT_TelemacPreview(Operator):
         prw_time_point = settings.get("preview_time_point", 0)
         start = time.time()
 
-        vertex_colors_var_name = tmp_data.variables_info["names"][int(settings.preview_point_data)]
+        vertex_colors_var_name = tmp_data.vars_info["names"][int(settings.preview_point_data)]
         list_point_data = [vertex_colors_var_name]
         # Generate vertex colors for all the variables
-        # list_point_data = tmp_data.variables_info["names"]
+        # list_point_data = tmp_data.vars_info["names"]
 
         try:
             objs_to_normalize = []

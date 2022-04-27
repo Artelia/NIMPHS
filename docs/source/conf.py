@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.abspath('../../'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'Toolsbox blender'
+project = 'Toolsbox blender 0.2.0'
 copyright = '2022, Félix Olart'
 author = 'Félix Olart'
 
