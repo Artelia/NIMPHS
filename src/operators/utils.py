@@ -1,9 +1,28 @@
 # <pep8 compliant>
 import bpy
-from bpy.types import Context, Mesh, Object
+from bpy.types import Collection, Mesh, Object, Context
 from rna_prop_ui import rna_idprop_ui_create
 
 import numpy as np
+
+
+def get_collection(name: str, context: Context) -> Collection:
+    """
+    Get the collection named 'name'. If it does not exist, create it.
+
+    :param name: name of the collection
+    :type name: str
+    :type context: Context
+    :return: the collection
+    :rtype: Collection
+    """
+
+    collection = bpy.data.collections.get(name)
+    if collection is None:
+        collection = bpy.data.collections.new(name=name)
+        context.scene.collection.children.link(collection)
+
+    return collection
 
 
 def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, name: str) -> tuple[Mesh, Object]:

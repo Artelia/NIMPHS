@@ -2,6 +2,8 @@
 import bpy
 from bpy.types import Operator, Context, Event
 
+from ...utils import get_collection
+
 import time
 
 
@@ -100,7 +102,7 @@ class TBB_OT_TelemacCreateSequence(Operator):
                     # Create the blender object (which will contain the sequence)
                     obj = bpy.data.objects.new(self.user_sequence_name + "_sequence", mesh)
                     self.sequence_object_name = obj.name
-                    context.collection.objects.link(obj)
+                    get_collection("TBB_TELEMAC", context).objects.link(obj)
                 else:
                     pass
 

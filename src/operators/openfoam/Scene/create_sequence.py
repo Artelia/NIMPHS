@@ -5,6 +5,7 @@ from bpy.types import Operator, RenderSettings, Context, Event
 import time
 
 from ..utils import generate_mesh_for_sequence, add_mesh_to_sequence, generate_sequence_object
+from ...utils import get_collection
 
 
 class TBB_OT_OpenfoamCreateSequence(Operator):
@@ -132,7 +133,7 @@ class TBB_OT_OpenfoamCreateSequence(Operator):
                     # The object created from the convert_to_mesh_sequence() method adds
                     # "_sequence" at the end of the name
                     self.sequence_object_name = obj.name + "_sequence"
-                    context.collection.objects.link(obj)
+                    get_collection("TBB_OpenFOAM", context).objects.link(obj)
                     # Convert it to a mesh sequence
                     context.view_layer.objects.active = obj
                     bpy.ops.ms.convert_to_mesh_sequence()

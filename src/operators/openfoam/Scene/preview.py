@@ -5,7 +5,7 @@ from bpy.types import Operator, Context
 import time
 
 from ..utils import generate_mesh, generate_vertex_colors, generate_preview_material, load_openfoam_file
-from ...utils import generate_object_from_data
+from ...utils import generate_object_from_data, get_collection
 
 from ....properties.openfoam.utils import encode_value_ranges, encode_scalar_names
 
@@ -31,7 +31,7 @@ class TBB_OT_OpenfoamPreview(Operator):
         settings = context.scene.tbb_openfoam_settings
         tmp_data = context.scene.tbb_openfoam_tmp_data
         prw_time_point = settings["preview_time_point"]
-        collection = bpy.data.collections.get("TBB_OpenFOAM")
+        collection = get_collection("TBB_OpenFOAM", context)
         clip = settings.clip
 
         if settings.file_path == "":

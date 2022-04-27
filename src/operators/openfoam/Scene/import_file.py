@@ -1,5 +1,4 @@
 # <pep8 compliant>
-import bpy
 from bpy_extras.io_utils import ImportHelper
 from bpy.types import Operator, Context
 from bpy.props import StringProperty
@@ -7,7 +6,7 @@ from bpy.props import StringProperty
 import time
 
 from ..utils import load_openfoam_file, update_settings_dynamic_props, generate_mesh
-from ...utils import generate_object_from_data
+from ...utils import generate_object_from_data, get_collection
 from ....properties.openfoam.utils import encode_value_ranges, encode_scalar_names
 
 
@@ -37,12 +36,7 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
 
         settings = context.scene.tbb_openfoam_settings
         tmp_data = context.scene.tbb_openfoam_tmp_data
-
-        # Create a custom collection
-        collection = bpy.data.collections.get("TBB_OpenFOAM")
-        if collection is None:
-            collection = bpy.data.collections.new(name="TBB_OpenFOAM")
-            context.scene.collection.children.link(collection)
+        collection = get_collection("TBB_OpenFOAM", context)
 
         start = time.time()
         success, file_reader = load_openfoam_file(self.filepath)

@@ -1,10 +1,10 @@
 # <pep8 compliant>
-import bpy
 from bpy.types import Operator, Context
 
 import time
 
 from ..utils import generate_object, generate_vertex_colors, generate_preview_material, normalize_preview
+from ...utils import get_collection
 
 
 class TBB_OT_TelemacPreview(Operator):
@@ -27,10 +27,10 @@ class TBB_OT_TelemacPreview(Operator):
 
         settings = context.scene.tbb_telemac_settings
         tmp_data = context.scene.tbb_telemac_tmp_data
+        collection = get_collection("TBB_TELEMAC", context)
         prw_time_point = settings.get("preview_time_point", 0)
         start = time.time()
 
-        collection = bpy.data.collections.get("TBB_TELEMAC_preview")
         list_point_data = tmp_data.variables_info["names"]
         vertex_colors_var_name = tmp_data.variables_info["names"][int(settings.preview_point_data)]
 

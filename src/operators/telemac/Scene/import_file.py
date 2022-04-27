@@ -1,13 +1,12 @@
 # <pep8 compliant>
-import bpy
 from bpy_extras.io_utils import ImportHelper
 from bpy.types import Operator, Context
 from bpy.props import StringProperty
 
 import time
-import numpy as np
 
 from ..utils import update_settings_dynamic_props, generate_object, get_object_dimensions_from_mesh
+from ...utils import get_collection
 
 
 class TBB_OT_TelemacImportFile(Operator, ImportHelper):
@@ -36,6 +35,7 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
 
         settings = context.scene.tbb_telemac_settings
         tmp_data = context.scene.tbb_telemac_tmp_data
+        collection = get_collection("TBB_TELEMAC", context)
         prw_time_point = 0
         start = time.time()
 
@@ -51,12 +51,6 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
 
         # Update properties values
         update_settings_dynamic_props(context)
-
-        # Create a custom collection
-        collection = bpy.data.collections.get("TBB_TELEMAC")
-        if collection is None:
-            collection = bpy.data.collections.new(name="TBB_TELEMAC")
-            context.scene.collection.children.link(collection)
 
         # Generate the preview mesh. This step is not present in the reload operator because
         # the preview mesh may already be loaded. Moreover, this step takes a while for large meshes.
