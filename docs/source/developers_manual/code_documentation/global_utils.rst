@@ -1,7 +1,28 @@
 Global utils
 ============
 
-| Function defined for a global use (for OpenFOAM and TELEMAC modules)
+* :ref:`global_utils_classes`
+* :ref:`global_utils_functions`
+
+| Function and classes defined for a global use (for OpenFOAM and TELEMAC modules)
+
+.. _global_utils_classes:
+
+Classes
+#######
+
+.. autoclass:: src.properties.scene_settings.TBB_SceneSettings
+   :members:
+   :show-inheritance:
+
+.. autoclass:: src.properties.sequence_settings.TBB_StreamingSequenceProperty
+   :members:
+   :show-inheritance:
+
+.. _global_utils_functions:
+
+Functions
+#########
 
 .. automodule:: src.panels.utils
    :members:
