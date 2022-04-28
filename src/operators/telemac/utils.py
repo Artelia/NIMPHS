@@ -1,32 +1,11 @@
 # <pep8 compliant>
 import bpy
-from bpy.types import Context, Mesh, Object, Collection
+from bpy.types import Mesh, Object
 
 import numpy as np
 
-from ..utils import update_dynamic_props, generate_object_from_data, remap_array
-from ...properties.telemac.Scene.settings import telemac_settings_dynamic_props
+from ..utils import generate_object_from_data, remap_array
 from ...properties.telemac.temporary_data import TBB_TelemacTemporaryData
-
-
-def update_settings_dynamic_props(context: Context) -> None:
-    """
-    Update 'dynamic' settings of the main panel. It adapts the max values of properties in function of the imported file.
-
-    :type context: Context
-    """
-
-    settings = context.scene.tbb_telemac_settings
-    tmp_data = context.scene.tbb_telemac_tmp_data
-
-    max_time_step = tmp_data.nb_time_points
-    new_maxima = {
-        "preview_time_point": max_time_step - 1,
-        "start_time_point": max_time_step - 1,
-        "end_time_point": max_time_step - 1,
-        "anim_length": max_time_step,
-    }
-    update_dynamic_props(settings, new_maxima, telemac_settings_dynamic_props)
 
 
 def generate_vertex_colors_name(var_id_groups: list, tmp_data: TBB_TelemacTemporaryData) -> str:

@@ -8,8 +8,7 @@ from pathlib import Path
 import numpy as np
 import time
 
-from ...properties.openfoam.Scene.settings import openfoam_settings_dynamic_props
-from ..utils import update_dynamic_props, remap_array
+from ..utils import remap_array
 
 
 def load_openfoam_file(file_path: str) -> tuple[bool, OpenFOAMReader]:
@@ -350,23 +349,3 @@ def update_sequence_mesh(seq_obj: Object, settings, time_point: int) -> None:
     # Import point data as vertex colors
     if settings.import_point_data:
         blender_mesh = generate_vertex_colors(mesh, blender_mesh, settings.list_point_data, time_point)
-
-
-def update_settings_dynamic_props(context: Context, file_reader: OpenFOAMReader) -> None:
-    """
-    Update 'dynamic' settings of the main panel. It adapts the max values of properties in function of the imported file.
-
-    :type context: Context
-    :type file_reader: OpenFOAMReader
-    """
-
-    settings = context.scene.tbb_openfoam_settings
-
-    max_time_step = file_reader.number_time_points
-    new_maxima = {
-        "preview_time_point": max_time_step - 1,
-        "start_time_point": max_time_step - 1,
-        "end_time_point": max_time_step - 1,
-        "anim_length": max_time_step,
-    }
-    update_dynamic_props(settings, new_maxima, openfoam_settings_dynamic_props)

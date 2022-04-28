@@ -34,6 +34,7 @@ from .properties.telemac.temporary_data import TBB_TelemacTemporaryData
 
 # Other imports
 from .panels.main_panel import TBB_PT_MainPanel
+from .properties.scene_settings import TBB_SceneSettings
 
 bl_info = {
     "name": "Toolsbox OpenFOAM/TELEMAC",
@@ -71,6 +72,7 @@ panels = (
 )
 
 properties = (
+    TBB_SceneSettings,
     TBB_OpenfoamClipScalarProperty,
     TBB_OpenfoamClipProperty,
     TBB_OpenfoamSettings,

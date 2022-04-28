@@ -2,7 +2,8 @@
 from bpy.types import Operator, Context
 import time
 
-from ..utils import load_openfoam_file, update_settings_dynamic_props
+from ..utils import load_openfoam_file
+from ...utils import update_scene_settings_dynamic_props
 from ....properties.openfoam.utils import encode_value_ranges, encode_scalar_names
 
 
@@ -38,7 +39,7 @@ class TBB_OT_OpenfoamReloadFile(Operator):
             return {"FINISHED"}
 
         # Update properties values
-        update_settings_dynamic_props(context, file_reader)
+        update_scene_settings_dynamic_props(context, 'OpenFOAM', settings, tmp_data)
 
         # Update temp data
         tmp_data.update(file_reader, settings["preview_time_point"])

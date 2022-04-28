@@ -5,8 +5,8 @@ from bpy.props import StringProperty
 
 import time
 
-from ..utils import load_openfoam_file, update_settings_dynamic_props, generate_mesh
-from ...utils import generate_object_from_data, get_collection
+from ..utils import load_openfoam_file, generate_mesh
+from ...utils import generate_object_from_data, get_collection, update_scene_settings_dynamic_props
 from ....properties.openfoam.utils import encode_value_ranges, encode_scalar_names
 
 
@@ -47,19 +47,18 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
 
         settings.file_path = self.filepath
 
-        # Update properties values
-        update_settings_dynamic_props(context, file_reader)
-        time_point = settings["preview_time_point"]
-
         # Update temp data
-        tmp_data.update(file_reader, time_point)
+        tmp_data.update(file_reader, 0)
+
+        # Update properties values
+        update_scene_settings_dynamic_props(context, 'OpenFOAM', settings, tmp_data)
         settings.clip.scalar.value_ranges = encode_value_ranges(tmp_data.mesh)
         settings.clip.scalar.list = encode_scalar_names(tmp_data.mesh)
 
         # Generate the preview mesh. This step is not present in the reload operator because
         # the preview mesh may already be loaded. Moreover, this step takes a while for large meshes.
         try:
-            vertices, faces, preview_mesh = generate_mesh(file_reader, time_point)
+            vertices, faces, preview_mesh = generate_mesh(file_reader, 0)
             blender_mesh, obj = generate_object_from_data(vertices, faces, "TBB_OpenFOAM_preview")
             if collection.name not in [col.name for col in obj.users_collection]:
                 collection.objects.link(obj)

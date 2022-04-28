@@ -5,8 +5,8 @@ from bpy.props import StringProperty
 
 import time
 
-from ..utils import update_settings_dynamic_props, generate_object, get_object_dimensions_from_mesh
-from ...utils import get_collection
+from ..utils import generate_object, get_object_dimensions_from_mesh
+from ...utils import get_collection, update_scene_settings_dynamic_props
 
 
 class TBB_OT_TelemacImportFile(Operator, ImportHelper):
@@ -50,7 +50,7 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         settings.file_path = self.filepath
 
         # Update properties values
-        update_settings_dynamic_props(context)
+        update_scene_settings_dynamic_props(context)
 
         try:
             if not tmp_data.is_3d:

@@ -2,7 +2,7 @@
 from bpy.types import Operator, Context
 import time
 
-from ..utils import update_settings_dynamic_props
+from ...utils import update_scene_settings_dynamic_props
 
 
 class TBB_OT_TelemacReloadFile(Operator):
@@ -40,7 +40,7 @@ class TBB_OT_TelemacReloadFile(Operator):
             return {"FINISHED"}
 
         # Update properties values
-        update_settings_dynamic_props(context)
+        update_scene_settings_dynamic_props(context, 'TELEMAC', settings, tmp_data)
 
         print("Reload::TELEMAC: " + "{:.4f}".format(time.time() - start) + "s")
         self.report({"INFO"}, "Reload successfull")

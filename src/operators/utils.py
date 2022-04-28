@@ -3,6 +3,8 @@ import bpy
 from bpy.types import Collection, Mesh, Object, Context
 from rna_prop_ui import rna_idprop_ui_create
 
+from ..properties.scene_settings import scene_settings_dynamic_props
+
 import numpy as np
 
 
@@ -57,6 +59,31 @@ def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, name: str
     blender_mesh.from_pydata(vertices, [], faces)
 
     return blender_mesh, obj
+
+
+def update_scene_settings_dynamic_props(context: Context, type: str, settings, tmp_data) -> None:
+    """
+    Update 'dynamic' settings of the main panel. It adapts the max values of properties in function of the imported file.
+
+    :type context: Context
+    :param type: type of scene settings, enum in ['OpenFOAM', 'TELEMAC']
+    :type type: str
+    :param settings: scene settings
+    :param tmp_data: temporary data
+    """
+
+    if type == 'OpenFOAM':
+        max_time_step = tmp_data.file_reader.number_time_points
+    else:
+        max_time_step = tmp_data.nb_time_points
+
+    new_maxima = {
+        "preview_time_point": max_time_step - 1,
+        "start_time_point": max_time_step - 1,
+        "end_time_point": max_time_step - 1,
+        "anim_length": max_time_step,
+    }
+    update_dynamic_props(settings, new_maxima, scene_settings_dynamic_props)
 
 
 def update_dynamic_props(settings, new_maxima, props) -> None:
