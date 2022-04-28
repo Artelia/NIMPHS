@@ -25,7 +25,15 @@ class TBB_PT_TelemacCreateSequence(Panel):
         :rtype: bool
         """
 
-        return context.scene.tbb_telemac_tmp_data.is_ok()
+        obj = context.active_object
+        # Even if no objects are selected, the last selected object remains in the active_objects variable
+        if len(context.selected_objects) == 0:
+            obj = None
+
+        if obj is None:
+            return context.scene.tbb_telemac_tmp_data.is_ok()
+        else:
+            return context.scene.tbb_telemac_tmp_data.is_ok() and not obj.tbb_telemac_sequence.is_streaming_sequence
 
     def draw(self, context: Context):
         """
@@ -43,10 +51,25 @@ class TBB_PT_TelemacCreateSequence(Panel):
 
         row = layout.row()
         row.enabled = enable_rows
-        row.prop(settings, '["start_time_point"]', text="Start")
-        row = layout.row()
-        row.enabled = enable_rows
-        row.prop(settings, '["end_time_point"]', text="End")
+        row.prop(settings, "sequence_type", text="Type")
+
+        if settings.sequence_type == "mesh_sequence":
+            row = layout.row()
+            row.enabled = enable_rows
+            row.prop(settings, '["start_time_point"]', text="Start")
+            row = layout.row()
+            row.enabled = enable_rows
+            row.prop(settings, '["end_time_point"]', text="End")
+        elif settings.sequence_type == "streaming_sequence":
+            row = layout.row()
+            row.enabled = enable_rows
+            row.prop(settings, "frame_start", text="Frame start")
+            row = layout.row()
+            row.enabled = enable_rows
+            row.prop(settings, '["anim_length"]', text="Length")
+        else:
+            row = layout.row()
+            row.label(text="Error: unknown sequence type...", icon="ERROR")
 
         row = layout.row()
         row.enabled = enable_rows

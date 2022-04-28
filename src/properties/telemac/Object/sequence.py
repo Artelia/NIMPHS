@@ -1,12 +1,11 @@
 # <pep8 compliant>
 from bpy.types import PropertyGroup
-from bpy.props import BoolProperty, IntProperty, StringProperty, PointerProperty
+from bpy.props import BoolProperty, IntProperty, StringProperty
 
-from ..clip import TBB_OpenfoamClipProperty
 from ...utils import set_sequence_anim_length, get_sequence_anim_length
 
 
-class TBB_OpenfoamSequenceProperty(PropertyGroup):
+class TBB_TelemacSequenceProperty(PropertyGroup):
     """
     'Streaming sequence' properties.
     """
@@ -15,7 +14,7 @@ class TBB_OpenfoamSequenceProperty(PropertyGroup):
     name: StringProperty(
         name="Name",
         description="Name of the sequence",
-        default="Openfoam_sequence",
+        default="TELEMAC_sequence",
     )
 
     #: bpy.props.StringProperty: File to read when updating the sequence.
@@ -75,6 +74,3 @@ class TBB_OpenfoamSequenceProperty(PropertyGroup):
         description="List of point data to import as vertex color groups. Separate each with a semicolon",
         default="",
     )
-
-    #: TBB_OpenfoamClipProperty: Clip settings of the sequence.
-    clip: PointerProperty(type=TBB_OpenfoamClipProperty)

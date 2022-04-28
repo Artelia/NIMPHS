@@ -1,6 +1,6 @@
 # <pep8 compliant>
 from bpy.types import PropertyGroup
-from bpy.props import StringProperty, BoolProperty, EnumProperty, FloatVectorProperty
+from bpy.props import StringProperty, BoolProperty, EnumProperty, FloatVectorProperty, IntProperty
 
 from ..utils import update_var_names
 
@@ -9,16 +9,18 @@ telemac_settings_dynamic_props = [
     ("preview_time_point", "Time step used for the preview section"),
     ("start_time_point", "Starting point of the sequence"),
     ("end_time_point", "Ending point of the sequence"),
+    ("anim_length", "Length of the animation"),
 ]
 
 
 class TBB_TelemacSettings(PropertyGroup):
     """
-    Main panel settings. Contains 3 'dynamic' properties:
+    Main panel settings. Contains 4 'dynamic' properties:
 
     | **preview_time_point**: *bpy.types.IntProperty*, time step used for the preview section
     | **start_time_point**: *bpy.types.IntProperty*, starting point of the sequence
     | **end_time_point**: *bpy.types.IntProperty*, ending point of the sequence
+    | **anim_length**: *bpy.types.IntProperty*, length of the animation
     """
 
     # preview_time_point: IntProperty dynamically created
@@ -26,6 +28,15 @@ class TBB_TelemacSettings(PropertyGroup):
     # start_time_point: IntProperty dynamically created
 
     # end_time_point: IntProperty dynamically created
+
+    # anim_length: IntProperty dynamically created
+
+    #: bpy.types.IntProperty: Starting point of the sequence
+    frame_start: IntProperty(
+        name="Frame start",
+        description="Starting point of the sequence",
+        default=1
+    )
 
     #: bpy.types.StringProperty: Path to the .foam file
     file_path: StringProperty(
@@ -80,4 +91,18 @@ class TBB_TelemacSettings(PropertyGroup):
         name="Sequence name",
         description="Name of the sequence object",
         default="TELEMAC",
+    )
+
+    #: bpy.types.EnumProperty: Select a sequence type
+    sequence_type: EnumProperty(
+        items=[
+            ("mesh_sequence",
+             "Mesh sequence",
+             "Make a sequence by adding shape keys for each time step (good option for small meshes)"),
+            ("streaming_sequence",
+             "Streaming sequence",
+             "TODO (good option for large meshes)"),
+        ],
+        name="Sequence type",
+        description="Select a sequence type",
     )

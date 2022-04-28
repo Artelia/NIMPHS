@@ -24,6 +24,7 @@ def update_settings_dynamic_props(context: Context) -> None:
         "preview_time_point": max_time_step - 1,
         "start_time_point": max_time_step - 1,
         "end_time_point": max_time_step - 1,
+        "anim_length": max_time_step,
     }
     update_dynamic_props(settings, new_maxima, telemac_settings_dynamic_props)
 

@@ -29,6 +29,7 @@ from .operators.telemac.Scene.create_sequence import TBB_OT_TelemacCreateSequenc
 from .panels.telemac.Scene.main_panel import TBB_PT_TelemacMainPanel
 from .panels.telemac.Scene.create_sequence import TBB_PT_TelemacCreateSequence
 from .properties.telemac.Scene.settings import TBB_TelemacSettings
+from .properties.telemac.Object.sequence import TBB_TelemacSequenceProperty
 from .properties.telemac.temporary_data import TBB_TelemacTemporaryData
 
 # Other imports
@@ -75,6 +76,7 @@ properties = (
     TBB_OpenfoamSettings,
     TBB_OpenfoamSequenceProperty,
     TBB_TelemacSettings,
+    TBB_TelemacSequenceProperty,
 )
 
 classes = [operators, panels, properties]
@@ -90,12 +92,13 @@ def register():
     Scene.tbb_telemac_tmp_data = TBB_TelemacTemporaryData()
     Scene.tbb_openfoam_settings = PointerProperty(type=TBB_OpenfoamSettings)
     Scene.tbb_telemac_settings = PointerProperty(type=TBB_TelemacSettings)
+    Object.tbb_openfoam_sequence = PointerProperty(type=TBB_OpenfoamSequenceProperty)
+    Object.tbb_telemac_sequence = PointerProperty(type=TBB_TelemacSequenceProperty)
     Scene.tbb_create_sequence_is_running = BoolProperty(
         name="Create sequence state",
         description="State of the 'create sequence' operation (used by all the 'create sequence' operators)",
         default=False,
     )
-    Object.tbb_openfoam_sequence = PointerProperty(type=TBB_OpenfoamSequenceProperty)
 
     # Custom progress bar
     register_custom_progress_bar()
