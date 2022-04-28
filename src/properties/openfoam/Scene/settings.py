@@ -2,8 +2,8 @@
 from bpy.props import EnumProperty, PointerProperty
 
 from ...scene_settings import TBB_SceneSettings
-from ..utils import update_scalar_names
 from ..clip import TBB_OpenfoamClipProperty
+from ..utils import update_scalar_names
 
 
 class TBB_OpenfoamSettings(TBB_SceneSettings):

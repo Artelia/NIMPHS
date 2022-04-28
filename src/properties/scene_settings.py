@@ -13,7 +13,8 @@ scene_settings_dynamic_props = [
 
 class TBB_SceneSettings(PropertyGroup):
     """
-    Main panel settings. Contains 4 'dynamic' properties:
+    Scene settings. This data structure holds common data used in the OpenFOAM and TELEMAC modules.
+    It contains 4 'dynamic' properties:
 
     | **preview_time_point**: *bpy.types.IntProperty*, time step used for the preview section
     | **start_time_point**: *bpy.types.IntProperty*, starting point of the sequence

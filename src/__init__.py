@@ -35,12 +35,13 @@ from .properties.telemac.temporary_data import TBB_TelemacTemporaryData
 # Other imports
 from .panels.main_panel import TBB_PT_MainPanel
 from .properties.scene_settings import TBB_SceneSettings
+from .properties.sequence_settings import TBB_StreamingSequenceProperty
 
 bl_info = {
     "name": "Toolsbox OpenFOAM/TELEMAC",
     "description": "Load, visualize and manipulate OpenFOAM/TELEMAC files",
     "author": "Thibault Oudart, Félix Olart",
-    "version": (0, 1, 0),
+    "version": (0, 2, 0),
     "blender": (3, 0, 0),
     "location": "View3D",
     "warning": "",
@@ -73,6 +74,7 @@ panels = (
 
 properties = (
     TBB_SceneSettings,
+    TBB_StreamingSequenceProperty,
     TBB_OpenfoamClipScalarProperty,
     TBB_OpenfoamClipProperty,
     TBB_OpenfoamSettings,

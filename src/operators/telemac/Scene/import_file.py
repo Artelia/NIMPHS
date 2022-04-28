@@ -50,7 +50,7 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         settings.file_path = self.filepath
 
         # Update properties values
-        update_scene_settings_dynamic_props(context)
+        update_scene_settings_dynamic_props(context, 'TELEMAC', settings, tmp_data)
 
         try:
             if not tmp_data.is_3d:
