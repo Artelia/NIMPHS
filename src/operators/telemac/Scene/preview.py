@@ -31,18 +31,23 @@ class TBB_OT_TelemacPreview(Operator):
         prw_time_point = settings.get("preview_time_point", 0)
         start = time.time()
 
-        vertex_colors_var_name = tmp_data.vars_info["names"][int(settings.preview_point_data)]
-        list_point_data = [vertex_colors_var_name]
-        # Generate vertex colors for all the variables
-        # list_point_data = tmp_data.vars_info["names"]
+        # Prepare list of point data to preview
+        prw_var_id = int(settings.preview_point_data)
+        import_point_data = prw_var_id >= 0
+        if import_point_data:
+            vertex_colors_var_name = tmp_data.vars_info["names"][prw_var_id]
+            list_point_data = [vertex_colors_var_name]
+            # Generate vertex colors for all the variables
+            # list_point_data = tmp_data.vars_info["names"]
 
         try:
             objs_to_normalize = []
             if not tmp_data.is_3d:
                 for obj_type in ['BOTTOM', 'WATER_DEPTH']:
                     obj = generate_object(tmp_data, mesh_is_3d=False, time_point=prw_time_point, type=obj_type)
-                    generate_vertex_colors(tmp_data, obj.data, list_point_data, prw_time_point)
-                    generate_preview_material(obj, vertex_colors_var_name)
+                    if import_point_data:
+                        generate_vertex_colors(tmp_data, obj.data, list_point_data, prw_time_point)
+                        generate_preview_material(obj, vertex_colors_var_name)
                     # Reset the scale without applying it
                     obj.scale = [1.0] * 3
 
@@ -61,9 +66,10 @@ class TBB_OT_TelemacPreview(Operator):
                     name = "TBB_TELEMAC_preview_plane_" + str(plane_id)
                     obj = generate_object(tmp_data, mesh_is_3d=True, offset=plane_id,
                                           time_point=prw_time_point, name=name)
-                    generate_vertex_colors(tmp_data, obj.data, list_point_data, prw_time_point,
-                                           mesh_is_3d=True, offset=plane_id)
-                    generate_preview_material(obj, vertex_colors_var_name)
+                    if import_point_data:
+                        generate_vertex_colors(tmp_data, obj.data, list_point_data, prw_time_point,
+                                               mesh_is_3d=True, offset=plane_id)
+                        generate_preview_material(obj, vertex_colors_var_name)
                     # Reset the scale without applying it
                     obj.scale = [1.0] * 3
 

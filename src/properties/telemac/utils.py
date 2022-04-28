@@ -32,6 +32,7 @@ def update_var_names(self, context: Context) -> list:
     units = tmp_data.vars_info["units"]
 
     items = []
+    items.append(("-1", "None", "Do not import point data"))
     for name, unit, id in zip(names, units, range(tmp_data.nb_vars)):
         items.append((str(id), name + ", (" + unit + ")", "Undocumented"))
 
