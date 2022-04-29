@@ -1,5 +1,6 @@
 # <pep8 compliant>
 import bpy
+from bpy.types import Context, Object
 
 
 def sequence_name_already_exist(name: str) -> bool:
@@ -29,3 +30,12 @@ def lock_create_operator(settings) -> tuple[bool, str]:
         message = ""
 
     return snae or snie, message
+
+
+def get_selected_object(context: Context) -> Object | None:
+    obj = context.active_object
+    # Even if no objects are selected, the last selected object remains in the active_objects variable
+    if len(context.selected_objects) == 0:
+        obj = None
+
+    return obj

@@ -10,7 +10,7 @@ from .operators.openfoam.Scene.reload_file import TBB_OT_OpenfoamReloadFile
 from .operators.openfoam.Scene.preview import TBB_OT_OpenfoamPreview
 from .operators.openfoam.Scene.create_sequence import TBB_OT_OpenfoamCreateSequence
 from .operators.openfoam.utils import update_streaming_sequence
-from .panels.openfoam.Scene.main_panel import TBB_PT_OpenfoamMainPanel
+from .panels.openfoam.Scene.openfoam_main_panel import TBB_PT_OpenfoamMainPanel
 from .panels.openfoam.Scene.clip import TBB_PT_OpenfoamClip
 from .panels.openfoam.Scene.create_sequence import TBB_PT_OpenfoamCreateSequence
 from .panels.custom_progress_bar import register_custom_progress_bar
@@ -26,14 +26,13 @@ from .operators.telemac.Scene.import_file import TBB_OT_TelemacImportFile
 from .operators.telemac.Scene.reload_file import TBB_OT_TelemacReloadFile
 from .operators.telemac.Scene.preview import TBB_OT_TelemacPreview
 from .operators.telemac.Scene.create_sequence import TBB_OT_TelemacCreateSequence
-from .panels.telemac.Scene.main_panel import TBB_PT_TelemacMainPanel
+from .panels.telemac.Scene.telemac_main_panel import TBB_PT_TelemacMainPanel
 from .panels.telemac.Scene.create_sequence import TBB_PT_TelemacCreateSequence
 from .properties.telemac.Scene.settings import TBB_TelemacSettings
 from .properties.telemac.Object.sequence import TBB_TelemacSequenceProperty
 from .properties.telemac.temporary_data import TBB_TelemacTemporaryData
 
 # Other imports
-from .panels.main_panel import TBB_PT_MainPanel
 from .properties.scene_settings import TBB_SceneSettings
 from .properties.streaming_sequence_property import TBB_StreamingSequenceProperty
 
@@ -62,7 +61,6 @@ operators = (
 )
 
 panels = (
-    TBB_PT_MainPanel,
     TBB_PT_OpenfoamMainPanel,
     TBB_PT_OpenfoamClip,
     TBB_PT_OpenfoamCreateSequence,

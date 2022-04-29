@@ -52,7 +52,7 @@ class TBB_PT_TelemacCreateSequence(CreateSequencePanel):
         row.prop(settings, "sequence_name", text="Name")
 
         row = layout.row()
-        row.enabled = lock
+        row.enabled = not lock
         row.operator("tbb.telemac_create_sequence", text="Create sequence", icon="RENDER_ANIMATION")
 
         # Lock the create_sequence operator if the sequence name is already taken or empty

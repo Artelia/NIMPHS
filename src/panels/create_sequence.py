@@ -4,7 +4,7 @@ from bpy.types import Panel, Context
 
 class CreateSequencePanel(Panel):
     """
-    UI panel to manage the creation of new sequences.
+    Base UI panel for OpenFOAM and TELEMAC modules. Specific settings are added in the classes which derive from this one.
     """
 
     @classmethod

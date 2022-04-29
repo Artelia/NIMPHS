@@ -167,7 +167,6 @@ def poll_create_sequence(settings, context: Context) -> bool:
     else:  # Lock ui by default
         result = False
 
-    print(result)
     return result
 
 

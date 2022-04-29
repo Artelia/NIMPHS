@@ -1,19 +1,15 @@
 # <pep8 compliant>
-from bpy.types import Panel, Context
+from bpy.types import Panel, Context, Object
+
+from .utils import get_selected_object
 
 
-class TBB_PT_OpenfoamMainPanel(Panel):
+class ModulePanel(Panel):
     """
-    Main panel of the OpenFOAM module. This is the 'parent' panel.
+    Base UI panel for OpenFOAM and TELEMAC modules. Specific settings are added in the classes which derive from this one.
     """
 
-    bl_label = "OpenFOAM"
-    bl_idname = "TBB_PT_OpenfoamMainPanel"
-    bl_parent_id = "TBB_PT_MainPanel"
-    bl_space_type = "VIEW_3D"
-    bl_region_type = "UI"
-
-    def draw(self, context: Context) -> None:
+    def draw(self, settings, tmp_data, context: Context) -> tuple[bool, Object | None]:
         """
         Layout of the panel.
 
@@ -21,7 +17,16 @@ class TBB_PT_OpenfoamMainPanel(Panel):
         """
 
         layout = self.layout
-        settings = context.scene.tbb_openfoam_settings
+        module = tmp_data.module_name
+        obj = get_selected_object(context)
+
+        if obj is not None:
+            if module == 'OpenFOAM':
+                sequence_settings = obj.tbb_openfoam_sequence
+            if module == 'TELEMAC':
+                sequence_settings = obj.tbb_telemac_sequence
+        else:
+            sequence_settings = None
 
         # Check if we need to lock the ui
         enable_rows = not context.scene.tbb_create_sequence_is_running
@@ -36,19 +41,15 @@ class TBB_PT_OpenfoamMainPanel(Panel):
             box.label(text="File: " + settings.file_path)
             row = layout.row()
             row.enabled = enable_rows
-            row.operator("tbb.import_openfoam_file", text="Import", icon="IMPORT")
-            row.operator("tbb.reload_openfoam_file", text="Reload", icon="FILE_REFRESH")
+            row.operator("tbb.import_" + module.lower() + "_file", text="Import", icon="IMPORT")
+            row.operator("tbb.reload_" + module.lower() + "_file", text="Reload", icon="FILE_REFRESH")
         else:
-            row.operator("tbb.import_openfoam_file", text="Import OpenFOAM file", icon="IMPORT")
+            row.enabled = enable_rows
+            row.operator("tbb.import_" + module.lower() + "_file", text="Import " + module + " file", icon="IMPORT")
 
-        obj = context.active_object
-        # Even if no objects are selected, the last selected object remains in the active_objects variable
-        if len(context.selected_objects) == 0:
-            obj = None
+        if sequence_settings is None or not sequence_settings.is_streaming_sequence:
 
-        if obj is None or not obj.tbb_openfoam_sequence.is_streaming_sequence:
-
-            if context.scene.tbb_openfoam_tmp_data.is_ok():
+            if tmp_data.is_ok():
                 # Preview section
                 row = layout.row()
                 row.enabled = enable_rows
@@ -59,9 +60,6 @@ class TBB_PT_OpenfoamMainPanel(Panel):
                 row = layout.row()
                 row.enabled = enable_rows
                 row.prop(settings, "preview_point_data", text="Points")
-                row = layout.row()
-                row.enabled = enable_rows
-                row.operator("tbb.openfoam_preview", text="Preview", icon="HIDE_OFF")
 
             # If the file_path is not empty, it means that there is an error with temp data. Need to reload.
             elif settings.file_path != "":
@@ -71,7 +69,10 @@ class TBB_PT_OpenfoamMainPanel(Panel):
         else:
             row = layout.row()
             row.label(text="Edit settings of this sequence in the object properties panel", icon="INFO")
+
             # If the file_path is not empty, it means that there is an error with temp data. Need to reload.
-            if not context.scene.tbb_openfoam_tmp_data.is_ok() and settings.file_path != "":
+            if not tmp_data.is_ok() and settings.file_path != "":
                 row = layout.row()
                 row.label(text="Error: please reload the file.", icon="ERROR")
+
+        return enable_rows, obj
