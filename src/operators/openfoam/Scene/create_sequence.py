@@ -5,7 +5,7 @@ from bpy.types import Operator, RenderSettings, Context, Event
 import time
 
 from ..utils import generate_mesh_for_sequence, add_mesh_to_sequence, generate_sequence_object
-from ...utils import get_collection
+from ...utils import get_collection, poll_create_sequence
 
 
 class TBB_OT_OpenfoamCreateSequence(Operator):
@@ -37,13 +37,7 @@ class TBB_OT_OpenfoamCreateSequence(Operator):
         """
 
         settings = context.scene.tbb_openfoam_settings
-
-        if settings.sequence_type == "mesh_sequence":
-            return not context.scene.tbb_create_sequence_is_running and settings["start_time_point"] < settings["end_time_point"]
-        elif settings.sequence_type == "streaming_sequence":
-            return not context.scene.tbb_create_sequence_is_running
-        else:  # Lock ui by default
-            return False
+        return poll_create_sequence(settings, context)
 
     def execute(self, context: Context) -> set:
         """
@@ -53,6 +47,7 @@ class TBB_OT_OpenfoamCreateSequence(Operator):
         :return: state of the operator
         :rtype: set
         """
+
         wm = context.window_manager
         settings = context.scene.tbb_openfoam_settings
         clip = settings.clip

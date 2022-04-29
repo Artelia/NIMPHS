@@ -1,7 +1,7 @@
 # <pep8 compliant>
 from bpy.props import BoolProperty
 
-from ...sequence_settings import TBB_StreamingSequenceProperty
+from ...streaming_sequence_property import TBB_StreamingSequenceProperty
 
 
 class TBB_TelemacSequenceProperty(TBB_StreamingSequenceProperty):

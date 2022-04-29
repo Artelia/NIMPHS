@@ -2,7 +2,7 @@
 import bpy
 from bpy.types import Operator, Context, Event
 
-from ...utils import get_collection
+from ...utils import get_collection, poll_create_sequence
 
 import time
 
@@ -36,13 +36,7 @@ class TBB_OT_TelemacCreateSequence(Operator):
         """
 
         settings = context.scene.tbb_telemac_settings
-
-        if settings.sequence_type == "mesh_sequence":
-            return not context.scene.tbb_create_sequence_is_running and settings["start_time_point"] < settings["end_time_point"]
-        elif settings.sequence_type == "streaming_sequence":
-            return not context.scene.tbb_create_sequence_is_running
-        else:  # Lock ui by default
-            return False
+        return poll_create_sequence(settings, context)
 
     def execute(self, context: Context) -> set:
         """

@@ -35,7 +35,7 @@ from .properties.telemac.temporary_data import TBB_TelemacTemporaryData
 # Other imports
 from .panels.main_panel import TBB_PT_MainPanel
 from .properties.scene_settings import TBB_SceneSettings
-from .properties.sequence_settings import TBB_StreamingSequenceProperty
+from .properties.streaming_sequence_property import TBB_StreamingSequenceProperty
 
 bl_info = {
     "name": "Toolsbox OpenFOAM/TELEMAC",

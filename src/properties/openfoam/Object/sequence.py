@@ -1,7 +1,7 @@
 # <pep8 compliant>
 from bpy.props import PointerProperty
 
-from ...sequence_settings import TBB_StreamingSequenceProperty
+from ...streaming_sequence_property import TBB_StreamingSequenceProperty
 from ..clip import TBB_OpenfoamClipProperty
 
 

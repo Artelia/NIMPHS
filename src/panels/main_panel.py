@@ -13,7 +13,7 @@ class TBB_PT_MainPanel(Panel):
     bl_region_type = "UI"
     bl_category = "Toolsbox blender"
 
-    def draw(self, context: Context) -> None:
+    def draw(self, _context: Context) -> None:
         """
         Layout of the panel.
 
