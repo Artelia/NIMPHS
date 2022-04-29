@@ -11,6 +11,8 @@ class TBB_TelemacTemporaryData():
     Hold temporary data for the TELEMAC module.
     """
 
+    # str: name of the module
+    module_name = "TELEMAC"
     #: Serafin: TELEMAC file
     file = None
     #: np.ndarray: Vertices of the mesh
@@ -33,6 +35,7 @@ class TBB_TelemacTemporaryData():
     is_3d = False
 
     def __init__(self) -> None:
+        self.module_name = "TELEMAC"
         self.file = None
         self.vertices = None
         self.faces = None

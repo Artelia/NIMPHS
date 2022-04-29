@@ -159,13 +159,16 @@ def poll_create_sequence(settings, context: Context) -> bool:
     :type context: Context
     :rtype: bool
     """
-
+    result = None
     if settings.sequence_type == "mesh_sequence":
-        return not context.scene.tbb_create_sequence_is_running and settings["start_time_point"] < settings["end_time_point"]
+        result = not context.scene.tbb_create_sequence_is_running and settings["start_time_point"] < settings["end_time_point"]
     elif settings.sequence_type == "streaming_sequence":
-        return not context.scene.tbb_create_sequence_is_running
+        result = not context.scene.tbb_create_sequence_is_running
     else:  # Lock ui by default
-        return False
+        result = False
+
+    print(result)
+    return result
 
 
 def execute_create_sequence(operator, settings, context: Context, type: str) -> set:

@@ -7,6 +7,8 @@ class TBB_OpenfoamTemporaryData():
     Hold temporary data for the OpenFOAM module.
     """
 
+    # str: name of the module
+    module_name = "OpenFOAM"
     #: OpenFOAMReader: file reader
     file_reader = None
     #: Dataset: data read from the file_reader at time_point
@@ -19,6 +21,7 @@ class TBB_OpenfoamTemporaryData():
     nb_time_points = 1
 
     def __init__(self, file_reader: OpenFOAMReader = None, new_data: DataSet = None, new_mesh: UnstructuredGrid = None):
+        self.module_name = "OpenFOAM"
         self.file_reader = file_reader
         self.data = new_data
         self.mesh = new_mesh

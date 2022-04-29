@@ -38,14 +38,14 @@ class TBB_OT_OpenfoamReloadFile(Operator):
             self.report({"ERROR"}, "The choosen file does not exist")
             return {"FINISHED"}
 
-        # Update properties values
-        update_scene_settings_dynamic_props(settings, tmp_data)
-
         # Update temp data
-        tmp_data.update(file_reader, settings["preview_time_point"])
+        tmp_data.update(file_reader, settings.get("preview_time_point", 0))
         settings.clip.scalar.value_ranges = encode_value_ranges(tmp_data.mesh)
         settings.clip.scalar.list = encode_scalar_names(tmp_data.mesh)
         context.scene.tbb_create_sequence_is_running = False
+
+        # Update properties values
+        update_scene_settings_dynamic_props(settings, tmp_data)
 
         print("Reload::OpenFOAM: " + "{:.4f}".format(time.time() - start) + "s")
         self.report({"INFO"}, "Reload successfull")
