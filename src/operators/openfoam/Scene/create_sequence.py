@@ -4,8 +4,8 @@ from bpy.types import Operator, RenderSettings, Context, Event
 
 import time
 
-from ..utils import generate_mesh_for_sequence, add_mesh_to_sequence, generate_sequence_object
-from ...utils import get_collection, poll_create_sequence
+from ..utils import generate_mesh_for_sequence, add_mesh_to_sequence
+from ...utils import get_collection, poll_create_sequence, stop_create_sequence, execute_create_sequence
 
 
 class TBB_OT_OpenfoamCreateSequence(Operator):
@@ -48,52 +48,8 @@ class TBB_OT_OpenfoamCreateSequence(Operator):
         :rtype: set
         """
 
-        wm = context.window_manager
         settings = context.scene.tbb_openfoam_settings
-        clip = settings.clip
-        tmp_data = context.scene.tbb_openfoam_tmp_data
-
-        if settings.sequence_type == "mesh_sequence":
-            # Create timer event
-            self.timer = wm.event_timer_add(time_step=1e-3, window=context.window)
-            wm.modal_handler_add(self)
-
-            # Setup prograss bar
-            context.scene.tbb_progress_label = "Create sequence"
-            context.scene.tbb_progress_value = -1.0
-
-            # Setup for creating the sequence
-            self.start_time_point = settings["start_time_point"]
-            self.current_time_point = settings["start_time_point"]
-            self.end_time_point = settings["end_time_point"]
-            self.current_frame = context.scene.frame_current
-            self.user_sequence_name = settings.sequence_name
-
-            context.scene.tbb_create_sequence_is_running = True
-
-            return {"RUNNING_MODAL"}
-
-        elif settings.sequence_type == "streaming_sequence":
-            # Check if the selected time frame is ok
-            if settings.frame_start < context.scene.frame_start or settings.frame_start > context.scene.frame_end:
-                self.report({"WARNING"},
-                            "Frame start is not in the selected time frame. See 'Output properties' > 'Frame range'")
-
-            obj = generate_sequence_object(self, settings, clip, tmp_data.file_reader.number_time_points)
-
-            context.collection.objects.link(obj)
-
-            # As mentionned here, lock the interface because the custom handler will alter data on frame change
-            # https://docs.blender.org/api/current/bpy.app.handlers.html?highlight=app%20handlers#module-bpy.app.handlers
-            RenderSettings.use_lock_interface = True
-
-            self.report({"INFO"}, "Sequence successfully created")
-
-            return {"FINISHED"}
-
-        else:
-            self.report({"ERROR"}, "Unknown sequence type (type = " + str(settings.sequence_type) + ")")
-            return {"FINISHED"}
+        return execute_create_sequence(self, settings, context, 'OpenFOAM')
 
     def modal(self, context: Context, event: Event) -> set:
         """
@@ -181,10 +137,5 @@ class TBB_OT_OpenfoamCreateSequence(Operator):
         :param cancelled: ask to report 'Create sequence cancelled', defaults to False
         :type cancelled: bool, optional
         """
-        wm = context.window_manager
-        wm.event_timer_remove(self.timer)
-        self.timer = None
-        context.scene.tbb_create_sequence_is_running = False
-        context.scene.tbb_progress_value = -1.0
-        if cancelled:
-            self.report({"INFO"}, "Create sequence cancelled")
+
+        stop_create_sequence(self, context, cancelled)

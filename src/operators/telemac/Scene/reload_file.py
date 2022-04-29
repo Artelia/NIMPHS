@@ -40,7 +40,7 @@ class TBB_OT_TelemacReloadFile(Operator):
             return {"FINISHED"}
 
         # Update properties values
-        update_scene_settings_dynamic_props(context, 'TELEMAC', settings, tmp_data)
+        update_scene_settings_dynamic_props(settings, tmp_data)
 
         print("Reload::TELEMAC: " + "{:.4f}".format(time.time() - start) + "s")
         self.report({"INFO"}, "Reload successfull")

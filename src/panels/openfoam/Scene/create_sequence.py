@@ -48,6 +48,7 @@ class TBB_PT_OpenfoamCreateSequence(Panel):
         # Check if we need to lock the ui
         enable_rows = not context.scene.tbb_create_sequence_is_running
         snae = sequence_name_already_exist(settings.sequence_name)  # snae = sequence_name_already_exist
+        snie = settings.sequence_name == "" or settings.sequence_name.isspace()  # snie = sequence name is empty
 
         row = layout.row()
         row.enabled = enable_rows
@@ -85,10 +86,13 @@ class TBB_PT_OpenfoamCreateSequence(Panel):
         row.enabled = enable_rows
         row.prop(settings, "sequence_name", text="Name")
         row = layout.row()
-        row.enabled = not snae
+        row.enabled = not snae and not snie
         row.operator("tbb.openfoam_create_sequence", text="Create sequence", icon="RENDER_ANIMATION")
 
         # Lock the create_sequence operator if the sequence name is already taken
         if snae:
             row = layout.row()
             row.label(text="Sequence name already taken.", icon="ERROR")
+        if snie:
+            row = layout.row()
+            row.label(text="Sequence name is empty.", icon="ERROR")

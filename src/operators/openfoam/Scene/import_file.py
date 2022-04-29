@@ -51,7 +51,7 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         tmp_data.update(file_reader, 0)
 
         # Update properties values
-        update_scene_settings_dynamic_props(context, 'OpenFOAM', settings, tmp_data)
+        update_scene_settings_dynamic_props(settings, tmp_data)
         settings.clip.scalar.value_ranges = encode_value_ranges(tmp_data.mesh)
         settings.clip.scalar.list = encode_scalar_names(tmp_data.mesh)
 

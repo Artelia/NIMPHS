@@ -15,11 +15,15 @@ class TBB_OpenfoamTemporaryData():
     mesh = None
     #: int: current time point
     time_point = 0
+    #: int: nimber of time points
+    nb_time_points = 1
 
     def __init__(self, file_reader: OpenFOAMReader = None, new_data: DataSet = None, new_mesh: UnstructuredGrid = None):
         self.file_reader = file_reader
         self.data = new_data
         self.mesh = new_mesh
+        self.time_point = 0
+        self.nb_time_points = 1
 
     def update(self, new_file_reader: OpenFOAMReader, time_point: int = 0, new_data: DataSet = None,
                new_mesh: UnstructuredGrid = None) -> None:
@@ -34,6 +38,7 @@ class TBB_OpenfoamTemporaryData():
 
         self.file_reader = new_file_reader
         self.time_point = time_point
+        self.nb_time_points = self.file_reader.number_time_points
 
         try:
             self.file_reader.set_active_time_point(time_point)

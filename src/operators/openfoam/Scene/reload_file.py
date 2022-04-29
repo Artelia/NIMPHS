@@ -39,7 +39,7 @@ class TBB_OT_OpenfoamReloadFile(Operator):
             return {"FINISHED"}
 
         # Update properties values
-        update_scene_settings_dynamic_props(context, 'OpenFOAM', settings, tmp_data)
+        update_scene_settings_dynamic_props(settings, tmp_data)
 
         # Update temp data
         tmp_data.update(file_reader, settings["preview_time_point"])

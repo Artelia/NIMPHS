@@ -2,7 +2,7 @@
 import bpy
 from bpy.types import Operator, Context, Event
 
-from ...utils import get_collection, poll_create_sequence
+from ...utils import get_collection, poll_create_sequence, execute_create_sequence, stop_create_sequence
 
 import time
 
@@ -47,28 +47,8 @@ class TBB_OT_TelemacCreateSequence(Operator):
         :rtype: set
         """
 
-        wm = context.window_manager
         settings = context.scene.tbb_telemac_settings
-        tmp_data = context.scene.tbb_telemac_tmp_data
-
-        # Create timer event
-        self.timer = wm.event_timer_add(time_step=1e-3, window=context.window)
-        wm.modal_handler_add(self)
-
-        # Setup prograss bar
-        context.scene.tbb_progress_label = "Create sequence"
-        context.scene.tbb_progress_value = -1.0
-
-        # Setup for creating the sequence
-        self.start_time_point = settings["start_time_point"]
-        self.current_time_point = settings["start_time_point"]
-        self.end_time_point = settings["end_time_point"]
-        self.current_frame = context.scene.frame_current
-        self.user_sequence_name = settings.sequence_name
-
-        context.scene.tbb_create_sequence_is_running = True
-
-        return {"RUNNING_MODAL"}
+        return execute_create_sequence(self, settings, context, 'TELEMAC')
 
     def modal(self, context: Context, event: Event) -> set:
         """
@@ -129,10 +109,4 @@ class TBB_OT_TelemacCreateSequence(Operator):
         :type cancelled: bool, optional
         """
 
-        wm = context.window_manager
-        wm.event_timer_remove(self.timer)
-        self.timer = None
-        context.scene.tbb_create_sequence_is_running = False
-        context.scene.tbb_progress_value = -1.0
-        if cancelled:
-            self.report({"INFO"}, "Create sequence cancelled")
+        stop_create_sequence(self, context, cancelled)

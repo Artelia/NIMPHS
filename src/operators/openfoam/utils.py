@@ -30,7 +30,7 @@ def load_openfoam_file(file_path: str) -> tuple[bool, OpenFOAMReader]:
     return True, file_reader
 
 
-def generate_sequence_object(operator, settings, clip, time_points: int) -> Object:
+def generate_openfoam_sequence_object(operator, settings, time_points: int) -> Object:
     """
     Generate a sequence object using the given parameters.
 
@@ -38,8 +38,6 @@ def generate_sequence_object(operator, settings, clip, time_points: int) -> Obje
     :type operator: bpy.types.Operator
     :param settings: OpenFOAM main panel settings
     :type settings: TBB_OpenfoamSettings
-    :param clip: OpenFOAM main panel clip settings
-    :type clip: TBB_OpenfoamClipProperty
     :param time_points: number of time points
     :type time_points: int
     :return: generated sequence (Blender object)
@@ -62,25 +60,25 @@ def generate_sequence_object(operator, settings, clip, time_points: int) -> Obje
     obj_settings.anim_length = settings["anim_length"]
 
     # Set clip settings
-    obj_settings.clip.type = clip.type
-    obj_settings.clip.scalar.value_ranges = clip.scalar.value_ranges
-    obj_settings.clip.scalar.list = clip.scalar.list
+    obj_settings.clip.type = settings.clip.type
+    obj_settings.clip.scalar.value_ranges = settings.clip.scalar.value_ranges
+    obj_settings.clip.scalar.list = settings.clip.scalar.list
 
     # Sometimes, the selected scalar may not correspond to ones available in the EnumProperty.
     # This happens when the selected scalar is not available at time point 0
     # (the EnumProperty only reads data at time point 0 to create the list of
     # available items)
     try:
-        obj_settings.clip.scalar.name = clip.scalar.name
+        obj_settings.clip.scalar.name = settings.clip.scalar.name
     except TypeError as error:
         print("ERROR::TBB_OT_OpenfoamCreateSequence: " + str(error))
         operator.report({"WARNING"}, "the selected scalar does not exist at time point 0 (selected from time point " +
                         str(settings["preview_time_point"]) + ")")
 
-    obj_settings.clip.scalar.invert = clip.scalar.invert
+    obj_settings.clip.scalar.invert = settings.clip.scalar.invert
     # 'value' and 'vector_value' may not be defined, so use .get(prop, default_returned_value)
-    obj_settings.clip.scalar["value"] = clip.scalar.get("value", 0.5)
-    obj_settings.clip.scalar["vector_value"] = clip.scalar.get("vector_value", (0.5, 0.5, 0.5))
+    obj_settings.clip.scalar["value"] = settings.clip.scalar.get("value", 0.5)
+    obj_settings.clip.scalar["vector_value"] = settings.clip.scalar.get("vector_value", (0.5, 0.5, 0.5))
     obj_settings.import_point_data = settings.import_point_data
     obj_settings.list_point_data = settings.list_point_data
 
