@@ -1,11 +1,11 @@
 # <pep8 compliant>
 from bpy.types import Context
 
-from ...shared.create_sequence import CreateSequencePanel
+from ...shared.create_sequence import TBB_CreateSequencePanel
 from ...utils import lock_create_operator
 
 
-class TBB_PT_OpenfoamCreateSequence(CreateSequencePanel):
+class TBB_PT_OpenfoamCreateSequence(TBB_CreateSequencePanel):
     """
     UI panel to manage the creation of new sequences.
     """
@@ -26,7 +26,7 @@ class TBB_PT_OpenfoamCreateSequence(CreateSequencePanel):
         :rtype: bool
         """
 
-        return CreateSequencePanel.poll(context.scene.tbb_openfoam_tmp_data, context)
+        return TBB_CreateSequencePanel.poll(context.scene.tbb_openfoam_tmp_data, context)
 
     def draw(self, context: Context):
         """
@@ -36,7 +36,7 @@ class TBB_PT_OpenfoamCreateSequence(CreateSequencePanel):
         """
 
         settings = context.scene.tbb_openfoam_settings
-        enable_rows = CreateSequencePanel.draw(self, settings, context)
+        enable_rows = TBB_CreateSequencePanel.draw(self, settings, context)
         lock_operator, err_message = lock_create_operator(settings)
 
         layout = self.layout

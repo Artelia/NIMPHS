@@ -4,7 +4,7 @@ from bpy.types import Panel, Context, Object
 from ..utils import get_selected_object
 
 
-class ModulePanel(Panel):
+class TBB_ModulePanel(Panel):
     """
     Base UI panel for OpenFOAM and TELEMAC modules. Specific settings are added in the classes which derive from this one.
     """

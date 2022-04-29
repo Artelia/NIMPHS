@@ -4,11 +4,11 @@ from bpy.types import Context, Event
 
 import time
 
-from ...shared.create_sequence import CreateSequence
+from ...shared.create_sequence import TBB_CreateSequence
 from ...utils import get_collection
 
 
-class TBB_OT_TelemacCreateSequence(CreateSequence):
+class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
     """
     Create a sequence using the settings defined in the main panel and the 'create sequence' panel.
     """

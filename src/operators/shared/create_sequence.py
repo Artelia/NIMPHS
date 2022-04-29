@@ -5,7 +5,7 @@ from bpy.types import Operator, Context, RenderSettings
 from ..utils import setup_streaming_sequence_object
 
 
-class CreateSequence(Operator):
+class TBB_CreateSequence(Operator):
     """
     Create a sequence using the settings defined in the main panel and the 'create sequence' panel.
     """

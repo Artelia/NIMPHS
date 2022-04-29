@@ -1,10 +1,10 @@
 # <pep8 compliant>
 from bpy.types import Context
 
-from ...shared.module_panel import ModulePanel
+from ...shared.module_panel import TBB_ModulePanel
 
 
-class TBB_PT_TelemacMainPanel(ModulePanel):
+class TBB_PT_TelemacMainPanel(TBB_ModulePanel):
     """
     Main panel of the TELEMAC module. This is the 'parent' panel.
     """
@@ -24,7 +24,7 @@ class TBB_PT_TelemacMainPanel(ModulePanel):
 
         settings = context.scene.tbb_telemac_settings
         tmp_data = context.scene.tbb_telemac_tmp_data
-        enable_rows, obj = ModulePanel.draw(self, settings, tmp_data, context)
+        enable_rows, obj = TBB_ModulePanel.draw(self, settings, tmp_data, context)
 
         layout = self.layout
         if obj is not None:

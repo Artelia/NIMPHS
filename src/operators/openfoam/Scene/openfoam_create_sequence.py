@@ -6,10 +6,10 @@ import time
 
 from ..utils import generate_mesh_for_sequence, add_mesh_to_sequence
 from ...utils import get_collection
-from ...shared.create_sequence import CreateSequence
+from ...shared.create_sequence import TBB_CreateSequence
 
 
-class TBB_OT_OpenfoamCreateSequence(CreateSequence):
+class TBB_OT_OpenfoamCreateSequence(TBB_CreateSequence):
     """
     Create a sequence using the settings defined in the main panel and the 'create sequence' panel.
     """

@@ -7,4 +7,4 @@ Code documentation
 
     openfoam/index
     telemac/index
-    global_utils
+    shared/index

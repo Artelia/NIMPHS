@@ -1,10 +1,10 @@
 # <pep8 compliant>
 from bpy.types import Context
 
-from ...shared.streaming_sequence_settings import StreamingSequenceSettingsPanel
+from ...shared.streaming_sequence_settings import TBB_StreamingSequenceSettingsPanel
 
 
-class TBB_PT_OpenfoamStreamingSequence(StreamingSequenceSettingsPanel):
+class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
     """
     Main panel of the 'Streaming sequence' settings. This is the 'parent' panel.
     """

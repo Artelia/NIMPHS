@@ -8,10 +8,10 @@ Panels
 Scene
 #####
 
-.. autoclass:: src.panels.telemac.Scene.main_panel.TBB_PT_TelemacMainPanel
+.. autoclass:: src.panels.telemac.Scene.telemac_main_panel.TBB_PT_TelemacMainPanel
    :members:
    :show-inheritance:
 
-.. autoclass:: src.panels.telemac.Scene.create_sequence.TBB_PT_TelemacCreateSequence
+.. autoclass:: src.panels.telemac.Scene.telemac_create_sequence.TBB_PT_TelemacCreateSequence
    :members:
    :show-inheritance:

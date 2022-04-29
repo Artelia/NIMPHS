@@ -22,7 +22,7 @@ Temporary data
 Scene
 #####
 
-.. autoclass:: src.properties.telemac.Scene.settings.TBB_TelemacSettings
+.. autoclass:: src.properties.telemac.Scene.telemac_settings.TBB_TelemacSettings
    :members:
    :show-inheritance:
 

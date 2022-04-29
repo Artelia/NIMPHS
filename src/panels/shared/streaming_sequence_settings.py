@@ -2,7 +2,7 @@
 from bpy.types import Panel
 
 
-class StreamingSequenceSettingsPanel(Panel):
+class TBB_StreamingSequenceSettingsPanel(Panel):
     """
     Main panel of the 'Streaming sequence' settings. This is the 'parent' panel.
     """

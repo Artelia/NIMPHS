@@ -54,7 +54,7 @@ Clip
 Scene
 #####
 
-.. autoclass:: src.properties.openfoam.Scene.settings.TBB_OpenfoamSettings
+.. autoclass:: src.properties.openfoam.Scene.openfoam_settings.TBB_OpenfoamSettings
    :members:
    :show-inheritance:
 
@@ -63,7 +63,7 @@ Scene
 Object
 ######
 
-.. autoclass:: src.properties.openfoam.Object.sequence.TBB_OpenfoamSequenceProperty
+.. autoclass:: src.properties.openfoam.Object.openfoam_streaming_sequence.TBB_OpenfoamStreamingSequenceProperty
    :members:
    :show-inheritance:
 

@@ -9,19 +9,19 @@ Operators
 Scene
 #####
 
-.. autoclass:: src.operators.telemac.Scene.create_sequence.TBB_OT_TelemacCreateSequence
+.. autoclass:: src.operators.telemac.Scene.telemac_create_sequence.TBB_OT_TelemacCreateSequence
    :members:
    :show-inheritance:
 
-.. autoclass:: src.operators.telemac.Scene.import_file.TBB_OT_TelemacImportFile
+.. autoclass:: src.operators.telemac.Scene.telemac_import_file.TBB_OT_TelemacImportFile
    :members:
    :show-inheritance:
 
-.. autoclass:: src.operators.telemac.Scene.preview.TBB_OT_TelemacPreview
+.. autoclass:: src.operators.telemac.Scene.telemac_preview.TBB_OT_TelemacPreview
    :members:
    :show-inheritance:
 
-.. autoclass:: src.operators.telemac.Scene.reload_file.TBB_OT_TelemacReloadFile
+.. autoclass:: src.operators.telemac.Scene.telemac_reload_file.TBB_OT_TelemacReloadFile
    :members:
    :show-inheritance:
 
