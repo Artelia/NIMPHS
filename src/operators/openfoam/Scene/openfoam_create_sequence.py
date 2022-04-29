@@ -6,7 +6,7 @@ import time
 
 from ..utils import generate_mesh_for_sequence, add_mesh_to_sequence
 from ...utils import get_collection
-from ...create_sequence import CreateSequence
+from ...shared.create_sequence import CreateSequence
 
 
 class TBB_OT_OpenfoamCreateSequence(CreateSequence):

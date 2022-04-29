@@ -2,10 +2,10 @@
 from bpy.props import PointerProperty
 
 from ..clip import TBB_OpenfoamClipProperty
-from ...streaming_sequence_property import TBB_StreamingSequenceProperty
+from ...shared.streaming_sequence_property import TBB_StreamingSequenceProperty
 
 
-class TBB_OpenfoamSequenceProperty(TBB_StreamingSequenceProperty):
+class TBB_OpenfoamStreamingSequenceProperty(TBB_StreamingSequenceProperty):
     """
     'Streaming sequence' settings for the OpenFOAM module.
     """

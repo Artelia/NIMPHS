@@ -2,7 +2,7 @@
 import bpy
 from bpy.types import Operator, Context, RenderSettings
 
-from .utils import setup_streaming_sequence_object
+from ..utils import setup_streaming_sequence_object
 
 
 class CreateSequence(Operator):

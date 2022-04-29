@@ -2,7 +2,7 @@
 from bpy.types import PropertyGroup
 from bpy.props import BoolProperty, IntProperty, StringProperty
 
-from .utils import set_sequence_anim_length, get_sequence_anim_length
+from ..utils import set_sequence_anim_length, get_sequence_anim_length
 
 
 class TBB_StreamingSequenceProperty(PropertyGroup):

@@ -6,7 +6,7 @@ from rna_prop_ui import rna_idprop_ui_create
 from typing import Any
 import numpy as np
 
-from ..properties.scene_settings import scene_settings_dynamic_props
+from ..properties.shared.scene_settings import scene_settings_dynamic_props
 
 
 def get_collection(name: str, context: Context, link_to_scene: bool = True) -> Collection:

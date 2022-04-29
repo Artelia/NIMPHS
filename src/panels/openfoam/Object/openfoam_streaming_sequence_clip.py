@@ -2,14 +2,14 @@
 from bpy.types import Panel, Context
 
 
-class TBB_PT_OpenfoamSequenceClipSettings(Panel):
+class TBB_PT_OpenfoamStreamingSequenceClip(Panel):
     """
     UI panel to manage clip settings of the 'Streaming sequence'.
     """
 
     bl_label = "Clip"
-    bl_idname = "TBB_PT_OpenfoamSequenceClipSettings"
-    bl_parent_id = "TBB_PT_OpenfoamSequenceSettings"
+    bl_idname = "TBB_PT_OpenfoamSequenceClip"
+    bl_parent_id = "TBB_PT_OpenfoamStreamingSequence"
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
     bl_context = "object"

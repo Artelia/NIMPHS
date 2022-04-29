@@ -1,7 +1,7 @@
 # <pep8 compliant>
 from bpy.types import Context
 
-from ...module_panel import ModulePanel
+from ...shared.module_panel import ModulePanel
 
 
 class TBB_PT_OpenfoamMainPanel(ModulePanel):

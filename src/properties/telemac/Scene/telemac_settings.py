@@ -2,7 +2,7 @@
 from bpy.props import BoolProperty, EnumProperty, FloatVectorProperty
 
 from ..utils import update_var_names
-from ...scene_settings import TBB_SceneSettings
+from ...shared.scene_settings import TBB_SceneSettings
 
 
 class TBB_TelemacSettings(TBB_SceneSettings):

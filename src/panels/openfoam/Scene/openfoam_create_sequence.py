@@ -1,18 +1,18 @@
 # <pep8 compliant>
 from bpy.types import Context
 
-from ...create_sequence import CreateSequencePanel
+from ...shared.create_sequence import CreateSequencePanel
 from ...utils import lock_create_operator
 
 
-class TBB_PT_TelemacCreateSequence(CreateSequencePanel):
+class TBB_PT_OpenfoamCreateSequence(CreateSequencePanel):
     """
     UI panel to manage the creation of new sequences.
     """
 
     bl_label = "Create sequence"
-    bl_idname = "TBB_PT_TelemacCreateSequence"
-    bl_parent_id = "TBB_PT_TelemacMainPanel"
+    bl_idname = "TBB_PT_OpenfoamCreateSequence"
+    bl_parent_id = "TBB_PT_OpenfoamMainPanel"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_options = {"DEFAULT_CLOSED"}
@@ -26,7 +26,7 @@ class TBB_PT_TelemacCreateSequence(CreateSequencePanel):
         :rtype: bool
         """
 
-        return CreateSequencePanel.poll(context.scene.tbb_telemac_tmp_data, context)
+        return CreateSequencePanel.poll(context.scene.tbb_openfoam_tmp_data, context)
 
     def draw(self, context: Context):
         """
@@ -35,16 +35,11 @@ class TBB_PT_TelemacCreateSequence(CreateSequencePanel):
         :type context: Context
         """
 
-        settings = context.scene.tbb_telemac_settings
+        settings = context.scene.tbb_openfoam_settings
         enable_rows = CreateSequencePanel.draw(self, settings, context)
-        lock, message = lock_create_operator(settings)
+        lock_operator, err_message = lock_create_operator(settings)
 
         layout = self.layout
-
-        row = layout.row()
-        row.enabled = enable_rows
-        row.prop(settings, "normalize_sequence_obj", text="Normalize")
-
         layout.row().separator()
 
         row = layout.row()
@@ -52,10 +47,10 @@ class TBB_PT_TelemacCreateSequence(CreateSequencePanel):
         row.prop(settings, "sequence_name", text="Name")
 
         row = layout.row()
-        row.enabled = not lock
-        row.operator("tbb.telemac_create_sequence", text="Create sequence", icon="RENDER_ANIMATION")
+        row.enabled = not lock_operator
+        row.operator("tbb.openfoam_create_sequence", text="Create sequence", icon="RENDER_ANIMATION")
 
         # Lock the create_sequence operator if the sequence name is already taken or empty
-        if lock:
+        if lock_operator:
             row = layout.row()
-            row.label(text=message, icon="ERROR")
+            row.label(text=err_message, icon="ERROR")

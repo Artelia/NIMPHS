@@ -1,7 +1,7 @@
 # <pep8 compliant>
 from bpy.types import Panel, Context, Object
 
-from .utils import get_selected_object
+from ..utils import get_selected_object
 
 
 class ModulePanel(Panel):

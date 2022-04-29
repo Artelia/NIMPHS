@@ -4,7 +4,7 @@ from bpy.types import Context, Event
 
 import time
 
-from ...create_sequence import CreateSequence
+from ...shared.create_sequence import CreateSequence
 from ...utils import get_collection
 
 
