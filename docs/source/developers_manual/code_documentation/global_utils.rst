@@ -15,7 +15,7 @@ Classes
    :members:
    :show-inheritance:
 
-.. autoclass:: src.properties.sequence_settings.TBB_StreamingSequenceProperty
+.. autoclass:: src.properties.streaming_sequence_property.TBB_StreamingSequenceProperty
    :members:
    :show-inheritance:
 

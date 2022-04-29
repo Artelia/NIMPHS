@@ -121,7 +121,7 @@ def setup_telemac_streaming_sequence_obj(obj: Object, context: Context) -> tuple
 
 def setup_streaming_sequence_object(obj: Object, context: Context, type: str):
     """
-    Setup parameters of the given sequence object. Precise which streaming sequence you wan to setup
+    Setup parameters of the given sequence object. Precise which streaming sequence you want to setup
     using the 'type' parameter.
 
     :param obj: sequence object
@@ -143,53 +143,12 @@ def setup_streaming_sequence_object(obj: Object, context: Context, type: str):
     obj_settings.update = True
 
     # Set the selected time frame
-    obj_settings.frame_start = settings.frame_start
-    obj_settings.anim_length = settings["anim_length"]
-    obj_settings.max_length = time_points
+    obj_settings.frame_start = settings.frame_start     #
+    obj_settings.max_length = time_points               # Order matters, check TBB_StreamingSequenceProperty class definition
+    obj_settings.anim_length = settings["anim_length"]  #
 
     obj_settings.import_point_data = settings.import_point_data
     obj_settings.list_point_data = settings.list_point_data
-
-
-def update_scene_settings_dynamic_props(settings, tmp_data) -> None:
-    """
-    Update 'dynamic' settings of the main panel. It adapts the max values of properties in function of the imported file.
-
-    :param settings: scene settings
-    :param tmp_data: temporary data
-    """
-
-    # This works because TBB_TelemacTemporaryData and TBB_OpenfoamTemporaryData have the same 'nb_time_points' attribute
-    max_time_step = tmp_data.nb_time_points
-
-    new_maxima = {
-        "preview_time_point": max_time_step - 1,
-        "start_time_point": max_time_step - 1,
-        "end_time_point": max_time_step - 1,
-        "anim_length": max_time_step,
-    }
-    update_dynamic_props(settings, new_maxima, scene_settings_dynamic_props)
-
-
-def update_dynamic_props(settings, new_maxima, props) -> None:
-    for prop_id, prop_desc in props:
-        if settings.get(prop_id) is None:
-            rna_idprop_ui_create(
-                settings,
-                prop_id,
-                default=0,
-                min=0,
-                soft_min=0,
-                max=0,
-                soft_max=0,
-                description=prop_desc
-            )
-
-        prop = settings.id_properties_ui(prop_id)
-        default = settings[prop_id]
-        if new_maxima[prop_id] < default:
-            default = 0
-        prop.update(default=default, max=new_maxima[prop_id], soft_max=new_maxima[prop_id])
 
 
 def poll_create_sequence(settings, context: Context) -> bool:
@@ -286,6 +245,47 @@ def stop_create_sequence(operator, context: Context, cancelled: bool = False) ->
     context.scene.tbb_progress_value = -1.0
     if cancelled:
         operator.report({"INFO"}, "Create sequence cancelled")
+
+
+def update_scene_settings_dynamic_props(settings, tmp_data) -> None:
+    """
+    Update 'dynamic' settings of the main panel. It adapts the max values of properties in function of the imported file.
+
+    :param settings: scene settings
+    :param tmp_data: temporary data
+    """
+
+    # This works because TBB_TelemacTemporaryData and TBB_OpenfoamTemporaryData have the same 'nb_time_points' attribute
+    max_time_step = tmp_data.nb_time_points
+
+    new_maxima = {
+        "preview_time_point": max_time_step - 1,
+        "start_time_point": max_time_step - 1,
+        "end_time_point": max_time_step - 1,
+        "anim_length": max_time_step,
+    }
+    update_dynamic_props(settings, new_maxima, scene_settings_dynamic_props)
+
+
+def update_dynamic_props(settings, new_maxima, props) -> None:
+    for prop_id, prop_desc in props:
+        if settings.get(prop_id) is None:
+            rna_idprop_ui_create(
+                settings,
+                prop_id,
+                default=0,
+                min=0,
+                soft_min=0,
+                max=0,
+                soft_max=0,
+                description=prop_desc
+            )
+
+        prop = settings.id_properties_ui(prop_id)
+        default = settings[prop_id]
+        if new_maxima[prop_id] < default:
+            default = 0
+        prop.update(default=default, max=new_maxima[prop_id], soft_max=new_maxima[prop_id])
 
 
 def remap_array(input: np.ndarray, out_min: float = 0.0, out_max: float = 1.0,
