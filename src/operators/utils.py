@@ -1,12 +1,12 @@
 # <pep8 compliant>
-from typing import Any
 import bpy
-from bpy.types import Collection, Mesh, Object, Context, RenderSettings
+from bpy.types import Collection, Mesh, Object, Context
 from rna_prop_ui import rna_idprop_ui_create
 
-from ..properties.scene_settings import scene_settings_dynamic_props
-
+from typing import Any
 import numpy as np
+
+from ..properties.scene_settings import scene_settings_dynamic_props
 
 
 def get_collection(name: str, context: Context, link_to_scene: bool = True) -> Collection:
@@ -149,104 +149,6 @@ def setup_streaming_sequence_object(obj: Object, context: Context, type: str):
 
     obj_settings.import_point_data = settings.import_point_data
     obj_settings.list_point_data = settings.list_point_data
-
-
-def poll_create_sequence(settings, context: Context) -> bool:
-    """
-    Common poll function for OpenFOAM and TELEMAC 'Create sequence' operators.
-
-    :param settings: settings
-    :type context: Context
-    :rtype: bool
-    """
-    result = None
-    if settings.sequence_type == "mesh_sequence":
-        result = not context.scene.tbb_create_sequence_is_running and settings["start_time_point"] < settings["end_time_point"]
-    elif settings.sequence_type == "streaming_sequence":
-        result = not context.scene.tbb_create_sequence_is_running
-    else:  # Lock ui by default
-        result = False
-
-    return result
-
-
-def execute_create_sequence(operator, settings, context: Context, type: str) -> set:
-    """
-    Common execute function for OpenFOAM and TELEMAC 'Create sequence' operators.
-
-    :param operator: target operator
-    :param settings: scene settings
-    :type context: Context
-    :param type: module name, enum in ['OpenFOAM', 'TELEMAC']
-    :type type: str
-    :return: state of the operator
-    :rtype: set
-    """
-
-    wm = context.window_manager
-
-    if settings.sequence_type == "mesh_sequence":
-        # Create timer event
-        operator.timer = wm.event_timer_add(time_step=1e-3, window=context.window)
-        wm.modal_handler_add(operator)
-
-        # Setup prograss bar
-        context.scene.tbb_progress_label = "Create sequence"
-        context.scene.tbb_progress_value = -1.0
-
-        # Setup for creating the sequence
-        operator.start_time_point = settings["start_time_point"]
-        operator.current_time_point = settings["start_time_point"]
-        operator.end_time_point = settings["end_time_point"]
-        operator.current_frame = context.scene.frame_current
-        operator.user_sequence_name = settings.sequence_name
-
-        context.scene.tbb_create_sequence_is_running = True
-
-        return {"RUNNING_MODAL"}
-
-    elif settings.sequence_type == "streaming_sequence":
-        # Warn the user when the selected start frame may be weird
-        if settings.frame_start < context.scene.frame_start or settings.frame_start > context.scene.frame_end:
-            operator.report({"WARNING"}, "Frame start is not in the selected time frame.")
-
-        obj_name = settings.sequence_name + "_sequence"
-        blender_mesh = bpy.data.meshes.new(name=settings.sequence_name + "_mesh")
-        obj = bpy.data.objects.new(obj_name, blender_mesh)
-        setup_streaming_sequence_object(obj, context, type)
-
-        context.collection.objects.link(obj)
-
-        # As mentionned here, lock the interface because the custom handler will alter data on frame change
-        # https://docs.blender.org/api/current/bpy.app.handlers.html?highlight=app%20handlers#module-bpy.app.handlers
-        RenderSettings.use_lock_interface = True
-
-        operator.report({"INFO"}, "Sequence successfully created")
-
-        return {"FINISHED"}
-
-    else:
-        operator.report({"ERROR"}, "Unknown sequence type (type = " + str(settings.sequence_type) + ")")
-        return {"FINISHED"}
-
-
-def stop_create_sequence(operator, context: Context, cancelled: bool = False) -> None:
-    """
-    Common stop function for OpenFOAM and TELEMAC 'Create sequence' operators.
-
-    :param operator: operator to stop
-    :type context: Context
-    :param cancelled: ask to report 'Create sequence cancelled', defaults to False
-    :type cancelled: bool, optional
-    """
-
-    wm = context.window_manager
-    wm.event_timer_remove(operator.timer)
-    operator.timer = None
-    context.scene.tbb_create_sequence_is_running = False
-    context.scene.tbb_progress_value = -1.0
-    if cancelled:
-        operator.report({"INFO"}, "Create sequence cancelled")
 
 
 def update_scene_settings_dynamic_props(settings, tmp_data) -> None:

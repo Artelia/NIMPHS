@@ -1,6 +1,8 @@
 # <pep8 compliant>
 from bpy.types import Panel, Context
 
+from .utils import get_selected_object
+
 
 class CreateSequencePanel(Panel):
     """
@@ -16,10 +18,7 @@ class CreateSequencePanel(Panel):
         :rtype: bool
         """
 
-        obj = context.active_object
-        # Even if no objects are selected, the last selected object remains in the active_objects variable
-        if len(context.selected_objects) == 0:
-            obj = None
+        obj = get_selected_object(context)
 
         if obj is None:
             return tmp_data.is_ok()

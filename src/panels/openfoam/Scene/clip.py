@@ -1,6 +1,8 @@
 # <pep8 compliant>
 from bpy.types import Panel, Context
 
+from ...utils import get_selected_object
+
 
 class TBB_PT_OpenfoamClip(Panel):
     """
@@ -23,10 +25,7 @@ class TBB_PT_OpenfoamClip(Panel):
         :rtype: bool
         """
 
-        obj = context.active_object
-        # Even if no objects are selected, the last selected object remains in the active_objects variable
-        if len(context.selected_objects) == 0:
-            obj = None
+        obj = get_selected_object(context)
 
         if obj is None:
             return context.scene.tbb_openfoam_tmp_data.is_ok()
@@ -42,8 +41,8 @@ class TBB_PT_OpenfoamClip(Panel):
 
         layout = self.layout
         settings = context.scene.tbb_openfoam_settings
-        clip = context.scene.tbb_openfoam_settings.clip
         tmp_data = context.scene.tbb_openfoam_tmp_data
+        clip = context.scene.tbb_openfoam_settings.clip
 
         # Check if temp mesh data is loaded. If not, do not show clip settings and show a message asking to hit preview.
         if tmp_data.time_point != settings["preview_time_point"]:
@@ -78,4 +77,4 @@ class TBB_PT_OpenfoamClip(Panel):
 
         if lock_clip_settings:
             row = layout.row()
-            row.label(text="Error: no data available at this time point. Please reload of hit 'preview'.", icon="ERROR")
+            row.label(text="Error: no data available at this time point. Please reload or hit 'preview'.", icon="ERROR")

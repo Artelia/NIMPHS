@@ -1,13 +1,14 @@
 # <pep8 compliant>
 import bpy
-from bpy.types import Operator, Context, Event
-
-from ...utils import get_collection, poll_create_sequence, execute_create_sequence, stop_create_sequence
+from bpy.types import Context, Event
 
 import time
 
+from ...create_sequence import CreateSequence
+from ...utils import get_collection
 
-class TBB_OT_TelemacCreateSequence(Operator):
+
+class TBB_OT_TelemacCreateSequence(CreateSequence):
     """
     Create a sequence using the settings defined in the main panel and the 'create sequence' panel.
     """
@@ -15,16 +16,6 @@ class TBB_OT_TelemacCreateSequence(Operator):
     bl_idname = "tbb.telemac_create_sequence"
     bl_label = "Create sequence"
     bl_description = "Create a mesh sequence using the selected parameters. Press 'esc' to cancel"
-
-    timer = None
-    sequence_object_name = ""
-    user_sequence_name = ""
-    start_time_point = 0
-    current_time_point = 0
-    end_time_point = 0
-    current_frame = 0
-
-    chrono_start = 0
 
     @classmethod
     def poll(cls, context: Context) -> bool:
@@ -35,8 +26,7 @@ class TBB_OT_TelemacCreateSequence(Operator):
         :rtype: bool
         """
 
-        settings = context.scene.tbb_telemac_settings
-        return poll_create_sequence(settings, context)
+        return super().poll(context.scene.tbb_telemac_settings, context)
 
     def execute(self, context: Context) -> set:
         """
@@ -47,8 +37,7 @@ class TBB_OT_TelemacCreateSequence(Operator):
         :rtype: set
         """
 
-        settings = context.scene.tbb_telemac_settings
-        return execute_create_sequence(self, settings, context, 'TELEMAC')
+        return super().execute(context.scene.tbb_telemac_settings, context, 'TELEMAC')
 
     def modal(self, context: Context, event: Event) -> set:
         """
@@ -61,7 +50,7 @@ class TBB_OT_TelemacCreateSequence(Operator):
         """
 
         if event.type == "ESC":
-            self.stop(context, cancelled=True)
+            super().stop(context, cancelled=True)
             return {"CANCELLED"}
 
         if event.type == "TIMER":
@@ -73,7 +62,7 @@ class TBB_OT_TelemacCreateSequence(Operator):
                     print("ERROR::TBB_OT_TelemacCreateSequence: " + str(error))
                     self.report({"ERROR"}, "An error occurred creating the sequence, (time_step = " +
                                 str(self.current_time_point) + ")")
-                    self.stop(context)
+                    super().stop(context)
                     return {"CANCELLED"}
 
                 # First time point, create the sequence object
@@ -89,7 +78,7 @@ class TBB_OT_TelemacCreateSequence(Operator):
                       + str(self.current_time_point))
 
             else:
-                self.stop(context)
+                super().stop(context)
                 self.report({"INFO"}, "Create sequence finished")
                 return {"FINISHED"}
 
@@ -99,14 +88,3 @@ class TBB_OT_TelemacCreateSequence(Operator):
             self.current_frame += 1
 
         return {"PASS_THROUGH"}
-
-    def stop(self, context: Context, cancelled: bool = False) -> None:
-        """
-        Stop the 'Create sequence' process.
-
-        :type context: Context
-        :param cancelled: ask to report 'Create sequence cancelled', defaults to False
-        :type cancelled: bool, optional
-        """
-
-        stop_create_sequence(self, context, cancelled)

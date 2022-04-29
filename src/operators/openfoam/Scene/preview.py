@@ -1,12 +1,10 @@
 # <pep8 compliant>
-import bpy
 from bpy.types import Operator, Context
 
 import time
 
 from ..utils import generate_mesh, generate_vertex_colors, generate_preview_material, load_openfoam_file
 from ...utils import generate_object_from_data, get_collection
-
 from ....properties.openfoam.utils import encode_value_ranges, encode_scalar_names
 
 
