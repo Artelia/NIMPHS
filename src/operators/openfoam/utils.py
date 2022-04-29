@@ -9,15 +9,16 @@ import numpy as np
 import time
 
 from ..utils import remap_array
+from ...properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
 
 
 def load_openfoam_file(file_path: str) -> tuple[bool, OpenFOAMReader]:
     """
-    Load an OpenFOAM file and return the file_reader.
+    Load an OpenFOAM file and return the file_reader. Also returns if it succeeded to read.
 
     :param file_path: path to the file
     :type file_path: str
-    :return: success, the file_reader
+    :return: success, the file reader
     :rtype: tuple[bool, OpenFOAMReader]
     """
 
@@ -30,68 +31,12 @@ def load_openfoam_file(file_path: str) -> tuple[bool, OpenFOAMReader]:
     return True, file_reader
 
 
-def generate_openfoam_sequence_object(operator, settings, time_points: int) -> Object:
-    """
-    Generate a sequence object using the given parameters.
-
-    :param operator: Source operator
-    :type operator: bpy.types.Operator
-    :param settings: OpenFOAM main panel settings
-    :type settings: TBB_OpenfoamSettings
-    :param time_points: number of time points
-    :type time_points: int
-    :return: generated sequence (Blender object)
-    :rtype: Object
-    """
-
-    obj_name = settings.sequence_name + "_sequence"
-    blender_mesh = bpy.data.meshes.new(name=settings.sequence_name + "_mesh")
-    obj = bpy.data.objects.new(obj_name, blender_mesh)
-    obj_settings = obj.tbb_openfoam_sequence
-
-    obj_settings.name = obj_name
-    obj_settings.file_path = settings.file_path
-    obj_settings.update = True
-    obj_settings.is_streaming_sequence = True
-
-    # Set the selected time frame
-    obj_settings.frame_start = settings.frame_start
-    obj_settings.max_length = time_points
-    obj_settings.anim_length = settings["anim_length"]
-
-    # Set clip settings
-    obj_settings.clip.type = settings.clip.type
-    obj_settings.clip.scalar.value_ranges = settings.clip.scalar.value_ranges
-    obj_settings.clip.scalar.list = settings.clip.scalar.list
-
-    # Sometimes, the selected scalar may not correspond to ones available in the EnumProperty.
-    # This happens when the selected scalar is not available at time point 0
-    # (the EnumProperty only reads data at time point 0 to create the list of
-    # available items)
-    try:
-        obj_settings.clip.scalar.name = settings.clip.scalar.name
-    except TypeError as error:
-        print("ERROR::TBB_OT_OpenfoamCreateSequence: " + str(error))
-        operator.report({"WARNING"}, "the selected scalar does not exist at time point 0 (selected from time point " +
-                        str(settings["preview_time_point"]) + ")")
-
-    obj_settings.clip.scalar.invert = settings.clip.scalar.invert
-    # 'value' and 'vector_value' may not be defined, so use .get(prop, default_returned_value)
-    obj_settings.clip.scalar["value"] = settings.clip.scalar.get("value", 0.5)
-    obj_settings.clip.scalar["vector_value"] = settings.clip.scalar.get("vector_value", (0.5, 0.5, 0.5))
-    obj_settings.import_point_data = settings.import_point_data
-    obj_settings.list_point_data = settings.list_point_data
-
-    return obj
-
-
 def generate_mesh(file_reader: OpenFOAMReader, time_point: int, clip=None,
                   mesh: UnstructuredGrid = None) -> tuple[np.array, np.array, UnstructuredGrid]:
     """
-    Generate mesh data for Blender using the given data. Applies the clip if defined.
+    Generate mesh data for Blender using the given file reader. Applies the clip if defined.
     If 'mesh' is not defined, it will be read from the given OpenFOAMReader (file_reader).
-    The mesh will be modified (clip, extract_surface, triangulation and compute_normals).
-
+    **Warning**: the given mesh will be modified (clip, extract_surface, triangulation and compute_normals).
 
     :param file_reader: OpenFOAM file reader
     :type file_reader: OpenFOAMReader
@@ -101,7 +46,7 @@ def generate_mesh(file_reader: OpenFOAMReader, time_point: int, clip=None,
     :type clip: TBB_OpenfoamClipProperty, optional
     :param mesh: 'raw mesh', defaults to None
     :type mesh: UnstructuredGrid, optional
-    :return: vertices, faces and the output mesh
+    :return: vertices, faces and the output mesh (modified)
     :rtype: tuple[np.array, np.array, UnstructuredGrid]
     """
 
@@ -170,7 +115,7 @@ def generate_preview_material(obj: Object, scalar: str, name: str = "TBB_OpenFOA
 
 def generate_mesh_for_sequence(context: Context, time_point: int, name: str = "TBB") -> Mesh:
     """
-    Generate a mesh for a 'Mesh sequence' at the given time point.
+    Generate a mesh for an OpenFOAM 'Mesh sequence' at the given time point.
 
     :type context: Context
     :type time_point: int
@@ -260,12 +205,12 @@ def generate_vertex_colors(mesh: UnstructuredGrid, blender_mesh: Mesh, list_poin
 
 # Code taken from the Stop-motion-OBJ addon
 # Link: https://github.com/neverhood311/Stop-motion-OBJ/blob/rename-module-name/src/stop_motion_obj.py
-def add_mesh_to_sequence(seq_obj: Object, blender_mesh: Mesh) -> int:
+def add_mesh_to_sequence(obj: Object, blender_mesh: Mesh) -> int:
     """
-    Add a mesh to a 'Mesh sequence'.
+    Add a mesh to an OpenFOAM 'Mesh sequence'.
 
-    :param seq_obj: sequence object
-    :type seq_obj: Object
+    :param obj: sequence object
+    :type obj: Object
     :param blender_mesh: mesh to add to the sequence
     :type blender_mesh: Mesh
     :return: mesh id in the sequence
@@ -273,7 +218,7 @@ def add_mesh_to_sequence(seq_obj: Object, blender_mesh: Mesh) -> int:
     """
 
     blender_mesh.inMeshSequence = True
-    mss = seq_obj.mesh_sequence_settings
+    mss = obj.mesh_sequence_settings
     # add the new mesh to meshNameArray
     newMeshNameElement = mss.meshNameArray.add()
     newMeshNameElement.key = blender_mesh.name_full
@@ -293,7 +238,7 @@ def add_mesh_to_sequence(seq_obj: Object, blender_mesh: Mesh) -> int:
 @persistent
 def update_streaming_sequence(scene: Scene) -> None:
     """
-    App handler which is appened to the frame_change_pre handlers. Updates all the 'Streaming sequences' of the scene.
+    App handler appened to the frame_change_pre handlers. Updates all the OpenFOAM 'Streaming sequences' of the scene.
 
     :type scene: Scene
     """
@@ -317,21 +262,24 @@ def update_streaming_sequence(scene: Scene) -> None:
                     print("Update::OpenFOAM: " + settings.name + ", " + "{:.4f}".format(time.time() - start) + "s")
 
 
-def update_sequence_mesh(seq_obj: Object, settings, time_point: int) -> None:
+def update_sequence_mesh(obj: Object, settings: TBB_OpenfoamStreamingSequenceProperty, time_point: int) -> None:
     """
     Update the mesh of the given sequence object.
 
-    :param seq_obj: sequence object
-    :type seq_obj: Object
-    :param settings: sequence settings
-    :type settings: TBB_OpenfoamSequenceProperty
+    :param obj: sequence object
+    :type obj: Object
+    :param settings: streaming sequence settings
+    :type settings: TBB_OpenfoamStreamingSequenceProperty
     :param time_point: time point from which to read data
     :type time_point: int
+    :raises OSError: if there was an error reading the file
     :raises ValueError: if the given time point does no exists
     """
 
     # TODO: use load_openfoam_file
-    file_reader = OpenFOAMReader(settings.file_path)
+    success, file_reader = load_openfoam_file(settings.file_path)
+    if not success:
+        raise OSError("Unable to read the given file")
 
     # Check if time point is ok
     if time_point >= file_reader.number_time_points:
@@ -340,7 +288,7 @@ def update_sequence_mesh(seq_obj: Object, settings, time_point: int) -> None:
 
     vertices, faces, mesh = generate_mesh(file_reader, time_point, settings.clip)
 
-    blender_mesh = seq_obj.data
+    blender_mesh = obj.data
     blender_mesh.clear_geometry()
     blender_mesh.from_pydata(vertices, [], faces)
 

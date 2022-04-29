@@ -8,13 +8,13 @@ from ..utils import generate_object_from_data, remap_array
 from ...properties.telemac.temporary_data import TBB_TelemacTemporaryData
 
 
-def generate_vertex_colors_name(var_id_groups: list, tmp_data: TBB_TelemacTemporaryData) -> str:
+def generate_vertex_colors_name(var_id_groups: list[int], tmp_data: TBB_TelemacTemporaryData) -> str:
     """
     Generate the name of the vertex colors groups which correspond to the given list of ids.
     Example: 'FOND, VITESSE U, NONE' corresponds to: red channel = FOND, green channel = VITESS U, blue channel = NONE
 
     :param var_id_groups: ids of varibales names (from Serafin.nomvar)
-    :type var_id_groups: list
+    :type var_id_groups: list[int]
     :param tmp_data: temporary data
     :type tmp_data: TBB_TelemacTemporaryData
     :return: vertex colors name
@@ -137,6 +137,7 @@ def generate_object(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, offset
 
     blender_mesh, obj = generate_object_from_data(vertices, tmp_data.faces, name=name)
 
+    # TODO: where to add this option? (Set object's origin to center of the world)
     # Set the object at the origin of the scene
     # obj.select_set(state=True, view_layer=context.view_layer)
     # bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN')
@@ -297,7 +298,7 @@ def rescale_objects(objects: list[Object], dimensions: list[float], apply: bool 
     :type collection: list[Object]
     :param dimensions: target dimensions
     :type dimensions: list[float]
-    :param apply: apply the rescale for each object in the collection
+    :param apply: apply the rescale for each object in the given list
     :type apply: bool
     """
 
@@ -319,7 +320,7 @@ def rescale_objects(objects: list[Object], dimensions: list[float], apply: bool 
 
 def get_object_dimensions_from_mesh(obj: Object) -> list[float]:
     """
-    Get the dimensions of the object using its mesh.
+    Compute the dimensions of the object from its mesh.
 
     :param obj: object
     :type obj: Object

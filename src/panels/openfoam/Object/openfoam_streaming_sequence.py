@@ -6,7 +6,8 @@ from ...shared.streaming_sequence_settings import TBB_StreamingSequenceSettingsP
 
 class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
     """
-    Main panel of the 'Streaming sequence' settings. This is the 'parent' panel.
+    Main panel of the OpenFOAM 'streaming sequence' settings.
+    This is the 'parent' panel.
     """
 
     bl_label = "OpenFOAM Streaming sequence"

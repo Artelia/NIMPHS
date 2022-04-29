@@ -6,17 +6,19 @@ from rna_prop_ui import rna_idprop_ui_create
 from typing import Any
 import numpy as np
 
-from ..properties.shared.scene_settings import scene_settings_dynamic_props
+from ..properties.shared.scene_settings import scene_settings_dynamic_props, TBB_SceneSettings
+from ..properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
+from ..properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
 
 
 def get_collection(name: str, context: Context, link_to_scene: bool = True) -> Collection:
     """
-    Get the collection named 'name'. If it does not exist, create it.
+    Get the collection called 'name'. If it does not exist, create it.
 
     :param name: name of the collection
     :type name: str
     :type context: Context
-    :param link_to_scene: automatically the collection to the list of scene collections, defaults to True
+    :param link_to_scene: automatically link the collection to the list of scene collections, defaults to True
     :type link_to_scene: bool
     :return: the collection
     :rtype: Collection
@@ -41,7 +43,7 @@ def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, name: str
     :type faces: np.ndarray
     :param name: name of the preview object
     :type name: str
-    :return: Blender mesh (of the generated object), generated object
+    :return: Blender mesh (obj.data), generated object
     :rtype: tuple[Mesh, Object]
     """
 
@@ -64,7 +66,7 @@ def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, name: str
 
 def setup_openfoam_streaming_sequence_obj(obj: Object, context: Context) -> tuple[Any, int, Any]:
     """
-    Setup settings for an OpenFOAM streaming sequence.
+    Setup settings for an OpenFOAM 'streaming sequence'.
 
     :param obj: sequence object
     :type obj: Object
@@ -84,12 +86,11 @@ def setup_openfoam_streaming_sequence_obj(obj: Object, context: Context) -> tupl
 
     # Sometimes, the selected scalar may not correspond to ones available in the EnumProperty.
     # This happens when the selected scalar is not available at time point 0
-    # (the EnumProperty only reads data at time point 0 to create the list of
-    # available items)
+    # (the EnumProperty only reads data at time point 0 to create the list of available items)
     try:
         obj_settings.clip.scalar.name = settings.clip.scalar.name
     except TypeError as error:
-        print("WARNING::setup_openfoam_streaming_sequence_object: " + str(error))
+        print("WARNING::setup_openfoam_streaming_sequence_obj: " + str(error))
 
     obj_settings.clip.scalar.invert = settings.clip.scalar.invert
     # 'value' and 'vector_value' may not be defined, so use .get(prop, default_returned_value)
@@ -101,7 +102,7 @@ def setup_openfoam_streaming_sequence_obj(obj: Object, context: Context) -> tupl
 
 def setup_telemac_streaming_sequence_obj(obj: Object, context: Context) -> tuple[Any, int, Any]:
     """
-    Setup settings for a TELEMAC streaming sequence.
+    Setup settings for a TELEMAC 'streaming sequence'.
 
     :param obj: sequence object
     :type obj: Object
@@ -121,7 +122,7 @@ def setup_telemac_streaming_sequence_obj(obj: Object, context: Context) -> tuple
 
 def setup_streaming_sequence_object(obj: Object, context: Context, type: str):
     """
-    Setup parameters of the given sequence object. Precise which streaming sequence you want to setup
+    Setup parameters of the given sequence object. Precise which 'streaming sequence' you want to setup
     using the 'type' parameter.
 
     :param obj: sequence object
@@ -151,15 +152,19 @@ def setup_streaming_sequence_object(obj: Object, context: Context, type: str):
     obj_settings.list_point_data = settings.list_point_data
 
 
-def update_scene_settings_dynamic_props(settings, tmp_data) -> None:
+def update_scene_settings_dynamic_props(settings: TBB_SceneSettings,
+                                        tmp_data: TBB_OpenfoamSettings | TBB_TelemacSettings) -> None:
     """
-    Update 'dynamic' settings of the main panel. It adapts the max values of properties in function of the imported file.
+    Update 'dynamic' settings of the main panel.
+    It adapts the max values of properties in function of the imported file.
 
     :param settings: scene settings
+    :type settings: TBB_SceneSettings
     :param tmp_data: temporary data
+    :type tmp_data: TBB_OpenfoamSettings | TBB_TelemacSettings
     """
 
-    # This works because TBB_TelemacTemporaryData and TBB_OpenfoamTemporaryData have the same 'nb_time_points' attribute
+    # This works because TBB_TelemacTemporaryData and TBB_OpenfoamTemporaryData have the same nb_time_points attribute
     max_time_step = tmp_data.nb_time_points
 
     new_maxima = {
@@ -171,7 +176,19 @@ def update_scene_settings_dynamic_props(settings, tmp_data) -> None:
     update_dynamic_props(settings, new_maxima, scene_settings_dynamic_props)
 
 
-def update_dynamic_props(settings, new_maxima, props) -> None:
+def update_dynamic_props(settings: TBB_SceneSettings, new_maxima: dict, props: dict) -> None:
+    """
+    Set new max values to the given list of props.
+    If a property does not exist, it creates it.
+
+    :param settings: scene settings
+    :type settings: TBB_SceneSettings
+    :param new_maxima: dict of new maxima: {"prop_name": value, etc.}
+    :type new_maxima: dict
+    :param props: dict of properties: {"prop_name", "description", etc.}
+    :type props: dict
+    """
+
     for prop_id, prop_desc in props:
         if settings.get(prop_id) is None:
             rna_idprop_ui_create(

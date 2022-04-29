@@ -17,14 +17,14 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
 
     def draw(self, context: Context) -> None:
         """
-        Layout of the panel.
+        Layout of the panel. Calls 'super().draw(...)'.
 
         :type context: Context
         """
 
         settings = context.scene.tbb_openfoam_settings
         tmp_data = context.scene.tbb_openfoam_tmp_data
-        enable_rows, obj = TBB_ModulePanel.draw(self, settings, tmp_data, context)
+        enable_rows, obj = super().draw(settings, tmp_data, context)
 
         layout = self.layout
         if obj is not None:

@@ -9,7 +9,7 @@ from ....properties.openfoam.utils import encode_value_ranges, encode_scalar_nam
 
 class TBB_OT_OpenfoamReloadFile(Operator):
     """
-    Reload the selected file (update properties and temporary data).
+    Reload the selected file.
     """
 
     bl_idname = "tbb.reload_openfoam_file"
@@ -19,6 +19,7 @@ class TBB_OT_OpenfoamReloadFile(Operator):
     def execute(self, context: Context) -> set:
         """
         Main function of the operator. Reload the selected file.
+        It updates temporary data and 'dynamic' scene settings.
 
         :type context: Context
         :return: state of the operator

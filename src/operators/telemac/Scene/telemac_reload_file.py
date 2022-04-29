@@ -7,7 +7,7 @@ from ...utils import update_scene_settings_dynamic_props
 
 class TBB_OT_TelemacReloadFile(Operator):
     """
-    Reload the selected file (update properties and temporary data).
+    Reload the selected file.
     """
 
     bl_idname = "tbb.reload_telemac_file"
@@ -17,6 +17,7 @@ class TBB_OT_TelemacReloadFile(Operator):
     def execute(self, context: Context) -> set:
         """
         Main function of the operator. Reload the selected file.
+        It updates temporary data and 'dynamic' scene settings.
 
         :type context: Context
         :return: state of the operator

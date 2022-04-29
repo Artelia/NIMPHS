@@ -26,7 +26,8 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
 
     def execute(self, context: Context) -> set:
         """
-        Main function of the operator. Import the selected file. It also generates the preview object.
+        Main function of the operator. Import the selected file.
+        It also generates the preview object, updates temporary data and 'dynamic' scene settings.
 
         :type context: Context
         :return: state of the operator

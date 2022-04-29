@@ -153,6 +153,15 @@ class TBB_TelemacTemporaryData():
             return np.array(data[var_id]).reshape(data[var_id].shape[0], 1)
 
     def compute_var_value_range(self, var_id: int) -> tuple[float, float]:
+        """
+        Compute global min / max values of all time points.
+
+        :param var_id: variable id
+        :type var_id: int
+        :return: min, max
+        :rtype: tuple[float, float]
+        """
+
         start = time.time()
         min, max = np.inf, -np.inf
         for time_point in range(self.nb_time_points):
@@ -167,7 +176,17 @@ class TBB_TelemacTemporaryData():
         print("TBB_TelemacTemporaryData::compute_var_value_range: " + "{:.4f}".format(time.time() - start) + "s")
         return (min, max)
 
-    def get_var_value_range(self, var_id: int):
+    def get_var_value_range(self, var_id: int) -> tuple[float, float]:
+        """
+        Get global min / max values for the given variable.
+
+        :param var_id: variable id
+        :type var_id: int
+        :raises ValueError: if the variable id undefined
+        :return: min, max
+        :rtype: tuple[float, float]
+        """
+
         if var_id < 0 or var_id > self.nb_vars:
             raise ValueError("Undefined variable id '" + str(var_id) + "'")
 

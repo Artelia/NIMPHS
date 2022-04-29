@@ -7,7 +7,7 @@ from ...shared.scene_settings import TBB_SceneSettings
 
 class TBB_TelemacSettings(TBB_SceneSettings):
     """
-    TELEMAC panel settings.
+    TELEMAC module settings.
     """
 
     #: bpy.types.EnumProperty: Name of point data to preview

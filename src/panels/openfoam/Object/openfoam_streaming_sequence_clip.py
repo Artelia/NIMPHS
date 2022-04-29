@@ -4,7 +4,7 @@ from bpy.types import Panel, Context
 
 class TBB_PT_OpenfoamStreamingSequenceClip(Panel):
     """
-    UI panel to manage clip settings of the 'Streaming sequence'.
+    UI panel to manage clip settings of an OpenFOAM 'streaming sequence'.
     """
 
     bl_label = "Clip"

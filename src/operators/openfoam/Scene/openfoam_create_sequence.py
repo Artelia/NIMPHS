@@ -11,7 +11,8 @@ from ...shared.create_sequence import TBB_CreateSequence
 
 class TBB_OT_OpenfoamCreateSequence(TBB_CreateSequence):
     """
-    Create a sequence using the settings defined in the main panel and the 'create sequence' panel.
+    Create an OpenFOAM sequence using the settings defined in the
+    main panel of the module and the 'create sequence' panel.
     """
 
     bl_idname = "tbb.openfoam_create_sequence"
@@ -21,7 +22,7 @@ class TBB_OT_OpenfoamCreateSequence(TBB_CreateSequence):
     @classmethod
     def poll(cls, context: Context) -> bool:
         """
-        If false, locks the UI button of the operator.
+        If false, locks the UI button of the operator. Calls 'super().poll(...)'.
 
         :type context: Context
         :rtype: bool
@@ -31,7 +32,7 @@ class TBB_OT_OpenfoamCreateSequence(TBB_CreateSequence):
 
     def execute(self, context: Context) -> set:
         """
-        Main function of the operator. Its behaviour depends on the sequence type.
+        Main function of the operator. Calls 'super().execute(...)'.
 
         :type context: Context
         :return: state of the operator
@@ -42,7 +43,7 @@ class TBB_OT_OpenfoamCreateSequence(TBB_CreateSequence):
 
     def modal(self, context: Context, event: Event) -> set:
         """
-        Run one step of the 'Create Mesh Sequence' process.
+        Run one step of the 'Create OpenFOAM Mesh Sequence' process.
 
         :type context: Context
         :type event: Event

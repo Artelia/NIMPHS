@@ -3,12 +3,31 @@ import bpy
 from bpy.types import Operator, Context, RenderSettings
 
 from ..utils import setup_streaming_sequence_object
+from ...properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
+from ...properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
 
 
 class TBB_CreateSequence(Operator):
     """
-    Create a sequence using the settings defined in the main panel and the 'create sequence' panel.
+    Base class of the 'CreateSequence' operators.
     """
+
+    #: bpy.types.Timer: Timer which triggers the 'modal' method of operators
+    timer = None
+    #: str: Name of the sequence object
+    sequence_name = ""
+    #: str: Sequence name typed by the user
+    user_sequence_name = ""
+    #: int: Starting point of the sequence to generate
+    start_time_point = 0
+    #: int: Ending point of the sequence to generate
+    end_time_point = 0
+    #: int: Time point currently processed when creating a sequence
+    current_time_point = 0
+    #: int: Current frame during the 'create sequence' process (different from time point)
+    current_frame = 0
+    #: float: Variable used to measure execution times of the operators
+    chrono_start = 0
 
     def __init__(self) -> None:
         super().__init__()
@@ -24,26 +43,28 @@ class TBB_CreateSequence(Operator):
     @classmethod
     def poll(self, settings, context: Context) -> bool:
         """
-        Common poll method for OpenFOAM and TELEMAC 'Create sequence' operators.
+        If false, locks the UI button of the operator.
 
         :param settings: settings
         :type context: Context
         :rtype: bool
         """
 
+        tbb_csir = context.scene.tbb_create_sequence_is_running  # csir = create sequence is running
         if settings.sequence_type == "mesh_sequence":
-            return not context.scene.tbb_create_sequence_is_running and settings["start_time_point"] < settings["end_time_point"]
+            return not tbb_csir and settings["start_time_point"] < settings["end_time_point"]
         elif settings.sequence_type == "streaming_sequence":
-            return not context.scene.tbb_create_sequence_is_running
+            return not tbb_csir
         else:  # Lock ui by default
             return False
 
-    def execute(self, settings, context: Context, type: str) -> set:
+    def execute(self, settings: TBB_OpenfoamSettings | TBB_TelemacSettings, context: Context, type: str) -> set:
         """
-        Common execute method for OpenFOAM and TELEMAC 'Create sequence' operators.
+        Main method of the operator.
 
         :param operator: target operator
         :param settings: scene settings
+        :type settings: TBB_OpenfoamSettings | TBB_TelemacSettings
         :type context: Context
         :param type: module name, enum in ['OpenFOAM', 'TELEMAC']
         :type type: str

@@ -10,7 +10,8 @@ from ...utils import get_collection
 
 class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
     """
-    Create a sequence using the settings defined in the main panel and the 'create sequence' panel.
+    Create an OpenFOAM sequence using the settings defined in the
+    main panel of the module and the 'create sequence' panel.
     """
 
     bl_idname = "tbb.telemac_create_sequence"
@@ -20,7 +21,7 @@ class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
     @classmethod
     def poll(cls, context: Context) -> bool:
         """
-        If false, locks the UI button of the operator.
+        If false, locks the UI button of the operator. Calls 'super().poll(...)'.
 
         :type context: Context
         :rtype: bool
@@ -30,7 +31,7 @@ class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
 
     def execute(self, context: Context) -> set:
         """
-        Main function of the operator.
+        Main function of the operator. Calls 'super().execute(...)'.
 
         :type context: Context
         :return: state of the operator
@@ -41,7 +42,7 @@ class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
 
     def modal(self, context: Context, event: Event) -> set:
         """
-        Run one step of the 'Create sequence' process.
+        Run one step of the 'Create TELEMAC Mesh sequence' process.
 
         :type context: Context
         :type event: Event

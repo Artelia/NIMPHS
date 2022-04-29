@@ -19,7 +19,8 @@ class TBB_OT_OpenfoamPreview(Operator):
 
     def execute(self, context: Context) -> set:
         """
-        Main function of the operator. Preview the mesh. It also updates temporary data with this new preview.
+        Main function of the operator. Preview the mesh.
+        It also updates temporary data with this new preview.
 
         :type context: Context
         :return: state of the operator

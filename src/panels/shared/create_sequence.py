@@ -2,18 +2,25 @@
 from bpy.types import Panel, Context
 
 from ..utils import get_selected_object
+from ...properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
+from ...properties.telemac.temporary_data import TBB_TelemacTemporaryData
+from ...properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
+from ...properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
 
 
 class TBB_CreateSequencePanel(Panel):
     """
-    Base UI panel for OpenFOAM and TELEMAC modules. Specific settings are added in the classes which derive from this one.
+    Base UI panel for OpenFOAM and TELEMAC modules.
+    Specific settings are added in the classes which derive from this one.
     """
 
     @classmethod
-    def poll(cls, tmp_data, context: Context) -> bool:
+    def poll(cls, tmp_data: TBB_OpenfoamTemporaryData | TBB_TelemacTemporaryData, context: Context) -> bool:
         """
         If false, hides the panel.
 
+        :param tmp_data: temporary data
+        :type tmp_data: TBB_OpenfoamTemporaryData | TBB_TelemacTemporaryData
         :type context: Context
         :rtype: bool
         """
@@ -30,11 +37,15 @@ class TBB_CreateSequencePanel(Panel):
             else:
                 return tmp_data.is_ok()
 
-    def draw(self, settings, context: Context) -> bool:
+    def draw(self, settings: TBB_OpenfoamSettings | TBB_TelemacSettings, context: Context) -> bool:
         """
         Layout of the panel.
 
+        :param settings: scene settings
+        :type settings: TBB_OpenfoamSettings | TBB_TelemacSettings
         :type context: Context
+        :return: enable rows
+        :rtype: bool
         """
 
         layout = self.layout

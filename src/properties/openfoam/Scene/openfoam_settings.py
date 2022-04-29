@@ -8,7 +8,7 @@ from ...shared.scene_settings import TBB_SceneSettings
 
 class TBB_OpenfoamSettings(TBB_SceneSettings):
     """
-    OpenFOAM panel settings.
+    OpenFOAM module settings.
     """
 
     #: bpy.types.EnumProperty: Name of point data to preview

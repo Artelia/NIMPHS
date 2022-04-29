@@ -7,7 +7,8 @@ from ..utils import set_sequence_anim_length, get_sequence_anim_length
 
 class TBB_StreamingSequenceProperty(PropertyGroup):
     """
-    'Streaming sequence' settings. This data structure holds common data used in the OpenFOAM and TELEMAC modules.
+    'Streaming sequence' properties.
+    This data structure holds common data used in the OpenFOAM and TELEMAC modules.
     """
 
     #: bpy.props.StringProperty: Name of the sequence.

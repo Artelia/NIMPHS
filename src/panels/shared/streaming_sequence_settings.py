@@ -1,25 +1,32 @@
 # <pep8 compliant>
 from bpy.types import Panel
 
+from ...properties.shared.streaming_sequence_property import TBB_StreamingSequenceProperty
+
 
 class TBB_StreamingSequenceSettingsPanel(Panel):
     """
-    Main panel of the 'Streaming sequence' settings. This is the 'parent' panel.
+    Base UI panel for OpenFOAM and TELEMAC 'streaming sequence' settings.
     """
 
     @classmethod
-    def poll(cls, sequence_settings) -> bool:
+    def poll(cls, sequence_settings: TBB_StreamingSequenceProperty) -> bool:
         """
         If false, hides the panel.
 
+        :param sequence_settings: 'streaming sequence' settings
+        :type sequence_settings: TBB_StreamingSequenceProperty
         :rtype: bool
         """
 
         return sequence_settings.is_streaming_sequence
 
-    def draw(self, sequence_settings) -> None:
+    def draw(self, sequence_settings: TBB_StreamingSequenceProperty) -> None:
         """
         Layout of the panel.
+
+        :param sequence_settings: 'streaming sequence' settings
+        :type sequence_settings: TBB_StreamingSequenceProperty
         """
 
         layout = self.layout

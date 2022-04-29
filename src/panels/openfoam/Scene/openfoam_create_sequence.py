@@ -7,7 +7,7 @@ from ...utils import lock_create_operator
 
 class TBB_PT_OpenfoamCreateSequence(TBB_CreateSequencePanel):
     """
-    UI panel to manage the creation of new sequences.
+    UI panel to manage the creation of new OpenFOAM sequences.
     """
 
     bl_label = "Create sequence"
@@ -20,23 +20,23 @@ class TBB_PT_OpenfoamCreateSequence(TBB_CreateSequencePanel):
     @classmethod
     def poll(cls, context: Context) -> bool:
         """
-        If false, hides the panel.
+        If false, hides the panel. Calls 'super().poll(...)'.
 
         :type context: Context
         :rtype: bool
         """
 
-        return TBB_CreateSequencePanel.poll(context.scene.tbb_openfoam_tmp_data, context)
+        return super().poll(context.scene.tbb_openfoam_tmp_data, context)
 
     def draw(self, context: Context):
         """
-        Layout of the panel.
+        Layout of the panel. Calls 'super().draw(...)'.
 
         :type context: Context
         """
 
         settings = context.scene.tbb_openfoam_settings
-        enable_rows = TBB_CreateSequencePanel.draw(self, settings, context)
+        enable_rows = super().draw(settings, context)
         lock_operator, err_message = lock_create_operator(settings)
 
         layout = self.layout

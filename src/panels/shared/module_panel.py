@@ -2,18 +2,29 @@
 from bpy.types import Panel, Context, Object
 
 from ..utils import get_selected_object
+from ...properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
+from ...properties.telemac.temporary_data import TBB_TelemacTemporaryData
+from ...properties.shared.scene_settings import TBB_SceneSettings
 
 
 class TBB_ModulePanel(Panel):
     """
-    Base UI panel for OpenFOAM and TELEMAC modules. Specific settings are added in the classes which derive from this one.
+    Base UI panel for OpenFOAM and TELEMAC modules.
+    Specific settings are added in the classes which derive from this one.
     """
 
-    def draw(self, settings, tmp_data, context: Context) -> tuple[bool, Object | None]:
+    def draw(self, settings: TBB_SceneSettings, tmp_data: TBB_OpenfoamTemporaryData |
+             TBB_TelemacTemporaryData, context: Context) -> tuple[bool, Object | None]:
         """
         Layout of the panel.
 
+        :param settings: scene settings
+        :type settings: TBB_SceneSettings
+        :param tmp_data: temporary data
+        :type tmp_data: TBB_OpenfoamTemporaryData | TBB_TelemacTemporaryData
         :type context: Context
+        :return: enable rows, selected object
+        :rtype: tuple[bool, Object | None]
         """
 
         layout = self.layout
