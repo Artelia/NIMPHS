@@ -4,7 +4,7 @@ from bpy.types import Panel, Context, Object
 from ..utils import get_selected_object
 from ...properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 from ...properties.telemac.temporary_data import TBB_TelemacTemporaryData
-from ...properties.shared.scene_settings import TBB_ModuleSceneSettings
+from ...properties.shared.module_scene_settings import TBB_ModuleSceneSettings
 
 
 class TBB_ModulePanel(Panel):
@@ -33,14 +33,14 @@ class TBB_ModulePanel(Panel):
 
         if obj is not None:
             if module == 'OpenFOAM':
-                sequence_settings = obj.tbb_openfoam_sequence
+                sequence_settings = obj.tbb.settings.openfoam
             if module == 'TELEMAC':
-                sequence_settings = obj.tbb_telemac_sequence
+                sequence_settings = obj.tbb.settings.telemac
         else:
             sequence_settings = None
 
         # Check if we need to lock the ui
-        enable_rows = not context.scene.tbb_create_sequence_is_running
+        enable_rows = not context.scene.tbb.create_sequence_is_running
 
         row = layout.row()
         row.label(text="Import")
@@ -58,7 +58,7 @@ class TBB_ModulePanel(Panel):
             row.enabled = enable_rows
             row.operator("tbb.import_" + module.lower() + "_file", text="Import " + module + " file", icon="IMPORT")
 
-        if sequence_settings is None or not sequence_settings.is_streaming_sequence:
+        if sequence_settings is None or not obj.tbb.is_streaming_sequence:
 
             if tmp_data.is_ok():
                 # Preview section

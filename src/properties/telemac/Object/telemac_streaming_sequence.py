@@ -1,10 +1,10 @@
 # <pep8 compliant>
 from bpy.props import BoolProperty
 
-from ...shared.streaming_sequence_property import TBB_StreamingSequenceProperty
+from ...shared.module_streaming_sequence_settings import TBB_ModuleStreamingSequenceSettings
 
 
-class TBB_TelemacStreamingSequenceProperty(TBB_StreamingSequenceProperty):
+class TBB_TelemacStreamingSequenceProperty(TBB_ModuleStreamingSequenceSettings):
     """
     'Streaming sequence' settings for the TELEMAC module.
     """

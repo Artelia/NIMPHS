@@ -50,7 +50,7 @@ class TBB_CreateSequence(Operator):
         :rtype: bool
         """
 
-        tbb_csir = context.scene.tbb_create_sequence_is_running  # csir = create sequence is running
+        tbb_csir = context.scene.tbb.create_sequence_is_running  # csir = create sequence is running
         if settings.sequence_type == "mesh_sequence":
             return not tbb_csir and settings["start_time_point"] < settings["end_time_point"]
         elif settings.sequence_type == "streaming_sequence":
@@ -90,7 +90,7 @@ class TBB_CreateSequence(Operator):
             self.current_frame = context.scene.frame_current
             self.user_sequence_name = settings.sequence_name
 
-            context.scene.tbb_create_sequence_is_running = True
+            context.scene.tbb.create_sequence_is_running = True
 
             return {"RUNNING_MODAL"}
 
@@ -131,7 +131,7 @@ class TBB_CreateSequence(Operator):
         wm = context.window_manager
         wm.event_timer_remove(self.timer)
         self.timer = None
-        context.scene.tbb_create_sequence_is_running = False
+        context.scene.tbb.create_sequence_is_running = False
         context.scene.tbb_progress_value = -1.0
         if cancelled:
             self.report({"INFO"}, "Create sequence cancelled")

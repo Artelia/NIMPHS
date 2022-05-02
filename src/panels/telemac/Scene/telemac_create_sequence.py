@@ -26,7 +26,7 @@ class TBB_PT_TelemacCreateSequence(TBB_CreateSequencePanel):
         :rtype: bool
         """
 
-        return super().poll(context.scene.tbb_settings.telemac.tmp_data, context)
+        return super().poll(context.scene.tbb.settings.telemac.tmp_data, context)
 
     def draw(self, context: Context):
         """
@@ -35,7 +35,7 @@ class TBB_PT_TelemacCreateSequence(TBB_CreateSequencePanel):
         :type context: Context
         """
 
-        settings = context.scene.tbb_settings.telemac
+        settings = context.scene.tbb.settings.telemac
         enable_rows = super().draw(settings, context)
         lock, message = lock_create_operator(settings)
 

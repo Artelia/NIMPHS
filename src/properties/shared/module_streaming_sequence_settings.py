@@ -5,7 +5,7 @@ from bpy.props import BoolProperty, IntProperty, StringProperty
 from ..utils import set_sequence_anim_length, get_sequence_anim_length
 
 
-class TBB_StreamingSequenceProperty(PropertyGroup):
+class TBB_ModuleStreamingSequenceSettings(PropertyGroup):
     """
     'Streaming sequence' properties.
     This data structure holds common data used in the OpenFOAM and TELEMAC modules.
@@ -15,7 +15,7 @@ class TBB_StreamingSequenceProperty(PropertyGroup):
     name: StringProperty(
         name="Name",
         description="Name of the sequence",
-        default="Openfoam_sequence",
+        default="",
     )
 
     #: bpy.props.StringProperty: File to read when updating the sequence.
@@ -23,20 +23,6 @@ class TBB_StreamingSequenceProperty(PropertyGroup):
         name="File path",
         description="File to read when updating the sequence",
         default="",
-    )
-
-    #: bpy.props.BoolProperty: Describe if this object is a sequence which updates when the frame changes.
-    is_streaming_sequence: BoolProperty(
-        name="Is on frame change sequence",
-        description="Describe if this object is a sequence which updates when the frame changes",
-        default=False,
-    )
-
-    #: bpy.props.BoolProperty: Update this sequence whenever the frame changes.
-    update: BoolProperty(
-        name="Update on frame change",
-        description="Update this sequence whenever the frame changes",
-        default=False,
     )
 
     #: bpy.props.IntProperty: Starting frame of the sequence.

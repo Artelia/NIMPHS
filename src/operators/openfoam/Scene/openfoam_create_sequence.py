@@ -28,7 +28,7 @@ class TBB_OT_OpenfoamCreateSequence(TBB_CreateSequence):
         :rtype: bool
         """
 
-        return super().poll(context.scene.tbb_settings.openfoam, context)
+        return super().poll(context.scene.tbb.settings.openfoam, context)
 
     def execute(self, context: Context) -> set:
         """
@@ -39,7 +39,7 @@ class TBB_OT_OpenfoamCreateSequence(TBB_CreateSequence):
         :rtype: set
         """
 
-        return super().execute(context.scene.tbb_settings.openfoam, context, 'OpenFOAM')
+        return super().execute(context.scene.tbb.settings.openfoam, context, 'OpenFOAM')
 
     def modal(self, context: Context, event: Event) -> set:
         """

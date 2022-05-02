@@ -1,7 +1,7 @@
 # <pep8 compliant>
-from bpy.types import Panel
+from bpy.types import Panel, Object, Context
 
-from ...properties.shared.streaming_sequence_property import TBB_StreamingSequenceProperty
+from ...properties.shared.module_streaming_sequence_settings import TBB_ModuleStreamingSequenceSettings
 
 
 class TBB_StreamingSequenceSettingsPanel(Panel):
@@ -10,30 +10,36 @@ class TBB_StreamingSequenceSettingsPanel(Panel):
     """
 
     @classmethod
-    def poll(cls, sequence_settings: TBB_StreamingSequenceProperty) -> bool:
+    def poll(cls, context: Object) -> bool:
         """
         If false, hides the panel.
 
-        :param sequence_settings: 'streaming sequence' settings
-        :type sequence_settings: TBB_StreamingSequenceProperty
+        :param obj: object
+        :type obj: Object
         :rtype: bool
         """
 
-        return sequence_settings.is_streaming_sequence
+        obj = context.active_object
+        if obj is not None:
+            return obj.tbb.is_streaming_sequence
+        else:
+            return False
 
-    def draw(self, sequence_settings: TBB_StreamingSequenceProperty) -> None:
+    def draw(self, sequence_settings: TBB_ModuleStreamingSequenceSettings, obj: Object) -> None:
         """
         Layout of the panel.
 
         :param sequence_settings: 'streaming sequence' settings
         :type sequence_settings: TBB_StreamingSequenceProperty
+        :param obj: object
+        :type obj: Object
         """
 
         layout = self.layout
 
         row = layout.row()
-        row.prop(sequence_settings, "update", text="Update")
-        if sequence_settings.update:
+        row.prop(obj.tbb, "update", text="Update")
+        if obj.tbb.update:
             row = layout.row()
             row.prop(sequence_settings, "frame_start", text="Frame start")
             row = layout.row()

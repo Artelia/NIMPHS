@@ -26,8 +26,8 @@ class TBB_OT_OpenfoamReloadFile(Operator):
         :rtype: set
         """
 
-        settings = context.scene.tbb_settings.openfoam
-        tmp_data = context.scene.tbb_settings.openfoam.tmp_data
+        settings = context.scene.tbb.settings.openfoam
+        tmp_data = settings.tmp_data
 
         if settings.file_path == "":
             self.report({"ERROR"}, "Please select a file first")
@@ -43,7 +43,7 @@ class TBB_OT_OpenfoamReloadFile(Operator):
         tmp_data.update(file_reader, settings.get("preview_time_point", 0))
         settings.clip.scalar.value_ranges = encode_value_ranges(tmp_data.mesh)
         settings.clip.scalar.list = encode_scalar_names(tmp_data.mesh)
-        context.scene.tbb_create_sequence_is_running = False
+        context.scene.tbb.create_sequence_is_running = False
 
         # Update properties values
         update_scene_settings_dynamic_props(settings, tmp_data)

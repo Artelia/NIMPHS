@@ -30,12 +30,7 @@ class TBB_CreateSequencePanel(Panel):
         if obj is None:
             return tmp_data.is_ok()
         else:
-            if tmp_data.module_name == "TELEMAC":
-                return tmp_data.is_ok() and not obj.tbb_telemac_sequence.is_streaming_sequence
-            elif tmp_data.module_name == "OpenFOAM":
-                return tmp_data.is_ok() and not obj.tbb_openfoam_sequence.is_streaming_sequence
-            else:
-                return tmp_data.is_ok()
+            return tmp_data.is_ok() and not obj.tbb.is_streaming_sequence
 
     def draw(self, settings: TBB_OpenfoamSettings | TBB_TelemacSettings, context: Context) -> bool:
         """
@@ -51,7 +46,7 @@ class TBB_CreateSequencePanel(Panel):
         layout = self.layout
 
         # Check if we need to lock the ui
-        enable_rows = not context.scene.tbb_create_sequence_is_running
+        enable_rows = not context.scene.tbb.create_sequence_is_running
 
         row = layout.row()
         row.enabled = enable_rows

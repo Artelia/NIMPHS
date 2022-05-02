@@ -27,7 +27,7 @@ def update_var_names(self, context: Context) -> list:
     :rtype: list
     """
 
-    tmp_data = context.scene.tbb_settings.telemac.tmp_data
+    tmp_data = context.scene.tbb.settings.telemac.tmp_data
     names = tmp_data.vars_info["names"]
     units = tmp_data.vars_info["units"]
 

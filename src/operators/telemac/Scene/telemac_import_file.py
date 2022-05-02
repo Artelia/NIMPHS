@@ -34,8 +34,8 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         :rtype: set
         """
 
-        settings = context.scene.tbb_settings.telemac
-        tmp_data = context.scene.tbb_settings.telemac.tmp_data
+        settings = context.scene.tbb.settings.telemac
+        tmp_data = settings.tmp_data
         collection = get_collection("TBB_TELEMAC", context)
         prw_time_point = 0
         start = time.time()

@@ -22,17 +22,17 @@ class TBB_PT_TelemacMainPanel(TBB_ModulePanel):
         :type context: Context
         """
 
-        settings = context.scene.tbb_settings.telemac
-        tmp_data = context.scene.tbb_settings.telemac.tmp_data
+        settings = context.scene.tbb.settings.telemac
+        tmp_data = settings.tmp_data
         enable_rows, obj = super().draw(settings, tmp_data, context)
 
         layout = self.layout
         if obj is not None:
-            sequence_settings = obj.tbb_telemac_sequence
+            sequence_settings = obj.tbb.settings.telemac
         else:
             sequence_settings = None
 
-        if sequence_settings is None or not sequence_settings.is_streaming_sequence:
+        if sequence_settings is None or not obj.tbb.is_streaming_sequence:
 
             if tmp_data.is_ok():
                 row = layout.row()

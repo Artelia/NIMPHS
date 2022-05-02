@@ -6,7 +6,7 @@ from rna_prop_ui import rna_idprop_ui_create
 from typing import Any
 import numpy as np
 
-from ..properties.shared.scene_settings import scene_settings_dynamic_props, TBB_ModuleSceneSettings
+from ..properties.shared.module_scene_settings import scene_settings_dynamic_props, TBB_ModuleSceneSettings
 from ..properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
 from ..properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
 
@@ -75,9 +75,9 @@ def setup_openfoam_streaming_sequence_obj(obj: Object, context: Context) -> tupl
     :rtype: tuple[Any, int, Any]
     """
 
-    settings = context.scene.tbb_settings.openfoam
-    time_points = context.scene.tbb_settings.openfoam.tmp_data.nb_time_points
-    obj_settings = obj.tbb_openfoam_sequence
+    settings = context.scene.tbb.settings.openfoam
+    time_points = settings.tmp_data.nb_time_points
+    obj_settings = obj.tbb.settings.openfoam
 
     # Set clip settings
     obj_settings.clip.type = settings.clip.type
@@ -111,9 +111,9 @@ def setup_telemac_streaming_sequence_obj(obj: Object, context: Context) -> tuple
     :rtype: tuple[Any, int, Any]
     """
 
-    settings = context.scene.tbb_settings.telemac
-    time_points = context.scene.tbb_settings.telemac.tmp_data.nb_time_points
-    obj_settings = obj.tbb_telemac_sequence
+    settings = context.scene.tbb.settings.telemac
+    time_points = settings.tmp_data.nb_time_points
+    obj_settings = obj.tbb.settings.telemac
 
     obj_settings.normalize = settings.normalize_sequence_obj
 
@@ -140,8 +140,8 @@ def setup_streaming_sequence_object(obj: Object, context: Context, type: str):
     # Setup common settings
     obj_settings.name = obj.name
     obj_settings.file_path = settings.file_path
-    obj_settings.is_streaming_sequence = True
-    obj_settings.update = True
+    obj.tbb.is_streaming_sequence = True
+    obj.tbb.update = True
 
     # Set the selected time frame
     obj_settings.frame_start = settings.frame_start     #

@@ -26,7 +26,7 @@ class TBB_PT_OpenfoamCreateSequence(TBB_CreateSequencePanel):
         :rtype: bool
         """
 
-        return super().poll(context.scene.tbb_settings.openfoam.tmp_data, context)
+        return super().poll(context.scene.tbb.settings.openfoam.tmp_data, context)
 
     def draw(self, context: Context):
         """
@@ -35,7 +35,7 @@ class TBB_PT_OpenfoamCreateSequence(TBB_CreateSequencePanel):
         :type context: Context
         """
 
-        settings = context.scene.tbb_settings.openfoam
+        settings = context.scene.tbb.settings.openfoam
         enable_rows = super().draw(settings, context)
         lock_operator, err_message = lock_create_operator(settings)
 

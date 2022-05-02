@@ -19,25 +19,21 @@ class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
     @classmethod
     def poll(cls, context: Context) -> bool:
         """
-        If false, hides the panel.
+        If false, hides the panel. Calls 'super().poll(...)'.
 
         :type context: Context
         :rtype: bool
         """
 
-        obj = context.active_object
-        if obj is not None:
-            return super().poll(obj.tbb_openfoam_sequence)
-        else:
-            return False
+        return super().poll(context)
 
     def draw(self, context: Context) -> None:
         """
-        Layout of the panel.
+        Layout of the panel. Calls 'super().draw(...)'.
 
         :type context: Context
         """
 
         obj = context.active_object
         if obj is not None:
-            super().draw(obj.tbb_openfoam_sequence)
+            super().draw(obj.tbb.settings.openfoam, obj)

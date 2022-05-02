@@ -25,7 +25,7 @@ class TBB_PT_OpenfoamStreamingSequenceClip(Panel):
         """
 
         obj = context.active_object
-        return obj.tbb_openfoam_sequence.update
+        return obj.tbb.update
 
     def draw(self, context: Context) -> None:
         """
@@ -36,7 +36,7 @@ class TBB_PT_OpenfoamStreamingSequenceClip(Panel):
 
         layout = self.layout
         obj = context.active_object
-        clip = obj.tbb_openfoam_sequence.clip
+        clip = obj.tbb.settings.openfoam.clip
 
         row = layout.row()
         row.prop(clip, "type", text="Type")

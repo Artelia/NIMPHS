@@ -125,7 +125,7 @@ def generate_mesh_for_sequence(context: Context, time_point: int, name: str = "T
     :rtype: Mesh
     """
 
-    settings = context.scene.tbb_settings.openfoam
+    settings = context.scene.tbb.settings.openfoam
 
     # Read data from the given OpenFoam file
     file_reader = OpenFOAMReader(settings.file_path)
@@ -246,11 +246,11 @@ def update_streaming_sequence(scene: Scene) -> None:
 
     frame = scene.frame_current
 
-    if not scene.tbb_create_sequence_is_running:
+    if not scene.tbb.create_sequence_is_running:
         for obj in scene.objects:
-            settings = obj.tbb_openfoam_sequence
+            settings = obj.tbb.settings.openfoam
 
-            if settings.is_streaming_sequence and settings.update:
+            if obj.tbb.is_streaming_sequence and obj.tbb.update:
                 time_point = frame - settings.frame_start
 
                 if time_point >= 0 and time_point < settings.anim_length:

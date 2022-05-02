@@ -27,8 +27,8 @@ class TBB_OT_OpenfoamPreview(Operator):
         :rtype: set
         """
 
-        settings = context.scene.tbb_settings.openfoam
-        tmp_data = context.scene.tbb_settings.openfoam.tmp_data
+        settings = context.scene.tbb.settings.openfoam
+        tmp_data = settings.tmp_data
         prw_time_point = settings["preview_time_point"]
         collection = get_collection("TBB_OpenFOAM", context)
         clip = settings.clip
@@ -43,7 +43,7 @@ class TBB_OT_OpenfoamPreview(Operator):
 
         start = time.time()
         # TODO: changing time point does not work if we do not load the file
-        # again... We would like to use the file_reader from tbb_settings.openfoam.tmp_data.
+        # again... We would like to use the file_reader from tbb.settings.openfoam.tmp_data.
         success, file_reader = load_openfoam_file(settings.file_path)
         if not success:
             self.report({"ERROR"}, "The choosen file does not exist.")

@@ -35,8 +35,8 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         :rtype: set
         """
 
-        settings = context.scene.tbb_settings.openfoam
-        tmp_data = context.scene.tbb_settings.openfoam.tmp_data
+        settings = context.scene.tbb.settings.openfoam
+        tmp_data = settings.tmp_data
         collection = get_collection("TBB_OpenFOAM", context)
 
         start = time.time()

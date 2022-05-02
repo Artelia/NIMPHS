@@ -4,7 +4,7 @@ from bpy.props import EnumProperty, PointerProperty
 from ..utils import update_scalar_names
 from ..clip import TBB_OpenfoamClipProperty
 from ..temporary_data import TBB_OpenfoamTemporaryData
-from ...shared.scene_settings import TBB_ModuleSceneSettings
+from ...shared.module_scene_settings import TBB_ModuleSceneSettings
 
 
 class TBB_OpenfoamSettings(TBB_ModuleSceneSettings):
