@@ -19,11 +19,8 @@ File architecture
 * A ``properties`` folder
     | Contains all the properties definitions
 
-| Each of these folders contain an ``OpenFOAM`` folder and a ``TELEMAC`` folder.
-| These contain all the code for each module.
-
-| If some code is used by both module, you can place it at the root folder.
-| Example: ``src/panels/custom_progress_bar.py``
+| Each of these folders contain an ``openfoam`` folder, a ``telemac`` folder and a ``shared`` folder.
+| These contain all the code for each module. The ``shared`` folder contains code used in both modules.
 
 .. _coding_style:
 

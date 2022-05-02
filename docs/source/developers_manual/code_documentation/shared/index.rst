@@ -44,11 +44,27 @@ Panels
 Properties
 ##########
 
-.. autoclass:: src.properties.shared.scene_settings.TBB_SceneSettings
+.. autoclass:: src.properties.shared.module_scene_settings.TBB_ModuleSceneSettings
    :members:
    :show-inheritance:
 
-.. autoclass:: src.properties.shared.streaming_sequence_property.TBB_StreamingSequenceProperty
+.. autoclass:: src.properties.shared.module_streaming_sequence_settings.TBB_ModuleStreamingSequenceSettings
+   :members:
+   :show-inheritance:
+
+.. autoclass:: src.properties.shared.tbb_scene.TBB_Scene
+   :members:
+   :show-inheritance:
+
+.. autoclass:: src.properties.shared.tbb_scene_settings.TBB_SceneSettings
+   :members:
+   :show-inheritance:
+
+.. autoclass:: src.properties.shared.tbb_object.TBB_Object
+   :members:
+   :show-inheritance:
+
+.. autoclass:: src.properties.shared.tbb_object_settings.TBB_ObjectSettings
    :members:
    :show-inheritance:
 
