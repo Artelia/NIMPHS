@@ -141,7 +141,8 @@ def setup_streaming_sequence_object(obj: Object, context: Context, type: str):
     obj_settings.name = obj.name
     obj_settings.file_path = settings.file_path
     obj.tbb.is_streaming_sequence = True
-    obj.tbb.update = True
+    obj_settings.update = True
+    obj.tbb.settings.module = type
 
     # Set the selected time frame
     obj_settings.frame_start = settings.frame_start     #

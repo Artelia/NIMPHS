@@ -44,10 +44,10 @@ def update_scalar_names(self, _context: Context) -> list:
     try:
         # Raises an AttributeError when this call comes from TBB_OpenfoamSettings.preview_point_data
         scalar_list = self.clip.scalar.list
+        items.append(("None@None", "None", "None"))
     except AttributeError:
         scalar_list = self.list
 
-    items.append(("None@None", "None", "None"))
     # Read from the saved list
     for scalar in scalar_list.split(";"):
         if scalar != "":

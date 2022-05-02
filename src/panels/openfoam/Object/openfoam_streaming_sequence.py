@@ -25,7 +25,7 @@ class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
         :rtype: bool
         """
 
-        return super().poll(context)
+        return super().poll(context, "OpenFOAM")
 
     def draw(self, context: Context) -> None:
         """
@@ -36,4 +36,4 @@ class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
 
         obj = context.active_object
         if obj is not None:
-            super().draw(obj.tbb.settings.openfoam, obj)
+            super().draw(obj.tbb.settings.openfoam)

@@ -2,6 +2,7 @@
 from bpy.types import Panel, Object, Context
 
 from ...properties.shared.module_streaming_sequence_settings import TBB_ModuleStreamingSequenceSettings
+from ..utils import get_selected_object
 
 
 class TBB_StreamingSequenceSettingsPanel(Panel):
@@ -10,7 +11,7 @@ class TBB_StreamingSequenceSettingsPanel(Panel):
     """
 
     @classmethod
-    def poll(cls, context: Object) -> bool:
+    def poll(cls, context: Context, type: str) -> bool:
         """
         If false, hides the panel.
 
@@ -19,27 +20,25 @@ class TBB_StreamingSequenceSettingsPanel(Panel):
         :rtype: bool
         """
 
-        obj = context.active_object
+        obj = get_selected_object(context)
         if obj is not None:
-            return obj.tbb.is_streaming_sequence
+            return obj.tbb.is_streaming_sequence and obj.tbb.settings.module == type
         else:
             return False
 
-    def draw(self, sequence_settings: TBB_ModuleStreamingSequenceSettings, obj: Object) -> None:
+    def draw(self, sequence_settings: TBB_ModuleStreamingSequenceSettings) -> None:
         """
         Layout of the panel.
 
         :param sequence_settings: 'streaming sequence' settings
         :type sequence_settings: TBB_StreamingSequenceProperty
-        :param obj: object
-        :type obj: Object
         """
 
         layout = self.layout
 
         row = layout.row()
-        row.prop(obj.tbb, "update", text="Update")
-        if obj.tbb.update:
+        row.prop(sequence_settings, "update", text="Update")
+        if sequence_settings.update:
             row = layout.row()
             row.prop(sequence_settings, "frame_start", text="Frame start")
             row = layout.row()

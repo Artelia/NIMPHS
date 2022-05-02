@@ -1,6 +1,6 @@
 # <pep8 compliant>
 from bpy.types import PropertyGroup
-from bpy.props import PointerProperty
+from bpy.props import PointerProperty, StringProperty
 
 from ..openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
 from ..telemac.Object.telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
@@ -10,6 +10,12 @@ class TBB_ObjectSettings(PropertyGroup):
     """
     Data structure which holds 'streaming sequence' settings for all the modules.
     """
+
+    module: StringProperty(
+        name="Module name",
+        description="Streaming sequence module name, enum in ['None', 'OpenFOAM', 'TELEMAC']",
+        default="None",
+    )
 
     #: TBB_OpenfoamStreamingSequenceProperty: OpenFOAM streaming sequence properties
     openfoam: PointerProperty(type=TBB_OpenfoamStreamingSequenceProperty)

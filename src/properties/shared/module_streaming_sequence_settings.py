@@ -18,6 +18,13 @@ class TBB_ModuleStreamingSequenceSettings(PropertyGroup):
         default="",
     )
 
+    #: bpy.props.BoolProperty: Update this sequence whenever the frame changes.
+    update: BoolProperty(
+        name="Update on frame change",
+        description="Update this sequence whenever the frame changes",
+        default=False,
+    )
+
     #: bpy.props.StringProperty: File to read when updating the sequence.
     file_path: StringProperty(
         name="File path",

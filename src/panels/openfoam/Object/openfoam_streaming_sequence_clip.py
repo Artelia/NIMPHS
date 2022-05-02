@@ -1,6 +1,8 @@
 # <pep8 compliant>
 from bpy.types import Panel, Context
 
+from ...utils import get_selected_object
+
 
 class TBB_PT_OpenfoamStreamingSequenceClip(Panel):
     """
@@ -24,8 +26,8 @@ class TBB_PT_OpenfoamStreamingSequenceClip(Panel):
         :rtype: bool
         """
 
-        obj = context.active_object
-        return obj.tbb.update
+        obj = get_selected_object(context)
+        return obj.tbb.settings.openfoam.update
 
     def draw(self, context: Context) -> None:
         """

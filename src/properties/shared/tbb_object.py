@@ -18,10 +18,3 @@ class TBB_Object(PropertyGroup):
         description="Describe if this object is a sequence which updates when the frame changes",
         default=False,
     )
-
-    #: bpy.props.BoolProperty: Update this sequence whenever the frame changes.
-    update: BoolProperty(
-        name="Update on frame change",
-        description="Update this sequence whenever the frame changes",
-        default=False,
-    )
