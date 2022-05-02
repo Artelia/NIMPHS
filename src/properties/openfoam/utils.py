@@ -47,6 +47,7 @@ def update_scalar_names(self, _context: Context) -> list:
     except AttributeError:
         scalar_list = self.list
 
+    items.append(("None@None", "None", "None"))
     # Read from the saved list
     for scalar in scalar_list.split(";"):
         if scalar != "":

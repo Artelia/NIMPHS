@@ -54,8 +54,7 @@ class TBB_OT_OpenfoamPreview(Operator):
             file_reader.set_active_time_point(prw_time_point)
         except ValueError as error:
             print("ERROR::TBB_OT_OpenfoamPreview: " + str(error))
-            self.report({"ERROR"}, "The selected time point is not defined (" +
-                        str(prw_time_point) + ").")
+            self.report({"ERROR"}, "The selected time point is not defined (" + str(prw_time_point) + ").")
             return {"FINISHED"}
 
         data = file_reader.read()

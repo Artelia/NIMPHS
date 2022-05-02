@@ -41,7 +41,7 @@ def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, name: str
     :type vertices: np.ndarray
     :param faces: faces, must have the following shape: (n, 3)
     :type faces: np.ndarray
-    :param name: name of the preview object
+    :param name: name of the object
     :type name: str
     :return: Blender mesh (obj.data), generated object
     :rtype: tuple[Mesh, Object]

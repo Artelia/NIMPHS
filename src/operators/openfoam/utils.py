@@ -171,8 +171,9 @@ def generate_vertex_colors(mesh: UnstructuredGrid, blender_mesh: Mesh, list_poin
         if raw_key != "":
             key = raw_key.split("@")[0]
             if key not in mesh.point_data.keys():
-                print("WARNING::generate_vertex_colors: the field array named '" +
-                      key + "' does not exist (time point = " + str(time_point) + ")")
+                if key != "None":
+                    print("WARNING::generate_vertex_colors: the field array named '" +
+                          key + "' does not exist (time point = " + str(time_point) + ")")
             else:
                 filtered_keys.append(key)
 
