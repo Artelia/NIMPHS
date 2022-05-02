@@ -27,7 +27,7 @@ class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
         :rtype: bool
         """
 
-        return super().poll(context.scene.tbb_telemac_settings, context)
+        return super().poll(context.scene.tbb_settings.telemac, context)
 
     def execute(self, context: Context) -> set:
         """
@@ -38,7 +38,7 @@ class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
         :rtype: set
         """
 
-        return super().execute(context.scene.tbb_telemac_settings, context, 'TELEMAC')
+        return super().execute(context.scene.tbb_settings.telemac, context, 'TELEMAC')
 
     def modal(self, context: Context, event: Event) -> set:
         """

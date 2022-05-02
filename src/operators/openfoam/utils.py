@@ -125,7 +125,7 @@ def generate_mesh_for_sequence(context: Context, time_point: int, name: str = "T
     :rtype: Mesh
     """
 
-    settings = context.scene.tbb_openfoam_settings
+    settings = context.scene.tbb_settings.openfoam
 
     # Read data from the given OpenFoam file
     file_reader = OpenFOAMReader(settings.file_path)

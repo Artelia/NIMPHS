@@ -25,8 +25,8 @@ class TBB_OT_TelemacPreview(Operator):
         :rtype: set
         """
 
-        settings = context.scene.tbb_telemac_settings
-        tmp_data = context.scene.tbb_telemac_tmp_data
+        settings = context.scene.tbb_settings.telemac
+        tmp_data = context.scene.tbb_settings.telemac.tmp_data
         collection = get_collection("TBB_TELEMAC", context)
         prw_time_point = settings.get("preview_time_point", 0)
         start = time.time()

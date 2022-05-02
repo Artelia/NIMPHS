@@ -24,8 +24,8 @@ class TBB_OT_TelemacReloadFile(Operator):
         :rtype: set
         """
 
-        settings = context.scene.tbb_telemac_settings
-        tmp_data = context.scene.tbb_telemac_tmp_data
+        settings = context.scene.tbb_settings.telemac
+        tmp_data = context.scene.tbb_settings.telemac.tmp_data
 
         if settings.file_path == "":
             self.report({"ERROR"}, "Please select a file first")

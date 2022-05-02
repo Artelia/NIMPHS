@@ -33,7 +33,8 @@ from .properties.telemac.Object.telemac_streaming_sequence import TBB_TelemacStr
 from .properties.telemac.temporary_data import TBB_TelemacTemporaryData
 
 # Other imports
-from .properties.shared.scene_settings import TBB_SceneSettings
+from .properties.shared.tbb_settings import TBB_Settings
+from .properties.shared.scene_settings import TBB_ModuleSceneSettings
 from .properties.shared.streaming_sequence_property import TBB_StreamingSequenceProperty
 
 bl_info = {
@@ -71,7 +72,7 @@ panels = (
 )
 
 properties = (
-    TBB_SceneSettings,
+    TBB_ModuleSceneSettings,
     TBB_StreamingSequenceProperty,
     TBB_OpenfoamClipScalarProperty,
     TBB_OpenfoamClipProperty,
@@ -79,6 +80,7 @@ properties = (
     TBB_OpenfoamStreamingSequenceProperty,
     TBB_TelemacSettings,
     TBB_TelemacStreamingSequenceProperty,
+    TBB_Settings,
 )
 
 classes = [operators, panels, properties]
@@ -90,15 +92,12 @@ def register():
             register_class(cls)
 
     # Register custom properties
-    Scene.tbb_openfoam_tmp_data = TBB_OpenfoamTemporaryData()
-    Scene.tbb_telemac_tmp_data = TBB_TelemacTemporaryData()
-    Scene.tbb_openfoam_settings = PointerProperty(type=TBB_OpenfoamSettings)
-    Scene.tbb_telemac_settings = PointerProperty(type=TBB_TelemacSettings)
+    Scene.tbb_settings = PointerProperty(type=TBB_Settings)
     Object.tbb_openfoam_sequence = PointerProperty(type=TBB_OpenfoamStreamingSequenceProperty)
     Object.tbb_telemac_sequence = PointerProperty(type=TBB_TelemacStreamingSequenceProperty)
     Scene.tbb_create_sequence_is_running = BoolProperty(
         name="Create sequence state",
-        description="State of the 'create sequence' operation (used by all the 'create sequence' operators)",
+        description="State of the 'create sequence' operation (used by all 'create sequence' operators)",
         default=False,
     )
 

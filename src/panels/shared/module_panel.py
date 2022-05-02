@@ -4,7 +4,7 @@ from bpy.types import Panel, Context, Object
 from ..utils import get_selected_object
 from ...properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 from ...properties.telemac.temporary_data import TBB_TelemacTemporaryData
-from ...properties.shared.scene_settings import TBB_SceneSettings
+from ...properties.shared.scene_settings import TBB_ModuleSceneSettings
 
 
 class TBB_ModulePanel(Panel):
@@ -13,7 +13,7 @@ class TBB_ModulePanel(Panel):
     Specific settings are added in the classes which derive from this one.
     """
 
-    def draw(self, settings: TBB_SceneSettings, tmp_data: TBB_OpenfoamTemporaryData |
+    def draw(self, settings: TBB_ModuleSceneSettings, tmp_data: TBB_OpenfoamTemporaryData |
              TBB_TelemacTemporaryData, context: Context) -> tuple[bool, Object | None]:
         """
         Layout of the panel.

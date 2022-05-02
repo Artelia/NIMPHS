@@ -22,8 +22,8 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
         :type context: Context
         """
 
-        settings = context.scene.tbb_openfoam_settings
-        tmp_data = context.scene.tbb_openfoam_tmp_data
+        settings = context.scene.tbb_settings.openfoam
+        tmp_data = context.scene.tbb_settings.openfoam.tmp_data
         enable_rows, obj = super().draw(settings, tmp_data, context)
 
         layout = self.layout

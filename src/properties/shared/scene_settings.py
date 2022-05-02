@@ -11,7 +11,7 @@ scene_settings_dynamic_props = [
 ]
 
 
-class TBB_SceneSettings(PropertyGroup):
+class TBB_ModuleSceneSettings(PropertyGroup):
     """
     Scene settings. This data structure holds common data used in the OpenFOAM and TELEMAC modules.
     It contains 4 'dynamic' properties:

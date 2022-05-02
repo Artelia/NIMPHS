@@ -2,7 +2,7 @@
 import bpy
 from bpy.types import Context, Object
 
-from ..properties.shared.scene_settings import TBB_SceneSettings
+from ..properties.shared.scene_settings import TBB_ModuleSceneSettings
 
 
 def sequence_name_already_exist(name: str) -> bool:
@@ -21,7 +21,7 @@ def sequence_name_already_exist(name: str) -> bool:
     return False
 
 
-def lock_create_operator(settings: TBB_SceneSettings) -> tuple[bool, str]:
+def lock_create_operator(settings: TBB_ModuleSceneSettings) -> tuple[bool, str]:
     """
     Return if we need to lock the 'create sequence' button.
 
