@@ -5,14 +5,14 @@ from ...utils import get_selected_object
 from ...shared.streaming_sequence_settings import TBB_StreamingSequenceSettingsPanel
 
 
-class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
+class TBB_PT_TelemacStreamingSequence(TBB_StreamingSequenceSettingsPanel):
     """
-    Main panel of the OpenFOAM 'streaming sequence' settings.
+    Main panel of the TELEMAC 'streaming sequence' settings.
     This is the 'parent' panel.
     """
 
-    bl_label = "OpenFOAM Streaming sequence"
-    bl_idname = "TBB_PT_OpenfoamStreamingSequence"
+    bl_label = "TELEMAC Streaming sequence"
+    bl_idname = "TBB_PT_TelemacStreamingSequence"
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"
     bl_context = "object"
@@ -26,7 +26,7 @@ class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
         :rtype: bool
         """
 
-        return super().poll(context, "OpenFOAM")
+        return super().poll(context, "TELEMAC")
 
     def draw(self, context: Context) -> None:
         """
@@ -35,6 +35,13 @@ class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
         :type context: Context
         """
 
+        layout = self.layout
+
         obj = get_selected_object(context)
         if obj is not None:
-            super().draw(obj.tbb.settings.openfoam)
+            obj_settings = obj.tbb.settings.telemac
+            super().draw(obj_settings)
+
+            if obj_settings.update:
+                row = layout.row()
+                row.prop(obj_settings, "normalize", text="Normalize")

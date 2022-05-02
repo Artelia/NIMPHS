@@ -14,6 +14,7 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = "OpenFOAM"
+    bl_options = {"HEADER_LAYOUT_EXPAND"}
 
     def draw(self, context: Context) -> None:
         """

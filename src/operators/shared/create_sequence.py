@@ -104,7 +104,7 @@ class TBB_CreateSequence(Operator):
             obj = bpy.data.objects.new(obj_name, blender_mesh)
             setup_streaming_sequence_object(obj, context, type)
 
-            context.collection.objects.link(obj)
+            context.scene.collection.objects.link(obj)
 
             # As mentionned here, lock the interface because the custom handler will alter data on frame change
             # https://docs.blender.org/api/current/bpy.app.handlers.html?highlight=app%20handlers#module-bpy.app.handlers
