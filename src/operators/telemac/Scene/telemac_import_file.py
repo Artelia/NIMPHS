@@ -1,12 +1,13 @@
 # <pep8 compliant>
+import bpy
 from bpy_extras.io_utils import ImportHelper
 from bpy.types import Operator, Context
 from bpy.props import StringProperty
 
 import time
 
-from ..utils import generate_object, get_object_dimensions_from_mesh
-from ...utils import get_collection, update_scene_settings_dynamic_props
+from ..utils import generate_mesh, get_object_dimensions_from_mesh
+from ...utils import get_collection, update_scene_settings_dynamic_props, generate_object_from_data
 
 
 class TBB_OT_TelemacImportFile(Operator, ImportHelper):
@@ -56,7 +57,9 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         try:
             if not tmp_data.is_3d:
                 for obj_type in ['BOTTOM', 'WATER_DEPTH']:
-                    obj = generate_object(tmp_data, mesh_is_3d=False, time_point=prw_time_point, type=obj_type)
+                    name = "TBB_TELEMAC_preview" + "_" + obj_type.lower()
+                    vertices = generate_mesh(tmp_data, mesh_is_3d=False, time_point=prw_time_point, type=obj_type)
+                    obj = generate_object_from_data(vertices, tmp_data.faces, name=name)
                     # Reset the scale without applying it
                     obj.scale = [1.0] * 3
                     # Add this new object to the collection
@@ -70,8 +73,8 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
 
                 for plane_id in range(tmp_data.nb_planes - 1, -1, -1):
                     name = "TBB_TELEMAC_preview_plane_" + str(plane_id)
-                    obj = generate_object(tmp_data, mesh_is_3d=True, offset=plane_id,
-                                          time_point=prw_time_point, name=name)
+                    vertices = generate_mesh(tmp_data, mesh_is_3d=True, offset=plane_id, time_point=prw_time_point)
+                    obj = generate_object_from_data(vertices, tmp_data.faces, name=name)
                     # Reset the scale without applying it
                     obj.scale = [1.0] * 3
 

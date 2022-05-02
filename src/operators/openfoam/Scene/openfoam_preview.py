@@ -78,7 +78,7 @@ class TBB_OT_OpenfoamPreview(Operator):
         tmp_data.update(file_reader, prw_time_point, data, raw_mesh)
 
         try:
-            blender_mesh, obj = generate_object_from_data(vertices, faces, "TBB_OpenFOAM_preview")
+            obj = generate_object_from_data(vertices, faces, "TBB_OpenFOAM_preview")
             if collection.name not in [col.name for col in obj.users_collection]:
                 collection.objects.link(obj)
         except Exception as error:
@@ -86,7 +86,7 @@ class TBB_OT_OpenfoamPreview(Operator):
             self.report({"ERROR"}, "Something went generating the object the object")
 
         scalars_to_preview = str(settings.preview_point_data.split("@")[0])
-        blender_mesh = generate_vertex_colors(mesh, blender_mesh, scalars_to_preview, prw_time_point)
+        blender_mesh = generate_vertex_colors(mesh, obj.data, scalars_to_preview, prw_time_point)
         generate_preview_material(obj, scalars_to_preview)
 
         print("Preview::OpenFOAM: " + "{:.4f}".format(time.time() - start) + "s")

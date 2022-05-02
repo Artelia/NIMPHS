@@ -69,12 +69,12 @@ def get_data_from_possible_var_names(tmp_data: TBB_TelemacTemporaryData,
         return z_values, var_name
 
 
-def generate_object(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, offset: int = 0,
-                    time_point: int = 0, type: str = 'BOTTOM', name: str = "TBB_TELEMAC_preview") -> Object:
+def generate_mesh(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, offset: int = 0,
+                  time_point: int = 0, type: str = 'BOTTOM') -> np.ndarray:
     """
     Generate the mesh of the selected file. If the selected file is a 2D simulation, you can precise
     which part of the mesh you want ('BOTTOM' or 'WATER_DEPTH'). If the file is a 3D simulation, you can
-    precise an offset for data reading (this offsets is somehow the id of the plane to generate).
+    precise an offset for data reading (this offsets is somehow the id of the plane to generate)
 
     :param tmp_data: temporary data
     :type tmp_data: TBB_TelemacTemporaryData
@@ -86,15 +86,13 @@ def generate_object(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, offset
     :type time_point: int, optional
     :param type: type of the object, enum in ['BOTTOM', 'WATER_DEPTH'], defaults to 'BOTTOM'
     :type type: str, optional
-    :param name: name of the object, defaults to "TBB_TELEMAC_preview"
-    :type name: str, optional
     :raises NameError: if the given type is undefined
     :raises error: if an error occurred reading data
-    :return: generated object
-    :rtype: Object
+    :return: vertices of the mesh
+    :rtype: np.ndarray
     """
 
-    if type not in ['BOTTOM', 'WATER_DEPTH']:
+    if not mesh_is_3d and type not in ['BOTTOM', 'WATER_DEPTH']:
         raise NameError("Undefined type, please use one in ['BOTTOM', 'WATER_DEPTH']")
 
     # Manage 2D / 3D meshes
@@ -133,16 +131,12 @@ def generate_object(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, offset
 
             vertices = np.hstack((tmp_data.vertices, z_values))
 
-        name += "_" + type.lower()
-
-    blender_mesh, obj = generate_object_from_data(vertices, tmp_data.faces, name=name)
-
     # TODO: where to add this option? (Set object's origin to center of the world)
     # Set the object at the origin of the scene
     # obj.select_set(state=True, view_layer=context.view_layer)
     # bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN')
 
-    return obj
+    return vertices
 
 
 def generate_vertex_colors(tmp_data: TBB_TelemacTemporaryData, blender_mesh: Mesh,
@@ -336,3 +330,30 @@ def get_object_dimensions_from_mesh(obj: Object) -> list[float]:
     dimensions.append(np.max(vertices[:, 1]) - np.min(vertices[:, 1]))
     dimensions.append(np.max(vertices[:, 2]) - np.min(vertices[:, 2]))
     return dimensions
+
+
+def set_new_shape_key(obj: Object, vertices: np.ndarray, name: str, frame: int) -> None:
+    """
+    Add a shape key to the object using the given vertices. It also set a keyframe with value = 1.0 at the given frame
+    and add keyframes at value = 0.0 around the given frame (-1 and +1).
+
+    :param obj: object to receive the new shape key
+    :type obj: Object
+    :param vertices: new vertices
+    :type vertices: np.ndarray
+    :param name: name of the shape key
+    :type name: str
+    :param frame: the frame on which the keyframe is inserted
+    :type frame: int
+    """
+
+    obj.data.vertices.foreach_set("co", vertices.flatten())
+
+    # Add a shape key
+    block = obj.shape_key_add(name=name, from_mix=False)
+    block.value = 1.0
+    # Keyframe the new shape key
+    block.keyframe_insert("value", frame=frame, index=-1)
+    block.value = 0.0
+    block.keyframe_insert("value", frame=frame - 1, index=-1)
+    block.keyframe_insert("value", frame=frame + 1, index=-1)

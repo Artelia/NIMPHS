@@ -33,7 +33,7 @@ def get_collection(name: str, context: Context, link_to_scene: bool = True) -> C
     return collection
 
 
-def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, name: str) -> tuple[Mesh, Object]:
+def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, name: str) -> Object:
     """
     Generate an object and its mesh using the given vertices and faces.
 
@@ -43,8 +43,8 @@ def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, name: str
     :type faces: np.ndarray
     :param name: name of the object
     :type name: str
-    :return: Blender mesh (obj.data), generated object
-    :rtype: tuple[Mesh, Object]
+    :return: generated object
+    :rtype: Object
     """
 
     # Create the object (or write over it if it already exists)
@@ -61,7 +61,7 @@ def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, name: str
     blender_mesh.clear_geometry()
     blender_mesh.from_pydata(vertices, [], faces)
 
-    return blender_mesh, obj
+    return obj
 
 
 def setup_openfoam_streaming_sequence_obj(obj: Object, context: Context) -> tuple[Any, int, Any]:

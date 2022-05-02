@@ -5,9 +5,9 @@ from bpy.types import Context, Event
 import time
 import numpy as np
 
-from ..utils import generate_object, normalize_objects, get_object_dimensions_from_mesh, get_data_from_possible_var_names
+from ..utils import generate_mesh, normalize_objects, get_object_dimensions_from_mesh, set_new_shape_key
 from ...shared.create_sequence import TBB_CreateSequence
-from ...utils import get_collection
+from ...utils import get_collection, generate_object_from_data
 
 
 class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
@@ -74,8 +74,10 @@ class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
                         objects = []
                         for obj_type in ['BOTTOM', 'WATER_DEPTH']:
                             # Generate object
-                            obj = generate_object(tmp_data, mesh_is_3d=False, time_point=self.start_time_point,
-                                                  type=obj_type, name=name)
+                            vertices = generate_mesh(tmp_data, mesh_is_3d=False, time_point=self.start_time_point,
+                                                     type=obj_type)
+                            obj = generate_object_from_data(
+                                vertices, tmp_data.faces, name=name + "_" + obj_type.lower())
                             # Add 'Basis' shape key
                             obj.shape_key_add(name="Basis", from_mix=False)
 
@@ -104,33 +106,18 @@ class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
                     collection.objects.link(seq_obj)
                 else:
                     seq_obj = bpy.data.objects[name]
-                    for obj in seq_obj.children:
-                        # Update geometry
-                        type = obj.name.split("_")[-1].upper()
-                        if type == 'BOTTOM':
-                            z_values, var_name = get_data_from_possible_var_names(tmp_data, ['BOTTOM', 'FOND'],
-                                                                                  self.current_time_point)
-                        if type == 'DEPTH':
-                            z_values, var_name = get_data_from_possible_var_names(
-                                tmp_data, ["WATER DEPTH", "HAUTEUR D'EAU", "FREE SURFACE", "SURFACE LIBRE"], self.current_time_point)
+                    time_point = self.current_time_point
 
-                            # Compute 'FREE SURFACE' from 'WATER_DEPTH' and 'BOTTOM'
-                            if var_name in ["WATER DEPTH", "HAUTEUR D'EAU"]:
-                                bottom, var_name = get_data_from_possible_var_names(
-                                    tmp_data, ["BOTTOM", "FOND"], self.current_time_point)
-                                z_values += bottom
+                    for obj, id in zip(seq_obj.children, range(len(seq_obj.children))):
+                        if not tmp_data.is_3d:
+                            raw_type = obj.name.split("_")[-1]
+                            # TODO: fix this small issue (the split does not read 'water' in 'water_depth')
+                            type = raw_type.upper() if raw_type != 'depth' else ('water_' + raw_type).upper()
+                            vertices = generate_mesh(tmp_data, mesh_is_3d=False, time_point=time_point, type=type)
+                        else:
+                            vertices = generate_mesh(tmp_data, mesh_is_3d=True, offset=id, time_point=time_point)
 
-                        vertices = np.hstack((tmp_data.vertices, z_values)).flatten()
-                        obj.data.vertices.foreach_set("co", vertices)
-
-                        # Add a shape key
-                        block = obj.shape_key_add(name=str(self.current_time_point), from_mix=False)
-                        block.value = 1.0
-                        # Keyframe the new shape key
-                        block.keyframe_insert("value", frame=self.current_frame, index=-1)
-                        block.value = 0.0
-                        block.keyframe_insert("value", frame=self.current_frame - 1, index=-1)
-                        block.keyframe_insert("value", frame=self.current_frame + 1, index=-1)
+                        set_new_shape_key(obj, vertices.flatten(), str(time_point), self.current_frame)
 
                 elapsed_time = "{:.4f}".format(time.time() - self.chrono_start)
                 print("CreateSequence::TELEMAC: " + elapsed_time + "s, time_point = " + str(self.current_time_point))

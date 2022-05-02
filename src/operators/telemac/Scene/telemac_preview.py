@@ -3,8 +3,8 @@ from bpy.types import Operator, Context
 
 import time
 
-from ..utils import generate_object, generate_vertex_colors, generate_preview_material, normalize_objects
-from ...utils import get_collection
+from ..utils import generate_mesh, generate_vertex_colors, generate_preview_material, normalize_objects
+from ...utils import get_collection, generate_object_from_data
 
 
 class TBB_OT_TelemacPreview(Operator):
@@ -44,7 +44,9 @@ class TBB_OT_TelemacPreview(Operator):
             objs_to_normalize = []
             if not tmp_data.is_3d:
                 for obj_type in ['BOTTOM', 'WATER_DEPTH']:
-                    obj = generate_object(tmp_data, mesh_is_3d=False, time_point=prw_time_point, type=obj_type)
+                    name = "TBB_TELEMAC_preview" + "_" + obj_type.lower()
+                    vertices = generate_mesh(tmp_data, mesh_is_3d=False, time_point=prw_time_point, type=obj_type)
+                    obj = generate_object_from_data(vertices, tmp_data.faces, name=name)
                     if import_point_data:
                         generate_vertex_colors(tmp_data, obj.data, list_point_data, prw_time_point)
                         generate_preview_material(obj, vertex_colors_var_name)
@@ -64,8 +66,8 @@ class TBB_OT_TelemacPreview(Operator):
 
                 for plane_id in range(tmp_data.nb_planes - 1, -1, -1):
                     name = "TBB_TELEMAC_preview_plane_" + str(plane_id)
-                    obj = generate_object(tmp_data, mesh_is_3d=True, offset=plane_id,
-                                          time_point=prw_time_point, name=name)
+                    vertices = generate_mesh(tmp_data, mesh_is_3d=True, offset=plane_id, time_point=prw_time_point)
+                    obj = generate_object_from_data(vertices, tmp_data.faces, name=name)
                     if import_point_data:
                         generate_vertex_colors(tmp_data, obj.data, list_point_data, prw_time_point,
                                                mesh_is_3d=True, offset=plane_id)

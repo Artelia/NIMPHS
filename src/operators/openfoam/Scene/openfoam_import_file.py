@@ -60,7 +60,7 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         # the preview mesh may already be loaded. Moreover, this step takes a while for large meshes.
         try:
             vertices, faces, preview_mesh = generate_mesh(file_reader, 0)
-            blender_mesh, obj = generate_object_from_data(vertices, faces, "TBB_OpenFOAM_preview")
+            obj = generate_object_from_data(vertices, faces, "TBB_OpenFOAM_preview")
             if collection.name not in [col.name for col in obj.users_collection]:
                 collection.objects.link(obj)
         except Exception as error:
