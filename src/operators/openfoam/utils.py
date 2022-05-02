@@ -108,7 +108,9 @@ def generate_preview_material(obj: Object, scalar: str, name: str = "TBB_OpenFOA
         vertex_color_node.location = (-200, 250)
 
     # Update scalar to preview
-    vertex_color_node.layer_name = scalar
+    vertex_color_node.layer_name = ""
+    if scalar != 'None':
+        vertex_color_node.layer_name = scalar
     # Make sure it is the active material
     obj.active_material = material
 

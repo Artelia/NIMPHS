@@ -104,16 +104,17 @@ class TBB_OT_OpenfoamCreateSequence(TBB_CreateSequence):
                         (keyframe for keyframe in meshIdxCurve.keyframe_points if keyframe.co.x == context.scene.frame_current), None)
                     newKeyAtFrame.interpolation = 'CONSTANT'
 
-                print("CreateSequence::OpenFOAM: " + "{:.4f}".format(time.time() - self.chrono_start) + "s, time_point = "
-                      + str(self.current_time_point))
+                elapsed_time = "{:.4f}".format(time.time() - self.chrono_start)
+                print("CreateSequence::OpenFOAM: " + elapsed_time + "s, time_point = " + str(self.current_time_point))
 
             else:
                 super().stop(context)
                 self.report({"INFO"}, "Create sequence finished")
                 return {"FINISHED"}
 
-            context.scene.tbb_progress_value = self.current_time_point / \
-                (self.end_time_point - self.start_time_point) * 100
+            # Update the progress bar
+            context.scene.tbb_progress_value = self.current_time_point / (self.end_time_point - self.start_time_point)
+            context.scene.tbb_progress_value *= 100
             self.current_time_point += 1
             self.current_frame += 1
 
