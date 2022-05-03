@@ -77,7 +77,7 @@ def setup_openfoam_streaming_sequence_obj(obj: Object, context: Context) -> tupl
 
     settings = context.scene.tbb.settings.openfoam
     time_points = settings.tmp_data.nb_time_points
-    obj_settings = obj.tbb.settings.openfoam
+    obj_settings = obj.tbb.settings.openfoam.streaming_sequence
 
     # Set clip settings
     obj_settings.clip.type = settings.clip.type
@@ -113,7 +113,7 @@ def setup_telemac_streaming_sequence_obj(obj: Object, context: Context) -> tuple
 
     settings = context.scene.tbb.settings.telemac
     time_points = settings.tmp_data.nb_time_points
-    obj_settings = obj.tbb.settings.telemac
+    obj_settings = obj.tbb.settings.telemac.streaming_sequence
 
     obj_settings.normalize = settings.normalize_sequence_obj
 

@@ -22,6 +22,7 @@ from .panels.custom_progress_bar import register_custom_progress_bar
 from .properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
 from .properties.openfoam.clip import TBB_OpenfoamClipProperty, TBB_OpenfoamClipScalarProperty
 from .properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
+from .properties.openfoam.Object.openfoam_object_settings import TBB_OpenfoamObjectSettings
 
 # ----- TELEMAC imports
 # Operators
@@ -36,6 +37,7 @@ from .panels.telemac.Object.telemac_streaming_sequence import TBB_PT_TelemacStre
 # Properties
 from .properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
 from .properties.telemac.Object.telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
+from .properties.telemac.Object.telemac_object_settings import TBB_TelemacObjectSettings
 
 # ----- Other imports
 from .properties.shared.tbb_scene import TBB_Scene
@@ -87,8 +89,10 @@ properties = (
     TBB_OpenfoamClipProperty,
     TBB_OpenfoamSettings,
     TBB_OpenfoamStreamingSequenceProperty,
+    TBB_OpenfoamObjectSettings,
     TBB_TelemacSettings,
     TBB_TelemacStreamingSequenceProperty,
+    TBB_TelemacObjectSettings,
     TBB_SceneSettings,
     TBB_Scene,
     TBB_ObjectSettings,

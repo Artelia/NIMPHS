@@ -29,7 +29,7 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
 
         layout = self.layout
         if obj is not None:
-            sequence_settings = obj.tbb.settings.openfoam
+            sequence_settings = obj.tbb.settings.openfoam.streaming_sequence
         else:
             sequence_settings = None
 

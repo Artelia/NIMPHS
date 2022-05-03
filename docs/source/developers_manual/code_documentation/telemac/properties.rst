@@ -3,6 +3,7 @@ Properties
 
 * :ref:`telemac_properties_other`
 * :ref:`telemac_properties_scene`
+* :ref:`telemac_properties_object`
 * :ref:`telemac_properties_utils`
 
 .. _telemac_properties_other:
@@ -26,6 +27,16 @@ Scene
    :members:
    :show-inheritance:
 
+
+.. _telemac_properties_object:
+
+Object
+######
+
+.. autoclass:: src.properties.telemac.Object.telemac_streaming_sequence.TBB_TelemacStreamingSequenceProperty
+   :members:
+   :show-inheritance:
+   
 .. _telemac_properties_utils:
 
 Utils
