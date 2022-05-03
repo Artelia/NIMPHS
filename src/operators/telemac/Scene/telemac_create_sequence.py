@@ -1,13 +1,14 @@
 # <pep8 compliant>
 import bpy
-from bpy.types import Context, Event
+from bpy.types import Context, Event, Object, Collection
 
 import time
-import numpy as np
 
 from ..utils import generate_mesh, normalize_objects, get_object_dimensions_from_mesh, set_new_shape_key
 from ...shared.create_sequence import TBB_CreateSequence
 from ...utils import get_collection, generate_object_from_data
+from ....properties.telemac.temporary_data import TBB_TelemacTemporaryData
+from ....properties.telemac.Object.telemac_object_settings import TBB_TelemacObjectSettings
 
 
 class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
@@ -57,6 +58,7 @@ class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
             return {"CANCELLED"}
 
         if event.type == "TIMER":
+            # If the 'Create TELEMAC Mesh sequence' process is not finished
             if self.current_time_point <= self.end_time_point:
                 self.chrono_start = time.time()
 
@@ -71,48 +73,31 @@ class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
                     collection = get_collection("TBB_TELEMAC", context)
 
                     try:
-                        objects = []
-                        for obj_type in ['BOTTOM', 'WATER_DEPTH']:
-                            # Generate object
-                            vertices = generate_mesh(tmp_data, mesh_is_3d=False, time_point=self.start_time_point,
-                                                     type=obj_type)
-                            obj = generate_object_from_data(
-                                vertices, tmp_data.faces, name=name + "_" + obj_type.lower())
-                            # Add 'Basis' shape key
-                            obj.shape_key_add(name="Basis", from_mix=False)
-
-                            # Add the object to the collection
-                            collection.objects.link(obj)
-                            objects.append(obj)
-
-                        # Normalize if needed (option set by the user)
-                        if settings.normalize_sequence_obj:
-                            normalize_objects(objects, get_object_dimensions_from_mesh(objects[0]))
-
+                        objects = self.generate_base_objects(tmp_data, settings, name, collection)
                     except Exception as error:
                         print("ERROR::TBB_OT_TelemacCreateSequence: " + str(error))
                         self.report({"ERROR"}, "An error occurred creating the sequence")
                         super().stop(context)
                         return {"CANCELLED"}
 
-                    # Create the blender object (which will contain the sequence)
+                    # Create the sequence object
                     seq_obj = bpy.data.objects.new(name=name, object_data=None)
 
                     # Parent objects
                     for child in objects:
                         child.parent = seq_obj
 
-                    self.sequence_object_name = obj.name
+                    self.sequence_object_name = seq_obj.name
                     collection.objects.link(seq_obj)
+
+                # Other time points, update vertices
                 else:
                     seq_obj = bpy.data.objects[name]
                     time_point = self.current_time_point
 
                     for obj, id in zip(seq_obj.children, range(len(seq_obj.children))):
                         if not tmp_data.is_3d:
-                            raw_type = obj.name.split("_")[-1]
-                            # TODO: fix this small issue (the split does not read 'water' in 'water_depth')
-                            type = raw_type.upper() if raw_type != 'depth' else ('water_' + raw_type).upper()
+                            type = obj.tbb.settings.telemac.z_name
                             vertices = generate_mesh(tmp_data, mesh_is_3d=False, time_point=time_point, type=type)
                         else:
                             vertices = generate_mesh(tmp_data, mesh_is_3d=True, offset=id, time_point=time_point)
@@ -134,3 +119,54 @@ class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
             self.current_frame += 1
 
         return {"PASS_THROUGH"}
+
+    def generate_base_objects(self, tmp_data: TBB_TelemacTemporaryData,
+                              settings: TBB_TelemacObjectSettings, name: str, collection: Collection) -> list[Object]:
+        """
+        Generate base objects for the 'mesh sequence'.
+
+        :param tmp_data: temporary data
+        :type tmp_data: TBB_TelemacTemporaryData
+        :param settings: object settings
+        :type settings: TBB_TelemacObjectSettings
+        :param name: name of the sequence object
+        :type name: str
+        :param collection: target collection for these new objects
+        :type collection: Collection
+        :return: list of generated objects
+        :rtype: list[Object]
+        """
+
+        time_point = self.start_time_point
+        objects = []
+        if not tmp_data.is_3d:
+            for type in ['BOTTOM', 'WATER_DEPTH']:
+                # Generate object
+                vertices = generate_mesh(tmp_data, mesh_is_3d=False, time_point=time_point, type=type)
+                obj = generate_object_from_data(vertices, tmp_data.faces, name=name + "_" + type.lower())
+                # Save the name of the variable used for 'z-values' of the vertices
+                obj.tbb.settings.telemac.z_name = type
+                # Add 'Basis' shape key
+                obj.shape_key_add(name="Basis", from_mix=False)
+
+                # Add the object to the collection
+                collection.objects.link(obj)
+                objects.append(obj)
+        else:
+            for plane_id in range(tmp_data.nb_planes - 1, -1, -1):
+                vertices = generate_mesh(tmp_data, mesh_is_3d=True, offset=plane_id, time_point=time_point)
+                obj = generate_object_from_data(vertices, tmp_data.faces, name=name + "_plane_" + str(plane_id))
+                # Save the name of the variable used for 'z-values' of the vertices
+                obj.tbb.settings.telemac.z_name = str(plane_id)
+                # Add 'Basis' shape key
+                obj.shape_key_add(name="Basis", from_mix=False)
+
+                # Add the object to the collection
+                collection.objects.link(obj)
+                objects.append(obj)
+
+        # Normalize if needed (option set by the user)
+        if settings.normalize_sequence_obj:
+            normalize_objects(objects, get_object_dimensions_from_mesh(objects[0]))
+
+        return objects

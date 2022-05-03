@@ -43,10 +43,12 @@ class TBB_OT_TelemacPreview(Operator):
         try:
             objs_to_normalize = []
             if not tmp_data.is_3d:
-                for obj_type in ['BOTTOM', 'WATER_DEPTH']:
-                    name = "TBB_TELEMAC_preview" + "_" + obj_type.lower()
-                    vertices = generate_mesh(tmp_data, mesh_is_3d=False, time_point=prw_time_point, type=obj_type)
+                for type in ['BOTTOM', 'WATER_DEPTH']:
+                    name = "TBB_TELEMAC_preview" + "_" + type.lower()
+                    vertices = generate_mesh(tmp_data, mesh_is_3d=False, time_point=prw_time_point, type=type)
                     obj = generate_object_from_data(vertices, tmp_data.faces, name=name)
+                    # Save the name of the variable used for 'z-values' of the vertices
+                    obj.tbb.settings.telemac.z_name = type
                     if import_point_data:
                         generate_vertex_colors(tmp_data, obj.data, list_point_data, prw_time_point)
                         generate_preview_material(obj, vertex_colors_var_name)
@@ -68,6 +70,8 @@ class TBB_OT_TelemacPreview(Operator):
                     name = "TBB_TELEMAC_preview_plane_" + str(plane_id)
                     vertices = generate_mesh(tmp_data, mesh_is_3d=True, offset=plane_id, time_point=prw_time_point)
                     obj = generate_object_from_data(vertices, tmp_data.faces, name=name)
+                    # Save the name of the variable used for 'z-values' of the vertices
+                    obj.tbb.settings.telemac.z_name = str(plane_id)
                     if import_point_data:
                         generate_vertex_colors(tmp_data, obj.data, list_point_data, prw_time_point,
                                                mesh_is_3d=True, offset=plane_id)

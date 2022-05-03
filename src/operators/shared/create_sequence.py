@@ -76,7 +76,7 @@ class TBB_CreateSequence(Operator):
 
         if settings.sequence_type == "mesh_sequence":
             # Create timer event
-            self.timer = wm.event_timer_add(time_step=1e-3, window=context.window)
+            self.timer = wm.event_timer_add(time_step=1e-6, window=context.window)
             wm.modal_handler_add(self)
 
             # Setup prograss bar
