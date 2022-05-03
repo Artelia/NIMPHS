@@ -2,7 +2,7 @@
 from bpy.types import Operator, Context
 import time
 
-from ...utils import update_scene_settings_dynamic_props
+from src.operators.utils import update_scene_settings_dynamic_props
 
 
 class TBB_OT_TelemacReloadFile(Operator):

@@ -1,8 +1,8 @@
 # <pep8 compliant>
 from bpy.types import Context
 
-from ...shared.create_sequence import TBB_CreateSequencePanel
-from ...utils import lock_create_operator
+from src.panels.shared.create_sequence import TBB_CreateSequencePanel
+from src.panels.utils import lock_create_operator
 
 
 class TBB_PT_OpenfoamCreateSequence(TBB_CreateSequencePanel):

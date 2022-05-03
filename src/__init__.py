@@ -1,51 +1,51 @@
 # <pep8 compliant>
 from bpy.utils import unregister_class, register_class
 from bpy.types import Scene, Object
-from bpy.props import PointerProperty, BoolProperty
+from bpy.props import PointerProperty
 from bpy.app.handlers import frame_change_pre
 
 # ----- OpenFOAM imports
 # Operators
-from .operators.openfoam.Scene.openfoam_import_file import TBB_OT_OpenfoamImportFile
-from .operators.openfoam.Scene.openfoam_reload_file import TBB_OT_OpenfoamReloadFile
-from .operators.openfoam.Scene.openfoam_preview import TBB_OT_OpenfoamPreview
-from .operators.openfoam.Scene.openfoam_create_sequence import TBB_OT_OpenfoamCreateSequence
-from .operators.openfoam.utils import update_streaming_sequence
+from src.operators.openfoam.Scene.openfoam_import_file import TBB_OT_OpenfoamImportFile
+from src.operators.openfoam.Scene.openfoam_reload_file import TBB_OT_OpenfoamReloadFile
+from src.operators.openfoam.Scene.openfoam_preview import TBB_OT_OpenfoamPreview
+from src.operators.openfoam.Scene.openfoam_create_sequence import TBB_OT_OpenfoamCreateSequence
+from src.operators.openfoam.utils import update_streaming_sequence
 # Panels
-from .panels.openfoam.Scene.openfoam_main_panel import TBB_PT_OpenfoamMainPanel
-from .panels.openfoam.Scene.clip import TBB_PT_OpenfoamClip
-from .panels.openfoam.Scene.openfoam_create_sequence import TBB_PT_OpenfoamCreateSequence
-from .panels.openfoam.Object.openfoam_streaming_sequence import TBB_PT_OpenfoamStreamingSequence
-from .panels.openfoam.Object.openfoam_streaming_sequence_clip import TBB_PT_OpenfoamStreamingSequenceClip
-from .panels.custom_progress_bar import register_custom_progress_bar
+from src.panels.openfoam.Scene.openfoam_main_panel import TBB_PT_OpenfoamMainPanel
+from src.panels.openfoam.Scene.clip import TBB_PT_OpenfoamClip
+from src.panels.openfoam.Scene.openfoam_create_sequence import TBB_PT_OpenfoamCreateSequence
+from src.panels.openfoam.Object.openfoam_streaming_sequence import TBB_PT_OpenfoamStreamingSequence
+from src.panels.openfoam.Object.openfoam_streaming_sequence_clip import TBB_PT_OpenfoamStreamingSequenceClip
+from src.panels.custom_progress_bar import register_custom_progress_bar
 # Properties
-from .properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
-from .properties.openfoam.clip import TBB_OpenfoamClipProperty, TBB_OpenfoamClipScalarProperty
-from .properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
-from .properties.openfoam.Object.openfoam_object_settings import TBB_OpenfoamObjectSettings
+from src.properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
+from src.properties.openfoam.clip import TBB_OpenfoamClipProperty, TBB_OpenfoamClipScalarProperty
+from src.properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
+from src.properties.openfoam.Object.openfoam_object_settings import TBB_OpenfoamObjectSettings
 
 # ----- TELEMAC imports
 # Operators
-from .operators.telemac.Scene.telemac_import_file import TBB_OT_TelemacImportFile
-from .operators.telemac.Scene.telemac_reload_file import TBB_OT_TelemacReloadFile
-from .operators.telemac.Scene.telemac_preview import TBB_OT_TelemacPreview
-from .operators.telemac.Scene.telemac_create_sequence import TBB_OT_TelemacCreateSequence
+from src.operators.telemac.Scene.telemac_import_file import TBB_OT_TelemacImportFile
+from src.operators.telemac.Scene.telemac_reload_file import TBB_OT_TelemacReloadFile
+from src.operators.telemac.Scene.telemac_preview import TBB_OT_TelemacPreview
+from src.operators.telemac.Scene.telemac_create_sequence import TBB_OT_TelemacCreateSequence
 # Panels
-from .panels.telemac.Scene.telemac_main_panel import TBB_PT_TelemacMainPanel
-from .panels.telemac.Scene.telemac_create_sequence import TBB_PT_TelemacCreateSequence
-from .panels.telemac.Object.telemac_streaming_sequence import TBB_PT_TelemacStreamingSequence
+from src.panels.telemac.Scene.telemac_main_panel import TBB_PT_TelemacMainPanel
+from src.panels.telemac.Scene.telemac_create_sequence import TBB_PT_TelemacCreateSequence
+from src.panels.telemac.Object.telemac_streaming_sequence import TBB_PT_TelemacStreamingSequence
 # Properties
-from .properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
-from .properties.telemac.Object.telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
-from .properties.telemac.Object.telemac_object_settings import TBB_TelemacObjectSettings
+from src.properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
+from src.properties.telemac.Object.telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
+from src.properties.telemac.Object.telemac_object_settings import TBB_TelemacObjectSettings
 
 # ----- Other imports
-from .properties.shared.tbb_scene import TBB_Scene
-from .properties.shared.tbb_scene_settings import TBB_SceneSettings
-from .properties.shared.tbb_object import TBB_Object
-from .properties.shared.tbb_object_settings import TBB_ObjectSettings
-from .properties.shared.module_scene_settings import TBB_ModuleSceneSettings
-from .properties.shared.module_streaming_sequence_settings import TBB_ModuleStreamingSequenceSettings
+from src.properties.shared.tbb_scene import TBB_Scene
+from src.properties.shared.tbb_scene_settings import TBB_SceneSettings
+from src.properties.shared.tbb_object import TBB_Object
+from src.properties.shared.tbb_object_settings import TBB_ObjectSettings
+from src.properties.shared.module_scene_settings import TBB_ModuleSceneSettings
+from src.properties.shared.module_streaming_sequence_settings import TBB_ModuleStreamingSequenceSettings
 
 bl_info = {
     "name": "Toolsbox OpenFOAM/TELEMAC",

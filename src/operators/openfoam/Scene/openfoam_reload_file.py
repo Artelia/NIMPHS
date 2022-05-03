@@ -2,9 +2,9 @@
 from bpy.types import Operator, Context
 import time
 
-from ..utils import load_openfoam_file
-from ...utils import update_scene_settings_dynamic_props
-from ....properties.openfoam.utils import encode_value_ranges, encode_scalar_names
+from src.operators.openfoam.utils import load_openfoam_file
+from src.operators.utils import update_scene_settings_dynamic_props
+from src.properties.openfoam.utils import encode_value_ranges, encode_scalar_names
 
 
 class TBB_OT_OpenfoamReloadFile(Operator):

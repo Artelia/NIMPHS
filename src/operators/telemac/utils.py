@@ -1,11 +1,12 @@
 # <pep8 compliant>
 import bpy
-from bpy.types import Mesh, Object, Collection, Context
+from bpy.types import Mesh, Object, Context
 
 import numpy as np
+from typing import Any
 
-from ..utils import generate_object_from_data, remap_array, get_collection
-from ...properties.telemac.temporary_data import TBB_TelemacTemporaryData
+from src.operators.utils import generate_object_from_data, remap_array, get_collection
+from src.properties.telemac.temporary_data import TBB_TelemacTemporaryData
 
 
 def generate_vertex_colors_name(var_id_groups: list[int], tmp_data: TBB_TelemacTemporaryData) -> str:
@@ -458,3 +459,41 @@ def generate_base_objects(context: Context, time_point: int, name: str,
             objects.append(obj)
 
     return objects
+
+
+def generate_telemac_streaming_sequence_obj(context: Context, name: str) -> Object:
+    """
+    Generate the base object for a TELEMAC 'streaming sequence'.
+
+    :type context: Context
+    :param name: name of the sequence
+    :type name: str
+    :return: generated object
+    :rtype: Object
+    """
+
+    settings = context.scene.tbb.settings.telemac
+    collection = context.scene.collection
+
+    # Create objects
+    seq_obj = bpy.data.objects.new(name=name + "_sequence", object_data=None)
+    objects = generate_base_objects(context, 0, name + "_sequence")
+
+    for obj in objects:
+        # Add 'Basis' shape key
+        # obj.shape_key_add(name="Basis", from_mix=False)
+
+        # Add the object to the collection
+        collection.objects.link(obj)
+        obj.parent = seq_obj
+
+    # Normalize if needed (option set by the user)
+    if settings.normalize_sequence_obj:
+        normalize_objects(objects, get_object_dimensions_from_mesh(objects[0]))
+
+    # Copy settings
+    seq_settings = seq_obj.tbb.settings.telemac.streaming_sequence
+
+    seq_settings.normalize = settings.normalize_sequence_obj
+
+    return seq_obj

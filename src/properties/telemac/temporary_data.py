@@ -1,6 +1,6 @@
 # <pep8 compliant>
-from .serafin import Serafin
-from .utils import remove_spaces_telemac_var_name
+from src.properties.telemac.serafin import Serafin
+from src.properties.telemac.utils import remove_spaces_telemac_var_name
 
 import numpy as np
 import time

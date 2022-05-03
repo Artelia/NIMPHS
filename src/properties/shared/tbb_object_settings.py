@@ -2,8 +2,8 @@
 from bpy.types import PropertyGroup
 from bpy.props import PointerProperty, StringProperty
 
-from ..openfoam.Object.openfoam_object_settings import TBB_OpenfoamObjectSettings
-from ..telemac.Object.telemac_object_settings import TBB_TelemacObjectSettings
+from src.properties.openfoam.Object.openfoam_object_settings import TBB_OpenfoamObjectSettings
+from src.properties.telemac.Object.telemac_object_settings import TBB_TelemacObjectSettings
 
 
 class TBB_ObjectSettings(PropertyGroup):

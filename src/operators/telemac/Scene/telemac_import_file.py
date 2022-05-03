@@ -1,13 +1,12 @@
 # <pep8 compliant>
-import bpy
 from bpy_extras.io_utils import ImportHelper
 from bpy.types import Operator, Context
 from bpy.props import StringProperty
 
 import time
 
-from ..utils import get_object_dimensions_from_mesh, generate_preview_objects
-from ...utils import get_collection, update_scene_settings_dynamic_props
+from src.operators.telemac.utils import get_object_dimensions_from_mesh, generate_preview_objects
+from src.operators.utils import update_scene_settings_dynamic_props
 
 
 class TBB_OT_TelemacImportFile(Operator, ImportHelper):

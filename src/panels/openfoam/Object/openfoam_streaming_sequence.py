@@ -1,8 +1,8 @@
 # <pep8 compliant>
 from bpy.types import Context
 
-from ...utils import get_selected_object
-from ...shared.streaming_sequence_settings import TBB_StreamingSequenceSettingsPanel
+from src.panels.utils import get_selected_object
+from src.panels.shared.streaming_sequence_settings import TBB_StreamingSequenceSettingsPanel
 
 
 class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):

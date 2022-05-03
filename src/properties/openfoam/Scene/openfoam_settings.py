@@ -1,10 +1,10 @@
 # <pep8 compliant>
 from bpy.props import EnumProperty, PointerProperty
 
-from ..utils import update_scalar_names
-from ..clip import TBB_OpenfoamClipProperty
-from ..temporary_data import TBB_OpenfoamTemporaryData
-from ...shared.module_scene_settings import TBB_ModuleSceneSettings
+from src.properties.openfoam.utils import update_scalar_names
+from src.properties.openfoam.clip import TBB_OpenfoamClipProperty
+from src.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
+from src.properties.shared.module_scene_settings import TBB_ModuleSceneSettings
 
 
 class TBB_OpenfoamSettings(TBB_ModuleSceneSettings):

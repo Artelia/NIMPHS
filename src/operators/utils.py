@@ -1,14 +1,15 @@
 # <pep8 compliant>
 import bpy
-from bpy.types import Collection, Mesh, Object, Context
+from bpy.types import Collection, Object, Context
 from rna_prop_ui import rna_idprop_ui_create
 
-from typing import Any
 import numpy as np
 
-from ..properties.shared.module_scene_settings import scene_settings_dynamic_props, TBB_ModuleSceneSettings
-from ..properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
-from ..properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
+from src.properties.shared.module_scene_settings import scene_settings_dynamic_props, TBB_ModuleSceneSettings
+from src.properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
+from src.properties.telemac.Object.telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
+from src.properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
+from src.properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
 
 
 def get_collection(name: str, context: Context, link_to_scene: bool = True) -> Collection:
@@ -64,93 +65,23 @@ def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, name: str
     return obj
 
 
-def setup_openfoam_streaming_sequence_obj(obj: Object, context: Context) -> tuple[Any, int, Any]:
-    """
-    Setup settings for an OpenFOAM 'streaming sequence'.
-
-    :param obj: sequence object
-    :type obj: Object
-    :type context: Context
-    :return: scene settings, number of time points, object settings
-    :rtype: tuple[Any, int, Any]
-    """
-
-    settings = context.scene.tbb.settings.openfoam
-    time_points = settings.tmp_data.nb_time_points
-    obj_settings = obj.tbb.settings.openfoam.streaming_sequence
-
-    # Set clip settings
-    obj_settings.clip.type = settings.clip.type
-    obj_settings.clip.scalar.list = settings.clip.scalar.list
-    obj_settings.clip.scalar.value_ranges = settings.clip.scalar.value_ranges
-
-    # Sometimes, the selected scalar may not correspond to ones available in the EnumProperty.
-    # This happens when the selected scalar is not available at time point 0
-    # (the EnumProperty only reads data at time point 0 to create the list of available items)
-    try:
-        obj_settings.clip.scalar.name = settings.clip.scalar.name
-    except TypeError as error:
-        print("WARNING::setup_openfoam_streaming_sequence_obj: " + str(error))
-
-    obj_settings.clip.scalar.invert = settings.clip.scalar.invert
-    # 'value' and 'vector_value' may not be defined, so use .get(prop, default_returned_value)
-    obj_settings.clip.scalar["value"] = settings.clip.scalar.get("value", 0.5)
-    obj_settings.clip.scalar["vector_value"] = settings.clip.scalar.get("vector_value", (0.5, 0.5, 0.5))
-
-    return settings, time_points, obj_settings
-
-
-def setup_telemac_streaming_sequence_obj(obj: Object, context: Context) -> tuple[Any, int, Any]:
-    """
-    Setup settings for a TELEMAC 'streaming sequence'.
-
-    :param obj: sequence object
-    :type obj: Object
-    :type context: Context
-    :return: scene settings, number of time points, object settings
-    :rtype: tuple[Any, int, Any]
-    """
-
-    settings = context.scene.tbb.settings.telemac
-    time_points = settings.tmp_data.nb_time_points
-    obj_settings = obj.tbb.settings.telemac.streaming_sequence
-
-    obj_settings.normalize = settings.normalize_sequence_obj
-
-    return settings, time_points, obj_settings
-
-
-def setup_streaming_sequence_object(obj: Object, context: Context, type: str):
-    """
-    Setup parameters of the given sequence object. Precise which 'streaming sequence' you want to setup
-    using the 'type' parameter.
-
-    :param obj: sequence object
-    :type obj: Object
-    :type context: Context
-    :param type: module name, enum in ['OpenFOAM', 'TELEMAC']
-    :type type: str
-    """
-
-    if type == 'OpenFOAM':
-        settings, time_points, obj_settings = setup_openfoam_streaming_sequence_obj(obj, context)
-    if type == 'TELEMAC':
-        settings, time_points, obj_settings = setup_telemac_streaming_sequence_obj(obj, context)
+def setup_streaming_sequence_object(obj: Object, seq_settings: TBB_OpenfoamStreamingSequenceProperty |
+                                    TBB_TelemacStreamingSequenceProperty, time_points: int, settings, module):
 
     # Setup common settings
-    obj_settings.name = obj.name
-    obj_settings.file_path = settings.file_path
+    seq_settings.name = obj.name
+    seq_settings.file_path = settings.file_path
     obj.tbb.is_streaming_sequence = True
-    obj_settings.update = True
-    obj.tbb.settings.module = type
+    seq_settings.update = True
+    obj.tbb.settings.module = module
 
     # Set the selected time frame
-    obj_settings.frame_start = settings.frame_start     #
-    obj_settings.max_length = time_points               # Order matters, check TBB_StreamingSequenceProperty class definition
-    obj_settings.anim_length = settings["anim_length"]  #
+    seq_settings.frame_start = settings.frame_start     #
+    seq_settings.max_length = time_points               # Order matters, check TBB_StreamingSequenceProperty class definition
+    seq_settings.anim_length = settings["anim_length"]  #
 
-    obj_settings.import_point_data = settings.import_point_data
-    obj_settings.list_point_data = settings.list_point_data
+    seq_settings.import_point_data = settings.import_point_data
+    seq_settings.list_point_data = settings.list_point_data
 
 
 def update_scene_settings_dynamic_props(settings: TBB_ModuleSceneSettings,

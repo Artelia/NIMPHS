@@ -5,9 +5,9 @@ from bpy.props import StringProperty
 
 import time
 
-from ..utils import load_openfoam_file, generate_mesh
-from ...utils import generate_object_from_data, get_collection, update_scene_settings_dynamic_props
-from ....properties.openfoam.utils import encode_value_ranges, encode_scalar_names
+from src.operators.openfoam.utils import load_openfoam_file, generate_mesh
+from src.operators.utils import generate_object_from_data, get_collection, update_scene_settings_dynamic_props
+from src.properties.openfoam.utils import encode_value_ranges, encode_scalar_names
 
 
 class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):

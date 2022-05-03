@@ -2,7 +2,7 @@
 from bpy.types import PropertyGroup
 from bpy.props import PointerProperty, BoolProperty
 
-from .tbb_object_settings import TBB_ObjectSettings
+from src.properties.shared.tbb_object_settings import TBB_ObjectSettings
 
 
 class TBB_Object(PropertyGroup):

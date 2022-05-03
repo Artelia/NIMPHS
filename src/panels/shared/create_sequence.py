@@ -1,11 +1,11 @@
 # <pep8 compliant>
 from bpy.types import Panel, Context
 
-from ..utils import get_selected_object
-from ...properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
-from ...properties.telemac.temporary_data import TBB_TelemacTemporaryData
-from ...properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
-from ...properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
+from src.panels.utils import get_selected_object
+from src.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
+from src.properties.telemac.temporary_data import TBB_TelemacTemporaryData
+from src.properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
+from src.properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
 
 
 class TBB_CreateSequencePanel(Panel):

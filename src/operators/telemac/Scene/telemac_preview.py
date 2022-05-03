@@ -3,7 +3,7 @@ from bpy.types import Operator, Context
 
 import time
 
-from ..utils import normalize_objects, generate_preview_objects, get_collection
+from src.operators.telemac.utils import normalize_objects, generate_preview_objects
 
 
 class TBB_OT_TelemacPreview(Operator):

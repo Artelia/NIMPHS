@@ -1,7 +1,7 @@
 # <pep8 compliant>
 from bpy.types import Panel, Context
 
-from ...utils import get_selected_object
+from src.panels.utils import get_selected_object
 
 
 class TBB_PT_OpenfoamClip(Panel):

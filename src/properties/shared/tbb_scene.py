@@ -2,7 +2,7 @@
 from bpy.types import PropertyGroup
 from bpy.props import PointerProperty, BoolProperty
 
-from .tbb_scene_settings import TBB_SceneSettings
+from src.properties.shared.tbb_scene_settings import TBB_SceneSettings
 
 
 class TBB_Scene(PropertyGroup):

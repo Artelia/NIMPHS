@@ -2,7 +2,7 @@
 from bpy.types import PropertyGroup
 from bpy.props import BoolProperty, EnumProperty, PointerProperty, FloatProperty, FloatVectorProperty, StringProperty
 
-from .utils import update_scalar_names, set_clip_values, get_clip_values
+from src.properties.openfoam.utils import update_scalar_names, set_clip_values, get_clip_values
 
 
 class TBB_OpenfoamClipScalarProperty(PropertyGroup):

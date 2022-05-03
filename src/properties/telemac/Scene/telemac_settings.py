@@ -1,9 +1,9 @@
 # <pep8 compliant>
 from bpy.props import BoolProperty, EnumProperty, FloatVectorProperty
 
-from ..utils import update_var_names
-from ..temporary_data import TBB_TelemacTemporaryData
-from ...shared.module_scene_settings import TBB_ModuleSceneSettings
+from src.properties.telemac.utils import update_var_names
+from src.properties.telemac.temporary_data import TBB_TelemacTemporaryData
+from src.properties.shared.module_scene_settings import TBB_ModuleSceneSettings
 
 
 class TBB_TelemacSettings(TBB_ModuleSceneSettings):

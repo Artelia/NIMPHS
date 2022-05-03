@@ -1,8 +1,8 @@
 # <pep8 compliant>
-from bpy.types import Panel, Object, Context
+from bpy.types import Panel, Context
 
-from ...properties.shared.module_streaming_sequence_settings import TBB_ModuleStreamingSequenceSettings
-from ..utils import get_selected_object
+from src.properties.shared.module_streaming_sequence_settings import TBB_ModuleStreamingSequenceSettings
+from src.panels.utils import get_selected_object
 
 
 class TBB_StreamingSequenceSettingsPanel(Panel):

@@ -1,7 +1,7 @@
 # <pep8 compliant>
 from bpy.types import Context
 
-from ...shared.module_panel import TBB_ModulePanel
+from src.panels.shared.module_panel import TBB_ModulePanel
 
 
 class TBB_PT_TelemacMainPanel(TBB_ModulePanel):

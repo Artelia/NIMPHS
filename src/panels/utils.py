@@ -2,7 +2,7 @@
 import bpy
 from bpy.types import Context, Object
 
-from ..properties.shared.module_scene_settings import TBB_ModuleSceneSettings
+from src.properties.shared.module_scene_settings import TBB_ModuleSceneSettings
 
 
 def sequence_name_already_exist(name: str) -> bool:

@@ -4,9 +4,9 @@ from bpy.types import Context, Event
 
 import time
 
-from ..utils import generate_mesh, normalize_objects, get_object_dimensions_from_mesh, set_new_shape_key, generate_base_objects
-from ...shared.create_sequence import TBB_CreateSequence
-from ...utils import get_collection
+from src.operators.telemac.utils import generate_mesh, normalize_objects, get_object_dimensions_from_mesh, set_new_shape_key, generate_base_objects
+from src.operators.shared.create_sequence import TBB_CreateSequence
+from src.operators.utils import get_collection
 
 
 class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):

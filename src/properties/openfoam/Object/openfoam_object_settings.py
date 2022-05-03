@@ -2,7 +2,7 @@
 from bpy.types import PropertyGroup
 from bpy.props import PointerProperty
 
-from .openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
+from src.properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
 
 
 class TBB_OpenfoamObjectSettings(PropertyGroup):

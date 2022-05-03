@@ -5,11 +5,12 @@ from bpy.app.handlers import persistent
 
 from pyvista import OpenFOAMReader, UnstructuredGrid
 from pathlib import Path
+from typing import Any
 import numpy as np
 import time
 
-from ..utils import remap_array
-from ...properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
+from src.operators.utils import remap_array
+from src.properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
 
 
 def load_openfoam_file(file_path: str) -> tuple[bool, OpenFOAMReader]:
@@ -298,3 +299,43 @@ def update_sequence_mesh(obj: Object, settings: TBB_OpenfoamStreamingSequencePro
     # Import point data as vertex colors
     if settings.import_point_data:
         blender_mesh = generate_vertex_colors(mesh, blender_mesh, settings.list_point_data, time_point)
+
+
+def generate_openfoam_streaming_sequence_obj(context: Context, name: str) -> Object:
+    """
+    Generate the base object for an OpenFOAM 'streaming sequence'.
+
+    :type context: Context
+    :param name: name of the sequence
+    :type name: str
+    :return: generated object
+    :rtype: Object
+    """
+
+    # Create the object
+    blender_mesh = bpy.data.meshes.new(name + "_sequence_mesh")
+    obj = bpy.data.objects.new(name + "_sequence", blender_mesh)
+
+    # Copy settings
+    settings = context.scene.tbb.settings.openfoam
+    seq_settings = obj.tbb.settings.openfoam.streaming_sequence
+
+    # Set clip settings
+    seq_settings.clip.type = settings.clip.type
+    seq_settings.clip.scalar.list = settings.clip.scalar.list
+    seq_settings.clip.scalar.value_ranges = settings.clip.scalar.value_ranges
+
+    # Sometimes, the selected scalar may not correspond to ones available in the EnumProperty.
+    # This happens when the selected scalar is not available at time point 0
+    # (the EnumProperty only reads data at time point 0 to create the list of available items)
+    try:
+        seq_settings.clip.scalar.name = settings.clip.scalar.name
+    except TypeError as error:
+        print("WARNING::setup_openfoam_streaming_sequence_obj: " + str(error))
+
+    seq_settings.clip.scalar.invert = settings.clip.scalar.invert
+    # 'value' and 'vector_value' may not be defined, so use .get(prop, default_returned_value)
+    seq_settings.clip.scalar["value"] = settings.clip.scalar.get("value", 0.5)
+    seq_settings.clip.scalar["vector_value"] = settings.clip.scalar.get("vector_value", (0.5, 0.5, 0.5))
+
+    return obj

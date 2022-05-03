@@ -1,10 +1,11 @@
 # <pep8 compliant>
-import bpy
 from bpy.types import Operator, Context, RenderSettings
 
-from ..utils import setup_streaming_sequence_object
-from ...properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
-from ...properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
+from src.properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
+from src.properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
+from src.operators.openfoam.utils import generate_openfoam_streaming_sequence_obj
+from src.operators.telemac.utils import generate_telemac_streaming_sequence_obj
+from src.operators.utils import setup_streaming_sequence_object
 
 
 class TBB_CreateSequence(Operator):
@@ -58,7 +59,7 @@ class TBB_CreateSequence(Operator):
         else:  # Lock ui by default
             return False
 
-    def execute(self, settings: TBB_OpenfoamSettings | TBB_TelemacSettings, context: Context, type: str) -> set:
+    def execute(self, settings: TBB_OpenfoamSettings | TBB_TelemacSettings, context: Context, module: str) -> set:
         """
         Main method of the operator.
 
@@ -66,8 +67,8 @@ class TBB_CreateSequence(Operator):
         :param settings: scene settings
         :type settings: TBB_OpenfoamSettings | TBB_TelemacSettings
         :type context: Context
-        :param type: module name, enum in ['OpenFOAM', 'TELEMAC']
-        :type type: str
+        :param module: module name, enum in ['OpenFOAM', 'TELEMAC']
+        :type module: str
         :return: state of the operator
         :rtype: set
         """
@@ -99,10 +100,14 @@ class TBB_CreateSequence(Operator):
             if settings.frame_start < context.scene.frame_start or settings.frame_start > context.scene.frame_end:
                 self.report({"WARNING"}, "Frame start is not in the selected time frame.")
 
-            obj_name = settings.sequence_name + "_sequence"
-            blender_mesh = bpy.data.meshes.new(name=settings.sequence_name + "_mesh")
-            obj = bpy.data.objects.new(obj_name, blender_mesh)
-            setup_streaming_sequence_object(obj, context, type)
+            if module == 'OpenFOAM':
+                obj = generate_openfoam_streaming_sequence_obj(context, settings.sequence_name)
+                seq_settings = obj.tbb.settings.openfoam.streaming_sequence
+            if module == 'TELEMAC':
+                obj = generate_telemac_streaming_sequence_obj(context, settings.sequence_name)
+                seq_settings = obj.tbb.settings.telemac.streaming_sequence
+
+            setup_streaming_sequence_object(obj, seq_settings, settings.tmp_data.nb_time_points, settings, module)
 
             context.scene.collection.objects.link(obj)
 

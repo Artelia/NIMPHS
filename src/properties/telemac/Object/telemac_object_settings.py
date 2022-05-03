@@ -2,7 +2,7 @@
 from bpy.types import PropertyGroup
 from bpy.props import PointerProperty, StringProperty
 
-from .telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
+from src.properties.telemac.Object.telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
 
 
 class TBB_TelemacObjectSettings(PropertyGroup):
