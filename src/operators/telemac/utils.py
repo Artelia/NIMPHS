@@ -362,6 +362,7 @@ def set_new_shape_key(obj: Object, vertices: np.ndarray, name: str, frame: int) 
 def generate_preview_objects(context: Context, time_point: int = 0, name: str = "TBB_TELEMAC_preview") -> list[Object]:
     """
     Generate preview objects using settings defined by the user. Calls 'generate_base_objects'.
+    This function also generate preview materials.
 
     :type context: Context
     :param time_point: time point of the preview, defaults to 0
@@ -385,10 +386,13 @@ def generate_preview_objects(context: Context, time_point: int = 0, name: str = 
         # Generate vertex colors for all the variables
         # point_data = tmp_data.vars_info["names"]
         objects = generate_base_objects(context, time_point, name, import_point_data=import_point_data,
-                                        vertex_colors_var_name=vertex_colors_var_name, point_data=point_data)
+                                        point_data=point_data)
+        for obj in objects:
+            generate_preview_material(obj, vertex_colors_var_name)
     else:
         objects = generate_base_objects(context, time_point, name)
 
+    # Add created objects to the right collection
     if tmp_data.is_3d:
         # Create a custom collection for 3D previews
         collection_3d = get_collection("TBB_TELEMAC_3D", context, link_to_scene=False)
@@ -396,19 +400,18 @@ def generate_preview_objects(context: Context, time_point: int = 0, name: str = 
             collection.children.link(collection_3d)
         collection = collection_3d
 
-    # Add new objects to the collection
     for obj in objects:
+        # Check if not already in collection
         if collection.name not in [col.name for col in obj.users_collection]:
             collection.objects.link(obj)
 
     return objects
 
 
-def generate_base_objects(context: Context, time_point: int, name: str, import_point_data: bool = False,
-                          vertex_colors_var_name: str = "", point_data: list[str] = [""]) -> list[Object]:
+def generate_base_objects(context: Context, time_point: int, name: str,
+                          import_point_data: bool = False, point_data: list[str] = [""]) -> list[Object]:
     """
-    Generate objects using settings defined by the user. This function generates objects,
-    vertex colors and preview materials.
+    Generate objects using settings defined by the user. This function generates objects and vertex colors.
 
     :type context: Context
     :param time_point: time point
@@ -417,8 +420,6 @@ def generate_base_objects(context: Context, time_point: int, name: str, import_p
     :type name: str
     :param import_point_data: import point data as vertex colors, defaults to False
     :type import_point_data: bool, optional
-    :param vertex_colors_var_name: name given to the vertex colors groups, defaults to ""
-    :type vertex_colors_var_name: str, optional
     :param point_data: list of point data to import as vertex colors groups, defaults to [""]
     :type point_data: list[str], optional
     :return: generated objects
@@ -440,7 +441,6 @@ def generate_base_objects(context: Context, time_point: int, name: str, import_p
 
             if import_point_data:
                 generate_vertex_colors(tmp_data, obj.data, point_data, time_point)
-                generate_preview_material(obj, vertex_colors_var_name)
 
             objects.append(obj)
     else:
@@ -454,7 +454,6 @@ def generate_base_objects(context: Context, time_point: int, name: str, import_p
 
             if import_point_data:
                 generate_vertex_colors(tmp_data, obj.data, point_data, time_point, mesh_is_3d=True, offset=plane_id)
-                generate_preview_material(obj, vertex_colors_var_name)
 
             objects.append(obj)
 
