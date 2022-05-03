@@ -35,9 +35,10 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         :rtype: set
         """
 
+        start = time.time()
+
         settings = context.scene.tbb.settings.telemac
         tmp_data = settings.tmp_data
-        start = time.time()
 
         # Read the file and update temporary data
         try:
@@ -55,7 +56,7 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         try:
             objects = generate_preview_objects(context)
 
-            # Reset some preview settings
+            # Reset preview object dimensions
             settings.preview_obj_dimensions = get_object_dimensions_from_mesh(objects[0])
 
         except Exception as error:
@@ -63,7 +64,7 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
             self.report({"ERROR"}, "Something went wrong building the mesh")
             return {"FINISHED"}
 
-        print("Import::TELEMAC: " + "{:.4f}".format(time.time() - start) + "s")
         self.report({"INFO"}, "File successfully imported")
+        print("Import::TELEMAC: " + "{:.4f}".format(time.time() - start) + "s")
 
         return {"FINISHED"}

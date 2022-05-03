@@ -140,7 +140,7 @@ def generate_mesh(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, offset: 
 
 
 def generate_vertex_colors(tmp_data: TBB_TelemacTemporaryData, blender_mesh: Mesh,
-                           list_point_data: str, time_point: int, mesh_is_3d: bool = False, offset: int = 0) -> None:
+                           list_point_data: list[str], time_point: int, mesh_is_3d: bool = False, offset: int = 0) -> None:
     """
     Generate vertex colors groups for each point data given in the list. The name given to the groups
     describe the content of the data contained in the groups.
@@ -150,7 +150,7 @@ def generate_vertex_colors(tmp_data: TBB_TelemacTemporaryData, blender_mesh: Mes
     :param blender_mesh: mesh
     :type blender_mesh: Mesh
     :param list_point_data: list of point data to import as vertex colors groups
-    :type list_point_data: str
+    :type list_point_data: list[str]
     :param time_point: time point to read data
     :type time_point: int
     :param mesh_is_3d: precise if the mesh is from a 3D simulation
@@ -361,8 +361,7 @@ def set_new_shape_key(obj: Object, vertices: np.ndarray, name: str, frame: int) 
 
 def generate_preview_objects(context: Context, time_point: int = 0, name: str = "TBB_TELEMAC_preview") -> list[Object]:
     """
-    Generate preview objects using settings defined by the user. This function generate objects,
-    vertex colors and preview materials if needed.
+    Generate preview objects using settings defined by the user. Calls 'generate_base_objects'.
 
     :type context: Context
     :param time_point: time point of the preview, defaults to 0
@@ -385,6 +384,49 @@ def generate_preview_objects(context: Context, time_point: int = 0, name: str = 
         point_data = [vertex_colors_var_name]
         # Generate vertex colors for all the variables
         # point_data = tmp_data.vars_info["names"]
+        objects = generate_base_objects(context, time_point, name, import_point_data=import_point_data,
+                                        vertex_colors_var_name=vertex_colors_var_name, point_data=point_data)
+    else:
+        objects = generate_base_objects(context, time_point, name)
+
+    if tmp_data.is_3d:
+        # Create a custom collection for 3D previews
+        collection_3d = get_collection("TBB_TELEMAC_3D", context, link_to_scene=False)
+        if collection_3d.name not in [col.name for col in collection.children]:
+            collection.children.link(collection_3d)
+        collection = collection_3d
+
+    # Add new objects to the collection
+    for obj in objects:
+        if collection.name not in [col.name for col in obj.users_collection]:
+            collection.objects.link(obj)
+
+    return objects
+
+
+def generate_base_objects(context: Context, time_point: int, name: str, import_point_data: bool = False,
+                          vertex_colors_var_name: str = "", point_data: list[str] = [""]) -> list[Object]:
+    """
+    Generate objects using settings defined by the user. This function generates objects,
+    vertex colors and preview materials.
+
+    :type context: Context
+    :param time_point: time point
+    :type time_point: int
+    :param name: name of the objects
+    :type name: str
+    :param import_point_data: import point data as vertex colors, defaults to False
+    :type import_point_data: bool, optional
+    :param vertex_colors_var_name: name given to the vertex colors groups, defaults to ""
+    :type vertex_colors_var_name: str, optional
+    :param point_data: list of point data to import as vertex colors groups, defaults to [""]
+    :type point_data: list[str], optional
+    :return: generated objects
+    :rtype: list[Object]
+    """
+
+    settings = context.scene.tbb.settings.telemac
+    tmp_data = settings.tmp_data
 
     objects = []
     if not tmp_data.is_3d:
@@ -400,17 +442,8 @@ def generate_preview_objects(context: Context, time_point: int = 0, name: str = 
                 generate_vertex_colors(tmp_data, obj.data, point_data, time_point)
                 generate_preview_material(obj, vertex_colors_var_name)
 
-            # Add this new object to the collection
-            if collection.name not in [col.name for col in obj.users_collection]:
-                collection.objects.link(obj)
-
             objects.append(obj)
     else:
-        # Create a custom collection for 3D previews
-        collection_3d = get_collection("TBB_TELEMAC_3D", context, link_to_scene=False)
-        if collection_3d.name not in [col.name for col in collection.children]:
-            collection.children.link(collection_3d)
-
         for plane_id in range(tmp_data.nb_planes - 1, -1, -1):
             vertices = generate_mesh(tmp_data, mesh_is_3d=True, offset=plane_id, time_point=time_point)
             obj = generate_object_from_data(vertices, tmp_data.faces, name=name + "_plane_" + str(plane_id))
@@ -422,10 +455,6 @@ def generate_preview_objects(context: Context, time_point: int = 0, name: str = 
             if import_point_data:
                 generate_vertex_colors(tmp_data, obj.data, point_data, time_point, mesh_is_3d=True, offset=plane_id)
                 generate_preview_material(obj, vertex_colors_var_name)
-
-            # Add this new object to the collection
-            if collection_3d.name not in [col.name for col in obj.users_collection]:
-                collection_3d.objects.link(obj)
 
             objects.append(obj)
 

@@ -3,7 +3,7 @@ from bpy.types import Operator, Context
 
 import time
 
-from ..utils import normalize_objects, generate_preview_objects
+from ..utils import normalize_objects, generate_preview_objects, get_collection
 
 
 class TBB_OT_TelemacPreview(Operator):
@@ -24,8 +24,9 @@ class TBB_OT_TelemacPreview(Operator):
         :rtype: set
         """
 
-        settings = context.scene.tbb.settings.telemac
         start = time.time()
+
+        settings = context.scene.tbb.settings.telemac
 
         try:
             objects = generate_preview_objects(context, time_point=settings["preview_time_point"])
@@ -38,7 +39,7 @@ class TBB_OT_TelemacPreview(Operator):
             self.report({"ERROR"}, "An error occurred during preview")
             return {"FINISHED"}
 
-        print("Preview::TELEMAC: " + "{:.4f}".format(time.time() - start) + "s")
         self.report({"INFO"}, "Mesh successfully built: checkout the viewport.")
+        print("Preview::TELEMAC: " + "{:.4f}".format(time.time() - start) + "s")
 
         return {"FINISHED"}

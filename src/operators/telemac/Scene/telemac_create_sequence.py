@@ -1,14 +1,12 @@
 # <pep8 compliant>
 import bpy
-from bpy.types import Context, Event, Object, Collection
+from bpy.types import Context, Event
 
 import time
 
-from ..utils import generate_mesh, normalize_objects, get_object_dimensions_from_mesh, set_new_shape_key
+from ..utils import generate_mesh, normalize_objects, get_object_dimensions_from_mesh, set_new_shape_key, generate_base_objects
 from ...shared.create_sequence import TBB_CreateSequence
-from ...utils import get_collection, generate_object_from_data
-from ....properties.telemac.temporary_data import TBB_TelemacTemporaryData
-from ....properties.telemac.Object.telemac_object_settings import TBB_TelemacObjectSettings
+from ...utils import get_collection
 
 
 class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
@@ -73,7 +71,18 @@ class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
                     collection = get_collection("TBB_TELEMAC", context)
 
                     try:
-                        objects = self.generate_base_objects(tmp_data, settings, name, collection)
+                        objects = generate_base_objects(context, self.start_time_point, name=name)
+
+                        for obj in objects:
+                            # Add 'Basis' shape key
+                            obj.shape_key_add(name="Basis", from_mix=False)
+                            # Add the object to the collection
+                            collection.objects.link(obj)
+
+                        # Normalize if needed (option set by the user)
+                        if settings.normalize_sequence_obj:
+                            normalize_objects(objects, get_object_dimensions_from_mesh(objects[0]))
+
                     except Exception as error:
                         print("ERROR::TBB_OT_TelemacCreateSequence: " + str(error))
                         self.report({"ERROR"}, "An error occurred creating the sequence")
@@ -119,54 +128,3 @@ class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
             self.current_frame += 1
 
         return {"PASS_THROUGH"}
-
-    def generate_base_objects(self, tmp_data: TBB_TelemacTemporaryData,
-                              settings: TBB_TelemacObjectSettings, name: str, collection: Collection) -> list[Object]:
-        """
-        Generate base objects for the 'mesh sequence'.
-
-        :param tmp_data: temporary data
-        :type tmp_data: TBB_TelemacTemporaryData
-        :param settings: object settings
-        :type settings: TBB_TelemacObjectSettings
-        :param name: name of the sequence object
-        :type name: str
-        :param collection: target collection for these new objects
-        :type collection: Collection
-        :return: list of generated objects
-        :rtype: list[Object]
-        """
-
-        time_point = self.start_time_point
-        objects = []
-        if not tmp_data.is_3d:
-            for type in ['BOTTOM', 'WATER_DEPTH']:
-                # Generate object
-                vertices = generate_mesh(tmp_data, mesh_is_3d=False, time_point=time_point, type=type)
-                obj = generate_object_from_data(vertices, tmp_data.faces, name=name + "_" + type.lower())
-                # Save the name of the variable used for 'z-values' of the vertices
-                obj.tbb.settings.telemac.z_name = type
-                # Add 'Basis' shape key
-                obj.shape_key_add(name="Basis", from_mix=False)
-
-                # Add the object to the collection
-                collection.objects.link(obj)
-                objects.append(obj)
-        else:
-            for plane_id in range(tmp_data.nb_planes - 1, -1, -1):
-                vertices = generate_mesh(tmp_data, mesh_is_3d=True, offset=plane_id, time_point=time_point)
-                obj = generate_object_from_data(vertices, tmp_data.faces, name=name + "_plane_" + str(plane_id))
-                # Save the name of the variable used for 'z-values' of the vertices
-                obj.tbb.settings.telemac.z_name = str(plane_id)
-                # Add 'Basis' shape key
-                obj.shape_key_add(name="Basis", from_mix=False)
-
-                # Add the object to the collection
-                collection.objects.link(obj)
-                objects.append(obj)
-
-        # Normalize if needed (option set by the user)
-        if settings.normalize_sequence_obj:
-            normalize_objects(objects, get_object_dimensions_from_mesh(objects[0]))
-
-        return objects
