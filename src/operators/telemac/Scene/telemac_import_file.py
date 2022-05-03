@@ -6,8 +6,8 @@ from bpy.props import StringProperty
 
 import time
 
-from ..utils import generate_mesh, get_object_dimensions_from_mesh
-from ...utils import get_collection, update_scene_settings_dynamic_props, generate_object_from_data
+from ..utils import get_object_dimensions_from_mesh, generate_preview_objects
+from ...utils import get_collection, update_scene_settings_dynamic_props
 
 
 class TBB_OT_TelemacImportFile(Operator, ImportHelper):
@@ -37,8 +37,6 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
 
         settings = context.scene.tbb.settings.telemac
         tmp_data = settings.tmp_data
-        collection = get_collection("TBB_TELEMAC", context)
-        prw_time_point = 0
         start = time.time()
 
         # Read the file and update temporary data
@@ -55,39 +53,10 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         update_scene_settings_dynamic_props(settings, tmp_data)
 
         try:
-            if not tmp_data.is_3d:
-                for type in ['BOTTOM', 'WATER_DEPTH']:
-                    name = "TBB_TELEMAC_preview" + "_" + type.lower()
-                    vertices = generate_mesh(tmp_data, mesh_is_3d=False, time_point=prw_time_point, type=type)
-                    obj = generate_object_from_data(vertices, tmp_data.faces, name=name)
-                    # Save the name of the variable used for 'z-values' of the vertices
-                    obj.tbb.settings.telemac.z_name = type
-                    # Reset the scale without applying it
-                    obj.scale = [1.0] * 3
-                    # Add this new object to the collection
-                    if collection.name not in [col.name for col in obj.users_collection]:
-                        collection.objects.link(obj)
-            else:
-                # Create a custom collection for 3D previews
-                collection_3d = get_collection("TBB_TELEMAC_3D", context, link_to_scene=False)
-                if collection_3d.name not in [col.name for col in collection.children]:
-                    collection.children.link(collection_3d)
-
-                for plane_id in range(tmp_data.nb_planes - 1, -1, -1):
-                    name = "TBB_TELEMAC_preview_plane_" + str(plane_id)
-                    vertices = generate_mesh(tmp_data, mesh_is_3d=True, offset=plane_id, time_point=prw_time_point)
-                    obj = generate_object_from_data(vertices, tmp_data.faces, name=name)
-                    # Save the name of the variable used for 'z-values' of the vertices
-                    obj.tbb.settings.telemac.z_name = str(plane_id)
-                    # Reset the scale without applying it
-                    obj.scale = [1.0] * 3
-
-                    # Add this new object to the collection
-                    if collection_3d.name not in [col.name for col in obj.users_collection]:
-                        collection_3d.objects.link(obj)
+            objects = generate_preview_objects(context)
 
             # Reset some preview settings
-            settings.preview_obj_dimensions = get_object_dimensions_from_mesh(obj)
+            settings.preview_obj_dimensions = get_object_dimensions_from_mesh(objects[0])
 
         except Exception as error:
             print("ERROR::TBB_OT_TelemacImportFile: " + str(error))
