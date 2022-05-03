@@ -167,6 +167,7 @@ def generate_vertex_colors(tmp_data: TBB_TelemacTemporaryData, blender_mesh: Mes
     vertex_ids = np.array([triangle.vertices for triangle in blender_mesh.loop_triangles]).flatten()
 
     # Filter variables
+    list_point_data = list(filter(None, list_point_data))  # Filter elements which evaluates to 'False', ex: ''
     filtered_variables_indices = []
     for var_name in list_point_data:
         for name, id in zip(tmp_data.file.nomvar, range(tmp_data.nb_vars)):

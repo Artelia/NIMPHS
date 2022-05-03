@@ -2,7 +2,8 @@
 import bpy
 from bpy.types import Context, Object
 
-from src.properties.shared.module_scene_settings import TBB_ModuleSceneSettings
+from src.properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
+from src.properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
 
 
 def sequence_name_already_exist(name: str) -> bool:
@@ -21,12 +22,12 @@ def sequence_name_already_exist(name: str) -> bool:
     return False
 
 
-def lock_create_operator(settings: TBB_ModuleSceneSettings) -> tuple[bool, str]:
+def lock_create_operator(settings: TBB_OpenfoamSettings | TBB_TelemacSettings) -> tuple[bool, str]:
     """
     Return if we need to lock the 'create sequence' button.
 
     :param settings: scene settings
-    :type settings: TBB_SceneSettings
+    :type settings: TBB_OpenfoamSettings | TBB_TelemacSettings
     :return: state, error message if 'false'
     :rtype: tuple[bool, str]
     """
