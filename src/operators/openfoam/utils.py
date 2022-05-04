@@ -145,7 +145,10 @@ def generate_mesh_for_sequence(context: Context, time_point: int, name: str = "T
     settings = context.scene.tbb.settings.openfoam
 
     # Read data from the given OpenFoam file
-    file_reader = OpenFOAMReader(settings.file_path)
+    success, file_reader = load_openfoam_file(settings.file_path)
+    if not success:
+        raise AttributeError("The given file does not exist (" + str(settings.file_path) + ")")
+
     vertices, faces, mesh = generate_mesh(file_reader, time_point, settings.clip)
 
     # Create mesh from python data
