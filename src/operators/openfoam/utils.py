@@ -5,7 +5,6 @@ from bpy.app.handlers import persistent
 
 from pyvista import OpenFOAMReader, UnstructuredGrid
 from pathlib import Path
-from typing import Any
 import numpy as np
 import time
 
@@ -29,6 +28,8 @@ def load_openfoam_file(file_path: str) -> tuple[bool, OpenFOAMReader]:
 
     # TODO: does this line can throw exceptions? How to manage errors here?
     file_reader = OpenFOAMReader(file_path)
+    # TODO: this should be an option
+    file_reader.decompose_polyhedra()
     return True, file_reader
 
 
@@ -70,9 +71,9 @@ def generate_mesh(file_reader: OpenFOAMReader, time_point: int, clip=None,
     else:
         mesh = mesh.extract_surface(nonlinear_subdivision=0)
 
-    # Old version
-    # mesh.triangulate(inplace=True)
-    # mesh.compute_normals(inplace=True, consistent_normals=False, split_vertices=True)
+    # TODO: this should be an option
+    mesh.triangulate(inplace=True)
+    mesh.compute_normals(inplace=True, consistent_normals=False, split_vertices=True)
 
     vertices = np.array(mesh.points)
 
@@ -82,7 +83,7 @@ def generate_mesh(file_reader: OpenFOAMReader, time_point: int, clip=None,
         faces_indices = np.array(mesh.faces)
         padding, padding_id = 0, 0
         faces = []
-        for id in range(faces_indices.size):
+        for id in range(mesh.n_faces):
             if padding_id >= faces_indices.size:
                 break
             padding = faces_indices[padding_id]
