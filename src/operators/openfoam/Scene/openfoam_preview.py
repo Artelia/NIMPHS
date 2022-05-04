@@ -83,7 +83,8 @@ class TBB_OT_OpenfoamPreview(Operator):
                 collection.objects.link(obj)
         except Exception as error:
             print("ERROR::TBB_OT_OpenfoamPreview: " + str(error))
-            self.report({"ERROR"}, "Something went generating the object the object")
+            self.report({"ERROR"}, "Something went generating the object")
+            return {"FINISHED"}
 
         scalars_to_preview = str(settings.preview_point_data.split("@")[0])
         blender_mesh = generate_vertex_colors(mesh, obj.data, scalars_to_preview, prw_time_point)

@@ -66,15 +66,28 @@ def generate_mesh(file_reader: OpenFOAMReader, time_point: int, clip=None,
         if value_type == "vector_value":
             value = np.linalg.norm(clip.scalar.vector_value)
             mesh.clip_scalar(inplace=True, scalars=name, invert=clip.scalar.invert, value=value)
-        mesh = mesh.extract_surface()
+        mesh = mesh.extract_surface(nonlinear_subdivision=0)
     else:
-        mesh = mesh.extract_surface()
+        mesh = mesh.extract_surface(nonlinear_subdivision=0)
 
-    mesh.triangulate(inplace=True)
-    mesh.compute_normals(inplace=True, consistent_normals=False, split_vertices=True)
+    # Old version
+    # mesh.triangulate(inplace=True)
+    # mesh.compute_normals(inplace=True, consistent_normals=False, split_vertices=True)
 
     vertices = np.array(mesh.points)
-    faces = np.array(mesh.faces.reshape((-1, 4))[:, 1:4])
+
+    if mesh.is_all_triangles:
+        faces = np.array(mesh.faces).reshape(-1, 4)[:, 1:4]
+    else:
+        faces_indices = np.array(mesh.faces)
+        padding, padding_id = 0, 0
+        faces = []
+        for id in range(faces_indices.size):
+            if padding_id >= faces_indices.size:
+                break
+            padding = faces_indices[padding_id]
+            faces.append(faces_indices[padding_id + 1: padding_id + 1 + padding])
+            padding_id = padding_id + (padding + 1)
 
     return vertices, faces, mesh
 
