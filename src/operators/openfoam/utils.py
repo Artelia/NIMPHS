@@ -149,7 +149,7 @@ def generate_mesh_for_sequence(context: Context, time_point: int, name: str = "T
     settings = context.scene.tbb.settings.openfoam
 
     # Read data from the given OpenFoam file
-    success, file_reader = load_openfoam_file(settings.file_path)
+    success, file_reader = load_openfoam_file(settings.file_path, settings.decompose_polyhedra)
     if not success:
         raise AttributeError("The given file does not exist (" + str(settings.file_path) + ")")
 
