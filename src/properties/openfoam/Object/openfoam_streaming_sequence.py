@@ -1,5 +1,5 @@
 # <pep8 compliant>
-from bpy.props import PointerProperty
+from bpy.props import PointerProperty, BoolProperty
 
 from src.properties.openfoam.clip import TBB_OpenfoamClipProperty
 from src.properties.shared.module_streaming_sequence_settings import TBB_ModuleStreamingSequenceSettings
@@ -9,6 +9,20 @@ class TBB_OpenfoamStreamingSequenceProperty(TBB_ModuleStreamingSequenceSettings)
     """
     'Streaming sequence' settings for the OpenFOAM module.
     """
+
+    #: bpy.types.BoolProperty: If `True`, decompose polyhedra into tetrahedra and pyramids
+    decompose_polyhedra: BoolProperty(
+        name="Decompose polyhedra",
+        description="Whether polyhedra are to be decomposed when read. If True, decompose polyhedra into tetrahedra and pyramids",
+        default=False
+    )
+
+    #: bpy.types.BoolProperty: If `True`, more complex polygons will be broken down into triangles
+    triangulate: BoolProperty(
+        name="Triangule",
+        description="More complex polygons will be broken down into triangles",
+        default=True
+    )
 
     #: TBB_OpenfoamClipProperty: Clip settings of the sequence.
     clip: PointerProperty(type=TBB_OpenfoamClipProperty)

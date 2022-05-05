@@ -34,7 +34,7 @@ class TBB_OT_OpenfoamReloadFile(Operator):
             return {"FINISHED"}
 
         start = time.time()
-        success, file_reader = load_openfoam_file(settings.file_path)
+        success, file_reader = load_openfoam_file(settings.file_path, settings.decompose_polyhedra)
         if not success:
             self.report({"ERROR"}, "The choosen file does not exist")
             return {"FINISHED"}

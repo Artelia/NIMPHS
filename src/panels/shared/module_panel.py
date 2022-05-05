@@ -62,6 +62,7 @@ class TBB_ModulePanel(Panel):
 
             if tmp_data.is_ok():
                 # Preview section
+                layout.separator()
                 row = layout.row()
                 row.enabled = enable_rows
                 row.label(text="Preview")

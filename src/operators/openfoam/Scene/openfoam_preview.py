@@ -44,7 +44,7 @@ class TBB_OT_OpenfoamPreview(Operator):
         start = time.time()
         # TODO: changing time point does not work if we do not load the file
         # again... We would like to use the file_reader from tbb.settings.openfoam.tmp_data.
-        success, file_reader = load_openfoam_file(settings.file_path)
+        success, file_reader = load_openfoam_file(settings.file_path, settings.decompose_polyhedra)
         if not success:
             self.report({"ERROR"}, "The choosen file does not exist.")
             return {"FINISHED"}

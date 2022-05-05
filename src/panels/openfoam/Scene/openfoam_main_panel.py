@@ -38,4 +38,10 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
             if tmp_data.is_ok():
                 row = layout.row()
                 row.enabled = enable_rows
+                row.prop(settings, "decompose_polyhedra", text="Decompose polyhedra")
+                row = layout.row()
+                row.enabled = enable_rows
+                row.prop(settings, "triangulate", text="Triangulate")
+                row = layout.row()
+                row.enabled = enable_rows
                 row.operator("tbb.openfoam_preview", text="Preview", icon="HIDE_OFF")

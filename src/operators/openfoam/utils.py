@@ -12,12 +12,14 @@ from src.operators.utils import remap_array
 from src.properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
 
 
-def load_openfoam_file(file_path: str) -> tuple[bool, OpenFOAMReader]:
+def load_openfoam_file(file_path: str, decompose_polyhedra: bool = False) -> tuple[bool, OpenFOAMReader]:
     """
     Load an OpenFOAM file and return the file_reader. Also returns if it succeeded to read.
 
     :param file_path: path to the file
     :type file_path: str
+    :param decompose_polyhedra: Whether polyhedra are to be decomposed when read. If True, decompose polyhedra into tetrahedra and pyramids
+    :type decompose_polyhedra: bool, defaults to False
     :return: success, the file reader
     :rtype: tuple[bool, OpenFOAMReader]
     """
@@ -28,8 +30,7 @@ def load_openfoam_file(file_path: str) -> tuple[bool, OpenFOAMReader]:
 
     # TODO: does this line can throw exceptions? How to manage errors here?
     file_reader = OpenFOAMReader(file_path)
-    # TODO: this should be an option
-    file_reader.decompose_polyhedra()
+    file_reader.decompose_polyhedra = decompose_polyhedra
     return True, file_reader
 
 
@@ -298,7 +299,7 @@ def update_sequence_mesh(obj: Object, settings: TBB_OpenfoamStreamingSequencePro
     """
 
     # TODO: use load_openfoam_file
-    success, file_reader = load_openfoam_file(settings.file_path)
+    success, file_reader = load_openfoam_file(settings.file_path, settings.decompose_polyhedra)
     if not success:
         raise OSError("Unable to read the given file")
 

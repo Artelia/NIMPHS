@@ -1,5 +1,5 @@
 # <pep8 compliant>
-from bpy.props import EnumProperty, PointerProperty
+from bpy.props import EnumProperty, PointerProperty, BoolProperty
 
 from src.properties.openfoam.utils import update_scalar_names
 from src.properties.openfoam.clip import TBB_OpenfoamClipProperty
@@ -11,6 +11,20 @@ class TBB_OpenfoamSettings(TBB_ModuleSceneSettings):
     """
     OpenFOAM module settings.
     """
+
+    #: bpy.types.BoolProperty: If `True`, decompose polyhedra into tetrahedra and pyramids
+    decompose_polyhedra: BoolProperty(
+        name="Decompose polyhedra",
+        description="Whether polyhedra are to be decomposed when read. If True, decompose polyhedra into tetrahedra and pyramids",
+        default=False
+    )
+
+    #: bpy.types.BoolProperty: If `True`, more complex polygons will be broken down into triangles
+    triangulate: BoolProperty(
+        name="Triangule",
+        description="More complex polygons will be broken down into triangles",
+        default=True
+    )
 
     #: TBB_OpenfoamTemporaryData: temporary data
     tmp_data = TBB_OpenfoamTemporaryData()
