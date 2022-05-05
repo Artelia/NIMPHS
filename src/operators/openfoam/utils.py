@@ -34,7 +34,7 @@ def load_openfoam_file(file_path: str, decompose_polyhedra: bool = False) -> tup
     return True, file_reader
 
 
-def generate_mesh(file_reader: OpenFOAMReader, time_point: int, clip=None,
+def generate_mesh(file_reader: OpenFOAMReader, time_point: int, triangulate: bool = True, clip=None,
                   mesh: UnstructuredGrid = None) -> tuple[np.array, np.array, UnstructuredGrid]:
     """
     Generate mesh data for Blender using the given file reader. Applies the clip if defined.
@@ -45,6 +45,8 @@ def generate_mesh(file_reader: OpenFOAMReader, time_point: int, clip=None,
     :type file_reader: OpenFOAMReader
     :param time_point: time point from which to read data
     :type time_point: int
+    :param triangulate: If `True`, more complex polygons will be broken down into triangles
+    :type triangulate: bool, defaults to True
     :param clip: clip settings, defaults to None
     :type clip: TBB_OpenfoamClipProperty, optional
     :param mesh: 'raw mesh', defaults to None
@@ -72,12 +74,13 @@ def generate_mesh(file_reader: OpenFOAMReader, time_point: int, clip=None,
     else:
         mesh = mesh.extract_surface(nonlinear_subdivision=0)
 
-    # TODO: this should be an option
-    mesh.triangulate(inplace=True)
-    mesh.compute_normals(inplace=True, consistent_normals=False, split_vertices=True)
+    if triangulate:
+        mesh.triangulate(inplace=True)
+        mesh.compute_normals(inplace=True, consistent_normals=False, split_vertices=True)
 
     vertices = np.array(mesh.points)
 
+    # Reshape the faces array
     if mesh.is_all_triangles:
         faces = np.array(mesh.faces).reshape(-1, 4)[:, 1:4]
     else:
@@ -150,7 +153,7 @@ def generate_mesh_for_sequence(context: Context, time_point: int, name: str = "T
     if not success:
         raise AttributeError("The given file does not exist (" + str(settings.file_path) + ")")
 
-    vertices, faces, mesh = generate_mesh(file_reader, time_point, settings.clip)
+    vertices, faces, mesh = generate_mesh(file_reader, time_point, triangulate=settings.triangulate, clip=settings.clip)
 
     # Create mesh from python data
     blender_mesh = bpy.data.meshes.new(name + "_mesh")
@@ -308,7 +311,7 @@ def update_sequence_mesh(obj: Object, settings: TBB_OpenfoamStreamingSequencePro
         raise ValueError("time point '" + str(time_point) + "' does not exist. Available time points: " +
                          str(file_reader.number_time_points))
 
-    vertices, faces, mesh = generate_mesh(file_reader, time_point, settings.clip)
+    vertices, faces, mesh = generate_mesh(file_reader, time_point, triangulate=settings.triangulate, clip=settings.clip)
 
     blender_mesh = obj.data
     blender_mesh.clear_geometry()
@@ -337,6 +340,8 @@ def generate_openfoam_streaming_sequence_obj(context: Context, name: str) -> Obj
     # Copy settings
     settings = context.scene.tbb.settings.openfoam
     seq_settings = obj.tbb.settings.openfoam.streaming_sequence
+    seq_settings.decompose_polyhedra = settings.decompose_polyhedra
+    seq_settings.triangulate = settings.triangulate
 
     # Set clip settings
     seq_settings.clip.type = settings.clip.type

@@ -63,7 +63,8 @@ class TBB_OT_OpenfoamPreview(Operator):
         clip.scalar.list = encode_scalar_names(raw_mesh)
 
         try:
-            vertices, faces, mesh = generate_mesh(file_reader, prw_time_point, clip, raw_mesh)
+            vertices, faces, mesh = generate_mesh(
+                file_reader, prw_time_point, triangulate=settings.triangulate, clip=clip, mesh=raw_mesh)
         except Exception as error:
             print("ERROR::TBB_OT_OpenfoamPreview: " + str(error))
             # Update temporary data, please read the comment below.

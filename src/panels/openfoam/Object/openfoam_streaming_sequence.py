@@ -37,4 +37,13 @@ class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
 
         obj = get_selected_object(context)
         if obj is not None:
-            super().draw(obj.tbb.settings.openfoam.streaming_sequence)
+            seq_settings = obj.tbb.settings.openfoam.streaming_sequence
+            super().draw(seq_settings)
+
+            if seq_settings.update:
+                layout = self.layout
+
+                row = layout.row()
+                row.prop(seq_settings, "decompose_polyhedra", text="Decompose polyhedra")
+                row = layout.row()
+                row.prop(seq_settings, "triangulate", text="Triangulate")
