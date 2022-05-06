@@ -1,8 +1,9 @@
 # <pep8 compliant>
-from bpy.utils import unregister_class, register_class
+from bpy.utils import unregister_class, register_class, previews
 from bpy.types import Scene, Object
 from bpy.props import PointerProperty
 from bpy.app.handlers import frame_change_pre
+from os import path
 
 # ----- OpenFOAM imports
 # Operators
@@ -103,6 +104,7 @@ classes = [operators, panels, properties]
 
 
 def register():
+    # Register custom classes
     for category in classes:
         for cls in category:
             register_class(cls)
@@ -117,8 +119,22 @@ def register():
     # Custom app handlers
     frame_change_pre.append(update_streaming_sequence)
 
+    # Add custom icons
+    icons = previews.new()
+    icons_dir = path.join(path.dirname(__file__), "icons")
+    icons.load("openfoam", path.join(icons_dir, "openfoam_32_px.png"), 'IMAGE')
+    icons.load("telemac", path.join(icons_dir, "telemac_32_px.png"), 'IMAGE')
+
+    Scene.tbb_icons = {"main": icons}
+
 
 def unregister():
+    # Unregister classes
     for category in reversed(classes):
         for cls in reversed(category):
             unregister_class(cls)
+
+    # Remove icons
+    for collection in Scene.tbb_icons.values():
+        previews.remove(collection)
+    Scene.tbb_icons.clear()

@@ -30,6 +30,7 @@ class TBB_ModulePanel(Panel):
         layout = self.layout
         module = tmp_data.module_name
         obj = get_selected_object(context)
+        icons = context.scene.tbb_icons["main"]
 
         if obj is not None:
             if module == 'OpenFOAM':
@@ -43,7 +44,7 @@ class TBB_ModulePanel(Panel):
         enable_rows = not context.scene.tbb.create_sequence_is_running
 
         row = layout.row()
-        row.label(text="Import")
+        row.label(text="Import", icon_value=icons[module.lower()].icon_id)
 
         # Import section
         row = layout.row()
