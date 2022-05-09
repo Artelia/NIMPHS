@@ -89,7 +89,7 @@ class TBB_OT_OpenfoamPreview(Operator):
             self.report({"ERROR"}, "Something went generating the object")
             return {"FINISHED"}
 
-        scalars_to_preview = str(settings.preview_point_data.split("@")[0])
+        scalars_to_preview = [settings.preview_point_data]
         blender_mesh = generate_vertex_colors(mesh, obj.data, scalars_to_preview, prw_time_point)
         generate_preview_material(obj, scalars_to_preview)
 

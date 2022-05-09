@@ -8,8 +8,9 @@ from pathlib import Path
 import numpy as np
 import time
 
-from src.operators.utils import remap_array
+from src.operators.utils import remap_array, generate_vertex_colors_groups
 from src.properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
+from src.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 
 
 def load_openfoam_file(file_path: str, decompose_polyhedra: bool = False) -> tuple[bool, OpenFOAMReader]:
@@ -163,9 +164,36 @@ def generate_mesh_for_sequence(context: Context, time_point: int, name: str = "T
 
     # Import point data as vertex colors
     if settings.import_point_data:
-        blender_mesh = generate_vertex_colors(mesh, blender_mesh, settings.list_point_data, time_point)
+        blender_mesh = generate_vertex_colors(mesh, blender_mesh, settings.list_point_data.split[";"], time_point)
 
     return blender_mesh
+
+
+def prepare_openfoam_point_data(mesh: UnstructuredGrid, blender_mesh: Mesh, list_point_data: list[str],
+                                tmp_data: TBB_OpenfoamTemporaryData, time_point: int,
+                                normalize: str = 'LOCAL') -> tuple[list[dict], dict, int]:
+
+    # Prepare the mesh to loop over all its triangles
+    if len(blender_mesh.loop_triangles) == 0:
+        blender_mesh.calc_loop_triangles()
+    vertex_ids = np.array([triangle.vertices for triangle in blender_mesh.loop_triangles]).flatten()
+
+    # Filter elements which evaluates to 'False', ex: ''
+    print(list_point_data)
+    list_point_data = list(filter(None, list_point_data))
+    # Filter field arrays (check if they exist)
+    filtered_variables = []
+    for raw_key in list_point_data:
+        key = raw_key.split("@")[0]
+        type = raw_key.split("@")[1]
+        if key not in mesh.point_data.keys():
+            if key != "None":
+                print("WARNING::prepare_openfoam_point_data: the field array named '" +
+                      key + "' does not exist (time point = " + str(time_point) + ")")
+        else:
+            filtered_variables.append({"name": key, "type": 'SCALAR' if type == "value" else 'VECTOR', "id": key})
+
+    return generate_vertex_colors_groups(filtered_variables), None, len(vertex_ids)
 
 
 def generate_vertex_colors(mesh: UnstructuredGrid, blender_mesh: Mesh, list_point_data: str, time_point: int) -> Mesh:
@@ -182,6 +210,9 @@ def generate_vertex_colors(mesh: UnstructuredGrid, blender_mesh: Mesh, list_poin
     :return: Blender mesh
     :rtype: Mesh
     """
+
+    res = prepare_openfoam_point_data(mesh, blender_mesh, list_point_data, None, time_point)
+    print(*res)
 
     # Prepare the mesh to loop over all its triangles
     if len(blender_mesh.loop_triangles) == 0:
@@ -319,7 +350,7 @@ def update_sequence_mesh(obj: Object, settings: TBB_OpenfoamStreamingSequencePro
 
     # Import point data as vertex colors
     if settings.import_point_data:
-        blender_mesh = generate_vertex_colors(mesh, blender_mesh, settings.list_point_data, time_point)
+        blender_mesh = generate_vertex_colors(mesh, blender_mesh, settings.list_point_data.split[";"], time_point)
 
 
 def generate_openfoam_streaming_sequence_obj(context: Context, name: str) -> Object:

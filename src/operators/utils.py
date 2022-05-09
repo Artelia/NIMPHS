@@ -4,6 +4,7 @@ from bpy.types import Collection, Object, Context, Mesh
 from rna_prop_ui import rna_idprop_ui_create
 
 import numpy as np
+from typing import Any
 
 from src.properties.shared.module_scene_settings import scene_settings_dynamic_props, TBB_ModuleSceneSettings
 from src.properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
@@ -28,7 +29,7 @@ def generate_vertex_colors_groups(variables: list[dict]) -> list[dict]:
     group, groups, nb_vars_in_current_group = {"name": "", "ids": []}, [], 0
 
     # Util function to add a variable to the current group
-    def add_var_to_group(name: str, id: int) -> None:
+    def add_var_to_group(name: str, id: Any) -> None:
         group["name"] += name + ", "
         group["ids"].append(id)
 
@@ -39,9 +40,8 @@ def generate_vertex_colors_groups(variables: list[dict]) -> list[dict]:
         groups.append(group)
 
     for var in variables:
-        add_var_to_group(var["name"], var["id"])
-
         if var["type"] == 'SCALAR':
+            add_var_to_group(var["name"], var["id"])
             nb_vars_in_current_group += 1
         elif var["type"] == 'VECTOR':
             # If it is a vector value, add it as an entire group
@@ -57,7 +57,7 @@ def generate_vertex_colors_groups(variables: list[dict]) -> list[dict]:
             group["ids"].clear()
 
     # Add 'None' to the end of the last group if it is not full
-    if nb_vars_in_current_group < 3:
+    if nb_vars_in_current_group != 0 and nb_vars_in_current_group < 3:
         for i in range(3 - nb_vars_in_current_group):
             add_var_to_group("None", -1)
 
@@ -66,14 +66,14 @@ def generate_vertex_colors_groups(variables: list[dict]) -> list[dict]:
     return groups
 
 
-def generate_vertex_colors(groups: list[dict], blender_mesh: Mesh, data: np.ndarray, nb_vertex_ids: int) -> None:
+def generate_vertex_colors(blender_mesh: Mesh, groups: list[dict], data: np.ndarray, nb_vertex_ids: int) -> None:
     """
     Generate vertex colors for the given mesh.
 
-    :param groups: groups of vertex colors to create. Expected input for one group: {"name": str, ids: [Any]}.
-    :type groups: list[dict]
     :param blender_mesh: mesh on which to add vertex colors.
     :type blender_mesh: Mesh
+    :param groups: groups of vertex colors to create. Expected input for one group: {"name": str, ids: [Any]}.
+    :type groups: list[dict]
     :param data: prepared data. Expected input: {id_var: np.ndarray, id_var: np.ndarray, ...}
     :type data: np.ndarray
     :param nb_vertex_ids: length of the list which contains all the vertex indices of all the triangles.

@@ -30,7 +30,7 @@ def prepare_telemac_point_data(blender_mesh: Mesh, list_point_data: list[str], t
     :type offset: int, optional
     :param normalize: normalize vertex colors, enum in ['LOCAL', 'GLOBAL'], defaults to 'LOCAL'
     :type normalize: str, optional
-    :return: variables, data, nb_vertex_ids
+    :return: vertex colors groups, data, nb_vertex_ids
     :rtype: tuple[list[dict], dict, int]
     """
 
@@ -64,43 +64,7 @@ def prepare_telemac_point_data(blender_mesh: Mesh, list_point_data: list[str], t
 
         prepared_data[var["id"]] = remap_array(np.array(data[var["id"]])[vertex_ids], in_min=min, in_max=max)
 
-    return filtered_variables, prepared_data, len(vertex_ids)
-
-
-def get_data_from_possible_var_names(tmp_data: TBB_TelemacTemporaryData,
-                                     possible_var_names: list[str], time_point: int) -> tuple[np.ndarray, str]:
-    """
-    Get data from the Serafin file (.slf) and check for every possible given names. When one is found,
-    return the associated data.
-
-    :param tmp_data: temporary data
-    :type tmp_data: TBB_TelemacTemporaryData
-    :param possible_var_names: variable names which could probably be defined in the Serafin file
-    :type possible_var_names: list[str]
-    :param time_point: time point to read data
-    :type time_point: int
-    :raises error: if an error occurred reading the Serafin file
-    :raises NameError: if the possible names are not defined
-    :return: data, var_name
-    :rtype: tuple[np.ndarray, str]
-    """
-
-    z_values = None
-    for var_name in possible_var_names:
-        try:
-            z_values = tmp_data.get_data_from_var_name(var_name, time_point)
-        except NameError:
-            pass
-        except Exception as error:
-            raise error
-
-        if z_values is not None:
-            return z_values, var_name
-
-    if z_values is None:
-        raise NameError("ERROR::get_data_from_possible_var_names: undefined variables " + str(possible_var_names))
-    else:
-        return z_values, var_name
+    return generate_vertex_colors_groups(filtered_variables), prepared_data, len(vertex_ids)
 
 
 def generate_mesh(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, offset: int = 0,
@@ -230,6 +194,184 @@ def generate_preview_material(obj: Object, var_name: str, name: str = "TBB_TELEM
     obj.active_material = material
 
 
+def generate_preview_objects(context: Context, time_point: int = 0, name: str = "TBB_TELEMAC_preview") -> list[Object]:
+    """
+    Generate preview objects using settings defined by the user. Calls 'generate_base_objects'.
+    This function also generate preview materials.
+
+    :type context: Context
+    :param time_point: time point of the preview, defaults to 0
+    :type time_point: int, optional
+    :param name: name of the preview object, defaults to "TBB_TELEMAC_preview"
+    :type name: str, optional
+    :return: generated objects
+    :rtype: list[Object]
+    """
+
+    settings = context.scene.tbb.settings.telemac
+    tmp_data = settings.tmp_data
+    collection = get_collection("TBB_TELEMAC", context)
+
+    # Prepare the list of point data to preview
+    prw_var_id = int(settings.preview_point_data)
+    import_point_data = prw_var_id >= 0
+    if import_point_data:
+        vertex_colors_var_name = tmp_data.vars_info["names"][prw_var_id]
+        point_data = [vertex_colors_var_name]
+        # Generate vertex colors for all the variables
+        # point_data = tmp_data.vars_info["names"]
+        objects = generate_base_objects(context, time_point, name, import_point_data=import_point_data,
+                                        list_point_data=point_data)
+        for obj in objects:
+            generate_preview_material(obj, vertex_colors_var_name)
+    else:
+        objects = generate_base_objects(context, time_point, name)
+
+    # Add created objects to the right collection
+    if tmp_data.is_3d:
+        # Create a custom collection for 3D previews
+        collection_3d = get_collection("TBB_TELEMAC_3D", context, link_to_scene=False)
+        if collection_3d.name not in [col.name for col in collection.children]:
+            collection.children.link(collection_3d)
+        collection = collection_3d
+
+    for obj in objects:
+        # Check if not already in collection
+        if collection.name not in [col.name for col in obj.users_collection]:
+            collection.objects.link(obj)
+
+    return objects
+
+
+def generate_base_objects(context: Context, time_point: int, name: str,
+                          import_point_data: bool = False, list_point_data: list[str] = [""]) -> list[Object]:
+    """
+    Generate objects using settings defined by the user. This function generates objects and vertex colors.
+
+    :type context: Context
+    :param time_point: time point
+    :type time_point: int
+    :param name: name of the objects
+    :type name: str
+    :param import_point_data: import point data as vertex colors, defaults to False
+    :type import_point_data: bool, optional
+    :param list_point_data: list of point data to import as vertex colors groups, defaults to [""]
+    :type list_point_data: list[str], optional
+    :return: generated objects
+    :rtype: list[Object]
+    """
+
+    settings = context.scene.tbb.settings.telemac
+    tmp_data = settings.tmp_data
+
+    objects = []
+    if not tmp_data.is_3d:
+        for type in ['BOTTOM', 'WATER_DEPTH']:
+            vertices = generate_mesh(tmp_data, mesh_is_3d=False, time_point=time_point, type=type)
+            obj = generate_object_from_data(vertices, tmp_data.faces, name=name + "_" + type.lower())
+            # Save the name of the variable used for 'z-values' of the vertices
+            obj.tbb.settings.telemac.z_name = type
+            # Reset the scale without applying it
+            obj.scale = [1.0, 1.0, 1.0]
+
+            if import_point_data:
+                res = prepare_telemac_point_data(obj.data, list_point_data, tmp_data, time_point, normalize='GLOBAL')
+                generate_vertex_colors(obj.data, *res)
+
+            objects.append(obj)
+    else:
+        for plane_id in range(tmp_data.nb_planes - 1, -1, -1):
+            vertices = generate_mesh(tmp_data, mesh_is_3d=True, offset=plane_id, time_point=time_point)
+            obj = generate_object_from_data(vertices, tmp_data.faces, name=name + "_plane_" + str(plane_id))
+            # Save the name of the variable used for 'z-values' of the vertices
+            obj.tbb.settings.telemac.z_name = str(plane_id)
+            # Reset the scale without applying it
+            obj.scale = [1.0, 1.0, 1.0]
+
+            if import_point_data:
+                res = prepare_telemac_point_data(obj.data, list_point_data, tmp_data, time_point,
+                                                 mesh_is_3d=True, offset=plane_id, normalize='GLOBAL')
+                generate_vertex_colors(obj.data, *res)
+
+            objects.append(obj)
+
+    return objects
+
+
+def generate_telemac_streaming_sequence_obj(context: Context, name: str) -> Object:
+    """
+    Generate the base object for a TELEMAC 'streaming sequence'.
+
+    :type context: Context
+    :param name: name of the sequence
+    :type name: str
+    :return: generated object
+    :rtype: Object
+    """
+
+    settings = context.scene.tbb.settings.telemac
+    collection = context.scene.collection
+
+    # Create objects
+    seq_obj = bpy.data.objects.new(name=name + "_sequence", object_data=None)
+    objects = generate_base_objects(context, 0, name + "_sequence")
+
+    for obj in objects:
+        # Add 'Basis' shape key
+        # obj.shape_key_add(name="Basis", from_mix=False)
+
+        # Add the object to the collection
+        collection.objects.link(obj)
+        obj.parent = seq_obj
+
+    # Normalize if needed (option set by the user)
+    if settings.normalize_sequence_obj:
+        normalize_objects(objects, get_object_dimensions_from_mesh(objects[0]))
+
+    # Copy settings
+    seq_settings = seq_obj.tbb.settings.telemac.streaming_sequence
+
+    seq_settings.normalize = settings.normalize_sequence_obj
+
+    return seq_obj
+
+
+def get_data_from_possible_var_names(tmp_data: TBB_TelemacTemporaryData,
+                                     possible_var_names: list[str], time_point: int) -> tuple[np.ndarray, str]:
+    """
+    Get data from the Serafin file (.slf) and check for every possible given names. When one is found,
+    return the associated data.
+
+    :param tmp_data: temporary data
+    :type tmp_data: TBB_TelemacTemporaryData
+    :param possible_var_names: variable names which could probably be defined in the Serafin file
+    :type possible_var_names: list[str]
+    :param time_point: time point to read data
+    :type time_point: int
+    :raises error: if an error occurred reading the Serafin file
+    :raises NameError: if the possible names are not defined
+    :return: data, var_name
+    :rtype: tuple[np.ndarray, str]
+    """
+
+    z_values = None
+    for var_name in possible_var_names:
+        try:
+            z_values = tmp_data.get_data_from_var_name(var_name, time_point)
+        except NameError:
+            pass
+        except Exception as error:
+            raise error
+
+        if z_values is not None:
+            return z_values, var_name
+
+    if z_values is None:
+        raise NameError("ERROR::get_data_from_possible_var_names: undefined variables " + str(possible_var_names))
+    else:
+        return z_values, var_name
+
+
 def normalize_objects(objects: list[Object], dimensions: list[float]) -> None:
     """
     Rescale the given list of objects so coordinates of all the meshes are now in the range [-1;1].
@@ -317,147 +459,3 @@ def set_new_shape_key(obj: Object, vertices: np.ndarray, name: str, frame: int) 
     block.value = 0.0
     block.keyframe_insert("value", frame=frame - 1, index=-1)
     block.keyframe_insert("value", frame=frame + 1, index=-1)
-
-
-def generate_preview_objects(context: Context, time_point: int = 0, name: str = "TBB_TELEMAC_preview") -> list[Object]:
-    """
-    Generate preview objects using settings defined by the user. Calls 'generate_base_objects'.
-    This function also generate preview materials.
-
-    :type context: Context
-    :param time_point: time point of the preview, defaults to 0
-    :type time_point: int, optional
-    :param name: name of the preview object, defaults to "TBB_TELEMAC_preview"
-    :type name: str, optional
-    :return: generated objects
-    :rtype: list[Object]
-    """
-
-    settings = context.scene.tbb.settings.telemac
-    tmp_data = settings.tmp_data
-    collection = get_collection("TBB_TELEMAC", context)
-
-    # Prepare the list of point data to preview
-    prw_var_id = int(settings.preview_point_data)
-    import_point_data = prw_var_id >= 0
-    if import_point_data:
-        vertex_colors_var_name = tmp_data.vars_info["names"][prw_var_id]
-        point_data = [vertex_colors_var_name]
-        # Generate vertex colors for all the variables
-        # point_data = tmp_data.vars_info["names"]
-        objects = generate_base_objects(context, time_point, name, import_point_data=import_point_data,
-                                        list_point_data=point_data)
-        for obj in objects:
-            generate_preview_material(obj, vertex_colors_var_name)
-    else:
-        objects = generate_base_objects(context, time_point, name)
-
-    # Add created objects to the right collection
-    if tmp_data.is_3d:
-        # Create a custom collection for 3D previews
-        collection_3d = get_collection("TBB_TELEMAC_3D", context, link_to_scene=False)
-        if collection_3d.name not in [col.name for col in collection.children]:
-            collection.children.link(collection_3d)
-        collection = collection_3d
-
-    for obj in objects:
-        # Check if not already in collection
-        if collection.name not in [col.name for col in obj.users_collection]:
-            collection.objects.link(obj)
-
-    return objects
-
-
-def generate_base_objects(context: Context, time_point: int, name: str,
-                          import_point_data: bool = False, list_point_data: list[str] = [""]) -> list[Object]:
-    """
-    Generate objects using settings defined by the user. This function generates objects and vertex colors.
-
-    :type context: Context
-    :param time_point: time point
-    :type time_point: int
-    :param name: name of the objects
-    :type name: str
-    :param import_point_data: import point data as vertex colors, defaults to False
-    :type import_point_data: bool, optional
-    :param list_point_data: list of point data to import as vertex colors groups, defaults to [""]
-    :type list_point_data: list[str], optional
-    :return: generated objects
-    :rtype: list[Object]
-    """
-
-    settings = context.scene.tbb.settings.telemac
-    tmp_data = settings.tmp_data
-
-    objects = []
-    if not tmp_data.is_3d:
-        for type in ['BOTTOM', 'WATER_DEPTH']:
-            vertices = generate_mesh(tmp_data, mesh_is_3d=False, time_point=time_point, type=type)
-            obj = generate_object_from_data(vertices, tmp_data.faces, name=name + "_" + type.lower())
-            # Save the name of the variable used for 'z-values' of the vertices
-            obj.tbb.settings.telemac.z_name = type
-            # Reset the scale without applying it
-            obj.scale = [1.0, 1.0, 1.0]
-
-            if import_point_data:
-                res = prepare_telemac_point_data(obj.data, list_point_data, tmp_data, time_point, normalize='GLOBAL')
-                groups = generate_vertex_colors_groups(res[0])
-                generate_vertex_colors(groups, obj.data, res[1], res[2])
-
-            objects.append(obj)
-    else:
-        for plane_id in range(tmp_data.nb_planes - 1, -1, -1):
-            vertices = generate_mesh(tmp_data, mesh_is_3d=True, offset=plane_id, time_point=time_point)
-            obj = generate_object_from_data(vertices, tmp_data.faces, name=name + "_plane_" + str(plane_id))
-            # Save the name of the variable used for 'z-values' of the vertices
-            obj.tbb.settings.telemac.z_name = str(plane_id)
-            # Reset the scale without applying it
-            obj.scale = [1.0, 1.0, 1.0]
-
-            if import_point_data:
-                res = prepare_telemac_point_data(obj.data, list_point_data, tmp_data, time_point,
-                                                 mesh_is_3d=True, offset=plane_id, normalize='GLOBAL')
-                groups = generate_vertex_colors_groups(res[0])
-                generate_vertex_colors(groups, obj.data, res[1], res[2])
-
-            objects.append(obj)
-
-    return objects
-
-
-def generate_telemac_streaming_sequence_obj(context: Context, name: str) -> Object:
-    """
-    Generate the base object for a TELEMAC 'streaming sequence'.
-
-    :type context: Context
-    :param name: name of the sequence
-    :type name: str
-    :return: generated object
-    :rtype: Object
-    """
-
-    settings = context.scene.tbb.settings.telemac
-    collection = context.scene.collection
-
-    # Create objects
-    seq_obj = bpy.data.objects.new(name=name + "_sequence", object_data=None)
-    objects = generate_base_objects(context, 0, name + "_sequence")
-
-    for obj in objects:
-        # Add 'Basis' shape key
-        # obj.shape_key_add(name="Basis", from_mix=False)
-
-        # Add the object to the collection
-        collection.objects.link(obj)
-        obj.parent = seq_obj
-
-    # Normalize if needed (option set by the user)
-    if settings.normalize_sequence_obj:
-        normalize_objects(objects, get_object_dimensions_from_mesh(objects[0]))
-
-    # Copy settings
-    seq_settings = seq_obj.tbb.settings.telemac.streaming_sequence
-
-    seq_settings.normalize = settings.normalize_sequence_obj
-
-    return seq_obj
