@@ -1,6 +1,6 @@
 # <pep8 compliant>
 import bpy
-from bpy.types import Collection, Object, Context
+from bpy.types import Collection, Object, Context, Mesh
 from rna_prop_ui import rna_idprop_ui_create
 
 import numpy as np
@@ -12,26 +12,96 @@ from src.properties.openfoam.Object.openfoam_streaming_sequence import TBB_Openf
 from src.properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
 
 
-def get_collection(name: str, context: Context, link_to_scene: bool = True) -> Collection:
+def generate_vertex_colors_groups(variables: list[dict]) -> list[dict]:
     """
-    Get the collection called 'name'. If it does not exist, create it.
+    Generate optimized vertex colors groups.
+    | Example: "FOND, VITESSE U, NONE" corresponds to: red channel = FOND, green channel = VITESS U, blue channel = NONE
+    | Example: "k, p_rgh, alpha.water" corresponds to: red channel = k, green channel = p_rgh, blue channel = alpha.water
 
-    :param name: name of the collection
-    :type name: str
-    :type context: Context
-    :param link_to_scene: automatically link the collection to the list of scene collections, defaults to True
-    :type link_to_scene: bool
-    :return: the collection
-    :rtype: Collection
+    :param variables: list of variables. Expected structure of each variable: {"name": str, "type": enum in ['VECTOR', 'SCALAR'], "id": Any}
+    :type variables: list[dict]
+    :raises AttributeError: if the given type of variable is undefined
+    :return: vertex colors groups. Output structure of each group: {"name": str, "ids": [Any]}
+    :rtype: list[dict]
     """
 
-    collection = bpy.data.collections.get(name)
-    if collection is None:
-        collection = bpy.data.collections.new(name=name)
-        if link_to_scene:
-            context.scene.collection.children.link(collection)
+    group, groups, nb_vars_in_current_group = {"name": "", "ids": []}, [], 0
 
-    return collection
+    # Util function to add a variable to the current group
+    def add_var_to_group(name: str, id: int) -> None:
+        group["name"] += name + ", "
+        group["ids"].append(id)
+
+    # Util function to append a new group to the list of groups
+    def append_group_to_groups() -> None:
+        # Remove the comma at the end of the name
+        group["name"] = group["name"][0:len(group["name"]) - 2]
+        groups.append(group)
+
+    for var in variables:
+        add_var_to_group(var["name"], var["id"])
+
+        if var["type"] == 'SCALAR':
+            nb_vars_in_current_group += 1
+        elif var["type"] == 'VECTOR':
+            # If it is a vector value, add it as an entire group
+            groups.append({"name": var["name"] + " (vector)", "ids": var["id"]})
+        else:
+            raise AttributeError("Variable type is undefined: '" + str(var["type"]) + "'")
+
+        if nb_vars_in_current_group >= 3:
+            append_group_to_groups()
+            # Reset group data
+            nb_vars_in_current_group = 0
+            group["name"] = ""
+            group["ids"].clear()
+
+    # Add 'None' to the end of the last group if it is not full
+    if nb_vars_in_current_group < 3:
+        for i in range(3 - nb_vars_in_current_group):
+            add_var_to_group("None", -1)
+
+        append_group_to_groups()
+
+    return groups
+
+
+def generate_vertex_colors(groups: list[dict], blender_mesh: Mesh, data: np.ndarray, nb_vertex_ids: int) -> None:
+    """
+    Generate vertex colors for the given mesh.
+
+    :param groups: groups of vertex colors to create. Expected input for one group: {"name": str, ids: [Any]}.
+    :type groups: list[dict]
+    :param blender_mesh: mesh on which to add vertex colors.
+    :type blender_mesh: Mesh
+    :param data: prepared data. Expected input: {id_var: np.ndarray, id_var: np.ndarray, ...}
+    :type data: np.ndarray
+    :param nb_vertex_ids: length of the list which contains all the vertex indices of all the triangles.
+    :type nb_vertex_ids: int
+    """
+
+    # Data for alpha and empty channels
+    ones = np.ones((nb_vertex_ids,))
+    zeros = np.zeros((nb_vertex_ids,))
+
+    for group in groups:
+        vertex_colors = blender_mesh.vertex_colors.new(name=group["name"], do_init=True)
+
+        colors = []
+        for var_id in group["ids"]:
+            if var_id != -1:
+                colors.append(np.array(data[var_id]))
+            else:
+                colors.append(zeros)
+
+        # Add ones for alpha channel
+        colors.append(ones)
+
+        # Reshape data
+        colors = np.array(colors).T
+
+        colors = colors.flatten()
+        vertex_colors.data.foreach_set("color", colors)
 
 
 def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, name: str) -> Object:
@@ -66,7 +136,8 @@ def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, name: str
 
 
 def setup_streaming_sequence_object(obj: Object, seq_settings: TBB_OpenfoamStreamingSequenceProperty |
-                                    TBB_TelemacStreamingSequenceProperty, time_points: int, settings, module):
+                                    TBB_TelemacStreamingSequenceProperty, time_points: int,
+                                    settings: TBB_ModuleSceneSettings, module: str) -> None:
 
     # Setup common settings
     seq_settings.name = obj.name
@@ -139,6 +210,28 @@ def update_dynamic_props(settings: TBB_ModuleSceneSettings, new_maxima: dict, pr
         if new_maxima[prop_id] < default:
             default = 0
         prop.update(default=default, max=new_maxima[prop_id], soft_max=new_maxima[prop_id])
+
+
+def get_collection(name: str, context: Context, link_to_scene: bool = True) -> Collection:
+    """
+    Get the collection called 'name'. If it does not exist, create it.
+
+    :param name: name of the collection
+    :type name: str
+    :type context: Context
+    :param link_to_scene: automatically link the collection to the list of scene collections, defaults to True
+    :type link_to_scene: bool
+    :return: the collection
+    :rtype: Collection
+    """
+
+    collection = bpy.data.collections.get(name)
+    if collection is None:
+        collection = bpy.data.collections.new(name=name)
+        if link_to_scene:
+            context.scene.collection.children.link(collection)
+
+    return collection
 
 
 def remap_array(input: np.ndarray, out_min: float = 0.0, out_max: float = 1.0,

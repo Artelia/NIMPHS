@@ -1,37 +1,70 @@
 # <pep8 compliant>
+from multiprocessing.spawn import prepare
 import bpy
 from bpy.types import Mesh, Object, Context
 
 import numpy as np
 from typing import Any
 
-from src.operators.utils import generate_object_from_data, remap_array, get_collection
+from src.operators.utils import generate_object_from_data, remap_array, get_collection, generate_vertex_colors_groups, generate_vertex_colors
 from src.properties.telemac.temporary_data import TBB_TelemacTemporaryData
 
 
-def generate_vertex_colors_name(var_id_groups: list[int], tmp_data: TBB_TelemacTemporaryData) -> str:
+def prepare_telemac_point_data(blender_mesh: Mesh, list_point_data: list[str], tmp_data: TBB_TelemacTemporaryData,
+                               time_point: int, mesh_is_3d: bool = False,
+                               offset: int = 0, normalize: str = 'LOCAL') -> tuple[list[dict], dict, int]:
     """
-    Generate the name of the vertex colors groups which correspond to the given list of ids.
-    Example: 'FOND, VITESSE U, NONE' corresponds to: red channel = FOND, green channel = VITESS U, blue channel = NONE
+    Preparte point data for the 'generate_vertex_colors' function.
 
-    :param var_id_groups: ids of varibales names (from Serafin.nomvar)
-    :type var_id_groups: list[int]
+    :param blender_mesh: mesh on which to add vertex colors
+    :type blender_mesh: Mesh
+    :param list_point_data: list of point data
+    :type list_point_data: list[str]
     :param tmp_data: temporary data
     :type tmp_data: TBB_TelemacTemporaryData
-    :return: vertex colors name
-    :rtype: str
+    :param time_point: time point from which to read data
+    :type time_point: int
+    :param mesh_is_3d: if the mesh is from a 3D simulation, defaults to False
+    :type mesh_is_3d: bool, optional
+    :param offset: if the mesh is from a 3D simulation, precise the offset in the data to read, defaults to 0
+    :type offset: int, optional
+    :param normalize: normalize vertex colors, enum in ['LOCAL', 'GLOBAL'], defaults to 'LOCAL'
+    :type normalize: str, optional
+    :return: variables, data, nb_vertex_ids
+    :rtype: tuple[list[dict], dict, int]
     """
 
-    name = ""
-    for var_id, num in zip(var_id_groups, range(3)):
-        if var_id != -1:
-            name += tmp_data.vars_info["names"][var_id]
-        else:
-            name += "NONE"
+    # Prepare the mesh to loop over all its triangles
+    if len(blender_mesh.loop_triangles) == 0:
+        blender_mesh.calc_loop_triangles()
 
-        name += (", " if num != 2 else "")
+    vertex_ids = np.array([triangle.vertices for triangle in blender_mesh.loop_triangles]).flatten()
 
-    return name
+    # Filter elements which evaluates to 'False', ex: ''
+    list_point_data = list(filter(None, list_point_data))
+    # Filter variables if they do not exist and build to output
+    filtered_variables = []
+    for var_name in list_point_data:
+        for name, id in zip(tmp_data.file.nomvar, range(tmp_data.nb_vars)):
+            if var_name in name:
+                filtered_variables.append({"name": var_name, "type": 'SCALAR', "id": id})
+
+    # Prepare data
+    prepared_data, data = dict(), tmp_data.read(time_point)
+
+    if mesh_is_3d:
+        start_id, end_id = offset * tmp_data.nb_vertices, offset * tmp_data.nb_vertices + tmp_data.nb_vertices
+        data = data[:, start_id:end_id]
+
+    for var in filtered_variables:
+        if normalize == 'GLOBAL':
+            min, max = tmp_data.get_var_value_range(var["id"])
+        elif normalize == 'LOCAL':
+            min, max = np.min(data[var["id"]]), np.max(data[var["id"]])
+
+        prepared_data[var["id"]] = remap_array(np.array(data[var["id"]])[vertex_ids], in_min=min, in_max=max)
+
+    return filtered_variables, prepared_data, len(vertex_ids)
 
 
 def get_data_from_possible_var_names(tmp_data: TBB_TelemacTemporaryData,
@@ -138,81 +171,6 @@ def generate_mesh(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, offset: 
     # bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN')
 
     return vertices
-
-
-def generate_vertex_colors(tmp_data: TBB_TelemacTemporaryData, blender_mesh: Mesh,
-                           list_point_data: list[str], time_point: int, mesh_is_3d: bool = False, offset: int = 0) -> None:
-    """
-    Generate vertex colors groups for each point data given in the list. The name given to the groups
-    describe the content of the data contained in the groups.
-
-    :param tmp_data: temporary data
-    :type tmp_data: TBB_TelemacTemporaryData
-    :param blender_mesh: mesh
-    :type blender_mesh: Mesh
-    :param list_point_data: list of point data to import as vertex colors groups
-    :type list_point_data: list[str]
-    :param time_point: time point to read data
-    :type time_point: int
-    :param mesh_is_3d: precise if the mesh is from a 3D simulation
-    :type mesh_is_3d: bool
-    :param offset: for a mesh from a 3D simulation, precise the offset to read data
-    :type offset: int
-    """
-
-    # Prepare the mesh to loop over all its triangles
-    if len(blender_mesh.loop_triangles) == 0:
-        blender_mesh.calc_loop_triangles()
-    # triangle_ids = np.arange(0, len(blender_mesh.loop_triangles), 1)
-    vertex_ids = np.array([triangle.vertices for triangle in blender_mesh.loop_triangles]).flatten()
-
-    # Filter variables
-    list_point_data = list(filter(None, list_point_data))  # Filter elements which evaluates to 'False', ex: ''
-    filtered_variables_indices = []
-    for var_name in list_point_data:
-        for name, id in zip(tmp_data.file.nomvar, range(tmp_data.nb_vars)):
-            if var_name in name:
-                filtered_variables_indices.append(id)
-
-    data = tmp_data.read(time_point)
-    if mesh_is_3d:
-        start_id, end_id = offset * tmp_data.nb_vertices, offset * tmp_data.nb_vertices + tmp_data.nb_vertices
-        data = data[:, start_id:end_id]
-
-    ones = np.ones((len(vertex_ids),))
-    zeros = np.zeros((len(vertex_ids),))
-
-    # Add '-1' to the array if it is not a multiple of 3
-    res = len(filtered_variables_indices) % 3
-    if res != 0:
-        filtered_variables_indices += [-1] * (3 - res)
-    nb_groups = int(len(filtered_variables_indices) / 3)
-
-    # Clear vertex colors groups
-    while blender_mesh.vertex_colors:
-        blender_mesh.vertex_colors.remove(blender_mesh.vertex_colors[0])
-
-    for var_id_groups in np.array(filtered_variables_indices).reshape(nb_groups, 3):
-        name = generate_vertex_colors_name(var_id_groups, tmp_data)
-        vertex_colors = blender_mesh.vertex_colors.new(name=name, do_init=True)
-
-        colors = []
-        for var_id in var_id_groups:
-            if var_id != -1:
-                min, max = tmp_data.get_var_value_range(var_id)
-                colors_data = remap_array(np.array(data[var_id])[vertex_ids], in_min=min, in_max=max)
-                colors.append(colors_data)
-            else:
-                colors.append(zeros)
-
-        # Add ones for alpha channel
-        colors.append(ones)
-
-        # Reshape data
-        colors = np.array(colors).T
-
-        colors = colors.flatten()
-        vertex_colors.data.foreach_set("color", colors)
 
 
 def generate_preview_material(obj: Object, var_name: str, name: str = "TBB_TELEMAC_preview_material") -> None:
@@ -388,7 +346,7 @@ def generate_preview_objects(context: Context, time_point: int = 0, name: str = 
         # Generate vertex colors for all the variables
         # point_data = tmp_data.vars_info["names"]
         objects = generate_base_objects(context, time_point, name, import_point_data=import_point_data,
-                                        point_data=point_data)
+                                        list_point_data=point_data)
         for obj in objects:
             generate_preview_material(obj, vertex_colors_var_name)
     else:
@@ -411,7 +369,7 @@ def generate_preview_objects(context: Context, time_point: int = 0, name: str = 
 
 
 def generate_base_objects(context: Context, time_point: int, name: str,
-                          import_point_data: bool = False, point_data: list[str] = [""]) -> list[Object]:
+                          import_point_data: bool = False, list_point_data: list[str] = [""]) -> list[Object]:
     """
     Generate objects using settings defined by the user. This function generates objects and vertex colors.
 
@@ -422,8 +380,8 @@ def generate_base_objects(context: Context, time_point: int, name: str,
     :type name: str
     :param import_point_data: import point data as vertex colors, defaults to False
     :type import_point_data: bool, optional
-    :param point_data: list of point data to import as vertex colors groups, defaults to [""]
-    :type point_data: list[str], optional
+    :param list_point_data: list of point data to import as vertex colors groups, defaults to [""]
+    :type list_point_data: list[str], optional
     :return: generated objects
     :rtype: list[Object]
     """
@@ -442,7 +400,9 @@ def generate_base_objects(context: Context, time_point: int, name: str,
             obj.scale = [1.0, 1.0, 1.0]
 
             if import_point_data:
-                generate_vertex_colors(tmp_data, obj.data, point_data, time_point)
+                res = prepare_telemac_point_data(obj.data, list_point_data, tmp_data, time_point, normalize='GLOBAL')
+                groups = generate_vertex_colors_groups(res[0])
+                generate_vertex_colors(groups, obj.data, res[1], res[2])
 
             objects.append(obj)
     else:
@@ -455,7 +415,10 @@ def generate_base_objects(context: Context, time_point: int, name: str,
             obj.scale = [1.0, 1.0, 1.0]
 
             if import_point_data:
-                generate_vertex_colors(tmp_data, obj.data, point_data, time_point, mesh_is_3d=True, offset=plane_id)
+                res = prepare_telemac_point_data(obj.data, list_point_data, tmp_data, time_point,
+                                                 mesh_is_3d=True, offset=plane_id, normalize='GLOBAL')
+                groups = generate_vertex_colors_groups(res[0])
+                generate_vertex_colors(groups, obj.data, res[1], res[2])
 
             objects.append(obj)
 
