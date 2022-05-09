@@ -68,6 +68,7 @@ class TBB_OpenfoamClipProperty(PropertyGroup):
     Clip settings.
     """
     register_cls = True
+    is_custom_base_cls = False
 
     #: bpy.types.EnumProperty: Choose the clipping method
     type: EnumProperty(

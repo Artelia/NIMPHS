@@ -9,3 +9,4 @@ __pycache__
 
 # Docs
 docs/_build/
+*.xml.bkp
