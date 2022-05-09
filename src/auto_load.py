@@ -5,6 +5,7 @@ import typing
 import inspect
 import pkgutil
 import importlib
+import numpy as np
 from pathlib import Path
 
 __all__ = (
@@ -26,8 +27,6 @@ def init():
 
 
 def register():
-    for cls in ordered_classes:
-        print(cls)
     for cls in ordered_classes:
         bpy.utils.register_class(cls)
 
@@ -108,7 +107,10 @@ def get_dependency_from_annotation(value):
 
 
 def iter_my_deps_from_parent_id(cls, my_classes_by_idname):
-    if bpy.types.Panel in cls.__bases__:
+    cls_inherits_from_custom_base_class = bpy.types.Panel in np.array(
+        [base.__bases__ for base in cls.__bases__]).flatten()
+
+    if bpy.types.Panel in cls.__bases__ or cls_inherits_from_custom_base_class:
         parent_idname = getattr(cls, "bl_parent_id", None)
         if parent_idname is not None:
             parent_cls = my_classes_by_idname.get(parent_idname)
