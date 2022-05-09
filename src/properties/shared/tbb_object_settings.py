@@ -10,6 +10,8 @@ class TBB_ObjectSettings(PropertyGroup):
     """
     Data structure which holds object related settings for all the modules.
     """
+    register_cls = True
+    is_custom_base_cls = False
 
     module: StringProperty(
         name="Module name",

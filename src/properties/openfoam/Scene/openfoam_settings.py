@@ -2,7 +2,7 @@
 from bpy.props import EnumProperty, PointerProperty, BoolProperty
 
 from src.properties.openfoam.utils import update_scalar_names
-from src.properties.openfoam.clip import TBB_OpenfoamClipProperty
+from src.properties.openfoam.openfoam_clip import TBB_OpenfoamClipProperty
 from src.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 from src.properties.shared.module_scene_settings import TBB_ModuleSceneSettings
 
@@ -11,6 +11,8 @@ class TBB_OpenfoamSettings(TBB_ModuleSceneSettings):
     """
     OpenFOAM module settings.
     """
+    register_cls = True
+    is_custom_base_cls = False
 
     #: bpy.types.BoolProperty: If `True`, decompose polyhedra into tetrahedra and pyramids
     decompose_polyhedra: BoolProperty(

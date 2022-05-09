@@ -12,6 +12,8 @@ class TBB_OT_OpenfoamPreview(Operator):
     """
     Preview the mesh using the loaded file and selected parameters.
     """
+    register_cls = True
+    is_custom_base_cls = False
 
     bl_idname = "tbb.openfoam_preview"
     bl_label = "Preview"

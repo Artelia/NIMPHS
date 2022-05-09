@@ -14,6 +14,8 @@ class TBB_OT_OpenfoamCreateSequence(TBB_CreateSequence):
     Create an OpenFOAM sequence using the settings defined in the
     main panel of the module and the 'create sequence' panel.
     """
+    register_cls = True
+    is_custom_base_cls = False
 
     bl_idname = "tbb.openfoam_create_sequence"
     bl_label = "Create sequence"

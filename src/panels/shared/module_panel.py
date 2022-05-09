@@ -12,6 +12,8 @@ class TBB_ModulePanel(Panel):
     Base UI panel for OpenFOAM and TELEMAC modules.
     Specific settings are added in the classes which derive from this one.
     """
+    register_cls = False
+    is_custom_base_cls = True
 
     def draw(self, settings: TBB_ModuleSceneSettings, tmp_data: TBB_OpenfoamTemporaryData |
              TBB_TelemacTemporaryData, context: Context) -> tuple[bool, Object | None]:

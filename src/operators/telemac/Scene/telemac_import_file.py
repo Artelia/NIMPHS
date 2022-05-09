@@ -13,6 +13,8 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
     """
     Import a TELEMAC file. This operator manages the file browser and its filtering options.
     """
+    register_cls = True
+    is_custom_base_cls = False
 
     bl_idname = "tbb.import_telemac_file"
     bl_label = "Import"

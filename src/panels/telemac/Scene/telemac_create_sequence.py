@@ -9,6 +9,8 @@ class TBB_PT_TelemacCreateSequence(TBB_CreateSequencePanel):
     """
     UI panel to manage the creation of new TELEMAC sequences.
     """
+    register_cls = True
+    is_custom_base_cls = False
 
     bl_label = "Create sequence"
     bl_idname = "TBB_PT_TelemacCreateSequence"

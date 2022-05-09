@@ -8,6 +8,8 @@ class TBB_PT_TelemacMainPanel(TBB_ModulePanel):
     """
     Main panel of the TELEMAC module. This is the 'parent' panel.
     """
+    register_cls = True
+    is_custom_base_cls = False
 
     bl_label = "TELEMAC"
     bl_idname = "TBB_PT_TelemacMainPanel"

@@ -11,6 +11,8 @@ class TBB_OT_OpenfoamReloadFile(Operator):
     """
     Reload the selected file.
     """
+    register_cls = True
+    is_custom_base_cls = False
 
     bl_idname = "tbb.reload_openfoam_file"
     bl_label = "Reload"

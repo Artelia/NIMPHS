@@ -8,6 +8,8 @@ class TBB_TelemacStreamingSequenceProperty(TBB_ModuleStreamingSequenceSettings):
     """
     'Streaming sequence' settings for the TELEMAC module.
     """
+    register_cls = True
+    is_custom_base_cls = False
 
     #: bpy.types.BoolProperty: Option to normalize vertices coordinates (remap values in [-1;1])
     normalize: BoolProperty(

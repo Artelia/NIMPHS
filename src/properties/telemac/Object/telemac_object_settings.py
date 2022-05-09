@@ -9,6 +9,8 @@ class TBB_TelemacObjectSettings(PropertyGroup):
     """
     Data structure which holds object related settings for the TELEMAC module.
     """
+    register_cls = True
+    is_custom_base_cls = False
 
     #: bpy.props.StringProperty: Name of the variable used for the 'z-values' of the vertices
     z_name: StringProperty(

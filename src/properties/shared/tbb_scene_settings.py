@@ -10,6 +10,8 @@ class TBB_SceneSettings(PropertyGroup):
     """
     Data structure which holds scene settings for all the modules.
     """
+    register_cls = True
+    is_custom_base_cls = False
 
     #: TBB_OpenfoamSettings: OpenFOAM scene settings
     openfoam: PointerProperty(type=TBB_OpenfoamSettings)

@@ -21,6 +21,8 @@ class TBB_ModuleSceneSettings(PropertyGroup):
     | **end_time_point**: *bpy.types.IntProperty*, ending point of the sequence
     | **anim_length**: *bpy.types.IntProperty*, length of the animation
     """
+    register_cls = True
+    is_custom_base_cls = True
 
     # preview_time_point: IntProperty dynamically created
 

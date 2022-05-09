@@ -8,6 +8,8 @@ class TBB_PT_OpenfoamClip(Panel):
     """
     UI panel to manage clip settings used for previewing and creating sequences.
     """
+    register_cls = True
+    is_custom_base_cls = False
 
     bl_label = "Clip"
     bl_idname = "TBB_PT_OpenfoamClip"

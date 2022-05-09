@@ -14,6 +14,8 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
     """
     Import an OpenFOAM file. This operator manages the file browser and its filtering options.
     """
+    register_cls = True
+    is_custom_base_cls = False
 
     bl_idname = "tbb.import_openfoam_file"
     bl_label = "Import"

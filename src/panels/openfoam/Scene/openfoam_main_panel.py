@@ -8,6 +8,8 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
     """
     Main panel of the OpenFOAM module. This is the 'parent' panel.
     """
+    register_cls = True
+    is_custom_base_cls = False
 
     bl_label = "OpenFOAM"
     bl_idname = "TBB_PT_OpenfoamMainPanel"

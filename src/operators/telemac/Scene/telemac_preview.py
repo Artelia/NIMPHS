@@ -10,6 +10,8 @@ class TBB_OT_TelemacPreview(Operator):
     """
     Preview the mesh using the loaded file and selected parameters.
     """
+    register_cls = True
+    is_custom_base_cls = False
 
     bl_idname = "tbb.telemac_preview"
     bl_label = "Preview"

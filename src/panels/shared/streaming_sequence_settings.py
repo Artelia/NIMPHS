@@ -9,6 +9,8 @@ class TBB_StreamingSequenceSettingsPanel(Panel):
     """
     Base UI panel for OpenFOAM and TELEMAC 'streaming sequence' settings.
     """
+    register_cls = False
+    is_custom_base_cls = True
 
     @classmethod
     def poll(cls, context: Context, type: str) -> bool:

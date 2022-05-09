@@ -10,6 +10,8 @@ class TBB_ModuleStreamingSequenceSettings(PropertyGroup):
     'Streaming sequence' properties.
     This data structure holds common data used in both OpenFOAM and TELEMAC modules.
     """
+    register_cls = True
+    is_custom_base_cls = True
 
     #: bpy.props.StringProperty: Name of the sequence.
     name: StringProperty(

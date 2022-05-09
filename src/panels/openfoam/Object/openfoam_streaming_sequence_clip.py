@@ -8,9 +8,11 @@ class TBB_PT_OpenfoamStreamingSequenceClip(Panel):
     """
     UI panel to manage clip settings of an OpenFOAM 'streaming sequence'.
     """
+    register_cls = True
+    is_custom_base_cls = False
 
     bl_label = "Clip"
-    bl_idname = "TBB_PT_OpenfoamSequenceClip"
+    bl_idname = "TBB_PT_OpenfoamStreamingSequenceClip"
     bl_parent_id = "TBB_PT_OpenfoamStreamingSequence"
     bl_space_type = "PROPERTIES"
     bl_region_type = "WINDOW"

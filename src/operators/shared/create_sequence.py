@@ -12,6 +12,8 @@ class TBB_CreateSequence(Operator):
     """
     Base class of the 'CreateSequence' operators.
     """
+    register_cls = False
+    is_custom_base_cls = True
 
     #: bpy.types.Timer: Timer which triggers the 'modal' method of operators
     timer = None

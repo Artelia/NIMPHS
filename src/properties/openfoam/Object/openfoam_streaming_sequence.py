@@ -1,7 +1,7 @@
 # <pep8 compliant>
 from bpy.props import PointerProperty, BoolProperty
 
-from src.properties.openfoam.clip import TBB_OpenfoamClipProperty
+from src.properties.openfoam.openfoam_clip import TBB_OpenfoamClipProperty
 from src.properties.shared.module_streaming_sequence_settings import TBB_ModuleStreamingSequenceSettings
 
 
@@ -9,6 +9,8 @@ class TBB_OpenfoamStreamingSequenceProperty(TBB_ModuleStreamingSequenceSettings)
     """
     'Streaming sequence' settings for the OpenFOAM module.
     """
+    register_cls = True
+    is_custom_base_cls = False
 
     #: bpy.types.BoolProperty: If `True`, decompose polyhedra into tetrahedra and pyramids
     decompose_polyhedra: BoolProperty(

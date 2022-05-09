@@ -10,6 +10,8 @@ class TBB_PT_TelemacStreamingSequence(TBB_StreamingSequenceSettingsPanel):
     Main panel of the TELEMAC 'streaming sequence' settings.
     This is the 'parent' panel.
     """
+    register_cls = True
+    is_custom_base_cls = False
 
     bl_label = "TELEMAC Streaming sequence"
     bl_idname = "TBB_PT_TelemacStreamingSequence"

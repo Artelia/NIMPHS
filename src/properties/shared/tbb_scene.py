@@ -9,6 +9,8 @@ class TBB_Scene(PropertyGroup):
     """
     Main property of the Toolsbox blender add-on. This data structure holds all Scene data for the add-on.
     """
+    register_cls = True
+    is_custom_base_cls = False
 
     #: TBB_Settings: Holds scene settings for both OpenFOAM and TELEMAC modules
     settings: PointerProperty(type=TBB_SceneSettings)

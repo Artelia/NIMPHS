@@ -13,6 +13,8 @@ class TBB_CreateSequencePanel(Panel):
     Base UI panel for OpenFOAM and TELEMAC modules.
     Specific settings are added in the classes which derive from this one.
     """
+    register_cls = False
+    is_custom_base_cls = True
 
     @classmethod
     def poll(cls, tmp_data: TBB_OpenfoamTemporaryData | TBB_TelemacTemporaryData, context: Context) -> bool:

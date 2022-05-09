@@ -10,6 +10,8 @@ class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
     Main panel of the OpenFOAM 'streaming sequence' settings.
     This is the 'parent' panel.
     """
+    register_cls = True
+    is_custom_base_cls = False
 
     bl_label = "OpenFOAM Streaming sequence"
     bl_idname = "TBB_PT_OpenfoamStreamingSequence"

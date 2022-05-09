@@ -10,6 +10,8 @@ class TBB_TelemacSettings(TBB_ModuleSceneSettings):
     """
     TELEMAC module settings.
     """
+    register_cls = True
+    is_custom_base_cls = False
 
     #: TBB_TelemacTemporaryData: temporary data
     tmp_data = TBB_TelemacTemporaryData()
