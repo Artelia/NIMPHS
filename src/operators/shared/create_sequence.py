@@ -2,9 +2,8 @@
 from bpy.types import Operator, Context, RenderSettings
 
 from src.operators.utils import setup_streaming_sequence_object
-from src.properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
 from src.operators.telemac.utils import generate_telemac_streaming_sequence_obj
-from src.properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
+from src.properties.shared.module_scene_settings import TBB_ModuleSceneSettings
 from src.operators.openfoam.utils import generate_openfoam_streaming_sequence_obj
 
 
@@ -44,13 +43,16 @@ class TBB_CreateSequence(Operator):
         self.chrono_start = 0
 
     @classmethod
-    def poll(self, settings, context: Context) -> bool:
+    def poll(self, settings: TBB_ModuleSceneSettings, context: Context) -> bool:
         """
         If false, locks the UI button of the operator.
 
-        :param settings: settings
-        :type context: Context
-        :rtype: bool
+        Args:
+            settings (TBB_ModuleSceneSettings): scene settings
+            context (Context): context
+
+        Returns:
+            bool: state
         """
 
         tbb_csir = context.scene.tbb.create_sequence_is_running  # csir = create sequence is running
@@ -61,18 +63,17 @@ class TBB_CreateSequence(Operator):
         else:  # Lock ui by default
             return False
 
-    def execute(self, settings: TBB_OpenfoamSettings | TBB_TelemacSettings, context: Context, module: str) -> set:
+    def execute(self, settings: TBB_ModuleSceneSettings, context: Context, module: str) -> set:
         """
         Main method of the operator.
 
-        :param operator: target operator
-        :param settings: scene settings
-        :type settings: TBB_OpenfoamSettings | TBB_TelemacSettings
-        :type context: Context
-        :param module: module name, enum in ['OpenFOAM', 'TELEMAC']
-        :type module: str
-        :return: state of the operator
-        :rtype: set
+        Args:
+            settings (TBB_ModuleSceneSettings): scene settings
+            context (Context): context
+            module (str): name of the module, enum in ['OpenFOAM', 'TELEMAC']
+
+        Returns:
+            set: state of the operator
         """
 
         wm = context.window_manager
@@ -127,12 +128,11 @@ class TBB_CreateSequence(Operator):
 
     def stop(self, context: Context, cancelled: bool = False) -> None:
         """
-        Common stop function for OpenFOAM and TELEMAC 'Create sequence' operators.
+        Common stop function for OpenFOAM and TELEMAC 'create sequence' operators.
 
-        :param operator: operator to stop
-        :type context: Context
-        :param cancelled: ask to report 'Create sequence cancelled', defaults to False
-        :type cancelled: bool, optional
+        Args:
+            context (Context): context
+            cancelled (bool, optional): ask to report 'create sequence cancelled'. Defaults to False.
         """
 
         wm = context.window_manager

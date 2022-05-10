@@ -24,9 +24,11 @@ class TBB_OT_OpenfoamReloadFile(Operator):
         Main function of the operator. Reload the selected file.
         It updates temporary data and 'dynamic' scene settings.
 
-        :type context: Context
-        :return: state of the operator
-        :rtype: set
+        Args:
+            context (Context): context
+
+        Returns:
+            set: state of the operator
         """
 
         settings = context.scene.tbb.settings.openfoam

@@ -8,29 +8,30 @@ import numpy as np
 from pathlib import Path
 from pyvista import OpenFOAMReader, UnstructuredGrid
 
+from src.properties.openfoam.openfoam_clip import TBB_OpenfoamClipProperty
 from src.operators.utils import remap_array, generate_vertex_colors_groups, generate_vertex_colors
 from src.properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
 
 
-def generate_mesh_data(file_reader: OpenFOAMReader, time_point: int, triangulate: bool = True, clip=None,
+def generate_mesh_data(file_reader: OpenFOAMReader, time_point: int, triangulate: bool = True,
+                       clip: TBB_OpenfoamClipProperty = None,
                        mesh: UnstructuredGrid = None) -> tuple[np.array, np.array, UnstructuredGrid]:
     """
     Generate mesh data for Blender using the given file reader. Applies the clip if defined.
     If 'mesh' is not defined, it will be read from the given OpenFOAMReader (file_reader).
+
     **Warning**: the given mesh will be modified (clip, extract_surface, triangulation and compute_normals).
 
-    :param file_reader: OpenFOAM file reader
-    :type file_reader: OpenFOAMReader
-    :param time_point: time point from which to read data
-    :type time_point: int
-    :param triangulate: If `True`, more complex polygons will be broken down into triangles
-    :type triangulate: bool, defaults to True
-    :param clip: clip settings, defaults to None
-    :type clip: TBB_OpenfoamClipProperty, optional
-    :param mesh: 'raw mesh', defaults to None
-    :type mesh: UnstructuredGrid, optional
-    :return: vertices, faces and the output mesh (modified)
-    :rtype: tuple[np.array, np.array, UnstructuredGrid]
+    Args:
+        file_reader (OpenFOAMReader): OpenFOAM file reader
+        time_point (int): time point from which to read data
+        triangulate (bool, optional): If `True`, more complex polygons will be broken down into triangles.\
+            Defaults to True.
+        clip (TBB_OpenfoamClipProperty, optional): clip settings. Defaults to None.
+        mesh (UnstructuredGrid, optional): raw mesh. Defaults to None.
+
+    Returns:
+        tuple[np.array, np.array, UnstructuredGrid]: vertices, faces and the output mesh (modified)
     """
 
     # Read data from the given OpenFoam file
@@ -79,11 +80,12 @@ def generate_openfoam_streaming_sequence_obj(context: Context, name: str) -> Obj
     """
     Generate the base object for an OpenFOAM 'streaming sequence'.
 
-    :type context: Context
-    :param name: name of the sequence
-    :type name: str
-    :return: generated object
-    :rtype: Object
+    Args:
+        context (Context): context
+        name (str): name of the sequence
+
+    Returns:
+        Object: generated object
     """
 
     # Create the object
@@ -119,14 +121,18 @@ def generate_openfoam_streaming_sequence_obj(context: Context, name: str) -> Obj
 
 def generate_mesh_for_sequence(context: Context, time_point: int, name: str = "TBB") -> Mesh:
     """
-    Generate a mesh for an OpenFOAM 'Mesh sequence' at the given time point.
+    Generate a mesh for an OpenFOAM 'mesh sequence' at the given time point.
 
-    :type context: Context
-    :type time_point: int
-    :param name: name of the output mesh, defaults to "TBB"
-    :type name: str, optional
-    :return: Blender mesh
-    :rtype: Mesh
+    Args:
+        context (Context): context
+        time_point (int): time point from which to read data
+        name (str, optional): name of the output mesh. Defaults to "TBB".
+
+    Raises:
+        AttributeError: if the given file does not exist
+
+    Returns:
+        Mesh: generate mesh
     """
 
     settings = context.scene.tbb.settings.openfoam
@@ -148,6 +154,7 @@ def generate_mesh_for_sequence(context: Context, time_point: int, name: str = "T
     # Import point data as vertex colors
     if settings.import_point_data:
         res = prepare_openfoam_point_data(mesh, blender_mesh, settings.list_point_data.split(";"), time_point)
+        print(*res)
         generate_vertex_colors(blender_mesh, *res)
 
     return blender_mesh
@@ -157,14 +164,14 @@ def generate_mesh_for_sequence(context: Context, time_point: int, name: str = "T
 # Link: https://github.com/neverhood311/Stop-motion-OBJ/blob/rename-module-name/src/stop_motion_obj.py
 def add_mesh_to_sequence(obj: Object, blender_mesh: Mesh) -> int:
     """
-    Add a mesh to an OpenFOAM 'Mesh sequence'.
+    Add a mesh to an OpenFOAM 'mesh sequence'.
 
-    :param obj: sequence object
-    :type obj: Object
-    :param blender_mesh: mesh to add to the sequence
-    :type blender_mesh: Mesh
-    :return: mesh id in the sequence
-    :rtype: int
+    Args:
+        obj (Object): sequence object
+        blender_mesh (Mesh): mesh to add to the sequence
+
+    Returns:
+        int: mesh id in the sequence
     """
 
     blender_mesh.inMeshSequence = True
@@ -189,12 +196,10 @@ def generate_preview_material(obj: Object, scalar: str, name: str = "TBB_OpenFOA
     """
     Generate the preview material (if not generated yet). Update it otherwise (with the new scalar).
 
-    :param obj: preview object
-    :type obj: Object
-    :param scalar: name of the vertex colors group (same as scalar name)
-    :type scalar: str
-    :param name: name of the preview material, defaults to "TBB_OpenFOAM_preview_material"
-    :type name: str, optional
+    Args:
+        obj (Object): object on which to apply the material
+        scalar (str): name of the vertex colors group (same as scalar name) to preview
+        name (str, optional): name of the preview material. Defaults to "TBB_OpenFOAM_preview_material".
     """
 
     # Get the preview material
@@ -227,18 +232,35 @@ def prepare_openfoam_point_data(mesh: UnstructuredGrid, blender_mesh: Mesh, list
     """
     Prepare point data for the 'generate_vertex_colors' function.
 
-    :param mesh: mesh data read from the OpenFOAMReader
-    :type mesh: UnstructuredGrid
-    :param blender_mesh: mesh on which to add vertex colors
-    :type blender_mesh: Mesh
-    :param list_point_data: list of point data
-    :type list_point_data: list[str]
-    :param time_point: time point from which to read data
-    :type time_point: int
-    :param normalize: normalize vertex colors, enum in ['LOCAL', 'GLOBAL'], defaults to 'LOCAL'
-    :type normalize: str, optional
-    :return: vertex colors groups, data, nb_vertex_ids
-    :rtype: tuple[list[dict], dict, int]
+    .. code-block:: text
+
+        Example of output:
+        [
+            {'name': 'U.x, U.y, U.z', 'ids': ['U']},
+            {'name': 'p, p_rgh, None', 'ids': ['p', 'p_rgh', -1]}
+        ]
+
+        {
+            'p': array([0.10746115, ..., 0.16983157]),
+            'p_rgh': array([0.08247014, ..., 0.12436691]),
+            'U': [
+                    array([0.9147592,  ..., 0.91178226]),
+                    array([0.9147592, ..., 0.91471434]),
+                    array([0.9133451, ..., 0.91275126])
+                 ]
+        }
+
+        137730
+
+    Args:
+        mesh (UnstructuredGrid): mesh data read from the OpenFOAMReader
+        blender_mesh (Mesh): mesh on which to add vertex colors
+        list_point_data (list[str]): list of point data
+        time_point (int): time point from which to read data
+        normalize (str, optional): normalize vertex colors, enum in ['LOCAL', 'GLOBAL']. Defaults to 'LOCAL'.
+
+    Returns:
+        tuple[list[dict], dict, int]: vertex colors groups, data, number of vertex ids
     """
 
     # Prepare the mesh to loop over all its triangles
@@ -289,13 +311,14 @@ def prepare_openfoam_point_data(mesh: UnstructuredGrid, blender_mesh: Mesh, list
     return generate_vertex_colors_groups(filtered_variables), prepared_data, len(vertex_ids)
 
 
-##@persistent
+@persistent
 def update_openfoam_streaming_sequences(scene: Scene) -> None:
     """
     App handler appened to the frame_change_pre handlers.
     Updates all the OpenFOAM 'streaming sequences' of the scene.
 
-    :type scene: Scene
+    Args:
+        scene (Scene): scene
     """
 
     frame = scene.frame_current
@@ -321,14 +344,14 @@ def update_sequence_mesh(obj: Object, settings: TBB_OpenfoamStreamingSequencePro
     """
     Update the mesh of the given sequence object.
 
-    :param obj: sequence object
-    :type obj: Object
-    :param settings: streaming sequence settings
-    :type settings: TBB_OpenfoamStreamingSequenceProperty
-    :param time_point: time point from which to read data
-    :type time_point: int
-    :raises OSError: if there was an error reading the file
-    :raises ValueError: if the given time point does no exists
+    Args:
+        obj (Object): sequence object
+        settings (TBB_OpenfoamStreamingSequenceProperty): 'streaming sequence' settings
+        time_point (int): time point from which to read data
+
+    Raises:
+        OSError: if there was an error reading the file
+        ValueError: if the given time point does no exists
     """
 
     # TODO: use load_openfoam_file
@@ -358,12 +381,13 @@ def load_openfoam_file(file_path: str, decompose_polyhedra: bool = False) -> tup
     """
     Load an OpenFOAM file and return the file_reader. Also returns if it succeeded to read.
 
-    :param file_path: path to the file
-    :type file_path: str
-    :param decompose_polyhedra: Whether polyhedra are to be decomposed when read. If True, decompose polyhedra into tetrahedra and pyramids
-    :type decompose_polyhedra: bool, defaults to False
-    :return: success, the file reader
-    :rtype: tuple[bool, OpenFOAMReader]
+    Args:
+        file_path (str): path to the file
+        decompose_polyhedra (bool, optional): whether polyhedra are to be decomposed when read.\
+            If True, decompose polyhedra into tetrahedra and pyramids. Defaults to False.
+
+    Returns:
+        tuple[bool, OpenFOAMReader]: success, the file reader
     """
 
     file = Path(file_path)

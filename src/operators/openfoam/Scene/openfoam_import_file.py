@@ -32,9 +32,11 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         Main function of the operator. Import the selected file.
         It also generates the preview object, updates temporary data and 'dynamic' scene settings.
 
-        :type context: Context
-        :return: state of the operator
-        :rtype: set
+        Args:
+            context (Context): context
+
+        Returns:
+            set: state of the operator
         """
 
         settings = context.scene.tbb.settings.openfoam

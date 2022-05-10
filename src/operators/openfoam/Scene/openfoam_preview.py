@@ -24,9 +24,11 @@ class TBB_OT_OpenfoamPreview(Operator):
         Main function of the operator. Preview the mesh.
         It also updates temporary data with this new preview.
 
-        :type context: Context
-        :return: state of the operator
-        :rtype: set
+        Args:
+            context (Context): context
+
+        Returns:
+            set: state of the operator
         """
 
         settings = context.scene.tbb.settings.openfoam

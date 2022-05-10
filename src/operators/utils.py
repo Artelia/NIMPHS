@@ -25,7 +25,7 @@ def generate_vertex_colors_groups(variables: list[dict]) -> list[dict]:
 
     Args:
         variables (list[dict]): list of variables.\
-        Expected structure of each variable: ``{"name": str, "type": enum in ['VECTOR', 'SCALAR'], "id": Any}``
+            Expected structure of each variable: ``{"name": str, "type": enum in ['VECTOR', 'SCALAR'], "id": Any}``
 
     Raises:
         AttributeError: if the given type of variable is undefined
@@ -80,14 +80,13 @@ def generate_vertex_colors(blender_mesh: Mesh, groups: list[dict], data: np.ndar
     """
     Generate vertex colors for the given mesh.
 
-    :param blender_mesh: mesh on which to add vertex colors.
-    :type blender_mesh: Mesh
-    :param groups: groups of vertex colors to create. Expected input for one group: {"name": str, ids: [Any]}.
-    :type groups: list[dict]
-    :param data: prepared data. Expected input: {id_var: np.ndarray, id_var: np.ndarray, ...}
-    :type data: np.ndarray
-    :param nb_vertex_ids: length of the list which contains all the vertex indices of all the triangles.
-    :type nb_vertex_ids: int
+    Args:
+        blender_mesh (Mesh): mesh on which to add vertex colors
+        groups (list[dict]): groups of vertex colors to create.\
+            Expected input for one group: ``{"name": str, ids: [Any]}``.
+        data (np.ndarray):  prepared data.\
+            Expected input: ``{id_var: np.ndarray, id_var: np.ndarray, ...}``
+        nb_vertex_ids (int): length of the list which contains all the vertex indices of all the triangles.
     """
 
     # Data for alpha and empty channels
@@ -123,14 +122,13 @@ def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, name: str
     """
     Generate an object and its mesh using the given vertices and faces.
 
-    :param vertices: vertices, must have the following shape: (n, 3)
-    :type vertices: np.ndarray
-    :param faces: faces, must have the following shape: (n, 3)
-    :type faces: np.ndarray
-    :param name: name of the object
-    :type name: str
-    :return: generated object
-    :rtype: Object
+    Args:
+        vertices (np.ndarray): vertices, must have the following shape: (n, 3)
+        faces (np.ndarray): faces, must have the following shape: (n, 3)
+        name (str): name of the object
+
+    Returns:
+        Object: generated object
     """
 
     # Create the object (or write over it if it already exists)
@@ -154,6 +152,16 @@ def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, name: str
 def setup_streaming_sequence_object(obj: Object, seq_settings: TBB_OpenfoamStreamingSequenceProperty |
                                     TBB_TelemacStreamingSequenceProperty, time_points: int,
                                     settings: TBB_ModuleSceneSettings, module: str) -> None:
+    """
+    Setup streaming sequence settings for both OpenFOAM and TELEMAC modules.
+
+    Args:
+        obj (Object): sequence object
+        seq_settings (TBB_OpenfoamStreamingSequenceProperty | TBB_TelemacStreamingSequenceProperty): sequence settings
+        time_points (int): number of available time points
+        settings (TBB_ModuleSceneSettings): scene settings
+        module (str): name of the module, enum in ['OpenFOAM', 'TELEMAC']
+    """
 
     # Setup common settings
     seq_settings.name = obj.name
@@ -163,8 +171,8 @@ def setup_streaming_sequence_object(obj: Object, seq_settings: TBB_OpenfoamStrea
     obj.tbb.settings.module = module
 
     # Set the selected time frame
-    seq_settings.frame_start = settings.frame_start     #
-    seq_settings.max_length = time_points               # Order matters, check TBB_StreamingSequenceProperty class definition
+    seq_settings.frame_start = settings.frame_start     # Order matters!
+    seq_settings.max_length = time_points               # Check TBB_StreamingSequenceProperty class definition.
     seq_settings.anim_length = settings["anim_length"]  #
 
     seq_settings.import_point_data = settings.import_point_data
@@ -177,10 +185,9 @@ def update_scene_settings_dynamic_props(settings: TBB_ModuleSceneSettings,
     Update 'dynamic' settings of the main panel.
     It adapts the max values of properties in function of the imported file.
 
-    :param settings: scene settings
-    :type settings: TBB_SceneSettings
-    :param tmp_data: temporary data
-    :type tmp_data: TBB_OpenfoamSettings | TBB_TelemacSettings
+    Args:
+        settings (TBB_ModuleSceneSettings): scene settings
+        tmp_data (TBB_OpenfoamSettings | TBB_TelemacSettings): temporary data
     """
 
     # This works because TBB_TelemacTemporaryData and TBB_OpenfoamTemporaryData have the same nb_time_points attribute
@@ -197,15 +204,12 @@ def update_scene_settings_dynamic_props(settings: TBB_ModuleSceneSettings,
 
 def update_dynamic_props(settings: TBB_ModuleSceneSettings, new_maxima: dict, props: dict) -> None:
     """
-    Set new max values to the given list of props.
-    If a property does not exist, it creates it.
+    Set new max values to the given list of props. If a property does not exist, create it.
 
-    :param settings: scene settings
-    :type settings: TBB_SceneSettings
-    :param new_maxima: dict of new maxima: {"prop_name": value, etc.}
-    :type new_maxima: dict
-    :param props: dict of properties: {"prop_name", "description", etc.}
-    :type props: dict
+    Args:
+        settings (TBB_ModuleSceneSettings): scene settings
+        new_maxima (dict): dict of new maxima: ``{"prop_name": value, ...}``
+        props (dict): dict of properties: ``[(prop_name, description), ...]``
     """
 
     for prop_id, prop_desc in props:
@@ -232,13 +236,14 @@ def get_collection(name: str, context: Context, link_to_scene: bool = True) -> C
     """
     Get the collection called 'name'. If it does not exist, create it.
 
-    :param name: name of the collection
-    :type name: str
-    :type context: Context
-    :param link_to_scene: automatically link the collection to the list of scene collections, defaults to True
-    :type link_to_scene: bool
-    :return: the collection
-    :rtype: Collection
+    Args:
+        name (str): name of the collection
+        context (Context): context
+        link_to_scene (bool, optional): automatically link the collection to the list of scene collections.\
+            Defaults to True.
+
+    Returns:
+        Collection: collection
     """
 
     collection = bpy.data.collections.get(name)
@@ -254,10 +259,11 @@ def get_object_dimensions_from_mesh(obj: Object) -> list[float]:
     """
     Compute the dimensions of the object from its mesh.
 
-    :param obj: object
-    :type obj: Object
-    :return: (x, y, z) dimensions
-    :rtype: list[float]
+    Args:
+        obj (Object): object
+
+    Returns:
+        list[float]: ``(x, y, z)`` dimensions
     """
 
     dimensions = []
@@ -274,10 +280,9 @@ def normalize_objects(objects: list[Object], dimensions: list[float]) -> None:
     """
     Rescale the given list of objects so coordinates of all the meshes are now in the range [-1;1].
 
-    :param collection: objects to normalize
-    :type collection: list[Object]
-    :param dimensions: original dimensions
-    :type dimensions: list[float]
+    Args:
+        objects (list[Object]): objects to normalize
+        dimensions (list[float]): original dimensions
     """
 
     factor = 1.0 / np.max(dimensions)
@@ -288,12 +293,10 @@ def rescale_objects(objects: list[Object], dimensions: list[float], apply: bool 
     """
     Resize a collection using the given dimensions.
 
-    :param collection: objects to normalize
-    :type collection: list[Object]
-    :param dimensions: target dimensions
-    :type dimensions: list[float]
-    :param apply: apply the rescale for each object in the given list
-    :type apply: bool
+    Args:
+        objects (list[Object]): objects to normalize
+        dimensions (list[float]): target dimensions
+        apply (bool, optional): apply the rescale for each object in the given list. Defaults to False.
     """
 
     if apply:
@@ -317,18 +320,15 @@ def remap_array(input: np.ndarray, out_min: float = 0.0, out_max: float = 1.0,
     """
     Remap values of the given array.
 
-    :param input: input array to remap
-    :type input: np.ndarray
-    :param out_min: minimum value to output, defaults to 0.0
-    :type out_min: float, optional
-    :param out_max: maximum value to output, defaults to 1.0
-    :type out_max: float, optional
-    :param in_min: minimum value of the input, defaults to -1.0
-    :type in_min: float, optional
-    :param in_max: maximum value of the input, defaults to 1.0
-    :type in_max: float, optional
-    :return: output array
-    :rtype: np.ndarray
+    Args:
+        input (np.ndarray): input array to remap
+        out_min (float, optional): minimum value to output. Defaults to 0.0.
+        out_max (float, optional): maximum value to output. Defaults to 1.0.
+        in_min (float, optional): minimum value of the input. Defaults to -np.inf.
+        in_max (float, optional): maximum value of the input. Defaults to np.inf.
+
+    Returns:
+        np.ndarray: output array
     """
 
     if in_min == -np.inf or in_max == np.inf:

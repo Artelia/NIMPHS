@@ -26,8 +26,11 @@ class TBB_OT_OpenfoamCreateSequence(TBB_CreateSequence):
         """
         If false, locks the UI button of the operator. Calls 'super().poll(...)'.
 
-        :type context: Context
-        :rtype: bool
+        Args:
+            context (Context): context
+
+        Returns:
+            bool: state
         """
 
         return super().poll(context.scene.tbb.settings.openfoam, context)
@@ -36,21 +39,25 @@ class TBB_OT_OpenfoamCreateSequence(TBB_CreateSequence):
         """
         Main function of the operator. Calls 'super().execute(...)'.
 
-        :type context: Context
-        :return: state of the operator
-        :rtype: set
+        Args:
+            context (Context): context
+
+        Returns:
+            set: state of the operator
         """
 
         return super().execute(context.scene.tbb.settings.openfoam, context, 'OpenFOAM')
 
     def modal(self, context: Context, event: Event) -> set:
         """
-        Run one step of the 'Create OpenFOAM Mesh Sequence' process.
+        Run one step of the OpenFOAM 'create mesh sequence' process.
 
-        :type context: Context
-        :type event: Event
-        :return: state of the operator
-        :rtype: set
+        Args:
+            context (Context): context
+            event (Event): event
+
+        Returns:
+            set: state of the operator
         """
 
         if event.type == "ESC":

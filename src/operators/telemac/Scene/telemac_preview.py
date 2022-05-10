@@ -21,9 +21,11 @@ class TBB_OT_TelemacPreview(Operator):
         """
         Main function of the operator. Preview the mesh.
 
-        :type context: Context
-        :return: state of the operator
-        :rtype: set
+        Args:
+            context (Context): context
+
+        Returns:
+            set: state of the operator
         """
 
         start = time.time()

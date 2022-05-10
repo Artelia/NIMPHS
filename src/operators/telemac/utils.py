@@ -22,20 +22,20 @@ def generate_mesh_data(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, off
     which part of the mesh you want ('BOTTOM' or 'WATER_DEPTH'). If the file is a 3D simulation, you can
     precise an offset for data reading (this offsets is somehow the id of the plane to generate)
 
-    :param tmp_data: temporary data
-    :type tmp_data: TBB_TelemacTemporaryData
-    :param mesh_is_3d: if the mesh is a 3D simulation
-    :type mesh_is_3d: bool
-    :param offset: if the mesh is a 3D simulation, precise the offset in the data to read
-    :type offset: int
-    :param time_point: time point to read
-    :type time_point: int, optional
-    :param type: type of the object, enum in ['BOTTOM', 'WATER_DEPTH'], defaults to 'BOTTOM'
-    :type type: str, optional
-    :raises NameError: if the given type is undefined
-    :raises error: if an error occurred reading data
-    :return: vertices of the mesh
-    :rtype: np.ndarray
+    Args:
+        tmp_data (TBB_TelemacTemporaryData): temporary data
+        mesh_is_3d (bool): if the mesh is from a 3D simulation
+        offset (int, optional): if the mesh is from a 3D simulation, precise the offset in the data to read.\
+            Defaults to 0.
+        time_point (int, optional): time point from which to read data. Defaults to 0.
+        type (str, optional): type of the object, enum in ['BOTTOM', 'WATER_DEPTH']. Defaults to 'BOTTOM'.
+
+    Raises:
+        NameError: if the given type is undefined
+        error: if an error occurred reading data
+
+    Returns:
+        np.ndarray: vertices of the mesh
     """
 
     if not mesh_is_3d and type not in ['BOTTOM', 'WATER_DEPTH']:
@@ -92,17 +92,15 @@ def generate_base_objects(context: Context, time_point: int, name: str, import_p
     If the file is a 2D simulation, this will generate two objects ("Bottom" and "Water depth"). If the file
     is a 3D simulation, this will generate one object per plane.
 
-    :type context: Context
-    :param time_point: time point
-    :type time_point: int
-    :param name: name of the objects
-    :type name: str
-    :param import_point_data: import point data as vertex colors, defaults to False
-    :type import_point_data: bool, optional
-    :param list_point_data: list of point data to import as vertex colors groups, defaults to [""]
-    :type list_point_data: list[str], optional
-    :return: generated objects
-    :rtype: list[Object]
+    Args:
+        context (Context): context
+        time_point (int): time point from which to read data
+        name (str): name of the objects
+        import_point_data (bool, optional): import point data as vertex colors. Defaults to False.
+        list_point_data (list[str], optional): list of point data to import as vertex colors groups. Defaults to [""].
+
+    Returns:
+        list[Object]: generated object
     """
 
     settings = context.scene.tbb.settings.telemac
@@ -147,13 +145,13 @@ def generate_preview_objects(context: Context, time_point: int = 0, name: str = 
     Generate preview objects using settings defined by the user. Calls 'generate_base_objects'.
     This function also generate preview materials.
 
-    :type context: Context
-    :param time_point: time point of the preview, defaults to 0
-    :type time_point: int, optional
-    :param name: name of the preview object, defaults to "TBB_TELEMAC_preview"
-    :type name: str, optional
-    :return: generated objects
-    :rtype: list[Object]
+    Args:
+        context (Context): context
+        time_point (int, optional): time point of the preview. Defaults to 0.
+        name (str, optional): name of the preview object. Defaults to "TBB_TELEMAC_preview".
+
+    Returns:
+        list[Object]: generated objects
     """
 
     settings = context.scene.tbb.settings.telemac
@@ -194,15 +192,19 @@ def generate_preview_objects(context: Context, time_point: int = 0, name: str = 
 def generate_preview_material(obj: Object, var_name: str, name: str = "TBB_TELEMAC_preview_material") -> None:
     """
     Generate the preview material (if not generated yet). Update it otherwise (with the new variable).
-    This generates the following node tree: 'Vertex color'[color] >>> [image]'Separate RBG'[R, G, B] >>> [color]'Principled BSDF'
+    This generates the following node tree:
 
-    :param obj: preview object
-    :type obj: Object
-    :param var_name: name of the variable to preview
-    :type var_name: str
-    :param name: name of the material, defaults to "TBB_TELEMAC_preview_material"
-    :type name: str, optional
-    :raises NameError: if the variable is not found in the vertex colors groups
+    .. code-block:: text
+
+        {Vertex color}[color] >>> [image]{Separate RBG}[R, G, B] >>> [color]{Principled BSDF}
+
+    Args:
+        obj (Object): object on which to apply the material
+        var_name (str): name of the variable to preview
+        name (str, optional): name of the material. Defaults to "TBB_TELEMAC_preview_material".
+
+    Raises:
+        NameError: if the variable is not found in the vertex colors groups
     """
 
     # Get the preview material
@@ -252,11 +254,12 @@ def generate_telemac_streaming_sequence_obj(context: Context, name: str) -> Obje
     """
     Generate the base object for a TELEMAC 'streaming sequence'.
 
-    :type context: Context
-    :param name: name of the sequence
-    :type name: str
-    :return: generated object
-    :rtype: Object
+    Args:
+        context (Context): context
+        name (str): name of the sequence
+
+    Returns:
+        Object: generate object
     """
 
     settings = context.scene.tbb.settings.telemac
@@ -292,22 +295,18 @@ def prepare_telemac_point_data(blender_mesh: Mesh, list_point_data: list[str], t
     """
     Prepare point data for the 'generate_vertex_colors' function.
 
-    :param blender_mesh: mesh on which to add vertex colors
-    :type blender_mesh: Mesh
-    :param list_point_data: list of point data
-    :type list_point_data: list[str]
-    :param tmp_data: temporary data
-    :type tmp_data: TBB_TelemacTemporaryData
-    :param time_point: time point from which to read data
-    :type time_point: int
-    :param mesh_is_3d: if the mesh is from a 3D simulation, defaults to False
-    :type mesh_is_3d: bool, optional
-    :param offset: if the mesh is from a 3D simulation, precise the offset in the data to read, defaults to 0
-    :type offset: int, optional
-    :param normalize: normalize vertex colors, enum in ['LOCAL', 'GLOBAL'], defaults to 'LOCAL'
-    :type normalize: str, optional
-    :return: vertex colors groups, data, nb_vertex_ids
-    :rtype: tuple[list[dict], dict, int]
+    Args:
+        blender_mesh (Mesh): mesh on which to add vertex colors
+        list_point_data (list[str]): list of point data
+        tmp_data (TBB_TelemacTemporaryData): temporary data
+        time_point (int): time point from which to read data
+        mesh_is_3d (bool, optional): if the mesh is from a 3D simulation. Defaults to False.
+        offset (int, optional): if the mesh is from a 3D simulation, precise the offset in the data to read.\
+            Defaults to 0.
+        normalize (str, optional): normalize vertex colors, enum in ['LOCAL', 'GLOBAL']. Defaults to 'LOCAL'.
+
+    Returns:
+        tuple[list[dict], dict, int]: vertex colors groups, data, nb_vertex_ids
     """
 
     # Prepare the mesh to loop over all its triangles
@@ -346,16 +345,13 @@ def prepare_telemac_point_data(blender_mesh: Mesh, list_point_data: list[str], t
 def set_new_shape_key(obj: Object, vertices: np.ndarray, name: str, frame: int) -> None:
     """
     Add a shape key to the object using the given vertices. It also set a keyframe with value = 1.0 at the given frame
-    and add keyframes at value = 0.0 around the given frame (-1 and +1).
+    and add keyframes at value = 0.0 around the frame (-1 and +1).
 
-    :param obj: object to receive the new shape key
-    :type obj: Object
-    :param vertices: new vertices
-    :type vertices: np.ndarray
-    :param name: name of the shape key
-    :type name: str
-    :param frame: the frame on which the keyframe is inserted
-    :type frame: int
+    Args:
+        obj (Object): object to receive the new shape key
+        vertices (np.ndarray): new vertices values
+        name (str): name of the shape key
+        frame (int): the frame on which the keyframe is inserted
     """
 
     obj.data.vertices.foreach_set("co", vertices.flatten())

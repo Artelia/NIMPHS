@@ -27,8 +27,11 @@ class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
         """
         If false, locks the UI button of the operator. Calls 'super().poll(...)'.
 
-        :type context: Context
-        :rtype: bool
+        Args:
+            context (Context): context
+
+        Returns:
+            bool: state
         """
 
         return super().poll(context.scene.tbb.settings.telemac, context)
@@ -37,9 +40,11 @@ class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
         """
         Main function of the operator. Calls 'super().execute(...)'.
 
-        :type context: Context
-        :return: state of the operator
-        :rtype: set
+        Args:
+            context (Context): context
+
+        Returns:
+            set: state of the operator
         """
 
         return super().execute(context.scene.tbb.settings.telemac, context, 'TELEMAC')
@@ -48,10 +53,12 @@ class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
         """
         Run one step of the 'Create TELEMAC Mesh sequence' process.
 
-        :type context: Context
-        :type event: Event
-        :return: state of the operator
-        :rtype: set
+        Args:
+            context (Context): context
+            event (Event): event
+
+        Returns:
+            set: state of the operator
         """
 
         if event.type == "ESC":
