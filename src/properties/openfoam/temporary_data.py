@@ -33,10 +33,11 @@ class TBB_OpenfoamTemporaryData():
         """
         Update temporary data with the given data.
 
-        :type new_file_reader: OpenFOAMReader
-        :type time_point: int, optional
-        :type new_data: DataSet, optional
-        :type new_mesh: UnstructuredGrid, optional
+        Args:
+            new_file_reader (OpenFOAMReader): new file reader
+            time_point (int, optional): current time point. Defaults to 0.
+            new_data (DataSet, optional): new dataset. Defaults to None.
+            new_mesh (UnstructuredGrid, optional): new mesh. Defaults to None.
         """
 
         self.file_reader = new_file_reader
@@ -60,8 +61,9 @@ class TBB_OpenfoamTemporaryData():
 
     def is_ok(self) -> bool:
         """
-        Return if temporary data still hold data (data are not None).
+        Check if temporary data still hold data (data are not None).
 
-        :rtype: bool
+        Returns:
+            bool: ``True`` if everything is ok
         """
         return self.file_reader is not None and self.data is not None and self.mesh is not None

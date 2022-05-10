@@ -50,8 +50,8 @@ class TBB_TelemacTemporaryData():
         """
         Update temporary data by reading the file.
 
-        :param file_path: path to the TELEMAC file
-        :type file_path: str
+        Args:
+            file_path (str): path to the TELEMAC file
         """
 
         self.file = Serafin(file_path, read_time=True)
@@ -92,9 +92,10 @@ class TBB_TelemacTemporaryData():
 
     def is_ok(self) -> bool:
         """
-        Return if temporary data still hold data (data are not None).
+        Check if temporary data still hold data (data are not None).
 
-        :rtype: bool
+        Returns:
+            bool: ``True`` if everything is ok
         """
         return self.file is not None and self.vertices is not None and self.faces is not None
 
@@ -102,11 +103,14 @@ class TBB_TelemacTemporaryData():
         """
         Read and return data at the given time point.
 
-        :param time_point: time point to read data, defaults to 0
-        :type time_point: int, optional
-        :raises ValueError: if the time point does not exist
-        :return: data
-        :rtype: np.ndarray
+        Args:
+            time_point (int, optional): time point from which to read data. Defaults to 0.
+
+        Raises:
+            ValueError: if the time point does not exist
+
+        Returns:
+            np.ndarray: data
         """
 
         if time_point > self.nb_time_points or time_point < 0:
@@ -115,18 +119,20 @@ class TBB_TelemacTemporaryData():
         return self.file.read(self.file.temps[time_point])
 
     def get_data_from_var_name(self, var_name: str, time_point: int, output_shape: str = 'COL') -> np.ndarray:
-        """_summary_
+        """
+        Read and return data corresponding to the given variable name.
 
-        :param var_name: name of the variable
-        :type var_name: str
-        :param time_point: time point to read data
-        :type time_point: int
-        :param output_shape: shape of the output, enum in ['COL', 'ROW']
-        :type output_shape: str
-        :raises error: if something went wrong when reading data
-        :raises ValueError: if the given variable name does not exist
-        :return: data
-        :rtype: np.ndarray
+        Args:
+            var_name (str): name of the variable
+            time_point (int): time point from which to read data
+            output_shape (str, optional): shape of the output, enum in ['COL', 'ROW']. Defaults to 'COL'.
+
+        Raises:
+            error: if something went wrong when reading data
+            NameError: if the given variable name does not exist
+
+        Returns:
+            np.ndarray: data
         """
 
         try:
@@ -158,16 +164,16 @@ class TBB_TelemacTemporaryData():
         Get data from the file and check for every possible given names.
         When one is found, return the associated data.
 
-        :param tmp_data: temporary data
-        :type tmp_data: TBB_TelemacTemporaryData
-        :param possible_var_names: variable names which could probably be defined in the Serafin file
-        :type possible_var_names: list[str]
-        :param time_point: time point to read data
-        :type time_point: int
-        :raises error: if an error occurred reading the Serafin file
-        :raises NameError: if the possible names are not defined
-        :return: data, var_name
-        :rtype: tuple[np.ndarray, str]
+        Args:
+            possible_var_names (list[str]): variable names which could probably be defined in the Serafin file
+            time_point (int): time point from which to read data
+
+        Raises:
+            error: if an error occurred reading the Serafin file
+            NameError: if the possible names are not defined
+
+        Returns:
+            tuple[np.ndarray, str]: data, name of the variable which corresponds to the returned data
         """
 
         z_values = None
@@ -191,10 +197,11 @@ class TBB_TelemacTemporaryData():
         """
         Compute global min / max values of all time points.
 
-        :param var_id: variable id
-        :type var_id: int
-        :return: min, max
-        :rtype: tuple[float, float]
+        Args:
+            var_id (int): variable id
+
+        Returns:
+            tuple[float, float]: min, max
         """
 
         start = time.time()
@@ -215,11 +222,14 @@ class TBB_TelemacTemporaryData():
         """
         Get global min / max values for the given variable.
 
-        :param var_id: variable id
-        :type var_id: int
-        :raises ValueError: if the variable id undefined
-        :return: min, max
-        :rtype: tuple[float, float]
+        Args:
+            var_id (int): variable id
+
+        Raises:
+            ValueError: if the variable id undefined
+
+        Returns:
+            tuple[float, float]: min, max
         """
 
         if var_id < 0 or var_id > self.nb_vars:

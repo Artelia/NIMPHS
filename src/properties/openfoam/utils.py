@@ -8,10 +8,18 @@ from pyvista import UnstructuredGrid
 def encode_scalar_names(mesh: UnstructuredGrid) -> str:
     """
     Encode scalar names for the *list* attribute of TBB_OpenfoamClipProperty.
+    List of point data are stored as follows:
 
-    :param mesh: mesh data read from the OpenFOAM file
-    :type mesh: UnstructuredGrid
-    :rtype: str
+    .. code-block: txt
+
+        Pattern: "name_of_scalar@value;name_of_other_scalar@vector_value;..."
+        Example: "U@vector_value;alpha.water@value"
+
+    Args:
+        mesh (UnstructuredGrid): mesh data read from the OpenFOAM file
+
+    Returns:
+        str: encoded scalar names
     """
 
     output = ""
@@ -36,8 +44,11 @@ def update_scalar_names(self, _context: Context) -> list:
     """
     Update the list of scalar names for EnumProperties.
 
-    :type _context: Context
-    :rtype: list
+    Args:
+        _context (Context): context
+
+    Returns:
+        list: list of items
     """
 
     items = []
@@ -61,9 +72,18 @@ def encode_value_ranges(mesh: UnstructuredGrid) -> str:
     """
     Encode values ranges for the *value_ranges* attribute of TBB_OpenfoamClipProperty.
 
-    :param mesh: mesh data read from the OpenFOAM file
-    :type mesh: UnstructuredGrid
-    :rtype: str
+    Value ranges are stored as follows:
+
+    .. code-block: txt
+
+        Pattern: "name_of_scalar@value/min/max;name_of_other_scalar@vector_value_dimension/min.x/max.x/min.y/max.y/min.z/min.z/..."
+        Example: "U@vector_value_3/0.0/1.0/-1.0/2.0/2.5/3.5;alpha.water@value/0.0/1.0"
+
+    Args:
+        mesh (UnstructuredGrid): mesh data read from the OpenFOAM file
+
+    Returns:
+        str: encoded value ranges
     """
 
     output = ""
@@ -94,20 +114,20 @@ def encode_value_ranges(mesh: UnstructuredGrid) -> str:
 def get_value_range_from_name(value_ranges: str, name: str, value_type: str) -> dict | None:
     """
     Return the value range corresponding to the given scalar name.
+    Return a dict with the following members:
 
     .. code-block:: text
 
-        Return a dict with the following members:
         "min": contains min values
         "max": contains max values
 
-    :param value_ranges: encoded value ranges
-    :type value_ranges: str
-    :param name: name of the scalar to retrieve
-    :type name: str
-    :param value_type: type of the scalar ("value" or "vector_value_dim")
-    :type value_type: str
-    :rtype: dict | None
+    Args:
+        value_ranges (str): encoded value ranges
+        name (str): name of the scalar to retrieve
+        value_type (str): type of the scalar ("value" or "vector_value_dim")
+
+    Returns:
+        dict | None: value range
     """
 
     values = value_ranges.split(";")
@@ -135,8 +155,8 @@ def set_clip_values(self, value: float) -> None:
     Function triggered when the user sets a new clip value. This let us to make sure the new value
     is in the value range of the selected scalar. Set the value to the nearest bound if outside the range.
 
-    :param value: new value
-    :type value: float
+    Args:
+        value (float): new value
     """
 
     if self.name is not None:
@@ -170,8 +190,8 @@ def get_clip_values(self) -> float | list | None:
     """
     Function triggered when the UI fetches a clip value.
 
-    :return: value
-    :rtype: float | list | None
+    Returns:
+        float | list | None: value
     """
 
     if self.name is not None:
