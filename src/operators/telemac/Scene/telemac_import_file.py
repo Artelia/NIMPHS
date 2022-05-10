@@ -1,11 +1,12 @@
 # <pep8 compliant>
-from bpy_extras.io_utils import ImportHelper
-from bpy.types import Operator, Context
 from bpy.props import StringProperty
+from bpy.types import Operator, Context
+from bpy_extras.io_utils import ImportHelper
 
 import time
 
-from src.operators.telemac.utils import get_object_dimensions_from_mesh, generate_preview_objects
+from src.operators.utils import get_object_dimensions_from_mesh
+from src.operators.telemac.utils import generate_preview_objects
 from src.operators.utils import update_scene_settings_dynamic_props
 
 

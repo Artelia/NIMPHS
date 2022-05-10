@@ -4,9 +4,9 @@ from bpy.types import Context, Event
 
 import time
 
-from src.operators.openfoam.utils import generate_mesh_for_sequence, add_mesh_to_sequence
 from src.operators.utils import get_collection
 from src.operators.shared.create_sequence import TBB_CreateSequence
+from src.operators.openfoam.utils import generate_mesh_for_sequence, add_mesh_to_sequence
 
 
 class TBB_OT_OpenfoamCreateSequence(TBB_CreateSequence):

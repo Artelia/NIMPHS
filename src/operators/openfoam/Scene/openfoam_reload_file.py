@@ -1,5 +1,6 @@
 # <pep8 compliant>
 from bpy.types import Operator, Context
+
 import time
 
 from src.operators.openfoam.utils import load_openfoam_file

@@ -2,8 +2,8 @@
 from bpy.types import PropertyGroup
 from bpy.props import PointerProperty
 
-from src.properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
 from src.properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
+from src.properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
 
 
 class TBB_SceneSettings(PropertyGroup):

@@ -2,8 +2,8 @@
 from bpy.types import Panel, Context, Object
 
 from src.panels.utils import get_selected_object
-from src.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 from src.properties.telemac.temporary_data import TBB_TelemacTemporaryData
+from src.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 from src.properties.shared.module_scene_settings import TBB_ModuleSceneSettings
 
 

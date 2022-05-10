@@ -61,7 +61,7 @@ if bl_version < (3, 0, 0):
 # Register
 from src.properties.shared.tbb_scene import TBB_Scene
 from src.properties.shared.tbb_object import TBB_Object
-from src.operators.openfoam.utils import update_streaming_sequence
+from src.operators.openfoam.utils import update_openfoam_streaming_sequences
 from src.panels.custom_progress_bar import register_custom_progress_bar
 
 auto_load.init()
@@ -78,7 +78,7 @@ def register():
     register_custom_progress_bar()
 
     # Custom app handlers
-    frame_change_pre.append(update_streaming_sequence)
+    frame_change_pre.append(update_openfoam_streaming_sequences)
 
     # Add custom icons
     icons = previews.new()

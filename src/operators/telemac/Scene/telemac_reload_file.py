@@ -1,5 +1,6 @@
 # <pep8 compliant>
 from bpy.types import Operator, Context
+
 import time
 
 from src.operators.utils import update_scene_settings_dynamic_props

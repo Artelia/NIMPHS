@@ -4,9 +4,10 @@ from bpy.types import Context, Event
 
 import time
 
-from src.operators.telemac.utils import generate_mesh, normalize_objects, get_object_dimensions_from_mesh, set_new_shape_key, generate_base_objects
-from src.operators.shared.create_sequence import TBB_CreateSequence
 from src.operators.utils import get_collection
+from src.operators.utils import get_object_dimensions_from_mesh
+from src.operators.shared.create_sequence import TBB_CreateSequence
+from src.operators.telemac.utils import generate_mesh_data, normalize_objects, set_new_shape_key, generate_base_objects
 
 
 class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
@@ -108,9 +109,9 @@ class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
                     for obj, id in zip(seq_obj.children, range(len(seq_obj.children))):
                         if not tmp_data.is_3d:
                             type = obj.tbb.settings.telemac.z_name
-                            vertices = generate_mesh(tmp_data, mesh_is_3d=False, time_point=time_point, type=type)
+                            vertices = generate_mesh_data(tmp_data, mesh_is_3d=False, time_point=time_point, type=type)
                         else:
-                            vertices = generate_mesh(tmp_data, mesh_is_3d=True, offset=id, time_point=time_point)
+                            vertices = generate_mesh_data(tmp_data, mesh_is_3d=True, offset=id, time_point=time_point)
 
                         set_new_shape_key(obj, vertices.flatten(), str(time_point), self.current_frame)
 

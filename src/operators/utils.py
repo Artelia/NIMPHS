@@ -1,16 +1,16 @@
 # <pep8 compliant>
 import bpy
-from bpy.types import Collection, Object, Context, Mesh
 from rna_prop_ui import rna_idprop_ui_create
+from bpy.types import Collection, Object, Context, Mesh
 
 import numpy as np
 from typing import Any
 
-from src.properties.shared.module_scene_settings import scene_settings_dynamic_props, TBB_ModuleSceneSettings
+from src.properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
 from src.properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
 from src.properties.telemac.Object.telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
 from src.properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
-from src.properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
+from src.properties.shared.module_scene_settings import scene_settings_dynamic_props, TBB_ModuleSceneSettings
 
 
 def generate_vertex_colors_groups(variables: list[dict]) -> list[dict]:
@@ -240,6 +240,68 @@ def get_collection(name: str, context: Context, link_to_scene: bool = True) -> C
             context.scene.collection.children.link(collection)
 
     return collection
+
+
+def get_object_dimensions_from_mesh(obj: Object) -> list[float]:
+    """
+    Compute the dimensions of the object from its mesh.
+
+    :param obj: object
+    :type obj: Object
+    :return: (x, y, z) dimensions
+    :rtype: list[float]
+    """
+
+    dimensions = []
+    vertices = np.empty(len(obj.data.vertices) * 3, dtype=np.float64)
+    obj.data.vertices.foreach_get("co", vertices)
+    vertices = vertices.reshape((int(len(vertices) / 3)), 3)
+    dimensions.append(np.max(vertices[:, 0]) - np.min(vertices[:, 0]))
+    dimensions.append(np.max(vertices[:, 1]) - np.min(vertices[:, 1]))
+    dimensions.append(np.max(vertices[:, 2]) - np.min(vertices[:, 2]))
+    return dimensions
+
+
+def normalize_objects(objects: list[Object], dimensions: list[float]) -> None:
+    """
+    Rescale the given list of objects so coordinates of all the meshes are now in the range [-1;1].
+
+    :param collection: objects to normalize
+    :type collection: list[Object]
+    :param dimensions: original dimensions
+    :type dimensions: list[float]
+    """
+
+    factor = 1.0 / np.max(dimensions)
+    rescale_objects(objects, [factor, factor, factor])
+
+
+def rescale_objects(objects: list[Object], dimensions: list[float], apply: bool = False) -> None:
+    """
+    Resize a collection using the given dimensions.
+
+    :param collection: objects to normalize
+    :type collection: list[Object]
+    :param dimensions: target dimensions
+    :type dimensions: list[float]
+    :param apply: apply the rescale for each object in the given list
+    :type apply: bool
+    """
+
+    if apply:
+        # Deselect everything so we make sure the transform_apply will only be applied to our meshes
+        bpy.ops.object.select_all(action='DESELECT')
+
+    for obj in objects:
+        if apply:
+            obj.select_set(True)
+        obj.scale = dimensions
+
+    if apply:
+        bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+
+        for obj in objects:
+            obj.select_set(False)
 
 
 def remap_array(input: np.ndarray, out_min: float = 0.0, out_max: float = 1.0,

@@ -1,9 +1,9 @@
 # <pep8 compliant>
+import time
+import numpy as np
+
 from src.properties.telemac.serafin import Serafin
 from src.properties.telemac.utils import remove_spaces_telemac_var_name
-
-import numpy as np
-import time
 
 
 class TBB_TelemacTemporaryData():
@@ -151,6 +151,41 @@ class TBB_TelemacTemporaryData():
             return data[var_id]
         else:
             return np.array(data[var_id]).reshape(data[var_id].shape[0], 1)
+
+    def get_data_from_possible_var_names(self, possible_var_names: list[str],
+                                         time_point: int) -> tuple[np.ndarray, str]:
+        """
+        Get data from the file and check for every possible given names.
+        When one is found, return the associated data.
+
+        :param tmp_data: temporary data
+        :type tmp_data: TBB_TelemacTemporaryData
+        :param possible_var_names: variable names which could probably be defined in the Serafin file
+        :type possible_var_names: list[str]
+        :param time_point: time point to read data
+        :type time_point: int
+        :raises error: if an error occurred reading the Serafin file
+        :raises NameError: if the possible names are not defined
+        :return: data, var_name
+        :rtype: tuple[np.ndarray, str]
+        """
+
+        z_values = None
+        for var_name in possible_var_names:
+            try:
+                z_values = self.get_data_from_var_name(var_name, time_point)
+            except NameError:
+                pass
+            except Exception as error:
+                raise error
+
+            if z_values is not None:
+                return z_values, var_name
+
+        if z_values is None:
+            raise NameError("ERROR::get_data_from_possible_var_names: undefined variables " + str(possible_var_names))
+        else:
+            return z_values, var_name
 
     def compute_var_value_range(self, var_id: int) -> tuple[float, float]:
         """

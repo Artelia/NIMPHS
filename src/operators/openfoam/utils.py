@@ -1,42 +1,19 @@
 # <pep8 compliant>
 import bpy
-from bpy.types import Mesh, Object, Scene, Context
 from bpy.app.handlers import persistent
+from bpy.types import Mesh, Object, Scene, Context
 
-from pyvista import OpenFOAMReader, UnstructuredGrid
-from pathlib import Path
-import numpy as np
 import time
+import numpy as np
+from pathlib import Path
+from pyvista import OpenFOAMReader, UnstructuredGrid
 
 from src.operators.utils import remap_array, generate_vertex_colors_groups, generate_vertex_colors
 from src.properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
-from src.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 
 
-def load_openfoam_file(file_path: str, decompose_polyhedra: bool = False) -> tuple[bool, OpenFOAMReader]:
-    """
-    Load an OpenFOAM file and return the file_reader. Also returns if it succeeded to read.
-
-    :param file_path: path to the file
-    :type file_path: str
-    :param decompose_polyhedra: Whether polyhedra are to be decomposed when read. If True, decompose polyhedra into tetrahedra and pyramids
-    :type decompose_polyhedra: bool, defaults to False
-    :return: success, the file reader
-    :rtype: tuple[bool, OpenFOAMReader]
-    """
-
-    file = Path(file_path)
-    if not file.exists():
-        return False, None
-
-    # TODO: does this line can throw exceptions? How to manage errors here?
-    file_reader = OpenFOAMReader(file_path)
-    file_reader.decompose_polyhedra = decompose_polyhedra
-    return True, file_reader
-
-
-def generate_mesh(file_reader: OpenFOAMReader, time_point: int, triangulate: bool = True, clip=None,
-                  mesh: UnstructuredGrid = None) -> tuple[np.array, np.array, UnstructuredGrid]:
+def generate_mesh_data(file_reader: OpenFOAMReader, time_point: int, triangulate: bool = True, clip=None,
+                       mesh: UnstructuredGrid = None) -> tuple[np.array, np.array, UnstructuredGrid]:
     """
     Generate mesh data for Blender using the given file reader. Applies the clip if defined.
     If 'mesh' is not defined, it will be read from the given OpenFOAMReader (file_reader).
@@ -98,6 +75,116 @@ def generate_mesh(file_reader: OpenFOAMReader, time_point: int, triangulate: boo
     return vertices, faces, mesh
 
 
+def generate_openfoam_streaming_sequence_obj(context: Context, name: str) -> Object:
+    """
+    Generate the base object for an OpenFOAM 'streaming sequence'.
+
+    :type context: Context
+    :param name: name of the sequence
+    :type name: str
+    :return: generated object
+    :rtype: Object
+    """
+
+    # Create the object
+    blender_mesh = bpy.data.meshes.new(name + "_sequence_mesh")
+    obj = bpy.data.objects.new(name + "_sequence", blender_mesh)
+
+    # Copy settings
+    settings = context.scene.tbb.settings.openfoam
+    seq_settings = obj.tbb.settings.openfoam.streaming_sequence
+    seq_settings.decompose_polyhedra = settings.decompose_polyhedra
+    seq_settings.triangulate = settings.triangulate
+
+    # Set clip settings
+    seq_settings.clip.type = settings.clip.type
+    seq_settings.clip.scalar.list = settings.clip.scalar.list
+    seq_settings.clip.scalar.value_ranges = settings.clip.scalar.value_ranges
+
+    # Sometimes, the selected scalar may not correspond to ones available in the EnumProperty.
+    # This happens when the selected scalar is not available at time point 0
+    # (the EnumProperty only reads data at time point 0 to create the list of available items)
+    try:
+        seq_settings.clip.scalar.name = settings.clip.scalar.name
+    except TypeError as error:
+        print("WARNING::setup_openfoam_streaming_sequence_obj: " + str(error))
+
+    seq_settings.clip.scalar.invert = settings.clip.scalar.invert
+    # 'value' and 'vector_value' may not be defined, so use .get(prop, default_returned_value)
+    seq_settings.clip.scalar["value"] = settings.clip.scalar.get("value", 0.5)
+    seq_settings.clip.scalar["vector_value"] = settings.clip.scalar.get("vector_value", (0.5, 0.5, 0.5))
+
+    return obj
+
+
+def generate_mesh_for_sequence(context: Context, time_point: int, name: str = "TBB") -> Mesh:
+    """
+    Generate a mesh for an OpenFOAM 'Mesh sequence' at the given time point.
+
+    :type context: Context
+    :type time_point: int
+    :param name: name of the output mesh, defaults to "TBB"
+    :type name: str, optional
+    :return: Blender mesh
+    :rtype: Mesh
+    """
+
+    settings = context.scene.tbb.settings.openfoam
+
+    # Read data from the given OpenFoam file
+    success, file_reader = load_openfoam_file(settings.file_path, settings.decompose_polyhedra)
+    if not success:
+        raise AttributeError("The given file does not exist (" + str(settings.file_path) + ")")
+
+    vertices, faces, mesh = generate_mesh_data(
+        file_reader, time_point, triangulate=settings.triangulate, clip=settings.clip)
+
+    # Create mesh from python data
+    blender_mesh = bpy.data.meshes.new(name + "_mesh")
+    blender_mesh.from_pydata(vertices, [], faces)
+    # Use fake user so Blender will save our mesh in the .blend file
+    blender_mesh.use_fake_user = True
+
+    # Import point data as vertex colors
+    if settings.import_point_data:
+        res = prepare_openfoam_point_data(mesh, blender_mesh, settings.list_point_data.split(";"), time_point)
+        generate_vertex_colors(blender_mesh, *res)
+
+    return blender_mesh
+
+
+# Code taken from the Stop-motion-OBJ addon
+# Link: https://github.com/neverhood311/Stop-motion-OBJ/blob/rename-module-name/src/stop_motion_obj.py
+def add_mesh_to_sequence(obj: Object, blender_mesh: Mesh) -> int:
+    """
+    Add a mesh to an OpenFOAM 'Mesh sequence'.
+
+    :param obj: sequence object
+    :type obj: Object
+    :param blender_mesh: mesh to add to the sequence
+    :type blender_mesh: Mesh
+    :return: mesh id in the sequence
+    :rtype: int
+    """
+
+    blender_mesh.inMeshSequence = True
+    mss = obj.mesh_sequence_settings
+    # add the new mesh to meshNameArray
+    newMeshNameElement = mss.meshNameArray.add()
+    newMeshNameElement.key = blender_mesh.name_full
+    newMeshNameElement.inMemory = True
+    # increment numMeshes
+    mss.numMeshes = mss.numMeshes + 1
+    # increment numMeshesInMemory
+    mss.numMeshesInMemory = mss.numMeshesInMemory + 1
+    # set initialized to True
+    mss.initialized = True
+    # set loaded to True
+    mss.loaded = True
+
+    return mss.numMeshes - 1
+
+
 def generate_preview_material(obj: Object, scalar: str, name: str = "TBB_OpenFOAM_preview_material") -> None:
     """
     Generate the preview material (if not generated yet). Update it otherwise (with the new scalar).
@@ -135,43 +222,24 @@ def generate_preview_material(obj: Object, scalar: str, name: str = "TBB_OpenFOA
     obj.active_material = material
 
 
-def generate_mesh_for_sequence(context: Context, time_point: int, name: str = "TBB") -> Mesh:
-    """
-    Generate a mesh for an OpenFOAM 'Mesh sequence' at the given time point.
-
-    :type context: Context
-    :type time_point: int
-    :param name: name of the output mesh, defaults to "TBB"
-    :type name: str, optional
-    :return: Blender mesh
-    :rtype: Mesh
-    """
-
-    settings = context.scene.tbb.settings.openfoam
-
-    # Read data from the given OpenFoam file
-    success, file_reader = load_openfoam_file(settings.file_path, settings.decompose_polyhedra)
-    if not success:
-        raise AttributeError("The given file does not exist (" + str(settings.file_path) + ")")
-
-    vertices, faces, mesh = generate_mesh(file_reader, time_point, triangulate=settings.triangulate, clip=settings.clip)
-
-    # Create mesh from python data
-    blender_mesh = bpy.data.meshes.new(name + "_mesh")
-    blender_mesh.from_pydata(vertices, [], faces)
-    # Use fake user so Blender will save our mesh in the .blend file
-    blender_mesh.use_fake_user = True
-
-    # Import point data as vertex colors
-    if settings.import_point_data:
-        res = prepare_openfoam_point_data(mesh, blender_mesh, settings.list_point_data.split(";"), time_point)
-        generate_vertex_colors(blender_mesh, *res)
-
-    return blender_mesh
-
-
 def prepare_openfoam_point_data(mesh: UnstructuredGrid, blender_mesh: Mesh, list_point_data: list[str],
                                 time_point: int, normalize: str = 'LOCAL') -> tuple[list[dict], dict, int]:
+    """
+    Prepare point data for the 'generate_vertex_colors' function.
+
+    :param mesh: mesh data read from the OpenFOAMReader
+    :type mesh: UnstructuredGrid
+    :param blender_mesh: mesh on which to add vertex colors
+    :type blender_mesh: Mesh
+    :param list_point_data: list of point data
+    :type list_point_data: list[str]
+    :param time_point: time point from which to read data
+    :type time_point: int
+    :param normalize: normalize vertex colors, enum in ['LOCAL', 'GLOBAL'], defaults to 'LOCAL'
+    :type normalize: str, optional
+    :return: vertex colors groups, data, nb_vertex_ids
+    :rtype: tuple[list[dict], dict, int]
+    """
 
     # Prepare the mesh to loop over all its triangles
     if len(blender_mesh.loop_triangles) == 0:
@@ -221,42 +289,11 @@ def prepare_openfoam_point_data(mesh: UnstructuredGrid, blender_mesh: Mesh, list
     return generate_vertex_colors_groups(filtered_variables), prepared_data, len(vertex_ids)
 
 
-# Code taken from the Stop-motion-OBJ addon
-# Link: https://github.com/neverhood311/Stop-motion-OBJ/blob/rename-module-name/src/stop_motion_obj.py
-def add_mesh_to_sequence(obj: Object, blender_mesh: Mesh) -> int:
-    """
-    Add a mesh to an OpenFOAM 'Mesh sequence'.
-
-    :param obj: sequence object
-    :type obj: Object
-    :param blender_mesh: mesh to add to the sequence
-    :type blender_mesh: Mesh
-    :return: mesh id in the sequence
-    :rtype: int
-    """
-
-    blender_mesh.inMeshSequence = True
-    mss = obj.mesh_sequence_settings
-    # add the new mesh to meshNameArray
-    newMeshNameElement = mss.meshNameArray.add()
-    newMeshNameElement.key = blender_mesh.name_full
-    newMeshNameElement.inMemory = True
-    # increment numMeshes
-    mss.numMeshes = mss.numMeshes + 1
-    # increment numMeshesInMemory
-    mss.numMeshesInMemory = mss.numMeshesInMemory + 1
-    # set initialized to True
-    mss.initialized = True
-    # set loaded to True
-    mss.loaded = True
-
-    return mss.numMeshes - 1
-
-
 @persistent
-def update_streaming_sequence(scene: Scene) -> None:
+def update_openfoam_streaming_sequences(scene: Scene) -> None:
     """
-    App handler appened to the frame_change_pre handlers. Updates all the OpenFOAM 'Streaming sequences' of the scene.
+    App handler appened to the frame_change_pre handlers.
+    Updates all the OpenFOAM 'streaming sequences' of the scene.
 
     :type scene: Scene
     """
@@ -304,7 +341,8 @@ def update_sequence_mesh(obj: Object, settings: TBB_OpenfoamStreamingSequencePro
         raise ValueError("time point '" + str(time_point) + "' does not exist. Available time points: " +
                          str(file_reader.number_time_points))
 
-    vertices, faces, mesh = generate_mesh(file_reader, time_point, triangulate=settings.triangulate, clip=settings.clip)
+    vertices, faces, mesh = generate_mesh_data(
+        file_reader, time_point, triangulate=settings.triangulate, clip=settings.clip)
 
     blender_mesh = obj.data
     blender_mesh.clear_geometry()
@@ -316,43 +354,23 @@ def update_sequence_mesh(obj: Object, settings: TBB_OpenfoamStreamingSequencePro
         generate_vertex_colors(blender_mesh, *res)
 
 
-def generate_openfoam_streaming_sequence_obj(context: Context, name: str) -> Object:
+def load_openfoam_file(file_path: str, decompose_polyhedra: bool = False) -> tuple[bool, OpenFOAMReader]:
     """
-    Generate the base object for an OpenFOAM 'streaming sequence'.
+    Load an OpenFOAM file and return the file_reader. Also returns if it succeeded to read.
 
-    :type context: Context
-    :param name: name of the sequence
-    :type name: str
-    :return: generated object
-    :rtype: Object
+    :param file_path: path to the file
+    :type file_path: str
+    :param decompose_polyhedra: Whether polyhedra are to be decomposed when read. If True, decompose polyhedra into tetrahedra and pyramids
+    :type decompose_polyhedra: bool, defaults to False
+    :return: success, the file reader
+    :rtype: tuple[bool, OpenFOAMReader]
     """
 
-    # Create the object
-    blender_mesh = bpy.data.meshes.new(name + "_sequence_mesh")
-    obj = bpy.data.objects.new(name + "_sequence", blender_mesh)
+    file = Path(file_path)
+    if not file.exists():
+        return False, None
 
-    # Copy settings
-    settings = context.scene.tbb.settings.openfoam
-    seq_settings = obj.tbb.settings.openfoam.streaming_sequence
-    seq_settings.decompose_polyhedra = settings.decompose_polyhedra
-    seq_settings.triangulate = settings.triangulate
-
-    # Set clip settings
-    seq_settings.clip.type = settings.clip.type
-    seq_settings.clip.scalar.list = settings.clip.scalar.list
-    seq_settings.clip.scalar.value_ranges = settings.clip.scalar.value_ranges
-
-    # Sometimes, the selected scalar may not correspond to ones available in the EnumProperty.
-    # This happens when the selected scalar is not available at time point 0
-    # (the EnumProperty only reads data at time point 0 to create the list of available items)
-    try:
-        seq_settings.clip.scalar.name = settings.clip.scalar.name
-    except TypeError as error:
-        print("WARNING::setup_openfoam_streaming_sequence_obj: " + str(error))
-
-    seq_settings.clip.scalar.invert = settings.clip.scalar.invert
-    # 'value' and 'vector_value' may not be defined, so use .get(prop, default_returned_value)
-    seq_settings.clip.scalar["value"] = settings.clip.scalar.get("value", 0.5)
-    seq_settings.clip.scalar["vector_value"] = settings.clip.scalar.get("vector_value", (0.5, 0.5, 0.5))
-
-    return obj
+    # TODO: does this line can throw exceptions? How to manage errors here?
+    file_reader = OpenFOAMReader(file_path)
+    file_reader.decompose_polyhedra = decompose_polyhedra
+    return True, file_reader

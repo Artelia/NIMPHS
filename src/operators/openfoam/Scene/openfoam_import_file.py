@@ -1,13 +1,13 @@
 # <pep8 compliant>
-from bpy_extras.io_utils import ImportHelper
-from bpy.types import Operator, Context
 from bpy.props import StringProperty
+from bpy.types import Operator, Context
+from bpy_extras.io_utils import ImportHelper
 
 import time
 
-from src.operators.openfoam.utils import load_openfoam_file, generate_mesh
-from src.operators.utils import generate_object_from_data, get_collection, update_scene_settings_dynamic_props
+from src.operators.openfoam.utils import load_openfoam_file, generate_mesh_data
 from src.properties.openfoam.utils import encode_value_ranges, encode_scalar_names
+from src.operators.utils import generate_object_from_data, get_collection, update_scene_settings_dynamic_props
 
 
 class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
@@ -61,7 +61,7 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         # Generate the preview mesh. This step is not present in the reload operator because
         # the preview mesh may already be loaded. Moreover, this step takes a while for large meshes.
         try:
-            vertices, faces, preview_mesh = generate_mesh(file_reader, 0, triangulate=settings.triangulate)
+            vertices, faces, preview_mesh = generate_mesh_data(file_reader, 0, triangulate=settings.triangulate)
             obj = generate_object_from_data(vertices, faces, "TBB_OpenFOAM_preview")
             if collection.name not in [col.name for col in obj.users_collection]:
                 collection.objects.link(obj)

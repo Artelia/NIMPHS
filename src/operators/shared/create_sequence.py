@@ -1,11 +1,11 @@
 # <pep8 compliant>
 from bpy.types import Operator, Context, RenderSettings
 
-from src.properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
-from src.properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
-from src.operators.openfoam.utils import generate_openfoam_streaming_sequence_obj
-from src.operators.telemac.utils import generate_telemac_streaming_sequence_obj
 from src.operators.utils import setup_streaming_sequence_object
+from src.properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
+from src.operators.telemac.utils import generate_telemac_streaming_sequence_obj
+from src.properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
+from src.operators.openfoam.utils import generate_openfoam_streaming_sequence_obj
 
 
 class TBB_CreateSequence(Operator):

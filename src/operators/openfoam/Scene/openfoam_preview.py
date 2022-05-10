@@ -3,9 +3,9 @@ from bpy.types import Operator, Context
 
 import time
 
-from src.operators.openfoam.utils import generate_mesh, prepare_openfoam_point_data, generate_preview_material, load_openfoam_file
-from src.operators.utils import generate_object_from_data, get_collection, generate_vertex_colors
 from src.properties.openfoam.utils import encode_value_ranges, encode_scalar_names
+from src.operators.utils import generate_object_from_data, get_collection, generate_vertex_colors
+from src.operators.openfoam.utils import generate_mesh_data, prepare_openfoam_point_data, generate_preview_material, load_openfoam_file
 
 
 class TBB_OT_OpenfoamPreview(Operator):
@@ -65,7 +65,7 @@ class TBB_OT_OpenfoamPreview(Operator):
         clip.scalar.list = encode_scalar_names(raw_mesh)
 
         try:
-            vertices, faces, mesh = generate_mesh(
+            vertices, faces, mesh = generate_mesh_data(
                 file_reader, prw_time_point, triangulate=settings.triangulate, clip=clip, mesh=raw_mesh)
         except Exception as error:
             print("ERROR::TBB_OT_OpenfoamPreview: " + str(error))

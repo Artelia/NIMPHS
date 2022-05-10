@@ -2,8 +2,8 @@
 import bpy
 from bpy.types import Context, Object
 
-from src.properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
 from src.properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
+from src.properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
 
 
 def sequence_name_already_exist(name: str) -> bool:
