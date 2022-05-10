@@ -16,8 +16,9 @@ from src.properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
 def generate_vertex_colors_groups(variables: list[dict]) -> list[dict]:
     """
     Generate optimized vertex colors groups.
-    | Example: "FOND, VITESSE U, NONE" corresponds to: red channel = FOND, green channel = VITESS U, blue channel = NONE
     | Example: "k, p_rgh, alpha.water" corresponds to: red channel = k, green channel = p_rgh, blue channel = alpha.water
+    | Example: "U.x, U.y, U.z" corresponds to: red channel = U.x, green channel = U.y, blue channel = U.z
+    | Example: "FOND, VITESSE U, NONE" corresponds to: red channel = FOND, green channel = VITESS U, blue channel = NONE
 
     :param variables: list of variables. Expected structure of each variable: {"name": str, "type": enum in ['VECTOR', 'SCALAR'], "id": Any}
     :type variables: list[dict]
@@ -135,6 +136,7 @@ def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, name: str
     else:
         blender_mesh = obj.data
 
+    obj.shape_key_clear()
     blender_mesh.clear_geometry()
     blender_mesh.from_pydata(vertices, [], faces)
 

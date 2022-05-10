@@ -69,7 +69,6 @@ class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
                 # First time point, create the sequence object
                 if self.current_time_point == self.start_time_point:
 
-                    # Get settings and data
                     collection = get_collection("TBB_TELEMAC", context)
 
                     try:
