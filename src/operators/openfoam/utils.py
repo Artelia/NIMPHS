@@ -289,7 +289,7 @@ def prepare_openfoam_point_data(mesh: UnstructuredGrid, blender_mesh: Mesh, list
     return generate_vertex_colors_groups(filtered_variables), prepared_data, len(vertex_ids)
 
 
-@persistent
+##@persistent
 def update_openfoam_streaming_sequences(scene: Scene) -> None:
     """
     App handler appened to the frame_change_pre handlers.

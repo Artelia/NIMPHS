@@ -15,16 +15,24 @@ from src.properties.shared.module_scene_settings import scene_settings_dynamic_p
 
 def generate_vertex_colors_groups(variables: list[dict]) -> list[dict]:
     """
-    Generate optimized vertex colors groups.
-    | Example: "k, p_rgh, alpha.water" corresponds to: red channel = k, green channel = p_rgh, blue channel = alpha.water
-    | Example: "U.x, U.y, U.z" corresponds to: red channel = U.x, green channel = U.y, blue channel = U.z
-    | Example: "FOND, VITESSE U, NONE" corresponds to: red channel = FOND, green channel = VITESS U, blue channel = NONE
+    Generate optimized vertex colors groups. Some examples of outputs:
 
-    :param variables: list of variables. Expected structure of each variable: {"name": str, "type": enum in ['VECTOR', 'SCALAR'], "id": Any}
-    :type variables: list[dict]
-    :raises AttributeError: if the given type of variable is undefined
-    :return: vertex colors groups. Output structure of each group: {"name": str, "ids": [Any]}
-    :rtype: list[dict]
+    .. code-block:: text
+
+        Example: "k, p_rgh, alpha.water" means: (R = k, G = p_rgh, B = alpha.water)
+        Example: "U.x, U.y, U.z" means: (R = U.x, G = U.y, B = U.z)
+        Example: "FOND, VITESSE U, NONE" means: (R = FOND, G = VITESSE U, B = NONE)
+
+    Args:
+        variables (list[dict]): list of variables.\
+        Expected structure of each variable: ``{"name": str, "type": enum in ['VECTOR', 'SCALAR'], "id": Any}``
+
+    Raises:
+        AttributeError: if the given type of variable is undefined
+
+    Returns:
+        list[dict]: vertex colors groups.\
+        Output structure of each group: ``{"name": str, "ids": [Any]}``
     """
 
     group, groups, nb_vars_in_current_group = {"name": "", "ids": []}, [], 0

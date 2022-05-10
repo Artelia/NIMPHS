@@ -1,12 +1,16 @@
 # <pep8 compliant>
-import os
-from . import auto_load
-from bpy.app import version as bl_version
 from bpy.utils import previews
 from bpy.types import Scene, Object
 from bpy.props import PointerProperty
+from bpy.app import version as bl_version
 from bpy.app.handlers import frame_change_pre
 
+# Remove error on building the docs, since fake-bpy-module defines version as 'None'
+if bl_version is None:
+    bl_version = (3, 0, 0)
+
+import os
+from . import auto_load
 
 bl_info = {
     "name": "Toolsbox OpenFOAM/TELEMAC",

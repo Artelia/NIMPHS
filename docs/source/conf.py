@@ -39,7 +39,7 @@ extensions = [
     'sphinx.ext.autosectionlabel'
 ]
 
-suppress_warnings = ["autosectionlabel.*"]  # Suppress duplicated labels watnings
+suppress_warnings = ["autosectionlabel.*"]  # Suppress duplicated labels warnings
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 

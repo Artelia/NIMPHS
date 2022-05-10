@@ -17,7 +17,7 @@ Scene
    :members:
    :show-inheritance:
 
-.. autoclass:: src.panels.openfoam.Scene.clip.TBB_PT_OpenfoamClip
+.. autoclass:: src.panels.openfoam.Scene.openfoam_clip.TBB_PT_OpenfoamClip
    :members:
    :show-inheritance:
 
