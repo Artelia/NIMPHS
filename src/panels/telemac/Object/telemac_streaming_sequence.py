@@ -24,8 +24,11 @@ class TBB_PT_TelemacStreamingSequence(TBB_StreamingSequenceSettingsPanel):
         """
         If false, hides the panel. Calls 'super().poll(...)'.
 
-        :type context: Context
-        :rtype: bool
+        Args:
+            context (Context): context
+
+        Returns:
+            bool: state
         """
 
         return super().poll(context, "TELEMAC")
@@ -34,7 +37,8 @@ class TBB_PT_TelemacStreamingSequence(TBB_StreamingSequenceSettingsPanel):
         """
         Layout of the panel. Calls 'super().draw(...)'.
 
-        :type context: Context
+        Args:
+            context (Context): context
         """
 
         layout = self.layout

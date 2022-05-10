@@ -2,17 +2,18 @@
 import bpy
 from bpy.types import Context, Object
 
-from src.properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
-from src.properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
+from src.properties.shared.module_scene_settings import TBB_ModuleSceneSettings
 
 
 def sequence_name_already_exist(name: str) -> bool:
     """
-    Return if the given sequence name is already the name of an object. Will look for 'name' + '_sequence'.
+    Check if the given sequence name is already the name of an object. Will look for 'name' + '_sequence'.
 
-    :param user_sequence_name: possible name
-    :type user_sequence_name: str
-    :rtype: bool
+    Args:
+        name (str): possible name
+
+    Returns:
+        bool: ``True`` if the given name already exist
     """
 
     for object in bpy.data.objects:
@@ -22,14 +23,15 @@ def sequence_name_already_exist(name: str) -> bool:
     return False
 
 
-def lock_create_operator(settings: TBB_OpenfoamSettings | TBB_TelemacSettings) -> tuple[bool, str]:
+def lock_create_operator(settings: TBB_ModuleSceneSettings) -> tuple[bool, str]:
     """
-    Return if we need to lock the 'create sequence' button.
+    Check if we need to lock the 'create sequence' button.
 
-    :param settings: scene settings
-    :type settings: TBB_OpenfoamSettings | TBB_TelemacSettings
-    :return: state, error message if 'false'
-    :rtype: tuple[bool, str]
+    Args:
+        settings (TBB_ModuleSceneSettings): scene settings
+
+    Returns:
+        tuple[bool, str]: ``True`` if it needs to be locked, error message if ``False``
     """
 
     snae = sequence_name_already_exist(settings.sequence_name)  # snae = sequence_name_already_exist
@@ -46,10 +48,13 @@ def lock_create_operator(settings: TBB_OpenfoamSettings | TBB_TelemacSettings) -
 
 def get_selected_object(context: Context) -> Object | None:
     """
-    Return the selected object
+    Return the selected object.
 
-    :type context: Context
-    :rtype: Object | None
+    Args:
+        context (Context): context
+
+    Returns:
+        Object | None: selected object
     """
 
     obj = context.active_object

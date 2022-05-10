@@ -13,18 +13,21 @@ class TBB_StreamingSequenceSettingsPanel(Panel):
     is_custom_base_cls = True
 
     @classmethod
-    def poll(cls, context: Context, type: str) -> bool:
+    def poll(cls, context: Context, module: str) -> bool:
         """
         If false, hides the panel.
 
-        :param obj: object
-        :type obj: Object
-        :rtype: bool
+        Args:
+            context (Context): context
+            module (str): name of the module, enum in ['OpenFOAM', 'TELEMAC']
+
+        Returns:
+            bool: state
         """
 
         obj = get_selected_object(context)
         if obj is not None:
-            return obj.tbb.is_streaming_sequence and obj.tbb.settings.module == type
+            return obj.tbb.is_streaming_sequence and obj.tbb.settings.module == module
         else:
             return False
 
@@ -32,8 +35,8 @@ class TBB_StreamingSequenceSettingsPanel(Panel):
         """
         Layout of the panel.
 
-        :param sequence_settings: 'streaming sequence' settings
-        :type sequence_settings: TBB_StreamingSequenceProperty
+        Args:
+            sequence_settings (TBB_ModuleStreamingSequenceSettings): 'streaming sequence' settings
         """
 
         layout = self.layout

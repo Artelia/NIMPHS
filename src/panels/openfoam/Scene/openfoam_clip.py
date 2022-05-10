@@ -23,8 +23,11 @@ class TBB_PT_OpenfoamClip(Panel):
         """
         If false, hides the panel.
 
-        :type context: Context
-        :rtype: bool
+        Args:
+            context (Context): context
+
+        Returns:
+            bool: state
         """
 
         obj = get_selected_object(context)
@@ -39,7 +42,8 @@ class TBB_PT_OpenfoamClip(Panel):
         """
         Layout of the panel.
 
-        :type context: Context
+        Args:
+            context (Context): context
         """
 
         layout = self.layout

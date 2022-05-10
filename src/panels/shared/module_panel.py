@@ -20,13 +20,13 @@ class TBB_ModulePanel(Panel):
         """
         Layout of the panel.
 
-        :param settings: scene settings
-        :type settings: TBB_SceneSettings
-        :param tmp_data: temporary data
-        :type tmp_data: TBB_OpenfoamTemporaryData | TBB_TelemacTemporaryData
-        :type context: Context
-        :return: enable rows, selected object
-        :rtype: tuple[bool, Object | None]
+        Args:
+            settings (TBB_ModuleSceneSettings): scene settings
+            tmp_data (TBB_OpenfoamTemporaryData | TBB_TelemacTemporaryData): temporary data
+            context (Context): context
+
+        Returns:
+            tuple[bool, Object | None]: enable rows, selected object
         """
 
         layout = self.layout

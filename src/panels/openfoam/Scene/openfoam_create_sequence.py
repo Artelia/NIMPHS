@@ -24,17 +24,21 @@ class TBB_PT_OpenfoamCreateSequence(TBB_CreateSequencePanel):
         """
         If false, hides the panel. Calls 'super().poll(...)'.
 
-        :type context: Context
-        :rtype: bool
+        Args:
+            context (Context): context
+
+        Returns:
+            bool: state
         """
 
         return super().poll(context.scene.tbb.settings.openfoam.tmp_data, context)
 
-    def draw(self, context: Context):
+    def draw(self, context: Context) -> None:
         """
         Layout of the panel. Calls 'super().draw(...)'.
 
-        :type context: Context
+        Args:
+            context (Context): context
         """
 
         settings = context.scene.tbb.settings.openfoam

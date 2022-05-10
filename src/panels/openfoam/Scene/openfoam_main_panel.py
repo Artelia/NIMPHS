@@ -22,7 +22,8 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
         """
         Layout of the panel. Calls 'super().draw(...)'.
 
-        :type context: Context
+        Args:
+            context (Context): context
         """
 
         settings = context.scene.tbb.settings.openfoam

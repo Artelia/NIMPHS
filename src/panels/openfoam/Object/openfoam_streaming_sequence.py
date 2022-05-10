@@ -24,8 +24,11 @@ class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
         """
         If false, hides the panel. Calls 'super().poll(...)'.
 
-        :type context: Context
-        :rtype: bool
+        Args:
+            context (Context): context
+
+        Returns:
+            bool: state
         """
 
         return super().poll(context, "OpenFOAM")
@@ -34,7 +37,8 @@ class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
         """
         Layout of the panel. Calls 'super().draw(...)'.
 
-        :type context: Context
+        Args:
+            context (Context): context
         """
 
         obj = get_selected_object(context)

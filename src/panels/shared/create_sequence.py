@@ -2,10 +2,9 @@
 from bpy.types import Panel, Context
 
 from src.panels.utils import get_selected_object
+from src.properties.shared.module_scene_settings import TBB_ModuleSceneSettings
 from src.properties.telemac.temporary_data import TBB_TelemacTemporaryData
 from src.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
-from src.properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
-from src.properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
 
 
 class TBB_CreateSequencePanel(Panel):
@@ -21,10 +20,12 @@ class TBB_CreateSequencePanel(Panel):
         """
         If false, hides the panel.
 
-        :param tmp_data: temporary data
-        :type tmp_data: TBB_OpenfoamTemporaryData | TBB_TelemacTemporaryData
-        :type context: Context
-        :rtype: bool
+        Args:
+            tmp_data (TBB_OpenfoamTemporaryData | TBB_TelemacTemporaryData): temporary data
+            context (Context): context
+
+        Returns:
+            bool: state
         """
 
         obj = get_selected_object(context)
@@ -34,15 +35,16 @@ class TBB_CreateSequencePanel(Panel):
         else:
             return tmp_data.is_ok() and not obj.tbb.is_streaming_sequence
 
-    def draw(self, settings: TBB_OpenfoamSettings | TBB_TelemacSettings, context: Context) -> bool:
+    def draw(self, settings: TBB_ModuleSceneSettings, context: Context) -> bool:
         """
         Layout of the panel.
 
-        :param settings: scene settings
-        :type settings: TBB_OpenfoamSettings | TBB_TelemacSettings
-        :type context: Context
-        :return: enable rows
-        :rtype: bool
+        Args:
+            settings (TBB_ModuleSceneSettings): scene settings
+            context (Context): context
+
+        Returns:
+            bool: enable rows
         """
 
         layout = self.layout

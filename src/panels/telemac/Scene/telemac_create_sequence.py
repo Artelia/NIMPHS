@@ -24,8 +24,11 @@ class TBB_PT_TelemacCreateSequence(TBB_CreateSequencePanel):
         """
         If false, hides the panel. Calls 'super().poll(...)'.
 
-        :type context: Context
-        :rtype: bool
+        Args:
+            context (Context): context
+
+        Returns:
+            bool: state
         """
 
         return super().poll(context.scene.tbb.settings.telemac.tmp_data, context)
@@ -34,7 +37,9 @@ class TBB_PT_TelemacCreateSequence(TBB_CreateSequencePanel):
         """
         Layout of the panel. Calls 'super().draw(...)'.
 
-        :type context: Context
+
+        Args:
+            context (Context): context
         """
 
         settings = context.scene.tbb.settings.telemac
