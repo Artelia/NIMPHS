@@ -8,7 +8,7 @@ from pathlib import Path
 import numpy as np
 import time
 
-from src.operators.utils import remap_array, generate_vertex_colors_groups
+from src.operators.utils import remap_array, generate_vertex_colors_groups, generate_vertex_colors
 from src.properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
 from src.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 
@@ -164,14 +164,14 @@ def generate_mesh_for_sequence(context: Context, time_point: int, name: str = "T
 
     # Import point data as vertex colors
     if settings.import_point_data:
-        blender_mesh = generate_vertex_colors(mesh, blender_mesh, settings.list_point_data.split[";"], time_point)
+        res = prepare_openfoam_point_data(mesh, blender_mesh, settings.list_point_data.split(";"), time_point)
+        generate_vertex_colors(blender_mesh, *res)
 
     return blender_mesh
 
 
 def prepare_openfoam_point_data(mesh: UnstructuredGrid, blender_mesh: Mesh, list_point_data: list[str],
-                                tmp_data: TBB_OpenfoamTemporaryData, time_point: int,
-                                normalize: str = 'LOCAL') -> tuple[list[dict], dict, int]:
+                                time_point: int, normalize: str = 'LOCAL') -> tuple[list[dict], dict, int]:
 
     # Prepare the mesh to loop over all its triangles
     if len(blender_mesh.loop_triangles) == 0:
@@ -179,84 +179,46 @@ def prepare_openfoam_point_data(mesh: UnstructuredGrid, blender_mesh: Mesh, list
     vertex_ids = np.array([triangle.vertices for triangle in blender_mesh.loop_triangles]).flatten()
 
     # Filter elements which evaluates to 'False', ex: ''
-    print(list_point_data)
     list_point_data = list(filter(None, list_point_data))
     # Filter field arrays (check if they exist)
     filtered_variables = []
     for raw_key in list_point_data:
         key = raw_key.split("@")[0]
-        type = raw_key.split("@")[1]
-        if key not in mesh.point_data.keys():
-            if key != "None":
-                print("WARNING::prepare_openfoam_point_data: the field array named '" +
-                      key + "' does not exist (time point = " + str(time_point) + ")")
-        else:
-            filtered_variables.append({"name": key, "type": 'SCALAR' if type == "value" else 'VECTOR', "id": key})
 
-    return generate_vertex_colors_groups(filtered_variables), None, len(vertex_ids)
-
-
-def generate_vertex_colors(mesh: UnstructuredGrid, blender_mesh: Mesh, list_point_data: str, time_point: int) -> Mesh:
-    """
-    Generate vertex colors groups for each point data given in the list. The name given to the groups
-    are the same as in the list.
-
-    :type mesh: UnstructuredGrid
-    :param blender_mesh: mesh which will store the vertex color groups
-    :type blender_mesh: Mesh
-    :param list_point_data: list of point data (separate each with a ';')
-    :type list_point_data: str
-    :type time_point: int
-    :return: Blender mesh
-    :rtype: Mesh
-    """
-
-    res = prepare_openfoam_point_data(mesh, blender_mesh, list_point_data, None, time_point)
-    print(*res)
-
-    # Prepare the mesh to loop over all its triangles
-    if len(blender_mesh.loop_triangles) == 0:
-        blender_mesh.calc_loop_triangles()
-    vertex_ids = np.array([triangle.vertices for triangle in blender_mesh.loop_triangles]).flatten()
-
-    # Filter field arrays (check if they exist)
-    keys = list_point_data.split(";")
-    filtered_keys = []
-    for raw_key in keys:
-        if raw_key != "":
-            key = raw_key.split("@")[0]
+        try:
+            type = raw_key.split("@")[1]
+        except BaseException:
+            # When the list is given by the user, the type is not provided.
             if key not in mesh.point_data.keys():
                 if key != "None":
-                    print("WARNING::generate_vertex_colors: the field array named '" +
+                    print("WARNING::prepare_openfoam_point_data: the field array named '" +
                           key + "' does not exist (time point = " + str(time_point) + ")")
+
+                continue
             else:
-                filtered_keys.append(key)
+                type = "value" if len(mesh.get_array(key, preference='point').shape) == 1 else "vector_value"
 
-    for field_array in filtered_keys:
-        # Get field array
-        colors = mesh.get_array(name=field_array, preference="point")
-        # Create new vertex colors array
-        vertex_colors = blender_mesh.vertex_colors.new(name=field_array, do_init=True)
-        # Normalize data
-        colors = remap_array(colors)
+        if key != 'None':
+            filtered_variables.append({"name": key, "type": 'SCALAR' if type == "value" else 'VECTOR', "id": key})
 
-        colors = 1.0 - colors
-        # 1D scalars
-        if len(colors.shape) == 1:
-            # Copy values to the B and G color channels
-            data = np.tile(np.array([colors[vertex_ids]]).transpose(), (1, 3))
-        # 2D scalars
-        if len(colors.shape) == 2:
-            data = colors[vertex_ids]
+    # Prepare data
+    prepared_data, data = dict(), None
 
-        # Add a one for the 'alpha' color channel
-        ones = np.ones((len(vertex_ids), 1))
-        data = np.hstack((data, ones))
+    for var in filtered_variables:
+        data = mesh.get_array(var["id"], preference='point')[vertex_ids]
+        if normalize == 'GLOBAL':
+            # TODO: implement global 'normalize' (not implemented yet)
+            min, max = np.inf, -np.inf
+        elif normalize == 'LOCAL':
+            min, max = np.min(data), np.max(data)
 
-        data = data.flatten()
-        vertex_colors.data.foreach_set("color", data)
+        data = remap_array(data, in_min=min, in_max=max)
+        if var["type"] == 'VECTOR':
+            prepared_data[var["id"]] = [data[:, 0], data[:, 1], data[:, 2]]
+        elif var["type"] == 'SCALAR':
+            prepared_data[var["id"]] = data
 
-    return blender_mesh
+    return generate_vertex_colors_groups(filtered_variables), prepared_data, len(vertex_ids)
 
 
 # Code taken from the Stop-motion-OBJ addon
@@ -350,7 +312,8 @@ def update_sequence_mesh(obj: Object, settings: TBB_OpenfoamStreamingSequencePro
 
     # Import point data as vertex colors
     if settings.import_point_data:
-        blender_mesh = generate_vertex_colors(mesh, blender_mesh, settings.list_point_data.split[";"], time_point)
+        res = prepare_openfoam_point_data(mesh, blender_mesh, settings.list_point_data.split(";"), time_point)
+        generate_vertex_colors(blender_mesh, *res)
 
 
 def generate_openfoam_streaming_sequence_obj(context: Context, name: str) -> Object:

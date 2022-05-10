@@ -3,8 +3,8 @@ from bpy.types import Operator, Context
 
 import time
 
-from src.operators.openfoam.utils import generate_mesh, generate_vertex_colors, generate_preview_material, load_openfoam_file
-from src.operators.utils import generate_object_from_data, get_collection
+from src.operators.openfoam.utils import generate_mesh, prepare_openfoam_point_data, generate_preview_material, load_openfoam_file
+from src.operators.utils import generate_object_from_data, get_collection, generate_vertex_colors
 from src.properties.openfoam.utils import encode_value_ranges, encode_scalar_names
 
 
@@ -82,6 +82,7 @@ class TBB_OT_OpenfoamPreview(Operator):
 
         try:
             obj = generate_object_from_data(vertices, faces, "TBB_OpenFOAM_preview")
+            blender_mesh = obj.data
             if collection.name not in [col.name for col in obj.users_collection]:
                 collection.objects.link(obj)
         except Exception as error:
@@ -89,9 +90,9 @@ class TBB_OT_OpenfoamPreview(Operator):
             self.report({"ERROR"}, "Something went generating the object")
             return {"FINISHED"}
 
-        scalars_to_preview = [settings.preview_point_data]
-        blender_mesh = generate_vertex_colors(mesh, obj.data, scalars_to_preview, prw_time_point)
-        generate_preview_material(obj, scalars_to_preview)
+        res = prepare_openfoam_point_data(mesh, blender_mesh, [settings.preview_point_data], prw_time_point)
+        generate_vertex_colors(blender_mesh, *res)
+        generate_preview_material(obj, res[0][0]["name"] if len(res[0]) > 0 else 'None')
 
         print("Preview::OpenFOAM: " + "{:.4f}".format(time.time() - start) + "s")
         self.report({"INFO"}, "Mesh successfully built: checkout the viewport.")

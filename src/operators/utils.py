@@ -37,7 +37,7 @@ def generate_vertex_colors_groups(variables: list[dict]) -> list[dict]:
     def append_group_to_groups() -> None:
         # Remove the comma at the end of the name
         group["name"] = group["name"][0:len(group["name"]) - 2]
-        groups.append(group)
+        groups.append({"name": group["name"], "ids": group["ids"]})
 
     for var in variables:
         if var["type"] == 'SCALAR':
@@ -45,7 +45,8 @@ def generate_vertex_colors_groups(variables: list[dict]) -> list[dict]:
             nb_vars_in_current_group += 1
         elif var["type"] == 'VECTOR':
             # If it is a vector value, add it as an entire group
-            groups.append({"name": var["name"] + " (vector)", "ids": var["id"]})
+            name = var["name"] + ".x, " + var["name"] + ".y, " + var["name"] + ".z"
+            groups.append({"name": name, "ids": [var["id"]]})
         else:
             raise AttributeError("Variable type is undefined: '" + str(var["type"]) + "'")
 
@@ -54,7 +55,7 @@ def generate_vertex_colors_groups(variables: list[dict]) -> list[dict]:
             # Reset group data
             nb_vars_in_current_group = 0
             group["name"] = ""
-            group["ids"].clear()
+            group["ids"] = []
 
     # Add 'None' to the end of the last group if it is not full
     if nb_vars_in_current_group != 0 and nb_vars_in_current_group < 3:
@@ -88,11 +89,16 @@ def generate_vertex_colors(blender_mesh: Mesh, groups: list[dict], data: np.ndar
         vertex_colors = blender_mesh.vertex_colors.new(name=group["name"], do_init=True)
 
         colors = []
-        for var_id in group["ids"]:
-            if var_id != -1:
-                colors.append(np.array(data[var_id]))
-            else:
-                colors.append(zeros)
+        # Scalar value
+        if len(group["ids"]) > 1:
+            for var_id in group["ids"]:
+                if var_id != -1:
+                    colors.append(np.array(data[var_id]))
+                else:
+                    colors.append(zeros)
+        # Vector value
+        else:
+            colors = data[group["ids"][0]]
 
         # Add ones for alpha channel
         colors.append(ones)
