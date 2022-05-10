@@ -10,7 +10,7 @@ def encode_scalar_names(mesh: UnstructuredGrid) -> str:
     Encode scalar names for the *list* attribute of TBB_OpenfoamClipProperty.
     List of point data are stored as follows:
 
-    .. code-block: txt
+    .. code-block:: text
 
         Pattern: "name_of_scalar@value;name_of_other_scalar@vector_value;..."
         Example: "U@vector_value;alpha.water@value"
@@ -74,7 +74,7 @@ def encode_value_ranges(mesh: UnstructuredGrid) -> str:
 
     Value ranges are stored as follows:
 
-    .. code-block: txt
+    .. code-block:: text
 
         Pattern: "name_of_scalar@value/min/max;name_of_other_scalar@vector_value_dimension/min.x/max.x/min.y/max.y/min.z/min.z/..."
         Example: "U@vector_value_3/0.0/1.0/-1.0/2.0/2.5/3.5;alpha.water@value/0.0/1.0"
