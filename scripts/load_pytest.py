@@ -7,7 +7,7 @@ import os
 import sys
 from pathlib import Path
 
-sys.path.append(os.path.relpath("."))
+sys.path.append(os.path.relpath("."))  # Make utils.py functions available in this file
 from scripts.utils import install, install_requirements, install_local_package, remove_files_matching_pattern
 
 try:

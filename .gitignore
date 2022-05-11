@@ -12,5 +12,6 @@ docs/_build/
 *.xml.bkp
 
 # Tests
+data/
 cache/
 .pytest_cache/
