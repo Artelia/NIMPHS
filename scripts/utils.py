@@ -7,15 +7,19 @@ import argparse
 import subprocess
 
 
-def install(package):
+def install(package: str) -> None:
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
 
-def install_requirements(requirements):
+def install_requirements(requirements: str) -> None:
     subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", requirements])
 
 
-def zipdir(path: str, ziph: zipfile.ZipFile):
+def install_local_package(path: str) -> None:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "-e", path])
+
+
+def zipdir(path: str, ziph: zipfile.ZipFile) -> None:
     # Per https://www.tutorialspoint.com/How-to-zip-a-folder-recursively-using-Python
     # ziph is zipfile handle
     for root, dirs, files in os.walk(path):
@@ -25,7 +29,7 @@ def zipdir(path: str, ziph: zipfile.ZipFile):
 
 # Code taken here:
 # https://thispointer.com/python-how-to-remove-files-by-matching-pattern-wildcards-certain-extensions-only/
-def remove_files_matching_pattern(root_folder: str, pattern: str = "*.zip"):
+def remove_files_matching_pattern(root_folder: str, pattern: str = "*.zip") -> None:
     # Get a list of all files in directory
     for rootDir, subdirs, filenames in os.walk(root_folder):
         # Find the files that matches the given patterm
@@ -36,7 +40,7 @@ def remove_files_matching_pattern(root_folder: str, pattern: str = "*.zip"):
                 print("Error while deleting file")
 
 
-def remove_folders_matching_pattern(root_folder: str, pattern: str = "__pycache__"):
+def remove_folders_matching_pattern(root_folder: str, pattern: str = "__pycache__") -> None:
     # Get a list of all files in directory
     for rootDir, subdirs, filenames in os.walk(root_folder):
         # Find the files that matches the given patterm

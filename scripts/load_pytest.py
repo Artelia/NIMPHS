@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 sys.path.append(os.path.relpath("."))
-from scripts.utils import install, install_requirements, remove_files_matching_pattern
+from scripts.utils import install, install_requirements, install_local_package, remove_files_matching_pattern
 
 try:
     import pytest
@@ -32,6 +32,17 @@ TESTS_PATH = os.environ.get("BLENDER_ADDON_TESTS_PATH", default_tests_dir.as_pos
 # Install addon requirements
 try:
     install_requirements(os.path.join(os.path.relpath("."), "requirements.txt"))
+except Exception as e:
+    print(e)
+    sys.exit(1)
+
+# Temporary workaround to install a local custom version of pyvista and vtk
+# Reasons: no vtk support for pytyon 3.10+ and a small edit in pyvista which will be available later
+try:
+    from bpy.app import version
+    if version > (3, 0, 0):
+        install("https://github.com/pyvista/pyvista-wheels/raw/main/vtk-9.1.0.dev0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl")
+    install_local_package(os.path.join(os.path.relpath("./../"), "pyvista"))
 except Exception as e:
     print(e)
     sys.exit(1)
