@@ -84,10 +84,11 @@ class SetupPlugin:
 
         (self.bpy_module, self.zfile) = zip_addon(self.addon, self.addon_dir)
         change_addon_dir(self.bpy_module, self.addon_dir)
+        install_addon(self.bpy_module, os.environ.get("STOP_MOTION_OBJ_PATH", None))
         install_addon(self.bpy_module, self.zfile)
         config.cache.set("bpy_module", self.bpy_module)
 
-        print("PyTest configuration successfull!")
+        print("PyTest configure successfull!")
 
     def pytest_unconfigure(self):
         print("PyTest unconfigure...")
@@ -96,7 +97,7 @@ class SetupPlugin:
         # Cleanup zip files
         remove_files_matching_pattern(self.root, exclude_folders=[os.path.abspath("./cache")], pattern="*.zip")
 
-        print("PyTest unconfiguration successfull!")
+        print("PyTest unconfigure successfull!")
 
 
 try:

@@ -44,8 +44,8 @@ def main():
         # Cleanup '__pychache__' folders in the 'src' folder
         remove_folders_matching_pattern(os.path.join(os.path.relpath("."), "src"))
 
-        # Downalod addons on which this addon depends
-        download_stop_motion_obj_addon(here.joinpath("../cache").as_posix())
+        # Download addons on which this addon depends
+        os.environ["STOP_MOTION_OBJ_PATH"] = download_stop_motion_obj_addon(here.joinpath("../cache").as_posix())
 
         # Zip addon
         print("Zipping addon - " + name)

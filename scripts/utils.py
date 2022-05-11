@@ -53,7 +53,7 @@ def remove_folders_matching_pattern(root_folder: str, pattern: str = "__pycache_
                 os.rmdir(os.path.join(rootDir, subdir))
 
 
-def download_stop_motion_obj_addon(dest: str, version: str = "v2.2.0.alpha.18") -> None:
+def download_stop_motion_obj_addon(dest: str, version: str = "v2.2.0.alpha.18") -> str:
     name = "Stop-motion-OBJ"
     filename = name + "-" + version + ".zip"
 
@@ -62,13 +62,15 @@ def download_stop_motion_obj_addon(dest: str, version: str = "v2.2.0.alpha.18") 
 
     if (os.path.exists(os.path.join(dest, filename))):
         print("Stop-Motion-OBJ found:", os.path.abspath(os.path.join(dest, filename)))
-        return
+        return os.path.abspath(os.path.join(dest, filename))
 
     # Else, download it and save it at the given destination
     print("Downloading:", filename)
     url = "https://github.com/neverhood311/Stop-motion-OBJ/releases/download/" + version + "/"
     response = requests.get(url + filename)
     open(os.path.join(dest, filename), "wb").write(response.content)
+
+    return os.path.abspath(os.path.join(dest, filename))
 
 
 # Parser for run_tests.py
