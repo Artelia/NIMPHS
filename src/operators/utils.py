@@ -4,7 +4,7 @@ from rna_prop_ui import rna_idprop_ui_create
 from bpy.types import Collection, Object, Context, Mesh
 
 import numpy as np
-from typing import Any
+from typing import Any, Union
 
 from src.properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
 from src.properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
@@ -149,8 +149,8 @@ def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, name: str
     return obj
 
 
-def setup_streaming_sequence_object(obj: Object, seq_settings: TBB_OpenfoamStreamingSequenceProperty |
-                                    TBB_TelemacStreamingSequenceProperty, time_points: int,
+def setup_streaming_sequence_object(obj: Object, seq_settings: Union[TBB_OpenfoamStreamingSequenceProperty,
+                                    TBB_TelemacStreamingSequenceProperty], time_points: int,
                                     settings: TBB_ModuleSceneSettings, module: str) -> None:
     """
     Setup streaming sequence settings for both OpenFOAM and TELEMAC modules.
@@ -180,7 +180,7 @@ def setup_streaming_sequence_object(obj: Object, seq_settings: TBB_OpenfoamStrea
 
 
 def update_scene_settings_dynamic_props(settings: TBB_ModuleSceneSettings,
-                                        tmp_data: TBB_OpenfoamSettings | TBB_TelemacSettings) -> None:
+                                        tmp_data: Union[TBB_OpenfoamSettings, TBB_TelemacSettings]) -> None:
     """
     Update 'dynamic' settings of the main panel.
     It adapts the max values of properties in function of the imported file.

@@ -2,6 +2,8 @@
 import bpy
 from bpy.types import Context, Object
 
+from typing import Union
+
 from src.properties.shared.module_scene_settings import TBB_ModuleSceneSettings
 
 
@@ -46,7 +48,7 @@ def lock_create_operator(settings: TBB_ModuleSceneSettings) -> tuple[bool, str]:
     return snae or snie, message
 
 
-def get_selected_object(context: Context) -> Object | None:
+def get_selected_object(context: Context) -> Union[Object, None]:
     """
     Return the selected object.
 

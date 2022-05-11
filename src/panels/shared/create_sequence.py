@@ -1,6 +1,8 @@
 # <pep8 compliant>
 from bpy.types import Panel, Context
 
+from typing import Union
+
 from src.panels.utils import get_selected_object
 from src.properties.shared.module_scene_settings import TBB_ModuleSceneSettings
 from src.properties.telemac.temporary_data import TBB_TelemacTemporaryData
@@ -16,7 +18,7 @@ class TBB_CreateSequencePanel(Panel):
     is_custom_base_cls = True
 
     @classmethod
-    def poll(cls, tmp_data: TBB_OpenfoamTemporaryData | TBB_TelemacTemporaryData, context: Context) -> bool:
+    def poll(cls, tmp_data: Union[TBB_OpenfoamTemporaryData, TBB_TelemacTemporaryData], context: Context) -> bool:
         """
         If false, hides the panel.
 

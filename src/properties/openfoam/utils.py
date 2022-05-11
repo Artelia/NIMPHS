@@ -1,6 +1,8 @@
 # <pep8 compliant>
 from bpy.types import Context
 
+from typing import Union
+
 import numpy as np
 from pyvista import UnstructuredGrid
 
@@ -111,7 +113,7 @@ def encode_value_ranges(mesh: UnstructuredGrid) -> str:
     return output
 
 
-def get_value_range_from_name(value_ranges: str, name: str, value_type: str) -> dict | None:
+def get_value_range_from_name(value_ranges: str, name: str, value_type: str) -> Union[dict, None]:
     """
     Return the value range corresponding to the given scalar name.
     Return a dict with the following members:
@@ -186,7 +188,7 @@ def set_clip_values(self, value: float) -> None:
                     self[value_type][i] = value[i]
 
 
-def get_clip_values(self) -> float | list | None:
+def get_clip_values(self) -> Union[float, list, None]:
     """
     Function triggered when the UI fetches a clip value.
 

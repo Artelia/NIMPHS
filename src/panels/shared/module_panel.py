@@ -1,6 +1,8 @@
 # <pep8 compliant>
 from bpy.types import Panel, Context, Object
 
+from typing import Union
+
 from src.panels.utils import get_selected_object
 from src.properties.telemac.temporary_data import TBB_TelemacTemporaryData
 from src.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
@@ -15,8 +17,8 @@ class TBB_ModulePanel(Panel):
     register_cls = False
     is_custom_base_cls = True
 
-    def draw(self, settings: TBB_ModuleSceneSettings, tmp_data: TBB_OpenfoamTemporaryData |
-             TBB_TelemacTemporaryData, context: Context) -> tuple[bool, Object | None]:
+    def draw(self, settings: TBB_ModuleSceneSettings, tmp_data: Union[TBB_OpenfoamTemporaryData,
+             TBB_TelemacTemporaryData], context: Context) -> tuple[bool, Union[Object, None]]:
         """
         Layout of the panel.
 

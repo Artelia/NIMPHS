@@ -10,3 +10,7 @@ __pycache__
 # Docs
 docs/_build/
 *.xml.bkp
+
+# Tests
+cache/
+.pytest_cache/
