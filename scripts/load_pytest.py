@@ -1,5 +1,6 @@
 # <pep8 compliant>
 # Custom tests loader and runner for Blender's Python environment
+print("---------------------------------------- LOAD PYTEST ---------------------------------------------")
 print("Running file:", __file__, "from Blender")
 
 import os
@@ -93,7 +94,7 @@ class SetupPlugin:
 
         cleanup(self.addon, self.bpy_module, self.addon_dir)
         # Cleanup zip files
-        remove_files_matching_pattern(self.root)
+        remove_files_matching_pattern(self.root, exclude_folders=[os.path.abspath("./cache")], pattern="*.zip")
 
         print("PyTest unconfiguration successfull!")
 

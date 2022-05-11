@@ -4,7 +4,9 @@ import sys
 import zipfile
 from pathlib import Path
 
-from scripts.utils import zipdir, parser, remove_folders_matching_pattern
+from scripts.utils import zipdir, parser, remove_folders_matching_pattern, download_stop_motion_obj_addon
+
+print("---------------------------------------- RUN TESTS START ---------------------------------------------")
 
 try:
     import blender_addon_tester as BAT
@@ -36,9 +38,14 @@ def main():
 
     blender_rev = arguments.b
 
+    here = Path(__file__).parent
+
     try:
         # Cleanup '__pychache__' folders in the 'src' folder
         remove_folders_matching_pattern(os.path.join(os.path.relpath("."), "src"))
+
+        # Downalod addons on which this addon depends
+        download_stop_motion_obj_addon(here.joinpath("../cache").as_posix())
 
         # Zip addon
         print("Zipping addon - " + name)
@@ -53,7 +60,6 @@ def main():
     addon = os.path.join(os.path.abspath("."), name + ".zip")
 
     # Custom configuration
-    here = Path(__file__).parent
     config = {
         "blender_load_tests_script": here.joinpath("load_pytest.py").as_posix(),
         "coverage": False,
@@ -73,6 +79,7 @@ def main():
         print(e)
         exit_val = 1
 
+    print("---------------------------------------- RUN TESTS END ---------------------------------------------")
     sys.exit(exit_val)
 
 

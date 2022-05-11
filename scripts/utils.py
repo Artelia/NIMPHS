@@ -3,6 +3,7 @@ import os
 import sys
 import fnmatch
 import zipfile
+import requests
 import argparse
 import subprocess
 
@@ -29,13 +30,14 @@ def zipdir(path: str, ziph: zipfile.ZipFile) -> None:
 
 # Code taken here:
 # https://thispointer.com/python-how-to-remove-files-by-matching-pattern-wildcards-certain-extensions-only/
-def remove_files_matching_pattern(root_folder: str, pattern: str = "*.zip") -> None:
+def remove_files_matching_pattern(root_folder: str, exclude_folders: list[str] = [], pattern: str = "*.zip") -> None:
     # Get a list of all files in directory
     for rootDir, subdirs, filenames in os.walk(root_folder):
         # Find the files that matches the given patterm
         for filename in fnmatch.filter(filenames, pattern):
             try:
-                os.remove(os.path.join(rootDir, filename))
+                if os.path.dirname(os.path.join(rootDir, filename)) not in exclude_folders:
+                    os.remove(os.path.join(rootDir, filename))
             except OSError:
                 print("Error while deleting file")
 
@@ -47,8 +49,26 @@ def remove_folders_matching_pattern(root_folder: str, pattern: str = "__pycache_
         for subdir in subdirs:
             if subdir == pattern:
                 # First, remove all files inside the folder
-                remove_files_matching_pattern(os.path.join(rootDir, subdir), "*.*")
+                remove_files_matching_pattern(os.path.join(rootDir, subdir), pattern="*.*")
                 os.rmdir(os.path.join(rootDir, subdir))
+
+
+def download_stop_motion_obj_addon(dest: str, version: str = "v2.2.0.alpha.18") -> None:
+    name = "Stop-motion-OBJ"
+    filename = name + "-" + version + ".zip"
+
+    if (not os.path.exists(dest)):
+        raise AttributeError("The given path does not exist:", dest)
+
+    if (os.path.exists(os.path.join(dest, filename))):
+        print("Stop-Motion-OBJ found:", os.path.abspath(os.path.join(dest, filename)))
+        return
+
+    # Else, download it and save it at the given destination
+    print("Downloading:", filename)
+    url = "https://github.com/neverhood311/Stop-motion-OBJ/releases/download/" + version + "/"
+    response = requests.get(url + filename)
+    open(os.path.join(dest, filename), "wb").write(response.content)
 
 
 # Parser for run_tests.py
