@@ -1,7 +1,7 @@
 # <pep8 compliant>
 from bpy.types import Context, VIEW3D_HT_tool_header
 
-DEV_MODE = False
+DEV_MODE = True
 
 
 def set_sequence_anim_length(self, value: int) -> None:

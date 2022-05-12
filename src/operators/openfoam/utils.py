@@ -9,8 +9,56 @@ from pathlib import Path
 from pyvista import OpenFOAMReader, UnstructuredGrid
 
 from src.properties.openfoam.openfoam_clip import TBB_OpenfoamClipProperty
-from src.operators.utils import remap_array, generate_vertex_colors_groups, generate_vertex_colors
+from src.operators.utils import remap_array, generate_vertex_colors_groups, generate_vertex_colors, get_collection
 from src.properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
+
+
+def run_one_step_create_mesh_sequence_openfoam(context: Context, current_frame: int, current_time_point: int,
+                                               start_time_point: int, user_sequence_name: str):
+
+    seq_obj_name = user_sequence_name + "_sequence"
+    try:
+        mesh = generate_mesh_for_sequence(context, current_time_point, name=user_sequence_name)
+    except Exception as error:
+        raise error
+
+    # First time point, create the sequence object
+    if current_time_point == start_time_point:
+        # Create the blender object (which will contain the sequence)
+        obj = bpy.data.objects.new(user_sequence_name, mesh)
+        # The object created from the convert_to_mesh_sequence() method adds
+        # "_sequence" at the end of the name
+        get_collection("TBB_OpenFOAM", context).objects.link(obj)
+        # Convert it to a mesh sequence
+        context.view_layer.objects.active = obj
+
+        # TODO: is it possible not to call an operator and do it using functions?
+        bpy.ops.ms.convert_to_mesh_sequence()
+    else:
+        # Add mesh to the sequence
+        obj = bpy.data.objects[seq_obj_name]
+        context.scene.frame_set(frame=current_frame)
+
+        # Code taken from the Stop-motion-OBJ addon
+        # Link: https://github.com/neverhood311/Stop-motion-OBJ/blob/rename-module-name/src/panels.py
+        # if the object doesn't have a 'curMeshIdx' fcurve, we can't add a mesh to it
+        # TODO: manage the case when there is no 'curMeshIdx'. We may throw an exception or something.
+        meshIdxCurve = next(
+            (curve for curve in obj.animation_data.action.fcurves if 'curMeshIdx' in curve.data_path), None)
+
+        # add the mesh to the end of the sequence
+        meshIdx = add_mesh_to_sequence(obj, mesh)
+
+        # add a new keyframe at this frame number for the new mesh
+        obj.mesh_sequence_settings.curMeshIdx = meshIdx
+        obj.keyframe_insert(
+            data_path='mesh_sequence_settings.curMeshIdx',
+            frame=context.scene.frame_current)
+
+        # make the interpolation constant for this keyframe
+        newKeyAtFrame = next(
+            (keyframe for keyframe in meshIdxCurve.keyframe_points if keyframe.co.x == context.scene.frame_current), None)
+        newKeyAtFrame.interpolation = 'CONSTANT'
 
 
 def generate_mesh_data(file_reader: OpenFOAMReader, time_point: int, triangulate: bool = True,
