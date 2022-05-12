@@ -95,10 +95,10 @@ def test_create_mesh_sequence_openfoam():
     # Sequence settings
     settings.sequence_type = "mesh_sequence"
     settings["start_time_point"] = 0
-    settings["end_time_point"] = 20
+    settings["end_time_point"] = 5
     settings.import_point_data = True
     settings.list_point_data = "U;alpha.water;p;p_rgh"
     settings.sequence_name = "My_OpenFOAM_Sim"
-    assert bpy.ops.tbb.openfoam_create_sequence('EXEC_DEFAULT') == {"RUNNING_MODAL"}
+    assert bpy.ops.tbb.openfoam_create_sequence('EXEC_DEFAULT', mode='NORMAL') == {"FINISHED"}
 
     # TODO: Test geometry and impoted point data

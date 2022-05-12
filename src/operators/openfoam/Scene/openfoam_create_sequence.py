@@ -1,5 +1,4 @@
 # <pep8 compliant>
-import bpy
 from bpy.types import Context, Event
 
 import time
@@ -37,6 +36,7 @@ class TBB_OT_OpenfoamCreateSequence(TBB_CreateSequence):
     def execute(self, context: Context) -> set:
         """
         Main function of the operator. Calls 'super().execute(...)'.
+        If mode is set to 'NORMAL', run the operator without using the modal method (locks blender UI).
 
         Args:
             context (Context): context
@@ -45,7 +45,18 @@ class TBB_OT_OpenfoamCreateSequence(TBB_CreateSequence):
             set: state of the operator
         """
 
-        return super().execute(context.scene.tbb.settings.openfoam, context, 'OpenFOAM')
+        running_mode = super().execute(context.scene.tbb.settings.openfoam, context, 'OpenFOAM')
+        if running_mode == {"RUNNING_MODAL"}:
+            return running_mode
+
+        for time_point in range(self.start_time_point, self.end_time_point, 1):
+            state = self.run_one_step(context, time_point)
+            if state != {"PASS"}:
+                super().stop(context)
+                return state
+
+        super().stop(context)
+        return {"FINISHED"}
 
     def modal(self, context: Context, event: Event) -> set:
         """
@@ -65,18 +76,9 @@ class TBB_OT_OpenfoamCreateSequence(TBB_CreateSequence):
 
         if event.type == "TIMER":
             if self.current_time_point <= self.end_time_point:
-                try:
-                    start = time.time()
-                    run_one_step_create_mesh_sequence_openfoam(context, self.current_frame, self.current_time_point,
-                                                               self.start_time_point, self.user_sequence_name)
-                    el_time = "{:.4f}".format(time.time() - start)  # el_time = elapsed time
-                    print("CreateSequence::OpenFOAM: " + el_time + "s, time_point = " + str(self.current_time_point))
-                except Exception as error:
-                    print("ERROR::TBB_OT_OpenfoamCreateSequence: " + str(error))
-                    self.report({"ERROR"}, "An error occurred creating the sequence, (time_step = " +
-                                str(self.current_time_point) + ")")
-                    super().stop(context)
-                    return {"CANCELLED"}
+                state = self.run_one_step(context, self.current_time_point)
+                if state != {"PASS"}:
+                    return state
 
             else:
                 super().stop(context)
@@ -90,3 +92,30 @@ class TBB_OT_OpenfoamCreateSequence(TBB_CreateSequence):
             self.current_frame += 1
 
         return {"PASS_THROUGH"}
+
+    def run_one_step(self, context: Context, time_point: int) -> set:
+        """
+        Run one step of the create mesh sequence process.
+
+        Args:
+            context (Context): context
+            time_point (int): time point to generate
+
+        Returns:
+            set: state of the operation, enum in ['PASS', 'CANCELLED']
+        """
+
+        try:
+            start = time.time()
+            run_one_step_create_mesh_sequence_openfoam(context, self.current_frame, time_point,
+                                                       self.start_time_point, self.user_sequence_name)
+            el_time = "{:.4f}".format(time.time() - start)  # el_time = elapsed time
+            print("CreateSequence::OpenFOAM: " + el_time + "s, time_point = " + str(time_point))
+        except Exception as error:
+            print("ERROR::TBB_OT_OpenfoamCreateSequence: " + str(error))
+            self.report({"ERROR"}, "An error occurred creating the sequence, (time_step = " +
+                        str(time_point) + ")")
+            super().stop(context)
+            return {"CANCELLED"}
+
+        return {"PASS"}

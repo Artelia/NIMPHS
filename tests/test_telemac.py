@@ -86,10 +86,10 @@ def test_create_mesh_sequence_telemac_2d():
     # Sequence settings
     settings.sequence_type = "mesh_sequence"
     settings["start_time_point"] = 0
-    settings["end_time_point"] = 30
+    settings["end_time_point"] = 5
     settings.import_point_data = True
     settings.list_point_data = "VITESSE U;VITESSE V;SALINITE"
     settings.sequence_name = "My_TELEMAC_Sim"
-    assert bpy.ops.tbb.telemac_create_sequence('EXEC_DEFAULT') == {"RUNNING_MODAL"}
+    assert bpy.ops.tbb.telemac_create_sequence('EXEC_DEFAULT', mode='NORMAL') == {"FINISHED"}
 
     # TODO: Test geometry and impoted point data

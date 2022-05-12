@@ -1,5 +1,6 @@
 # <pep8 compliant>
 from bpy.types import Operator, Context, RenderSettings
+from bpy.props import StringProperty
 
 from src.operators.utils import setup_streaming_sequence_object
 from src.operators.telemac.utils import generate_telemac_streaming_sequence_obj
@@ -28,8 +29,13 @@ class TBB_CreateSequence(Operator):
     current_time_point = 0
     #: int: Current frame during the 'create sequence' process (different from time point)
     current_frame = 0
-    #: float: Variable used to measure execution times of the operators
-    chrono_start = 0
+
+    #: bpy.props.StringProperty: Wether the operator should run modal or not, enum in ['MODAL', 'NORMAL']
+    mode: StringProperty(
+        name="Create sequence mode",
+        description="Wether the operator should run modal or not, enum in ['MODAL', 'NORMAL']",
+        default="MODAL"
+    )
 
     def __init__(self) -> None:
         super().__init__()
@@ -40,7 +46,6 @@ class TBB_CreateSequence(Operator):
         self.end_time_point = 0
         self.current_time_point = 0
         self.current_frame = 0
-        self.chrono_start = 0
 
     @classmethod
     def poll(self, settings: TBB_ModuleSceneSettings, context: Context) -> bool:
@@ -56,6 +61,7 @@ class TBB_CreateSequence(Operator):
         """
 
         tbb_csir = context.scene.tbb.create_sequence_is_running  # csir = create sequence is running
+        print("CSIR:", tbb_csir)
         if settings.sequence_type == "mesh_sequence":
             return not tbb_csir and settings["start_time_point"] < settings["end_time_point"]
         elif settings.sequence_type == "streaming_sequence":
@@ -96,7 +102,14 @@ class TBB_CreateSequence(Operator):
 
             context.scene.tbb.create_sequence_is_running = True
 
-            return {"RUNNING_MODAL"}
+            if self.mode == 'MODAL':
+                return {'RUNNING_MODAL'}
+            elif self.mode == 'NORMAL':
+                return {'NORMAL'}  # custom value
+            else:
+                print("WARNING::TBB_CreateSequence: undefined operator mode '" +
+                      str(self.mode) + "', running modal by default.")
+                return {'RUNNING_MODAL'}
 
         elif settings.sequence_type == "streaming_sequence":
             # Warn the user when the selected start frame may be weird
@@ -135,10 +148,14 @@ class TBB_CreateSequence(Operator):
             cancelled (bool, optional): ask to report 'create sequence cancelled'. Defaults to False.
         """
 
-        wm = context.window_manager
-        wm.event_timer_remove(self.timer)
-        self.timer = None
+        # Reset timer if it was running modal
+        if self.timer is not None:
+            wm = context.window_manager
+            wm.event_timer_remove(self.timer)
+            self.timer = None
+
         context.scene.tbb.create_sequence_is_running = False
         context.scene.tbb.progress_value = -1.0
+
         if cancelled:
             self.report({"INFO"}, "Create sequence cancelled")

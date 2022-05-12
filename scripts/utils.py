@@ -53,16 +53,17 @@ def remove_folders_matching_pattern(root_folder: str, pattern: str = "__pycache_
                 os.rmdir(os.path.join(rootDir, subdir))
 
 
-def download_stop_motion_obj_addon(dest: str, version: str = "v2.2.0.alpha.18") -> str:
-    name = "Stop-motion-OBJ"
-    filename = name + "-" + version + ".zip"
+def download_stop_motion_obj_addon(dest: str, version: str = "v2.2.0.alpha.18") -> tuple[str, str]:
+    module_name = "Stop-motion-OBJ"
+    filename = module_name + "-" + version + ".zip"
+    path = os.path.abspath(os.path.join(dest, filename))
 
     if (not os.path.exists(dest)):
         raise AttributeError("The given path does not exist:", dest)
 
     if (os.path.exists(os.path.join(dest, filename))):
-        print("Stop-Motion-OBJ found:", os.path.abspath(os.path.join(dest, filename)))
-        return os.path.abspath(os.path.join(dest, filename))
+        print("Stop-Motion-OBJ found:", path)
+        return path, module_name
 
     # Else, download it and save it at the given destination
     print("Downloading:", filename)
@@ -70,7 +71,19 @@ def download_stop_motion_obj_addon(dest: str, version: str = "v2.2.0.alpha.18") 
     response = requests.get(url + filename)
     open(os.path.join(dest, filename), "wb").write(response.content)
 
-    return os.path.abspath(os.path.join(dest, filename))
+    return path, module_name
+
+
+def install_custom_addon(bpy_module: str, zfile: zipfile.ZipFile) -> None:
+    try:
+        import bpy
+        from pathlib import Path
+    except Exception as error:
+        raise error
+
+    path = Path(zfile).resolve()
+    bpy.ops.preferences.addon_install(overwrite=True, target='PREFS', filepath=path.as_posix())
+    bpy.ops.preferences.addon_enable(module=bpy_module)
 
 
 # Parser for run_tests.py

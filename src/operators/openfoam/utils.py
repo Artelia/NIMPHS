@@ -215,7 +215,6 @@ def generate_mesh_for_sequence(context: Context, time_point: int, name: str = "T
     # Import point data as vertex colors
     if settings.import_point_data:
         res = prepare_openfoam_point_data(mesh, blender_mesh, settings.list_point_data.split(";"), time_point)
-        print(*res)
         generate_vertex_colors(blender_mesh, *res)
 
     return blender_mesh

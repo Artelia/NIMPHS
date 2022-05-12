@@ -15,8 +15,8 @@ from src.operators.utils import (
     normalize_objects)
 
 
-def run_on_step_create_mesh_sequence_telemac(context: Context, current_frame: int, current_time_point: int,
-                                             start_time_point: int, user_sequence_name: str):
+def run_one_step_create_mesh_sequence_telemac(context: Context, current_frame: int, current_time_point: int,
+                                              start_time_point: int, user_sequence_name: str):
     """
     Run one step of the 'create mesh sequence' for the TELEMAC module.
 

@@ -45,7 +45,9 @@ def main():
         remove_folders_matching_pattern(os.path.join(os.path.relpath("."), "src"))
 
         # Download addons on which this addon depends
-        os.environ["STOP_MOTION_OBJ_PATH"] = download_stop_motion_obj_addon(here.joinpath("../cache").as_posix())
+        smo_path, smo_module_name = download_stop_motion_obj_addon(here.joinpath("../cache").as_posix())
+        os.environ["STOP_MOTION_OBJ_PATH"] = smo_path
+        os.environ["STOP_MOTION_OBJ_MODULE"] = smo_module_name
 
         # Zip addon
         print("Zipping addon - " + name)
