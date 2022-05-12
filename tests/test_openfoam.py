@@ -1,6 +1,5 @@
 import os
 import bpy
-import time
 
 # Sample A:
 # Number of time points = 21
@@ -20,6 +19,11 @@ def test_load_openfoam():
     assert tmp_data.data is not None
     assert tmp_data.mesh is not None
     assert tmp_data.nb_time_points == 21
+    # Test preview object
+    prw_obj = bpy.data.objects.get("TBB_OpenFOAM_preview", None)
+    assert prw_obj is not None
+    assert len(prw_obj.data.vertices) == 61616
+    assert len(prw_obj.data.edges) == 182698
 
 
 def test_reload_openfoam():
@@ -27,7 +31,15 @@ def test_reload_openfoam():
     assert bpy.ops.tbb.import_openfoam_file('EXEC_DEFAULT', filepath=path) == {"FINISHED"}
 
     assert bpy.ops.tbb.reload_openfoam_file('EXEC_DEFAULT') == {"FINISHED"}
-    # TODO: Test tmp data
+
+    tmp_data = bpy.context.scene.tbb.settings.openfoam.tmp_data
+    # Verify temporary data parameters
+    assert tmp_data.time_point == 0
+    assert tmp_data.module_name == "OpenFOAM"
+    assert tmp_data.file_reader is not None
+    assert tmp_data.data is not None
+    assert tmp_data.mesh is not None
+    assert tmp_data.nb_time_points == 21
 
 
 def test_preview_openfoam():
@@ -35,7 +47,26 @@ def test_preview_openfoam():
     assert bpy.ops.tbb.import_openfoam_file('EXEC_DEFAULT', filepath=path) == {"FINISHED"}
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
-    # TODO: Test preview object and preview material
+
+    # Test preview object
+    prw_obj = bpy.data.objects.get("TBB_OpenFOAM_preview", None)
+    assert prw_obj is not None
+    assert len(prw_obj.data.vertices) == 61616
+    assert len(prw_obj.data.edges) == 182698
+    # Test preview material
+    prw_mat = bpy.data.materials.get("TBB_OpenFOAM_preview_material", None)
+    assert prw_mat is not None
+    assert prw_mat.use_nodes == True
+    principled_bsdf_node = prw_mat.node_tree.nodes.get("Principled BSDF", None)
+    assert principled_bsdf_node is not None
+    vertex_color_node = prw_mat.node_tree.nodes.get("TBB_OpenFOAM_preview_material_vertex_color", None)
+    assert vertex_color_node is not None
+    assert vertex_color_node.layer_name == ""
+    link = prw_mat.node_tree.links[-1]
+    assert link.from_node == vertex_color_node
+    assert link.from_socket == vertex_color_node.outputs[0]
+    assert link.to_node == principled_bsdf_node
+    assert link.to_socket == principled_bsdf_node.inputs[0]
 
 
 def test_create_streaming_sequence_openfoam():
@@ -78,7 +109,7 @@ def test_create_streaming_sequence_openfoam():
     assert seq_settings.clip.scalar.name == "alpha.water@value"
     assert seq_settings.clip.scalar.invert == False
 
-    # TODO: Test geometry and impoted point data
+    # TODO: Test geometry and imported point data
 
 
 # WARNING: This test can take a while but pytest won't see it since the operator is running modal (on timer event)

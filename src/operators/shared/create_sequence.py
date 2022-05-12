@@ -61,7 +61,6 @@ class TBB_CreateSequence(Operator):
         """
 
         tbb_csir = context.scene.tbb.create_sequence_is_running  # csir = create sequence is running
-        print("CSIR:", tbb_csir)
         if settings.sequence_type == "mesh_sequence":
             return not tbb_csir and settings["start_time_point"] < settings["end_time_point"]
         elif settings.sequence_type == "streaming_sequence":

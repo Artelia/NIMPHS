@@ -34,6 +34,8 @@ def test_load_telemac_2d():
     assert tmp_data.nb_triangles == 24199
     assert tmp_data.is_3d == False
 
+    # TODO: test preview object
+
 
 def test_load_telemac_3d():
     path = os.path.abspath("./data/telemac_sample_b.slf")
@@ -53,12 +55,15 @@ def test_load_telemac_3d():
     assert tmp_data.nb_triangles == 24199
     assert tmp_data.is_3d == True
 
+    # TODO: test preview object
+
 
 def test_reload_telemac():
     path = os.path.abspath("./data/telemac_sample_a.slf")
     assert bpy.ops.tbb.import_telemac_file('EXEC_DEFAULT', filepath=path) == {"FINISHED"}
 
     assert bpy.ops.tbb.reload_telemac_file('EXEC_DEFAULT') == {"FINISHED"}
+
     # TODO: Test tmp data
 
 
@@ -67,6 +72,7 @@ def test_preview_telemac_2d():
     assert bpy.ops.tbb.import_telemac_file('EXEC_DEFAULT', filepath=path) == {"FINISHED"}
 
     assert bpy.ops.tbb.telemac_preview('EXEC_DEFAULT') == {"FINISHED"}
+
     # TODO: Test preview object and preview material
 
 
@@ -75,6 +81,7 @@ def test_preview_telemac_3d():
     assert bpy.ops.tbb.import_telemac_file('EXEC_DEFAULT', filepath=path) == {"FINISHED"}
 
     assert bpy.ops.tbb.telemac_preview('EXEC_DEFAULT') == {"FINISHED"}
+
     # TODO: Test preview object and preview material
 
 
@@ -92,4 +99,4 @@ def test_create_mesh_sequence_telemac_2d():
     settings.sequence_name = "My_TELEMAC_Sim"
     assert bpy.ops.tbb.telemac_create_sequence('EXEC_DEFAULT', mode='NORMAL') == {"FINISHED"}
 
-    # TODO: Test geometry and impoted point data
+    # TODO: Test geometry and imported point data

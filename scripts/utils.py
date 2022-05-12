@@ -74,18 +74,6 @@ def download_stop_motion_obj_addon(dest: str, version: str = "v2.2.0.alpha.18") 
     return path, module_name
 
 
-def install_custom_addon(bpy_module: str, zfile: zipfile.ZipFile) -> None:
-    try:
-        import bpy
-        from pathlib import Path
-    except Exception as error:
-        raise error
-
-    path = Path(zfile).resolve()
-    bpy.ops.preferences.addon_install(overwrite=True, target='PREFS', filepath=path.as_posix())
-    bpy.ops.preferences.addon_enable(module=bpy_module)
-
-
 # Parser for run_tests.py
 parser = argparse.ArgumentParser(description="Test addon")
 parser.add_argument(
