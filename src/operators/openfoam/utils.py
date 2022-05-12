@@ -15,6 +15,19 @@ from src.properties.openfoam.Object.openfoam_streaming_sequence import TBB_Openf
 
 def run_one_step_create_mesh_sequence_openfoam(context: Context, current_frame: int, current_time_point: int,
                                                start_time_point: int, user_sequence_name: str):
+    """
+    Run one step of the 'create mesh sequence' for the OpenFOAM module.
+
+    Args:
+        context (Context): context
+        current_frame (int): current frame
+        current_time_point (int): current time point
+        start_time_point (int): start time point
+        user_sequence_name (str): user defined sequence name
+
+    Raises:
+        error: if something went wrong generating the mesh
+    """
 
     seq_obj_name = user_sequence_name + "_sequence"
     try:

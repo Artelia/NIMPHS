@@ -15,6 +15,71 @@ from src.operators.utils import (
     normalize_objects)
 
 
+def run_on_step_create_mesh_sequence_telemac(context: Context, current_frame: int, current_time_point: int,
+                                             start_time_point: int, user_sequence_name: str):
+    """
+    Run one step of the 'create mesh sequence' for the TELEMAC module.
+
+    Args:
+        context (Context): context
+        current_frame (int): current frame
+        current_time_point (int): current time point
+        start_time_point (int): start time point
+        user_sequence_name (str): user defined sequence name
+
+    Raises:
+        error: if something went wrong generating meshes
+    """
+
+    settings = context.scene.tbb.settings.telemac
+    tmp_data = settings.tmp_data
+    seq_obj_name = user_sequence_name + "_sequence"
+
+    # First time point, create the sequence object
+    if current_time_point == start_time_point:
+
+        collection = get_collection("TBB_TELEMAC", context)
+
+        try:
+            objects = generate_base_objects(context, start_time_point, name=seq_obj_name)
+
+            for obj in objects:
+                # Add 'Basis' shape key
+                obj.shape_key_add(name="Basis", from_mix=False)
+                # Add the object to the collection
+                collection.objects.link(obj)
+
+            # Normalize if needed (option set by the user)
+            if settings.normalize_sequence_obj:
+                normalize_objects(objects, get_object_dimensions_from_mesh(objects[0]))
+
+        except Exception as error:
+            raise error
+
+        # Create the sequence object
+        seq_obj = bpy.data.objects.new(name=seq_obj_name, object_data=None)
+
+        # Parent objects
+        for child in objects:
+            child.parent = seq_obj
+
+        collection.objects.link(seq_obj)
+
+    # Other time points, update vertices
+    else:
+        seq_obj = bpy.data.objects[seq_obj_name]
+        time_point = current_time_point
+
+        for obj, id in zip(seq_obj.children, range(len(seq_obj.children))):
+            if not tmp_data.is_3d:
+                type = obj.tbb.settings.telemac.z_name
+                vertices = generate_mesh_data(tmp_data, mesh_is_3d=False, time_point=time_point, type=type)
+            else:
+                vertices = generate_mesh_data(tmp_data, mesh_is_3d=True, offset=id, time_point=time_point)
+
+            set_new_shape_key(obj, vertices.flatten(), str(time_point), current_frame)
+
+
 def generate_mesh_data(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, offset: int = 0,
                        time_point: int = 0, type: str = 'BOTTOM') -> np.ndarray:
     """
