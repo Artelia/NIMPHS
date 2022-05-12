@@ -66,7 +66,7 @@ if bl_version < (3, 0, 0):
 from src.properties.shared.tbb_scene import TBB_Scene
 from src.properties.shared.tbb_object import TBB_Object
 from src.operators.openfoam.utils import update_openfoam_streaming_sequences
-from src.panels.custom_progress_bar import register_custom_progress_bar
+from src.properties.utils import register_custom_progress_bar
 
 auto_load.init()
 

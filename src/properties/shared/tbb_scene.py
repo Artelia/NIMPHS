@@ -1,7 +1,8 @@
 # <pep8 compliant>
 from bpy.types import PropertyGroup
-from bpy.props import PointerProperty, BoolProperty
+from bpy.props import PointerProperty, BoolProperty, FloatProperty, StringProperty
 
+from src.properties.utils import update_progress_bar
 from src.properties.shared.tbb_scene_settings import TBB_SceneSettings
 
 
@@ -15,9 +16,29 @@ class TBB_Scene(PropertyGroup):
     #: TBB_Settings: Holds scene settings for both OpenFOAM and TELEMAC modules
     settings: PointerProperty(type=TBB_SceneSettings)
 
-    #: BoolProperty: State of the 'create sequence' operation (used by all 'create sequence' operators)
+    #: bpy.props.BoolProperty: State of the 'create sequence' operation (used by all 'create sequence' operators)
     create_sequence_is_running: BoolProperty(
         name="Create sequence state",
         description="State of the 'create sequence' operation (used by all 'create sequence' operators)",
         default=False,
+    )
+
+    #: bpy.props.FloatProperty: Progress bar value which is used by the progress bar when modal operators are running
+    progress_value: FloatProperty(
+        name="Progress value",
+        default=-1.0,
+        min=-1.0,
+        soft_min=0.0,
+        max=101.0,
+        soft_max=100.0,
+        precision=1,
+        subtype="PERCENTAGE",
+        update=update_progress_bar,
+    )
+
+    #: bpy.props.StringProperty: Label displayed on the progress bar
+    progress_label: StringProperty(
+        name="Progress label",
+        default="Progress",
+        update=update_progress_bar,
     )

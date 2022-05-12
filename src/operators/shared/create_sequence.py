@@ -84,8 +84,8 @@ class TBB_CreateSequence(Operator):
             wm.modal_handler_add(self)
 
             # Setup prograss bar
-            context.scene.tbb_progress_label = "Create sequence"
-            context.scene.tbb_progress_value = -1.0
+            context.scene.tbb.progress_label = "Create sequence"
+            context.scene.tbb.progress_value = -1.0
 
             # Setup for creating the sequence
             self.start_time_point = settings["start_time_point"]
@@ -139,6 +139,6 @@ class TBB_CreateSequence(Operator):
         wm.event_timer_remove(self.timer)
         self.timer = None
         context.scene.tbb.create_sequence_is_running = False
-        context.scene.tbb_progress_value = -1.0
+        context.scene.tbb.progress_value = -1.0
         if cancelled:
             self.report({"INFO"}, "Create sequence cancelled")

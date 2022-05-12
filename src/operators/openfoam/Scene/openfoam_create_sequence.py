@@ -122,8 +122,8 @@ class TBB_OT_OpenfoamCreateSequence(TBB_CreateSequence):
                 return {"FINISHED"}
 
             # Update the progress bar
-            context.scene.tbb_progress_value = self.current_time_point / (self.end_time_point - self.start_time_point)
-            context.scene.tbb_progress_value *= 100
+            context.scene.tbb.progress_value = self.current_time_point / (self.end_time_point - self.start_time_point)
+            context.scene.tbb.progress_value *= 100
             self.current_time_point += 1
             self.current_frame += 1
 
