@@ -36,7 +36,7 @@ TESTS_PATH = os.environ.get("BLENDER_ADDON_TESTS_PATH", default_tests_dir.as_pos
 
 # Install addon requirements
 try:
-    install_requirements(os.path.join(os.path.relpath("."), "requirements.txt"))
+    install_requirements(os.path.join(os.path.relpath("./scripts"), "requirements.txt"))
 except Exception as e:
     print(e)
     sys.exit(1)

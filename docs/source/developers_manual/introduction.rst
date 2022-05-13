@@ -8,7 +8,7 @@ Introduction
 .. _file_architecture:
 
 File architecture
-##################
+#################
 
 | The file architecture is as follows:
 

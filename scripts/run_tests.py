@@ -50,16 +50,16 @@ def main():
         os.environ["STOP_MOTION_OBJ_MODULE"] = smo_module_name
 
         # Zip addon
-        print("Zipping addon - " + name)
-        zipf = zipfile.ZipFile(name + ".zip", 'w', zipfile.ZIP_DEFLATED)
-        zipdir("./" + name, zipf)
-        zipf.close()
+        if not addon.endswith(".zip"):
+            print("Zipping addon - " + name)
+            zipf = zipfile.ZipFile(name + ".zip", 'w', zipfile.ZIP_DEFLATED)
+            zipdir("./" + name, zipf)
+            zipf.close()
+            addon = os.path.join(os.path.abspath("."), name + ".zip")
 
     except Exception as e:
         print(e)
         exit_val = 1
-
-    addon = os.path.join(os.path.abspath("."), name + ".zip")
 
     # Custom configuration
     config = {

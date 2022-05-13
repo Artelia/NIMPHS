@@ -11,14 +11,27 @@ Development environment
 General
 #######
 
-| You will need the following python packages to develop:
+| You will need the following python packages to develop.
+  What you can do is to use the python environment which comes with blender and install them there.
+
+| Install using: ``pip install -r requirements.txt``
+
+.. warning::
+
+    The latest version of `pyvista <https://github.com/pyvista/pyvista>`__ does not contain features that were added since the latest release `(v.0.34.0)`.
+    Therefore, you must clone the github repository next to the addon's folder. Make sure to checkout the `main` branch.
+    Then, do: ``pip install -e path/to/pyvista``
+
+| Or install everything manually:
 
 * `PyVista <https://docs.pyvista.org/#>`__ ``pip install pyvista`` (python 3.10 workaround `here <https://github.com/pyvista/pyvista/discussions/2064>`__)
 * `Numpy <https://numpy.org/doc/stable/#>`__ ``pip install numpy``
-* `fake-bpy-module <https://pypi.org/project/fake-bpy-module-latest/>`_
-* `sphinx <https://pypi.org/project/Sphinx/>`__, install using ``pip install sphinx`` or ``apt install sphinx`` (for Ubuntu)
-* `sphinxemoji <https://pypi.org/project/sphinxemoji/>`__
-* `sphinx_rtd_theme <https://pypi.org/project/sphinx-rtd-theme/>`__
+* `MatPlotLib <https://matplotlib.org/>`__ ``pip install matplotlib``
+* `fake-bpy-module <https://pypi.org/project/fake-bpy-module-latest/>`_ ``pip install fake-bpy-module-latest``
+* `sphinx <https://pypi.org/project/Sphinx/>`__, ``pip install sphinx`` or ``apt install sphinx`` (for Ubuntu)
+* `sphinxemoji <https://pypi.org/project/sphinxemoji/>`__ ``pip install sphinxemoji``
+* `sphinx_rtd_theme <https://pypi.org/project/sphinx-rtd-theme/>`__ ``pip install sphinx_rtd_theme``
+
 
 | We recommend you to use `Microsoft Visual Studio Code <https://code.visualstudio.com/>`__
 | It offers you the possibility to use the following extensions:
@@ -66,15 +79,14 @@ Unit tests
 ##########
 
 | In order to make sure new features do not break what already work, we try to maintain a high testing rate.
-
-| We use the `blender-addon-tester <https://github.com/nangtani/blender-addon-tester>`__ python package along with `pytest <https://docs.pytest.org/en/7.1.x/>`__ to make our unit tests.
+  We use the `blender-addon-tester <https://github.com/nangtani/blender-addon-tester>`__ python package along with `pytest <https://docs.pytest.org/en/7.1.x/>`__ to make our unit tests.
 
 Setup
 -----
 
 * Install the ``blender-addon-tester`` python package: ``pip install blender-addon-tester``
 
-.. important::
+.. warning::
 
     The latest version of `pyvista <https://github.com/pyvista/pyvista>`__ does not contain features that were added since the latest release `(v.0.34.0)`.
     Therefore, you must clone the github repository next to the addon's folder. Make sure to checkout the `main` branch.
@@ -84,7 +96,7 @@ Usage
 -----
 
 | Every scripts that concern unit testing are under the ``scripts`` folder.
-| The ``run_tests.py`` script can run all the tests for a given version of Blender.
+  The ``run_tests.py`` script can run all the tests for a given version of Blender.
 
 * Arguments for ``run_tests.py``
 
@@ -107,13 +119,12 @@ Write new tests
 ---------------
 
 | Please write new tests in the ``tests`` folder.
-| You can either write tests in existing files (if they correspond to the theme of the file) or create a new file.
-
-| If you need to add data for your tests, you can place it in the ``tests/data`` folder.
+  You can either write tests in existing files (if they correspond to the theme of the file) or create a new file.
+  If you need to add data for your tests, you can place it in the ``tests/data`` folder.
 
 .. important::
 
-    Please make sure they are lightweight as possible, no need to have samples with hundreds of time steps and thousands of vertices.
+    Please make sure test data are lightweight as possible, no need to have samples with hundreds of time steps and thousands of vertices.
 
 
 Testing pipeline
