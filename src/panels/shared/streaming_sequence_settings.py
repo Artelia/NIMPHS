@@ -50,6 +50,9 @@ class TBB_StreamingSequenceSettingsPanel(Panel):
             row.prop(sequence_settings, "anim_length", text="Length")
 
             row = layout.row()
+            row.prop(sequence_settings, "shade_smooth", text="Shade smooth")
+
+            row = layout.row()
             row.prop(sequence_settings, "import_point_data", text="Import point data")
 
             if sequence_settings.import_point_data:

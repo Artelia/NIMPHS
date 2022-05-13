@@ -414,7 +414,6 @@ def update_sequence_mesh(obj: Object, settings: TBB_OpenfoamStreamingSequencePro
         ValueError: if the given time point does no exists
     """
 
-    # TODO: use load_openfoam_file
     success, file_reader = load_openfoam_file(settings.file_path, settings.decompose_polyhedra)
     if not success:
         raise OSError("Unable to read the given file")
@@ -424,12 +423,15 @@ def update_sequence_mesh(obj: Object, settings: TBB_OpenfoamStreamingSequencePro
         raise ValueError("time point '" + str(time_point) + "' does not exist. Available time points: " +
                          str(file_reader.number_time_points))
 
-    vertices, faces, mesh = generate_mesh_data(
-        file_reader, time_point, triangulate=settings.triangulate, clip=settings.clip)
+    vertices, faces, mesh = generate_mesh_data(file_reader, time_point, triangulate=settings.triangulate,
+                                               clip=settings.clip)
 
     blender_mesh = obj.data
     blender_mesh.clear_geometry()
     blender_mesh.from_pydata(vertices, [], faces)
+
+    if settings.shade_smooth:
+        blender_mesh.polygons.foreach_set("use_smooth", [True] * len(blender_mesh.polygons))
 
     # Import point data as vertex colors
     if settings.import_point_data:

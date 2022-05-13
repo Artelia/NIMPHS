@@ -70,3 +70,10 @@ class TBB_ModuleStreamingSequenceSettings(PropertyGroup):
         description="List of point data to import as vertex color groups. Separate each with a semicolon",
         default="",
     )
+
+    #: bpy.props.BoolProperty: Whether to use smooth shading or not (flat shading)
+    shade_smooth: BoolProperty(
+        name="Shade smooth",
+        description="Whether to use smooth shading or not (flat shading)",
+        default=False
+    )
