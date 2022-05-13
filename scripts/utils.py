@@ -101,5 +101,5 @@ parser.add_argument(
     type=str,
     nargs='?',
     default="3.0.0",
-    help="Version(s) of Blender3d to test."
+    help="Version of Blender to test."
 )

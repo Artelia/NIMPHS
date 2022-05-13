@@ -40,6 +40,7 @@ extensions = [
 ]
 
 suppress_warnings = ["autosectionlabel.*"]  # Suppress duplicated labels warnings
+html_show_sourcelink = False  # Suppress the 'View page source' button on pages
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 

@@ -10,6 +10,7 @@ __pycache__
 # Docs
 docs/_build/
 *.xml.bkp
+*.bkp
 
 # Tests
 data/

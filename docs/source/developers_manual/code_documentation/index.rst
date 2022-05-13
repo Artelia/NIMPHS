@@ -11,7 +11,7 @@ Code documentation
 
 | Data structure (click on the image)
 
-.. image:: /images/addon_data_structure.svg
-    :width: 50%
+.. image:: /images/data_structure.svg
+    :width: 80%
     :alt: Data strucute of the addon
     :align: center

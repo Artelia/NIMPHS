@@ -41,6 +41,7 @@ except Exception as e:
     print(e)
     sys.exit(1)
 
+# TODO: fix this
 # Temporary workaround to install a local custom version of pyvista and vtk
 # Reasons: no vtk support for pytyon 3.10+ and a small edit in pyvista which will be available later
 try:
@@ -52,6 +53,7 @@ except Exception as e:
     print(e)
     sys.exit(1)
 
+# TODO: fix this
 # Not the best solution but it works.
 # Blender_addon_tester should not be installed in the Blender python folder.
 # We should be able to add it through this line: sys.path.append(os.environ["LOCAL_PYTHONPATH"])
