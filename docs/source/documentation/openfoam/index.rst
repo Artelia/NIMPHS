@@ -34,7 +34,7 @@ Previewing tools
 ################
 
 | Once you have imported a file, you should see the mesh in the viewport.
-| You can select the ``TBB_OpenFOAM_preview`` object and hit ``.`` on your numpad to center the view on it.
+  You can select the ``TBB_OpenFOAM_preview`` object and hit ``.`` on your numpad to center the view on it.
 
 .. image:: /images/openfoam/preview_panel.png
     :width: 35%
@@ -46,6 +46,8 @@ Previewing tools
 * **Reload**: reloads the selected file (`when something went wrong or temporary data is not available anymore`)
 * **Time step**: time step to preview
 * **Points**: point data to preview as vertex colors (`switch to material preview to see it`)
+* **Decompose polyhedra**: whether polyhedra are to be decomposed when read. If True, decompose polyhedra into tetrahedra and pyramids
+* **Triangulate**: more complex polygons will be broken down into triangles
 * **Preview**: preview the mesh with the selected parameters
 
 Clip
