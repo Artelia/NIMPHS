@@ -65,22 +65,27 @@ class TBB_PT_OpenfoamClip(Panel):
         row.prop(clip, "type")
 
         if clip.type == "scalar":
-            row = layout.row()
-            row.enabled = enable_rows
-            row.prop(clip.scalar, "name")
 
-            row = layout.row()
-            row.enabled = enable_rows
+            if clip.scalar.name != "None@None":
+                row = layout.row()
+                row.enabled = enable_rows
+                row.prop(clip.scalar, "name")
 
-            is_vector_scalars = clip.scalar.name.split("@")[1] == "vector_value"
-            if is_vector_scalars:
-                row.prop(clip.scalar, "vector_value", text="Value")
+                row = layout.row()
+                row.enabled = enable_rows
+
+                is_vector_scalars = clip.scalar.name.split("@")[1] == "vector_value"
+                if is_vector_scalars:
+                    row.prop(clip.scalar, "vector_value", text="Value")
+                else:
+                    row.prop(clip.scalar, "value", text="Value")
+
+                row = layout.row()
+                row.enabled = enable_rows
+                row.prop(clip.scalar, "invert")
             else:
-                row.prop(clip.scalar, "value", text="Value")
-
-            row = layout.row()
-            row.enabled = enable_rows
-            row.prop(clip.scalar, "invert")
+                row = layout.row()
+                row.label(text="No data available.", icon="ERROR")
 
         if lock_clip_settings:
             row = layout.row()

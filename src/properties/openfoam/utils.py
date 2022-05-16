@@ -45,6 +45,7 @@ def encode_scalar_names(mesh: UnstructuredGrid) -> str:
 def update_scalar_names(self, _context: Context) -> list:
     """
     Update the list of scalar names for EnumProperties.
+    If no scalars are availabe, return ("None@None", "None", "None").
 
     Args:
         _context (Context): context
@@ -62,10 +63,13 @@ def update_scalar_names(self, _context: Context) -> list:
         scalar_list = self.list
 
     # Read from the saved list
-    for scalar in scalar_list.split(";"):
-        if scalar != "":
-            name = scalar.split("@")[0]
-            items.append((scalar, name, "Undocumented"))
+    if len(scalar_list) > 0:
+        for scalar in scalar_list.split(";"):
+            if scalar != "":
+                name = scalar.split("@")[0]
+                items.append((scalar, name, "Undocumented"))
+    else:
+        items = [("None@None", "None", "None")]
 
     return items
 
@@ -188,12 +192,12 @@ def set_clip_values(self, value: float) -> None:
                     self[value_type][i] = value[i]
 
 
-def get_clip_values(self) -> Union[float, list, None]:
+def get_clip_values(self) -> Union[float, list]:
     """
-    Function triggered when the UI fetches a clip value.
+    Function triggered when the UI fetches a clip value. Defaults to np.inf.
 
     Returns:
-        float | list | None: value
+        float | list : value
     """
 
     if self.name is not None:
@@ -205,5 +209,5 @@ def get_clip_values(self) -> Union[float, list, None]:
         if value_type == "vector_value":
             return [val for val in self.get(value_type, (0.5, 0.5, 0.5))]
 
-    print("ERROR::get_clip_values: unknown value type '" + str(self.name) + "'")
-    return None
+    print("ERROR::get_clip_values: unknown value type '" + str(self.name) + "', return np.inf")
+    return np.inf

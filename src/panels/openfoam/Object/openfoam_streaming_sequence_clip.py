@@ -50,16 +50,20 @@ class TBB_PT_OpenfoamStreamingSequenceClip(Panel):
         row.prop(clip, "type", text="Type")
 
         if clip.type == "scalar":
-            row = layout.row()
-            row.prop(clip.scalar, "name", text="Scalars")
-
-            value_type = clip.scalar.name.split("@")[1]
-            if value_type == "vector_value":
+            if clip.scalar.name != "None@None":
                 row = layout.row()
-                row.prop(clip.scalar, "vector_value", text="Value")
-            elif value_type == "value":
-                row = layout.row()
-                row.prop(clip.scalar, "value", text="Value")
+                row.prop(clip.scalar, "name", text="Scalars")
 
-            row = layout.row()
-            row.prop(clip.scalar, "invert", text="Invert")
+                value_type = clip.scalar.name.split("@")[1]
+                if value_type == "vector_value":
+                    row = layout.row()
+                    row.prop(clip.scalar, "vector_value", text="Value")
+                elif value_type == "value":
+                    row = layout.row()
+                    row.prop(clip.scalar, "value", text="Value")
+
+                row = layout.row()
+                row.prop(clip.scalar, "invert", text="Invert")
+            else:
+                row = layout.row()
+                row.label(text="No data available.", icon="ERROR")
