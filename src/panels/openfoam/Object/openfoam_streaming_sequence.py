@@ -53,3 +53,5 @@ class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
                 row.prop(seq_settings, "decompose_polyhedra", text="Decompose polyhedra")
                 row = layout.row()
                 row.prop(seq_settings, "triangulate", text="Triangulate")
+                row = layout.row()
+                row.prop(seq_settings, "case_type", text="Case")

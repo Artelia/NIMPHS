@@ -18,14 +18,24 @@ class TBB_OpenfoamSettings(TBB_ModuleSceneSettings):
     decompose_polyhedra: BoolProperty(
         name="Decompose polyhedra",
         description="Whether polyhedra are to be decomposed when read. If True, decompose polyhedra into tetrahedra and pyramids",
-        default=False
+        default=False,
     )
 
     #: bpy.types.BoolProperty: If `True`, more complex polygons will be broken down into triangles
     triangulate: BoolProperty(
         name="Triangule",
         description="More complex polygons will be broken down into triangles",
-        default=True
+        default=True,
+    )
+
+    #: bpy.types.EnumProperty: The property indicates whether decomposed mesh or reconstructed mesh should be read
+    case_type: EnumProperty(
+        name="Case type",
+        description="The property indicates whether decomposed mesh or reconstructed mesh should be read",
+        items=[
+            ("0", "Reconstructed", "Reconstructed mesh should be read"),
+            ("1", "Decomposed", "Decomposed mesh should be read"),
+        ]
     )
 
     #: TBB_OpenfoamTemporaryData: temporary data

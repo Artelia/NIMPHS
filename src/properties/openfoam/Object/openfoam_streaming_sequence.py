@@ -1,5 +1,5 @@
 # <pep8 compliant>
-from bpy.props import PointerProperty, BoolProperty
+from bpy.props import PointerProperty, BoolProperty, EnumProperty
 
 from src.properties.openfoam.openfoam_clip import TBB_OpenfoamClipProperty
 from src.properties.shared.module_streaming_sequence_settings import TBB_ModuleStreamingSequenceSettings
@@ -24,6 +24,16 @@ class TBB_OpenfoamStreamingSequenceProperty(TBB_ModuleStreamingSequenceSettings)
         name="Triangule",
         description="More complex polygons will be broken down into triangles",
         default=True
+    )
+
+    #: bpy.types.EnumProperty: The property indicates whether decomposed mesh or reconstructed mesh should be read
+    case_type: EnumProperty(
+        name="Case type",
+        description="The property indicates whether decomposed mesh or reconstructed mesh should be read",
+        items=[
+            ("0", "Reconstructed", "Reconstructed mesh should be read"),
+            ("1", "Decomposed", "Decomposed mesh should be read"),
+        ]
     )
 
     #: TBB_OpenfoamClipProperty: Clip settings of the sequence.
