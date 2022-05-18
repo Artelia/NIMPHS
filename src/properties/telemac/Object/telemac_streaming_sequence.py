@@ -20,4 +20,4 @@ class TBB_TelemacStreamingSequenceProperty(TBB_ModuleStreamingSequenceSettings):
     )
 
     #: bpy.types.TBB_TelemacInterpolateProperty: Interpolation settings
-    interpolation: PointerProperty(type=TBB_TelemacInterpolateProperty)
+    interpolate: PointerProperty(type=TBB_TelemacInterpolateProperty)

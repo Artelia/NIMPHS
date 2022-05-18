@@ -10,13 +10,13 @@ class TBB_TelemacInterpolateProperty(PropertyGroup):
     register_cls = True
     is_custom_base_cls = False
 
-    #: bpy.types.EnumProperty: Type of the interpolation
+    #: bpy.types.EnumProperty: Type of the interpolation, enum in ['NONE', 'LINEAR']
     type: EnumProperty(
         name="Type",
         description="Type of the interpolation",
         items=[
-            ("none", "None", "None"),
-            ("linear", "Linear", "Apply a linear interpolation"),
+            ("NONE", "None", "None"),
+            ("LINEAR", "Linear", "Apply a linear interpolation"),
         ]
     )
 
@@ -27,4 +27,5 @@ class TBB_TelemacInterpolateProperty(PropertyGroup):
         default=0,
         min=0,
         soft_min=0,
+        soft_max=50,
     )

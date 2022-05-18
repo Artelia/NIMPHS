@@ -18,6 +18,13 @@ Temporary data
    :members:
    :show-inheritance:
 
+Interpolation
+-------------
+
+.. autoclass:: src.properties.telemac.telemac_interpolate.TBB_TelemacInterpolateProperty
+   :members:
+   :show-inheritance:
+
 .. _telemac_properties_scene:
 
 Scene

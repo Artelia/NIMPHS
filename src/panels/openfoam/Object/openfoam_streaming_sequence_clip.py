@@ -43,7 +43,7 @@ class TBB_PT_OpenfoamStreamingSequenceClip(Panel):
         """
 
         layout = self.layout
-        obj = context.active_object
+        obj = get_selected_object(context)
         clip = obj.tbb.settings.openfoam.streaming_sequence.clip
 
         row = layout.row()
