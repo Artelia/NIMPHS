@@ -66,6 +66,7 @@ if bl_version < (3, 0, 0):
 from src.properties.shared.tbb_scene import TBB_Scene
 from src.properties.shared.tbb_object import TBB_Object
 from src.operators.openfoam.utils import update_openfoam_streaming_sequences
+from src.operators.telemac.utils import update_telemac_streaming_sequences
 from src.properties.utils import register_custom_progress_bar
 
 auto_load.init()
@@ -83,6 +84,7 @@ def register():
 
     # Custom app handlers
     frame_change_pre.append(update_openfoam_streaming_sequences)
+    frame_change_pre.append(update_telemac_streaming_sequences)
 
     # Add custom icons
     icons = previews.new()

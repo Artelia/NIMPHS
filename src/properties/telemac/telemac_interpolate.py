@@ -24,8 +24,8 @@ class TBB_TelemacInterpolateProperty(PropertyGroup):
     time_steps: IntProperty(
         name="Time steps",
         description="Number of time steps to add between two time points",
-        default=0,
-        min=0,
-        soft_min=0,
+        default=1,
+        min=1,
+        soft_min=1,
         soft_max=50,
     )

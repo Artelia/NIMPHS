@@ -7,6 +7,7 @@ import time
 import numpy as np
 
 from src.properties.telemac.temporary_data import TBB_TelemacTemporaryData
+from src.properties.telemac.telemac_interpolate import TBB_TelemacInterpolateProperty
 from src.properties.telemac.Object.telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
 from src.operators.utils import (
     generate_object_from_data,
@@ -103,7 +104,7 @@ def generate_mesh_data(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, off
         error: if an error occurred reading data
 
     Returns:
-        np.ndarray: vertices of the mesh
+        np.ndarray: vertices of the mesh, shape is (number_of_vertices, 3)
     """
 
     if not mesh_is_3d and type not in ['BOTTOM', 'WATER_DEPTH']:
@@ -456,9 +457,13 @@ def update_telemac_streaming_sequences(scene: Scene) -> None:
                 if time_point >= 0 and time_point < settings.anim_length:
                     start = time.time()
                     try:
-                        for obj in obj.children:
-                            update_telemac_streaming_sequence_mesh(obj, settings, time_point)
-                            
+                        objects = obj.children
+                        for obj, id in zip(objects, range(len(objects))):
+                            interpolate = settings.interpolate
+                            point_data = settings.list_point_data.split(";")
+                            update_telemac_streaming_sequence_mesh(obj, settings, time_point, id, interpolate,
+                                                                   point_data)
+
                     except Exception as error:
                         print("ERROR::update_telemac_streaming_sequences: " + settings.name + ", " + str(error))
 
@@ -466,7 +471,7 @@ def update_telemac_streaming_sequences(scene: Scene) -> None:
 
 
 def update_telemac_streaming_sequence_mesh(obj: Object, settings: TBB_TelemacStreamingSequenceProperty,
-                                           time_point: int) -> None:
+                                           time_point: int, id: int, interpolate: TBB_TelemacInterpolateProperty, point_data: list[str]) -> None:
     """
     Update the mesh of the given object from a TELEMAC sequence object.
 
@@ -474,33 +479,86 @@ def update_telemac_streaming_sequence_mesh(obj: Object, settings: TBB_TelemacStr
         obj (Object): object from a TELEMAC sequence object
         settings (TBB_TelemacStreamingSequenceProperty): 'streaming sequence' settings
         time_point (int): time point
+        id (int): id of the current object (used for meshes from 3D simulations, corresponds to the 'plane id')
+        interpolate (TBB_TelemacInterpolateProperty): interpolation settings
+        point_data (list[str]): list of point data to import as vertex colors
 
     Raises:
-        error: if something went wrong loading temporary data
+        tmp_data_error: if something went wrong loading the file
+        vertices_error: if something went wrong generating mesh data
+        point_data_error: if something went wrong generating vertex colors data
         ValueError: if the given time point does not exist
     """
 
     # Check if tmp_data is loaded
+    tmp_data = settings.tmp_data
     if not settings.tmp_data.is_ok():
         try:
             settings.tmp_data.update(settings.file_path)
-        except Exception as error:
-            raise error
+        except Exception as tmp_data_error:
+            raise tmp_data_error from tmp_data_error
+
+    # Filter the given list
+    point_data = list(filter(None, point_data))
+    import_point_data = len(point_data) > 0
+
+    # Compute left time point if interpolate option is 'on'
+    if interpolate.type != 'NONE':
+        time_point_offset = interpolate.time_steps + 1
+        l_time_point = int((time_point - time_point % time_point_offset) / time_point_offset)
+        r_time_point = l_time_point + 1
+    else:
+        l_time_point = time_point
 
     # Check if time poit is ok
-    if time_point > settings.tmp_data.nb_time_points:
+    if time_point > tmp_data.nb_time_points:
         raise ValueError("time point '" + str(time_point) + "' does not exist. Available time points: " +
-                         str(settings.tmp_data.nb_time_points))
+                         str(tmp_data.nb_time_points))
 
     # Generate mesh
-
-    # Interpolate mesh if needed
-    if settings.interpolate != 'NONE':
-        pass
+    offset = id if tmp_data.is_3d else 0  # For meshes from 3D simulation
+    try:
+        l_vertices = generate_mesh_data(tmp_data, tmp_data.is_3d, offset=offset, time_point=l_time_point,
+                                        type=obj.tbb.settings.telemac.z_name)
+    except Exception as vertices_error:
+        raise vertices_error from vertices_error
 
     # Generate vertex colors data
+    if import_point_data:
+        try:
+            l_color_data = prepare_telemac_point_data(obj.data, point_data, tmp_data, l_time_point,
+                                                      mesh_is_3d=tmp_data.is_3d, offset=offset, normalize='GLOBAL')
+        except Exception as point_data_error:
+            raise point_data_error from point_data_error
 
+    # Interpolate mesh and vertex colors data
+    if l_time_point < tmp_data.nb_time_points and interpolate.type == 'LINEAR':
+        # How much to add to l_vertices from the
+        percentage = (time_point % time_point_offset) / time_point_offset
 
-    # Interpolate vertex colors data if needed
-    if settings.interpolate != 'NONE':
-        pass
+        # Interpolate vertices
+        r_vertices = generate_mesh_data(tmp_data, tmp_data.is_3d, offset=offset, time_point=r_time_point,
+                                        type=obj.tbb.settings.telemac.z_name)
+        vertices = (l_vertices.T + (r_vertices.T - l_vertices.T) * percentage).T
+
+        # Interpolate vertex colors data
+        if import_point_data:
+            r_color_data = prepare_telemac_point_data(obj.data, point_data, tmp_data, r_time_point,
+                                                      mesh_is_3d=tmp_data.is_3d, offset=offset, normalize='GLOBAL')
+            color_data = l_color_data
+            for id in color_data[1].keys():
+                color_data[1][id] = l_color_data[1][id] + (r_color_data[1][id] - l_color_data[1][id]) * percentage
+    else:
+        vertices = l_vertices
+        if import_point_data:
+            color_data = l_color_data
+
+    # Update mesh
+    obj = generate_object_from_data(vertices, tmp_data.faces, obj.name)
+
+    # Remove old vertex colors
+    if import_point_data:
+        while obj.data.vertex_colors:
+            obj.data.vertex_colors.remove(obj.data.vertex_colors[0])
+        # Update vertex colors data
+        generate_vertex_colors(obj.data, *color_data)
