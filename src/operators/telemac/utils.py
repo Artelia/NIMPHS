@@ -5,6 +5,7 @@ from bpy.types import Mesh, Object, Context, Scene
 
 import time
 import numpy as np
+from typing import Union
 
 from src.properties.telemac.temporary_data import TBB_TelemacTemporaryData
 from src.properties.telemac.telemac_interpolate import TBB_TelemacInterpolateProperty
@@ -510,12 +511,7 @@ def update_telemac_streaming_sequence_mesh(obj: Object, settings: TBB_TelemacStr
     # Compute left time point if interpolate option is 'on'
     existing_time_point = False
     if interpolate.type != 'NONE':
-        time_point_offset = interpolate.time_steps + 1
-        modulo = time_point % time_point_offset
-        l_time_point = int((time_point - modulo) / time_point_offset)
-        r_time_point = l_time_point + 1
-        if modulo == 0:
-            existing_time_point = True
+        l_time_point, r_time_point, existing_time_point = compute_interp_time_point(time_point, interpolate.time_steps)
     else:
         l_time_point = time_point
         existing_time_point = True
@@ -524,8 +520,6 @@ def update_telemac_streaming_sequence_mesh(obj: Object, settings: TBB_TelemacStr
     if l_time_point > tmp_data.nb_time_points:
         raise ValueError("time point '" + str(l_time_point) + "' does not exist. Available time points: " +
                          str(tmp_data.nb_time_points))
-
-    print(l_time_point)
 
     # Generate mesh
     offset = id if tmp_data.is_3d else 0  # For meshes from 3D simulation
@@ -546,7 +540,7 @@ def update_telemac_streaming_sequence_mesh(obj: Object, settings: TBB_TelemacStr
     # Interpolate mesh and vertex colors data
     if not existing_time_point and l_time_point < tmp_data.nb_time_points and interpolate.type == 'LINEAR':
         # How much to add to l_vertices from the
-        percentage = (time_point % time_point_offset) / time_point_offset
+        percentage = (time_point % (interpolate.time_steps + 1)) / (interpolate.time_steps + 1)
 
         # Interpolate vertices
         try:
@@ -578,3 +572,64 @@ def update_telemac_streaming_sequence_mesh(obj: Object, settings: TBB_TelemacStr
             obj.data.vertex_colors.remove(obj.data.vertex_colors[0])
         # Update vertex colors data
         generate_vertex_colors(obj.data, *color_data)
+
+
+def generate_mesh_data_linear_interp(obj: Object, tmp_data: TBB_TelemacStreamingSequenceProperty,
+                                     time_point: int, time_steps: int, l_vertices: np.ndarray = None) -> np.ndarray:
+    """
+    Linearly interpolates the mesh of the given TELEMAC object.
+
+    Args:
+        obj (Object): object to interpolate
+        tmp_data (TBB_TelemacStreamingSequenceProperty): temporary data
+        time_point (int): current time point
+        time_steps (int): number of time temps between each time point
+        l_vertices (np.ndarray, optional): left time point data. Defaults to None.
+
+    Raises:
+        vertices_error: if something went wrong generating mesh data
+
+    Returns:
+        np.ndarray: vertices
+    """
+
+    l_time_point, r_time_point, _existing_time_point = compute_interp_time_point(time_point, time_steps)
+
+    if l_vertices is None:
+        offset = id if tmp_data.is_3d else 0  # For meshes from 3D simulation
+        try:
+            l_vertices = generate_mesh_data(tmp_data, tmp_data.is_3d, offset=offset, time_point=l_time_point,
+                                            type=obj.tbb.settings.telemac.z_name)
+        except Exception as vertices_error:
+            raise vertices_error from vertices_error
+
+    try:
+        r_vertices = generate_mesh_data(tmp_data, tmp_data.is_3d, offset=offset, time_point=r_time_point,
+                                        type=obj.tbb.settings.telemac.z_name)
+    except Exception as vertices_error:
+        raise vertices_error from vertices_error
+
+    # How much to add to l_vertices from the
+    percentage = (time_point % (time_steps + 1)) / (time_steps + 1)
+
+    return (l_vertices.T + (r_vertices.T - l_vertices.T) * percentage).T
+
+
+def compute_interp_time_point(time_point: int, time_steps: int) -> Union[int, int, bool]:
+    """
+    Compute left time point and right time point for interpolation. It also indicates if
+    the current time point is an existing time point.
+
+    Args:
+        time_point (int): current time point
+        time_steps (int): number of time steps between each time point
+
+    Returns:
+        Union[int, int, bool]: left time point, right time point, existing time point
+    """
+
+    modulo = time_point % (time_steps + 1)
+    l_time_point = int((time_point - modulo) / (time_steps + 1))
+    r_time_point = l_time_point + 1
+
+    return l_time_point, r_time_point, modulo == 0
