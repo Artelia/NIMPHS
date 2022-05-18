@@ -385,10 +385,7 @@ def generate_telemac_streaming_sequence_obj(context: Context, name: str) -> Obje
     objects = generate_base_objects(context, 0, name + "_sequence")
 
     for obj in objects:
-        # Add 'Basis' shape key
-        # obj.shape_key_add(name="Basis", from_mix=False)
-
-        # Add the object to the collection
+        # Add object to the collection
         collection.objects.link(obj)
         obj.parent = seq_obj
 

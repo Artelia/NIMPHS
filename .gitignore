@@ -16,4 +16,5 @@ docs/_build/
 # Tests
 data/
 cache/
+local_addon/
 .pytest_cache/
