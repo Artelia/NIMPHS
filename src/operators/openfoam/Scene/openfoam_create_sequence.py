@@ -46,17 +46,17 @@ class TBB_OT_OpenfoamCreateSequence(TBB_CreateSequence):
         """
 
         running_mode = super().execute(context.scene.tbb.settings.openfoam, context, 'OpenFOAM')
-        if running_mode == {"RUNNING_MODAL"}:
+        if running_mode == {'RUNNING_MODAL'}:
             return running_mode
 
         for time_point in range(self.start_time_point, self.end_time_point, 1):
             state = self.run_one_step(context, time_point)
-            if state != {"PASS"}:
+            if state != {'PASS'}:
                 super().stop(context)
                 return state
 
         super().stop(context)
-        return {"FINISHED"}
+        return {'FINISHED'}
 
     def modal(self, context: Context, event: Event) -> set:
         """
@@ -70,20 +70,20 @@ class TBB_OT_OpenfoamCreateSequence(TBB_CreateSequence):
             set: state of the operator
         """
 
-        if event.type == "ESC":
+        if event.type == 'ESC':
             super().stop(context, cancelled=True)
-            return {"CANCELLED"}
+            return {'CANCELLED'}
 
-        if event.type == "TIMER":
+        if event.type == 'TIMER':
             if self.current_time_point <= self.end_time_point:
                 state = self.run_one_step(context, self.current_time_point)
-                if state != {"PASS"}:
+                if state != {'PASS'}:
                     return state
 
             else:
                 super().stop(context)
-                self.report({"INFO"}, "Create sequence finished")
-                return {"FINISHED"}
+                self.report({'INFO'}, "Create sequence finished")
+                return {'FINISHED'}
 
             # Update the progress bar
             context.scene.tbb.progress_value = self.current_time_point / (self.end_time_point - self.start_time_point)
@@ -91,7 +91,7 @@ class TBB_OT_OpenfoamCreateSequence(TBB_CreateSequence):
             self.current_time_point += 1
             self.current_frame += 1
 
-        return {"PASS_THROUGH"}
+        return {'PASS_THROUGH'}
 
     def run_one_step(self, context: Context, time_point: int) -> set:
         """
@@ -113,9 +113,9 @@ class TBB_OT_OpenfoamCreateSequence(TBB_CreateSequence):
             print("CreateSequence::OpenFOAM: " + el_time + "s, time_point = " + str(time_point))
         except Exception as error:
             print("ERROR::TBB_OT_OpenfoamCreateSequence: " + str(error))
-            self.report({"ERROR"}, "An error occurred creating the sequence, (time_step = " +
+            self.report({'ERROR'}, "An error occurred creating the sequence, (time_step = " +
                         str(time_point) + ")")
             super().stop(context)
-            return {"CANCELLED"}
+            return {'CANCELLED'}
 
-        return {"PASS"}
+        return {'PASS'}

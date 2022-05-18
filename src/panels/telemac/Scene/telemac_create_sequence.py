@@ -60,9 +60,9 @@ class TBB_PT_TelemacCreateSequence(TBB_CreateSequencePanel):
 
         row = layout.row()
         row.enabled = not lock
-        row.operator("tbb.telemac_create_sequence", text="Create sequence", icon="RENDER_ANIMATION")
+        row.operator("tbb.telemac_create_sequence", text="Create sequence", icon='RENDER_ANIMATION')
 
         # Lock the create_sequence operator if the sequence name is already taken or empty
         if lock:
             row = layout.row()
-            row.label(text=message, icon="ERROR")
+            row.label(text=message, icon='ERROR')

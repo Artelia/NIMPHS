@@ -49,8 +49,8 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
             tmp_data.update(self.filepath)
         except Exception as error:
             print("ERROR::TBB_OT_TelemacImportFile: " + str(error))
-            self.report({"ERROR"}, "An error occurred during import")
-            return {"FINISHED"}
+            self.report({'ERROR'}, "An error occurred during import")
+            return {'FINISHED'}
 
         settings.file_path = self.filepath
 
@@ -65,10 +65,10 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
 
         except Exception as error:
             print("ERROR::TBB_OT_TelemacImportFile: " + str(error))
-            self.report({"ERROR"}, "Something went wrong building the mesh")
-            return {"FINISHED"}
+            self.report({'ERROR'}, "Something went wrong building the mesh")
+            return {'FINISHED'}
 
-        self.report({"INFO"}, "File successfully imported")
+        self.report({'INFO'}, "File successfully imported")
         print("Import::TELEMAC: " + "{:.4f}".format(time.time() - start) + "s")
 
-        return {"FINISHED"}
+        return {'FINISHED'}

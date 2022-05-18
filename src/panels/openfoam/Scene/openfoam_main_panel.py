@@ -50,4 +50,4 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
                 row.prop(settings, "case_type", text="Case")
                 row = layout.row()
                 row.enabled = enable_rows
-                row.operator("tbb.openfoam_preview", text="Preview", icon="HIDE_OFF")
+                row.operator("tbb.openfoam_preview", text="Preview", icon='HIDE_OFF')

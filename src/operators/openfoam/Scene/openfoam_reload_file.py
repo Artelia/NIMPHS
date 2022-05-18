@@ -35,14 +35,14 @@ class TBB_OT_OpenfoamReloadFile(Operator):
         tmp_data = settings.tmp_data
 
         if settings.file_path == "":
-            self.report({"ERROR"}, "Please select a file first")
-            return {"FINISHED"}
+            self.report({'ERROR'}, "Please select a file first")
+            return {'FINISHED'}
 
         start = time.time()
         success, file_reader = load_openfoam_file(settings.file_path, settings.case_type, settings.decompose_polyhedra)
         if not success:
-            self.report({"ERROR"}, "The choosen file does not exist")
-            return {"FINISHED"}
+            self.report({'ERROR'}, "The choosen file does not exist")
+            return {'FINISHED'}
 
         # Update temp data
         tmp_data.update(file_reader, settings.get("preview_time_point", 0))
@@ -54,6 +54,6 @@ class TBB_OT_OpenfoamReloadFile(Operator):
         update_scene_settings_dynamic_props(settings, tmp_data)
 
         print("Reload::OpenFOAM: " + "{:.4f}".format(time.time() - start) + "s")
-        self.report({"INFO"}, "Reload successfull")
+        self.report({'INFO'}, "Reload successfull")
 
-        return {"FINISHED"}
+        return {'FINISHED'}

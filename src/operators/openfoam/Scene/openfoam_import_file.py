@@ -47,8 +47,8 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         success, file_reader = load_openfoam_file(self.filepath, settings.case_type, settings.decompose_polyhedra)
 
         if not success:
-            self.report({"ERROR"}, "The choosen file does not exist")
-            return {"FINISHED"}
+            self.report({'ERROR'}, "The choosen file does not exist")
+            return {'FINISHED'}
 
         settings.file_path = self.filepath
 
@@ -69,10 +69,10 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
                 collection.objects.link(obj)
         except Exception as error:
             print("ERROR::TBB_OT_OpenfoamImportFile: " + str(error))
-            self.report({"ERROR"}, "Something went wrong building the mesh")
-            return {"FINISHED"}
+            self.report({'ERROR'}, "Something went wrong building the mesh")
+            return {'FINISHED'}
 
         print("Import::OpenFOAM: " + "{:.4f}".format(time.time() - start) + "s")
-        self.report({"INFO"}, "File successfully imported")
+        self.report({'INFO'}, "File successfully imported")
 
-        return {"FINISHED"}
+        return {'FINISHED'}

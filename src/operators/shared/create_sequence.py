@@ -130,13 +130,13 @@ class TBB_CreateSequence(Operator):
             # https://docs.blender.org/api/current/bpy.app.handlers.html?highlight=app%20handlers#module-bpy.app.handlers
             RenderSettings.use_lock_interface = True
 
-            self.report({"INFO"}, "Sequence successfully created")
+            self.report({'INFO'}, "Sequence successfully created")
 
-            return {"FINISHED"}
+            return {'FINISHED'}
 
         else:
-            self.report({"ERROR"}, "Unknown sequence type (type = " + str(settings.sequence_type) + ")")
-            return {"FINISHED"}
+            self.report({'ERROR'}, "Unknown sequence type (type = " + str(settings.sequence_type) + ")")
+            return {'FINISHED'}
 
     def stop(self, context: Context, cancelled: bool = False) -> None:
         """
@@ -157,4 +157,4 @@ class TBB_CreateSequence(Operator):
         context.scene.tbb.progress_value = -1.0
 
         if cancelled:
-            self.report({"INFO"}, "Create sequence cancelled")
+            self.report({'INFO'}, "Create sequence cancelled")

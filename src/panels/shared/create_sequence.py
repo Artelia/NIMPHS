@@ -74,7 +74,7 @@ class TBB_CreateSequencePanel(Panel):
             row.prop(settings, '["anim_length"]', text="Length")
         else:
             row = layout.row()
-            row.label(text="Error: unknown sequence type...", icon="ERROR")
+            row.label(text="Error: unknown sequence type...", icon='ERROR')
 
         row = layout.row()
         row.enabled = enable_rows

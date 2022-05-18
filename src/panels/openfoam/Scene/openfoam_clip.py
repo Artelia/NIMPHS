@@ -85,8 +85,8 @@ class TBB_PT_OpenfoamClip(Panel):
                 row.prop(clip.scalar, "invert")
             else:
                 row = layout.row()
-                row.label(text="No data available.", icon="ERROR")
+                row.label(text="No data available.", icon='ERROR')
 
         if lock_clip_settings:
             row = layout.row()
-            row.label(text="Error: no data available at this time point. Please reload or hit 'preview'.", icon="ERROR")
+            row.label(text="Error: no data available at this time point. Please reload or hit 'preview'.", icon='ERROR')

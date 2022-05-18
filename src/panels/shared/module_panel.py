@@ -57,11 +57,11 @@ class TBB_ModulePanel(Panel):
             box.label(text="File: " + settings.file_path)
             row = layout.row()
             row.enabled = enable_rows
-            row.operator("tbb.import_" + module.lower() + "_file", text="Import", icon="IMPORT")
-            row.operator("tbb.reload_" + module.lower() + "_file", text="Reload", icon="FILE_REFRESH")
+            row.operator("tbb.import_" + module.lower() + "_file", text="Import", icon='IMPORT')
+            row.operator("tbb.reload_" + module.lower() + "_file", text="Reload", icon='FILE_REFRESH')
         else:
             row.enabled = enable_rows
-            row.operator("tbb.import_" + module.lower() + "_file", text="Import " + module + " file", icon="IMPORT")
+            row.operator("tbb.import_" + module.lower() + "_file", text="Import " + module + " file", icon='IMPORT')
 
         if sequence_settings is None or not obj.tbb.is_streaming_sequence:
 
@@ -81,15 +81,15 @@ class TBB_ModulePanel(Panel):
             # If the file_path is not empty, it means that there is an error with temp data. Need to reload.
             elif settings.file_path != "":
                 row = layout.row()
-                row.label(text="Error: please reload the file.", icon="ERROR")
+                row.label(text="Error: please reload the file.", icon='ERROR')
 
         else:
             row = layout.row()
-            row.label(text="Edit settings of this sequence in the object properties panel", icon="INFO")
+            row.label(text="Edit settings of this sequence in the object properties panel", icon='INFO')
 
             # If the file_path is not empty, it means that there is an error with temp data. Need to reload.
             if not tmp_data.is_ok() and settings.file_path != "":
                 row = layout.row()
-                row.label(text="Error: please reload the file.", icon="ERROR")
+                row.label(text="Error: please reload the file.", icon='ERROR')
 
         return enable_rows, obj

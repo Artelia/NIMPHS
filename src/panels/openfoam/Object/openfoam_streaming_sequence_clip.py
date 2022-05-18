@@ -66,4 +66,4 @@ class TBB_PT_OpenfoamStreamingSequenceClip(Panel):
                 row.prop(clip.scalar, "invert", text="Invert")
             else:
                 row = layout.row()
-                row.label(text="No data available.", icon="ERROR")
+                row.label(text="No data available.", icon='ERROR')

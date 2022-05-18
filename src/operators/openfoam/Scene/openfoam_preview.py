@@ -38,28 +38,28 @@ class TBB_OT_OpenfoamPreview(Operator):
         clip = settings.clip
 
         if settings.file_path == "":
-            self.report({"ERROR"}, "Please import a file first.")
-            return {"FINISHED"}
+            self.report({'ERROR'}, "Please import a file first.")
+            return {'FINISHED'}
 
         if clip.type != "" and clip.scalar.name == "":
-            self.report({"ERROR"}, "Please select a scalar to clip on. You may need to reload the file if none are shown.")
-            return {"FINISHED"}
+            self.report({'ERROR'}, "Please select a scalar to clip on. You may need to reload the file if none are shown.")
+            return {'FINISHED'}
 
         start = time.time()
         # TODO: changing time point does not work if we do not load the file
         # again... We would like to use the file_reader from tbb.settings.openfoam.tmp_data.
         success, file_reader = load_openfoam_file(settings.file_path, settings.case_type, settings.decompose_polyhedra)
         if not success:
-            self.report({"ERROR"}, "The choosen file does not exist.")
-            return {"FINISHED"}
+            self.report({'ERROR'}, "The choosen file does not exist.")
+            return {'FINISHED'}
 
         # Read data at the choosen time point
         try:
             file_reader.set_active_time_point(prw_time_point)
         except ValueError as error:
             print("ERROR::TBB_OT_OpenfoamPreview: " + str(error))
-            self.report({"ERROR"}, "The selected time point is not defined (" + str(prw_time_point) + ").")
-            return {"FINISHED"}
+            self.report({'ERROR'}, "The selected time point is not defined (" + str(prw_time_point) + ").")
+            return {'FINISHED'}
 
         data = file_reader.read()
         raw_mesh = data["internalMesh"]
@@ -73,8 +73,8 @@ class TBB_OT_OpenfoamPreview(Operator):
             print("ERROR::TBB_OT_OpenfoamPreview: " + str(error))
             # Update temporary data, please read the comment below.
             tmp_data.update(file_reader, prw_time_point, data, raw_mesh)
-            self.report({"ERROR"}, "Something went wrong building the mesh")
-            return {"FINISHED"}
+            self.report({'ERROR'}, "Something went wrong building the mesh")
+            return {'FINISHED'}
 
         # Update temporary data. We do not update it just after the reading of the file. Here is why.
         # This line will update the list of available scalars. If the choosen scalar is not available at
@@ -89,8 +89,8 @@ class TBB_OT_OpenfoamPreview(Operator):
                 collection.objects.link(obj)
         except Exception as error:
             print("ERROR::TBB_OT_OpenfoamPreview: " + str(error))
-            self.report({"ERROR"}, "Something went generating the object")
-            return {"FINISHED"}
+            self.report({'ERROR'}, "Something went generating the object")
+            return {'FINISHED'}
 
         res = prepare_openfoam_point_data(mesh, blender_mesh, [settings.preview_point_data], prw_time_point)
         if len(res[0]) > 0:
@@ -98,6 +98,6 @@ class TBB_OT_OpenfoamPreview(Operator):
             generate_preview_material(obj, res[0][0]["name"] if len(res[0]) > 0 else 'None')
 
         print("Preview::OpenFOAM: " + "{:.4f}".format(time.time() - start) + "s")
-        self.report({"INFO"}, "Mesh successfully built: checkout the viewport.")
+        self.report({'INFO'}, "Mesh successfully built: checkout the viewport.")
 
-        return {"FINISHED"}
+        return {'FINISHED'}

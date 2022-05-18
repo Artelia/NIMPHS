@@ -40,10 +40,10 @@ class TBB_OT_TelemacPreview(Operator):
 
         except Exception as error:
             print("ERROR::TBB_OT_TelemacPreview: " + str(error))
-            self.report({"ERROR"}, "An error occurred during preview")
-            return {"FINISHED"}
+            self.report({'ERROR'}, "An error occurred during preview")
+            return {'FINISHED'}
 
-        self.report({"INFO"}, "Mesh successfully built: checkout the viewport.")
+        self.report({'INFO'}, "Mesh successfully built: checkout the viewport.")
         print("Preview::TELEMAC: " + "{:.4f}".format(time.time() - start) + "s")
 
-        return {"FINISHED"}
+        return {'FINISHED'}

@@ -44,4 +44,4 @@ class TBB_PT_TelemacMainPanel(TBB_ModulePanel):
                 row.prop(settings, "normalize_preview_obj", text="Normalize")
                 row = layout.row()
                 row.enabled = enable_rows
-                row.operator("tbb.telemac_preview", text="Preview", icon="HIDE_OFF")
+                row.operator("tbb.telemac_preview", text="Preview", icon='HIDE_OFF')
