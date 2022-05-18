@@ -93,8 +93,9 @@ class TBB_OT_OpenfoamPreview(Operator):
             return {"FINISHED"}
 
         res = prepare_openfoam_point_data(mesh, blender_mesh, [settings.preview_point_data], prw_time_point)
-        generate_vertex_colors(blender_mesh, *res)
-        generate_preview_material(obj, res[0][0]["name"] if len(res[0]) > 0 else 'None')
+        if len(res[0]) > 0:
+            generate_vertex_colors(blender_mesh, *res)
+            generate_preview_material(obj, res[0][0]["name"] if len(res[0]) > 0 else 'None')
 
         print("Preview::OpenFOAM: " + "{:.4f}".format(time.time() - start) + "s")
         self.report({"INFO"}, "Mesh successfully built: checkout the viewport.")

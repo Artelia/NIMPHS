@@ -46,6 +46,7 @@ def test_preview_openfoam():
     path = os.path.abspath("./data/openfoam_sample_a/foam.foam")
     assert bpy.ops.tbb.import_openfoam_file('EXEC_DEFAULT', filepath=path) == {"FINISHED"}
 
+    bpy.context.scene.tbb.settings.openfoam.preview_point_data = "alpha.water@value"
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
 
     # Test preview object
@@ -61,7 +62,7 @@ def test_preview_openfoam():
     assert principled_bsdf_node is not None
     vertex_color_node = prw_mat.node_tree.nodes.get("TBB_OpenFOAM_preview_material_vertex_color", None)
     assert vertex_color_node is not None
-    assert vertex_color_node.layer_name == ""
+    assert vertex_color_node.layer_name == "alpha.water, None, None"
     link = prw_mat.node_tree.links[-1]
     assert link.from_node == vertex_color_node
     assert link.from_socket == vertex_color_node.outputs[0]

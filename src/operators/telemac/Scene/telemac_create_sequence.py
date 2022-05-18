@@ -45,7 +45,7 @@ class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
             set: state of the operator
         """
 
-        running_mode = super().execute(context.scene.tbb.settings.openfoam, context, 'OpenFOAM')
+        running_mode = super().execute(context.scene.tbb.settings.openfoam, context, 'TELEMAC')
         if running_mode == {"RUNNING_MODAL"}:
             return running_mode
 

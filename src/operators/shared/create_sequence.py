@@ -93,9 +93,9 @@ class TBB_CreateSequence(Operator):
             context.scene.tbb.progress_value = -1.0
 
             # Setup for creating the sequence
-            self.start_time_point = settings["start_time_point"]
-            self.current_time_point = settings["start_time_point"]
-            self.end_time_point = settings["end_time_point"]
+            self.start_time_point = settings.get("start_time_point", 0)
+            self.current_time_point =  settings.get("start_time_point", 0)
+            self.end_time_point =  settings.get("end_time_point", 1)
             self.current_frame = context.scene.frame_current
             self.user_sequence_name = settings.sequence_name
 
