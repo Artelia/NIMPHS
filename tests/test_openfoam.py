@@ -113,8 +113,6 @@ def test_create_streaming_sequence_openfoam():
     # TODO: Test geometry and imported point data
 
 
-# WARNING: This test can take a while but pytest won't see it since the operator is running modal (on timer event)
-# This can cause some context issues ('create_sequence_is_running' will probably be set to 'true')
 def test_create_mesh_sequence_openfoam():
     path = os.path.abspath("./data/openfoam_sample_a/foam.foam")
     assert bpy.ops.tbb.import_openfoam_file('EXEC_DEFAULT', filepath=path) == {"FINISHED"}

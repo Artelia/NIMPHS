@@ -85,6 +85,28 @@ def test_preview_telemac_3d():
     # TODO: Test preview object and preview material
 
 
+def test_create_streaming_sequence_telemac_2d():
+    path = os.path.abspath("./data/telemac_sample_a.slf")
+
+    settings = bpy.context.scene.tbb.settings.telemac
+    settings.sequence_name = "My_TELEMAC_Streaming_Sim"
+    settings.import_point_data = True
+    settings.list_point_data = "VITESSE U;SALINITE;VITESS V;FOND;"
+    settings.frame_start = 10
+    settings.sequence_type = "streaming_sequence"
+
+    assert bpy.ops.tbb.telemac_create_sequence('EXEC_DEFAULT') == {"FINISHED"}
+
+    # Change time point
+    bpy.context.scene.frame_set(22)
+
+    # TODO: Test geometry and imported point data
+
+
+def test_create_streaming_sequence_telemac_3d():
+    pass
+
+
 def test_create_mesh_sequence_telemac_2d():
     path = os.path.abspath("./data/telemac_sample_a.slf")
     assert bpy.ops.tbb.import_telemac_file('EXEC_DEFAULT', filepath=path) == {"FINISHED"}
@@ -100,3 +122,7 @@ def test_create_mesh_sequence_telemac_2d():
     assert bpy.ops.tbb.telemac_create_sequence('EXEC_DEFAULT', mode='NORMAL') == {"FINISHED"}
 
     # TODO: Test geometry and imported point data
+
+
+def test_create_mesh_sequence_telemac_3d():
+    pass
