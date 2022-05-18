@@ -104,14 +104,14 @@ class TBB_CreateSequence(Operator):
             if self.mode == 'MODAL':
                 return {'RUNNING_MODAL'}
             elif self.mode == 'NORMAL':
-                return {'NORMAL'}  # custom value
+                return {'NORMAL'}  # custom value to run the process whithout modal mode (used in tests)
             else:
                 print("WARNING::TBB_CreateSequence: undefined operator mode '" +
                       str(self.mode) + "', running modal by default.")
                 return {'RUNNING_MODAL'}
 
         elif settings.sequence_type == "streaming_sequence":
-            # Warn the user when the selected start frame may be weird
+            # Warn the user when the selected start frame may be "weird"
             if settings.frame_start < context.scene.frame_start or settings.frame_start > context.scene.frame_end:
                 self.report({"WARNING"}, "Frame start is not in the selected time frame.")
 

@@ -45,7 +45,7 @@ class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
             set: state of the operator
         """
 
-        running_mode = super().execute(context.scene.tbb.settings.openfoam, context, 'TELEMAC')
+        running_mode = super().execute(context.scene.tbb.settings.telemac, context, 'TELEMAC')
         if running_mode == {'RUNNING_MODAL'}:
             return running_mode
 
@@ -111,7 +111,7 @@ class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
             run_one_step_create_mesh_sequence_telemac(context, self.current_frame, time_point,
                                                       self.start_time_point, self.user_sequence_name)
             el_time = "{:.4f}".format(time.time() - start)  # el_time = elapsed time
-            print("CreateSequence::OpenFOAM: " + el_time + "s, time_point = " + str(time_point))
+            print("CreateSequence::TELEMAC: " + el_time + "s, time_point = " + str(time_point))
         except Exception as error:
             print("ERROR::TBB_OT_TelemacCreateSequence: " + str(error))
             self.report({'ERROR'}, "An error occurred creating the sequence, (time_step = " +
