@@ -1,10 +1,13 @@
 # <pep8 compliant>
 import bpy
-from bpy.types import Mesh, Object, Context
+from bpy.app.handlers import persistent
+from bpy.types import Mesh, Object, Context, Scene
 
+import time
 import numpy as np
 
 from src.properties.telemac.temporary_data import TBB_TelemacTemporaryData
+from src.properties.telemac.Object.telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
 from src.operators.utils import (
     generate_object_from_data,
     remap_array,
@@ -429,3 +432,75 @@ def set_new_shape_key(obj: Object, vertices: np.ndarray, name: str, frame: int) 
     block.value = 0.0
     block.keyframe_insert("value", frame=frame - 1, index=-1)
     block.keyframe_insert("value", frame=frame + 1, index=-1)
+
+
+@persistent
+def update_telemac_streaming_sequences(scene: Scene) -> None:
+    """
+    App handler appened to the frame_change_pre handlers.
+    Updates all the TELEMAC 'streaming sequences' of the scene.
+
+    Args:
+        scene (Scene): scene
+    """
+
+    frame = scene.frame_current
+
+    if not scene.tbb.create_sequence_is_running:
+        for obj in scene.objects:
+            settings = obj.tbb.settings.telemac.streaming_sequence
+
+            if obj.tbb.is_streaming_sequence and settings.update:
+                time_point = frame - settings.frame_start
+
+                if time_point >= 0 and time_point < settings.anim_length:
+                    start = time.time()
+                    try:
+                        for obj in obj.children:
+                            update_telemac_streaming_sequence_mesh(obj, settings, time_point)
+                            
+                    except Exception as error:
+                        print("ERROR::update_telemac_streaming_sequences: " + settings.name + ", " + str(error))
+
+                    print("Update::TELEMAC: " + settings.name + ", " + "{:.4f}".format(time.time() - start) + "s")
+
+
+def update_telemac_streaming_sequence_mesh(obj: Object, settings: TBB_TelemacStreamingSequenceProperty,
+                                           time_point: int) -> None:
+    """
+    Update the mesh of the given object from a TELEMAC sequence object.
+
+    Args:
+        obj (Object): object from a TELEMAC sequence object
+        settings (TBB_TelemacStreamingSequenceProperty): 'streaming sequence' settings
+        time_point (int): time point
+
+    Raises:
+        error: if something went wrong loading temporary data
+        ValueError: if the given time point does not exist
+    """
+
+    # Check if tmp_data is loaded
+    if not settings.tmp_data.is_ok():
+        try:
+            settings.tmp_data.update(settings.file_path)
+        except Exception as error:
+            raise error
+
+    # Check if time poit is ok
+    if time_point > settings.tmp_data.nb_time_points:
+        raise ValueError("time point '" + str(time_point) + "' does not exist. Available time points: " +
+                         str(settings.tmp_data.nb_time_points))
+
+    # Generate mesh
+
+    # Interpolate mesh if needed
+    if settings.interpolate != 'NONE':
+        pass
+
+    # Generate vertex colors data
+
+
+    # Interpolate vertex colors data if needed
+    if settings.interpolate != 'NONE':
+        pass

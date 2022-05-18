@@ -3,6 +3,7 @@ from bpy.props import BoolProperty, PointerProperty
 
 from src.properties.shared.module_streaming_sequence_settings import TBB_ModuleStreamingSequenceSettings
 from src.properties.telemac.telemac_interpolate import TBB_TelemacInterpolateProperty
+from src.properties.telemac.temporary_data import TBB_TelemacTemporaryData
 
 
 class TBB_TelemacStreamingSequenceProperty(TBB_ModuleStreamingSequenceSettings):
@@ -18,6 +19,9 @@ class TBB_TelemacStreamingSequenceProperty(TBB_ModuleStreamingSequenceSettings):
         description="Option to normalize vertices coordinates (remap values in [-1;1])",
         default=False
     )
+
+    #: TBB_TelemacTemporaryData: temporary data
+    tmp_data = TBB_TelemacTemporaryData()
 
     #: bpy.types.TBB_TelemacInterpolateProperty: Interpolation settings
     interpolate: PointerProperty(type=TBB_TelemacInterpolateProperty)

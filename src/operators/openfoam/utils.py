@@ -394,16 +394,17 @@ def update_openfoam_streaming_sequences(scene: Scene) -> None:
                 if time_point >= 0 and time_point < settings.anim_length:
                     start = time.time()
                     try:
-                        update_sequence_mesh(obj, settings, time_point)
+                        update_openfoam_streaming_sequence_mesh(obj, settings, time_point)
                     except Exception as error:
-                        print("ERROR::update_streaming_sequence: " + settings.name + ", " + str(error))
+                        print("ERROR::update_openfoam_streaming_sequences: " + settings.name + ", " + str(error))
 
                     print("Update::OpenFOAM: " + settings.name + ", " + "{:.4f}".format(time.time() - start) + "s")
 
 
-def update_sequence_mesh(obj: Object, settings: TBB_OpenfoamStreamingSequenceProperty, time_point: int) -> None:
+def update_openfoam_streaming_sequence_mesh(obj: Object, settings: TBB_OpenfoamStreamingSequenceProperty,
+                                            time_point: int) -> None:
     """
-    Update the mesh of the given sequence object.
+    Update the mesh of the given OpenFOAM sequence object.
 
     Args:
         obj (Object): sequence object
