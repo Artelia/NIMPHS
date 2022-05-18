@@ -315,6 +315,26 @@ def rescale_objects(objects: list[Object], dimensions: list[float], apply: bool 
             obj.select_set(False)
 
 
+def compute_interp_time_point(time_point: int, time_steps: int) -> Union[int, int, bool]:
+    """
+    Compute left time point and right time point for interpolation. It also indicates if
+    the current time point is an existing time point.
+
+    Args:
+        time_point (int): current time point
+        time_steps (int): number of time steps between each time point
+
+    Returns:
+        Union[int, int, bool]: left time point, right time point, existing time point
+    """
+
+    modulo = time_point % (time_steps + 1)
+    l_time_point = int((time_point - modulo) / (time_steps + 1))
+    r_time_point = l_time_point + 1
+
+    return l_time_point, r_time_point, modulo == 0
+
+
 def remap_array(input: np.ndarray, out_min: float = 0.0, out_max: float = 1.0,
                 in_min: float = -np.inf, in_max: float = np.inf) -> np.ndarray:
     """
