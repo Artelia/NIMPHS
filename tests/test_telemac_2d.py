@@ -1,6 +1,7 @@
 # <pep8 compliant>
 import os
 import bpy
+import pytest
 
 # Sample A:
 # Number of variables = 8
@@ -10,6 +11,21 @@ import bpy
 # Triangulated mesh: Vertices = 12,506 | Edges = 36,704 | Faces = 24,199 | Triangles = 24,199
 
 FILE_PATH = os.path.abspath("./data/telemac_sample_a.slf")
+
+
+@pytest.fixture
+def preview_object():
+    return [bpy.data.objects.get("TBB_TELEMAC_preview_" + type.lower(), None) for type in ['BOTTOM', 'WATER_DEPTH']]
+
+
+@pytest.fixture
+def mesh_sequence():
+    return bpy.data.objects.get("My_TELEMAC_Sim_2D_sequence", None)
+
+
+@pytest.fixture
+def streaming_sequence():
+    return bpy.data.objects.get("My_TELEMAC_Streaming_Sim_2D_sequence", None)
 
 
 def test_import_telemac_2d():
@@ -31,13 +47,12 @@ def test_import_telemac_2d():
     assert tmp_data.is_3d == False
 
 
-def test_geometry_imported_preview_object_telemac_2d():
-    prw_obj = [bpy.data.objects.get("TBB_TELEMAC_preview_" + type.lower(), None) for type in ['BOTTOM', 'WATER_DEPTH']]
-    assert None not in prw_obj
-    assert len(prw_obj) == 2
+def test_geometry_imported_preview_object_telemac_2d(preview_object):
+    assert None not in preview_object
+    assert len(preview_object) == 2
 
     # Test geometry
-    for obj in prw_obj:
+    for obj in preview_object:
         assert len(obj.data.vertices) == 12506
         assert len(obj.data.edges) == 36704
         assert len(obj.data.polygons) == 24199
@@ -71,25 +86,23 @@ def test_preview_telemac_2d():
     assert bpy.ops.tbb.telemac_preview('EXEC_DEFAULT') == {"FINISHED"}
 
 
-def test_geometry_preview_object_telemac_2d():
-    prw_obj = [bpy.data.objects.get("TBB_TELEMAC_preview_" + type.lower(), None) for type in ['BOTTOM', 'WATER_DEPTH']]
-    assert None not in prw_obj
-    assert len(prw_obj) == 2
+def test_geometry_preview_object_telemac_2d(preview_object):
+    assert None not in preview_object
+    assert len(preview_object) == 2
 
     # Test geometry
-    for obj in prw_obj:
+    for obj in preview_object:
         assert len(obj.data.vertices) == 12506
         assert len(obj.data.edges) == 36704
         assert len(obj.data.polygons) == 24199
 
 
-def test_point_data_preview_object_telemac_2d():
-    prw_obj = [bpy.data.objects.get("TBB_TELEMAC_preview_" + type.lower(), None) for type in ['BOTTOM', 'WATER_DEPTH']]
-    assert None not in prw_obj
-    assert len(prw_obj) == 2
+def test_point_data_preview_object_telemac_2d(preview_object):
+    assert None not in preview_object
+    assert len(preview_object) == 2
 
     # Test point data (only test if they exist)
-    for obj in prw_obj:
+    for obj in preview_object:
         vertex_colors = obj.data.vertex_colors
         assert len(vertex_colors) == 1
         u_colors = vertex_colors.get("VITESSE U, None, None", None)
@@ -107,13 +120,12 @@ def test_normalize_preview_telemac_2d():
     assert bpy.ops.tbb.telemac_preview('EXEC_DEFAULT') == {"FINISHED"}
 
 
-def test_dimensions_normalized_preview_object_telemac_2d():
-    prw_obj = [bpy.data.objects.get("TBB_TELEMAC_preview_" + type.lower(), None) for type in ['BOTTOM', 'WATER_DEPTH']]
-    assert None not in prw_obj
-    assert len(prw_obj) == 2
+def test_dimensions_normalized_preview_object_telemac_2d(preview_object):
+    assert None not in preview_object
+    assert len(preview_object) == 2
 
     # Test dimensions
-    for obj in prw_obj:
+    for obj in preview_object:
         assert obj.dimensions[0] <= 1.0 and obj.dimensions[1] <= 1.0 and obj.dimensions[2] <= 1.0
 
 
@@ -130,31 +142,29 @@ def test_create_streaming_sequence_telemac_2d():
     assert bpy.ops.tbb.telemac_create_sequence('EXEC_DEFAULT') == {"FINISHED"}
 
 
-def test_geometry_streaming_sequence_telemac_2d():
-    seq_obj = bpy.data.objects.get("My_TELEMAC_Streaming_Sim_2D_sequence", None)
-    assert seq_obj is not None
-    assert len(seq_obj.children) == 2
+def test_geometry_streaming_sequence_telemac_2d(streaming_sequence):
+    assert streaming_sequence is not None
+    assert len(streaming_sequence.children) == 2
 
     # Change frame to load another time point for the streaming sequence
     bpy.context.scene.frame_set(21)
     # Disable updates for this sequence object during the next tests
-    seq_obj.tbb.settings.telemac.streaming_sequence.update = False
+    streaming_sequence.tbb.settings.telemac.streaming_sequence.update = False
 
     # Test geometry
-    for obj in seq_obj.children:
+    for obj in streaming_sequence.children:
         assert len(obj.data.vertices) == 12506
         assert len(obj.data.edges) == 36704
         assert len(obj.data.polygons) == 24199
 
 
-def test_point_data_streaming_sequence_telemac_2d():
-    seq_obj = bpy.data.objects.get("My_TELEMAC_Streaming_Sim_2D_sequence", None)
-    assert seq_obj is not None
-    assert len(seq_obj.children) == 2
+def test_point_data_streaming_sequence_telemac_2d(streaming_sequence):
+    assert streaming_sequence is not None
+    assert len(streaming_sequence.children) == 2
 
     # Test point data (only test if they exist)
     # TODO: fix this, it is not working ...
-    # for obj in seq_obj.children:
+    # for obj in streaming_sequence.children:
     #     vertex_colors = obj.data.vertex_colors
     #     assert len(vertex_colors) == 2
     #     vu_s_vv_colors = vertex_colors.get("VITESSE U, SALINITE, VITESSE V", None)
@@ -178,39 +188,36 @@ def test_create_mesh_sequence_telemac_2d():
     assert bpy.ops.tbb.telemac_create_sequence('EXEC_DEFAULT', mode='NORMAL') == {"FINISHED"}
 
 
-def test_mesh_sequence_telemac_2d():
-    seq_obj = bpy.data.objects.get("My_TELEMAC_Sim_2D_sequence", None)
-    assert seq_obj is not None
-    assert len(seq_obj.children) == 2
+def test_mesh_sequence_telemac_2d(mesh_sequence):
+    assert mesh_sequence is not None
+    assert len(mesh_sequence.children) == 2
 
     # Change frame to load another time point for the mesh sequence
     bpy.context.scene.frame_set(4)
 
     # Test sequence data
-    for obj in seq_obj.children:
+    for obj in mesh_sequence.children:
         assert len(obj.data.shape_keys.key_blocks) == 5
 
 
-def test_geometry_mesh_sequence_telemac_2d():
-    seq_obj = bpy.data.objects.get("My_TELEMAC_Sim_2D_sequence", None)
-    assert seq_obj is not None
-    assert len(seq_obj.children) == 2
+def test_geometry_mesh_sequence_telemac_2d(mesh_sequence):
+    assert mesh_sequence is not None
+    assert len(mesh_sequence.children) == 2
 
     # Test geometry
-    for obj in seq_obj.children:
+    for obj in mesh_sequence.children:
         assert len(obj.data.vertices) == 12506
         assert len(obj.data.edges) == 36704
         assert len(obj.data.polygons) == 24199
 
 
-def test_point_data_mesh_sequence_telemac_2d():
-    seq_obj = bpy.data.objects.get("My_TELEMAC_Sim_2D_sequence", None)
-    assert seq_obj is not None
-    assert len(seq_obj.children) == 2
+def test_point_data_mesh_sequence_telemac_2d(mesh_sequence):
+    assert mesh_sequence is not None
+    assert len(mesh_sequence.children) == 2
 
     # Test point data (only test if they exist)
     # TODO: add this, not implemented yet
-    # for obj in seq_obj.children:
+    # for obj in mesh_sequence.children:
     #     vertex_colors = obj.data.vertex_colors
     #     assert len(vertex_colors) == 2
     #     vu_s_vv_colors = vertex_colors.get("VITESSE U, SALINITE, VITESSE V", None)
