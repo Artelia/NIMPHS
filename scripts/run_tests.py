@@ -4,9 +4,15 @@ import sys
 import zipfile
 from pathlib import Path
 
-from scripts.utils import zipdir, parser, remove_folders_matching_pattern, download_stop_motion_obj_addon
+from scripts.utils import (
+    zipdir,
+    parser,
+    bcolors,
+    remove_folders_matching_pattern,
+    download_stop_motion_obj_addon,
+    get_centered_message)
 
-print("---------------------------------------- RUN TESTS START ---------------------------------------------")
+print(f"{bcolors.OKBLUE}{get_centered_message(' RUN TESTS START ', '=')}{bcolors.ENDC}")
 
 try:
     import blender_addon_tester as BAT
@@ -42,7 +48,7 @@ def main():
 
     try:
         # Cleanup '__pychache__' folders in the 'src' folder
-        remove_folders_matching_pattern(os.path.join(os.path.relpath("."), "src"))
+        remove_folders_matching_pattern(os.path.join(os.path.abspath("."), "src"))
 
         # Download addons on which this addon depends
         smo_path, smo_module_name = download_stop_motion_obj_addon(here.joinpath("../cache").as_posix())
@@ -51,7 +57,7 @@ def main():
 
         # Zip addon
         if not addon.endswith(".zip"):
-            print("Zipping addon - " + name)
+            print("Zipping addon - path: " + os.path.abspath(addon))
             zipf = zipfile.ZipFile(name + ".zip", 'w', zipfile.ZIP_DEFLATED)
             zipdir("./" + name, zipf)
             zipf.close()
@@ -81,7 +87,7 @@ def main():
         print(e)
         exit_val = 1
 
-    print("---------------------------------------- RUN TESTS END ---------------------------------------------")
+    print(f"{bcolors.OKBLUE}{get_centered_message(' RUN TESTS END ', '=')}{bcolors.ENDC}")
     sys.exit(exit_val)
 
 

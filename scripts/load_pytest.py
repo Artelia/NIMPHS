@@ -1,18 +1,20 @@
 # <pep8 compliant>
 # Custom tests loader and runner for Blender's Python environment
-print("---------------------------------------- LOAD PYTEST ---------------------------------------------")
-print("Running file:", __file__, "from Blender")
-
 import os
 import sys
 from pathlib import Path
 
-sys.path.append(os.path.relpath("."))  # Make utils.py functions available in this file
+sys.path.append(os.path.abspath("."))  # Make utils.py functions available in this file
 from scripts.utils import (
     install,
     install_requirements,
     install_local_package,
-    remove_files_matching_pattern)
+    remove_files_matching_pattern,
+    bcolors,
+    get_centered_message)
+
+print(f"{bcolors.OKBLUE}{get_centered_message(' LOAD PYTEST ', '=')}{bcolors.ENDC}")
+print("Running file:", __file__, "from Blender")
 
 try:
     import pytest
@@ -35,23 +37,34 @@ default_tests_dir = Path(ADDON).parent.joinpath("tests")
 TESTS_PATH = os.environ.get("BLENDER_ADDON_TESTS_PATH", default_tests_dir.as_posix())
 
 # Install addon requirements
+
 try:
-    install_requirements(os.path.join(os.path.relpath("./scripts"), "requirements.txt"))
-except Exception as e:
-    print(e)
-    sys.exit(1)
+    import numpy
+    import matplotlib
+    # import pyvista
+except Exception:
+    try:
+        install_requirements(os.path.join(os.path.abspath("./scripts"), "requirements.txt"))
+    except Exception as e:
+        print(e)
+        sys.exit(1)
 
 # TODO: fix this
 # Temporary workaround to install a local custom version of pyvista and vtk
 # Reasons: no vtk support for pytyon 3.10+ and a small edit in pyvista which will be available later
 try:
+    import pyvista
+    assert pyvista.__version__ == "0.35.dev0"
+except Exception:
     from bpy.app import version
     if version > (3, 0, 0):
-        install("https://github.com/pyvista/pyvista-wheels/raw/main/vtk-9.1.0.dev0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl")
-    install_local_package(os.path.join(os.path.relpath("./../"), "pyvista"))
-except Exception as e:
-    print(e)
-    sys.exit(1)
+        install(
+            "https://github.com/pyvista/pyvista-wheels/raw/main/vtk-9.1.0.dev0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+            True)
+        install_local_package(os.path.join(os.path.abspath("./../"), "pyvista"))
+    else:
+        print("This addon is not suported for Blender versions under 3.0.0")
+        sys.exit(1)
 
 # TODO: fix this
 # Not the best solution but it works.
@@ -59,7 +72,7 @@ except Exception as e:
 # We should be able to add it through this line: sys.path.append(os.environ["LOCAL_PYTHONPATH"])
 try:
     import blender_addon_tester
-except BaseException:
+except Exception:
     pass
 
 if "blender_addon_tester" not in globals():
@@ -70,7 +83,7 @@ if "blender_addon_tester" not in globals():
         print(e)
         sys.exit(1)
 else:
-    print("Blender_addon_tester already installed.")
+    print("Blender_addon_tester - found")
 
 # Import utils functions
 from blender_addon_tester.addon_helper import zip_addon, change_addon_dir, install_addon, cleanup

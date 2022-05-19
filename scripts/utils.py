@@ -1,6 +1,7 @@
 # <pep8 compliant>
 import os
 import sys
+import shutil
 import fnmatch
 import zipfile
 import requests
@@ -8,8 +9,25 @@ import argparse
 import subprocess
 
 
-def install(package: str) -> None:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+
+def get_centered_message(message: str, char: str = "-") -> str:
+    terminal_size = shutil.get_terminal_size((80, 20))
+    return message.center(terminal_size.columns, char)
+
+
+def install(package: str, force: bool = False) -> None:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package, "--force-reinstall" if force else ""])
 
 
 def install_requirements(requirements: str) -> None:
@@ -62,7 +80,7 @@ def download_stop_motion_obj_addon(dest: str, version: str = "v2.2.0.alpha.18") 
         raise AttributeError("The given path does not exist:", dest)
 
     if (os.path.exists(os.path.join(dest, filename))):
-        print("Stop-Motion-OBJ found:", path)
+        print("Stop-Motion-OBJ - found:", path)
         return path, module_name
 
     # Else, download it and save it at the given destination
