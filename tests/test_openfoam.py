@@ -187,7 +187,8 @@ def test_create_streaming_sequence_openfoam():
 
     assert bpy.ops.tbb.openfoam_create_sequence('EXEC_DEFAULT') == {"FINISHED"}
 
-    # Test created sequence settings
+
+def test_streaming_sequence_openfoam():
     seq_obj = bpy.data.objects.get("My_OpenFOAM_Streaming_Sim_sequence", None)
     assert seq_obj is not None
     assert seq_obj.tbb.is_streaming_sequence == True
@@ -222,7 +223,7 @@ def test_geometry_streaming_sequence_openfoam():
     # Disable updates for this sequence object during the next tests
     seq_obj.tbb.settings.openfoam.streaming_sequence.update = False
 
-    # Test geometry (clip on alpha.water, 0.5, triangulated, decompose polyhedra)
+    # Test geometry (tp 11, clip on alpha.water, 0.5, triangulated, decompose polyhedra)
     assert len(seq_obj.data.vertices) == 55718
     assert len(seq_obj.data.edges) == 159953
     assert len(seq_obj.data.polygons) == 104450
@@ -264,7 +265,7 @@ def test_create_mesh_sequence_openfoam():
     assert bpy.ops.tbb.openfoam_create_sequence('EXEC_DEFAULT', mode='NORMAL') == {"FINISHED"}
 
 
-def test_geometry_mesh_sequence_openfoam():
+def test_mesh_sequence_openfoam():
     seq_obj = bpy.data.objects.get("My_OpenFOAM_Sim_sequence", None)
     assert seq_obj is not None
 
@@ -288,7 +289,27 @@ def test_geometry_mesh_sequence_openfoam():
     assert seq_obj.mesh_sequence_settings.isImported == False
     assert seq_obj.mesh_sequence_settings.fileName == ""
 
-    # Test geometry (clip on alpha.water, 0.5, triangulated, decompose polyhedra)
+
+def test_geometry_mesh_sequence_openfoam():
+    seq_obj = bpy.data.objects.get("My_OpenFOAM_Sim_sequence", None)
+    assert seq_obj is not None
+
+    # Test geometry (tp 11, clip on alpha.water, 0.5, triangulated, decompose polyhedra)
     assert len(seq_obj.data.vertices) == 55718
     assert len(seq_obj.data.edges) == 159953
     assert len(seq_obj.data.polygons) == 104450
+
+
+def test_point_data_mesh_sequence_openfoam():
+    seq_obj = bpy.data.objects.get("My_OpenFOAM_Sim_sequence", None)
+    assert seq_obj is not None
+
+    # Test point data (only test if they exist)
+    vertex_colors = seq_obj.data.vertex_colors
+    assert len(vertex_colors) == 2
+    u_colors = vertex_colors.get("U.x, U.y, U.z", None)
+    assert u_colors is not None
+    aw_p_prgh_colors = vertex_colors.get("alpha.water, p, p_rgh", None)
+    assert aw_p_prgh_colors is not None
+
+    # TODO: compare values (warning: color data are ramapped into [0; 1])
