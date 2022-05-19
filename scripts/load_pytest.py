@@ -61,7 +61,9 @@ except Exception:
         install(
             "https://github.com/pyvista/pyvista-wheels/raw/main/vtk-9.1.0.dev0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
             True)
-        install_local_package(os.path.join(os.path.abspath("./../"), "pyvista"))
+        install_local_package(os.path.join(os.path.abspath("./../"), "pyvista"), True)
+    elif version == (3, 0, 0):
+        install_local_package(os.path.join(os.path.abspath("./../"), "pyvista"), True)
     else:
         print("This addon is not suported for Blender versions under 3.0.0")
         sys.exit(1)
@@ -78,7 +80,7 @@ except Exception:
 if "blender_addon_tester" not in globals():
     try:
         print("Blender_addon_tester not found. Installaing...")
-        install("blender_addon_tester")
+        install("blender_addon_tester", True)
     except Exception as e:
         print(e)
         sys.exit(1)

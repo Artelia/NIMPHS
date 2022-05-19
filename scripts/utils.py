@@ -1,4 +1,5 @@
 # <pep8 compliant>
+from ast import arg
 import os
 import sys
 import shutil
@@ -27,15 +28,21 @@ def get_centered_message(message: str, char: str = "-") -> str:
 
 
 def install(package: str, force: bool = False) -> None:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package, "--force-reinstall" if force else ""])
+    args = [sys.executable, "-m", "pip", "install", package]
+    if force:
+        args.append("--force-reinstall")
+    subprocess.check_call(args)
 
 
 def install_requirements(requirements: str) -> None:
     subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", requirements])
 
 
-def install_local_package(path: str) -> None:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "-e", path])
+def install_local_package(path: str, force: bool = False) -> None:
+    args = [sys.executable, "-m", "pip", "install", "-e", path]
+    if force:
+        args.append("--force-reinstall")
+    subprocess.check_call(args)
 
 
 def zipdir(path: str, ziph: zipfile.ZipFile) -> None:
