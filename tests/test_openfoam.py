@@ -1,3 +1,4 @@
+# <pep8 compliant>
 import os
 import bpy
 
@@ -25,9 +26,11 @@ def test_import_openfoam():
     assert tmp_data.mesh is not None
     assert tmp_data.nb_time_points == 21
 
-    # Test preview object
+
+def test_geometry_imported_preview_object_openfoam():
     prw_obj = bpy.data.objects.get("TBB_OpenFOAM_preview", None)
     assert prw_obj is not None
+
     # Test geometry
     assert len(prw_obj.data.vertices) == 61616
     assert len(prw_obj.data.edges) == 182698
@@ -56,6 +59,8 @@ def test_normal_preview_object_openfoam():
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
 
+
+def test_geometry_normal_preview_object():
     prw_obj = bpy.data.objects.get("TBB_OpenFOAM_preview", None)
     assert prw_obj is not None
     # Test geometry
@@ -73,6 +78,8 @@ def test_normal_decompose_polyhedra_preview_object_openfoam():
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
 
+
+def test_geometry_normal_decompose_polyhedra_preview_object_openfoam():
     prw_obj = bpy.data.objects.get("TBB_OpenFOAM_preview", None)
     assert prw_obj is not None
     # Test geometry
@@ -90,6 +97,8 @@ def test_triangulated_preview_object_openfoam():
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
 
+
+def test_geometry_triangulated_preview_object_openfoam():
     prw_obj = bpy.data.objects.get("TBB_OpenFOAM_preview", None)
     assert prw_obj is not None
     # Test geometry
@@ -107,6 +116,8 @@ def test_triangulated_decompose_polyhedra_preview_object_openfoam():
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
 
+
+def test_geometry_triangulated_decompose_polyhedra_preview_object_openfoam():
     prw_obj = bpy.data.objects.get("TBB_OpenFOAM_preview", None)
     assert prw_obj is not None
     # Test geometry
@@ -138,15 +149,6 @@ def test_point_data_preview_object_openfoam():
 
 
 def test_preview_material_openfoam():
-    # Set preview settings
-    settings = bpy.context.scene.tbb.settings.openfoam
-    settings.decompose_polyhedra = True
-    settings.triangulate = True
-    settings.case_type = '0'
-    settings.preview_point_data = "alpha.water@value"
-
-    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
-
     # Test preview material
     prw_mat = bpy.data.materials.get("TBB_OpenFOAM_preview_material", None)
     assert prw_mat is not None
