@@ -3,7 +3,7 @@ from bpy.utils import previews
 from bpy.types import Scene, Object
 from bpy.props import PointerProperty
 from bpy.app import version as bl_version
-from bpy.app.handlers import frame_change_pre
+from bpy.app.handlers import frame_change_pre, frame_change_post
 
 # Remove error on building the docs, since fake-bpy-module defines version as 'None'
 if bl_version is None:
@@ -85,7 +85,7 @@ def register():
     # Custom app handlers
     frame_change_pre.append(update_openfoam_streaming_sequences)
     frame_change_pre.append(update_telemac_streaming_sequences)
-    frame_change_pre.append(update_telemac_mesh_sequence)
+    frame_change_post.append(update_telemac_mesh_sequence)
 
     # Add custom icons
     icons = previews.new()

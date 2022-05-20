@@ -465,7 +465,7 @@ def prepare_telemac_point_data_linear_interp(obj: Object, tmp_data: TBB_TelemacS
         obj (Object): object to interpolate
         tmp_data (TBB_TelemacStreamingSequenceProperty): temporary data
         time_point (int): current time point
-        time_steps (int): number of time temps between each time point
+        time_steps (int): number of time steps between time points
         point_data (list[str]): list of point data to import as vertex colors
         offset (int): corresponds to 'plane id' for meshes from 3D simulations. Defaults to 0.
 
@@ -638,7 +638,7 @@ def update_telemac_streaming_sequence_mesh(obj: Object, settings: TBB_TelemacStr
 
 
 @persistent
-def update_telemac_mesh_sequence(scene: Scene) -> None:
+def update_telemac_mesh_sequences(scene: Scene) -> None:
     frame = scene.frame_current
 
     if not scene.tbb.create_sequence_is_running:
@@ -646,4 +646,58 @@ def update_telemac_mesh_sequence(scene: Scene) -> None:
             settings = obj.tbb.settings.telemac
 
             if settings.is_mesh_sequence:
-                pass
+                time_points = get_read_time_point_from_active_shape_keys(obj.data)
+                print(time_points)
+
+
+def get_read_time_point_from_active_shape_keys(blender_mesh: Mesh,
+                                               threshold: float = 0.0001) -> dict[list[int], list[float]]:
+    """
+    Get left and right time points information for the currently read TELEMAC mesh sequence. Example of output:
+
+    .. code-block:: text
+
+        Context:
+        * TELEMAC mesh sequence: frame start = 12, anim length = 50.
+        * Shape keys are linearly interpolated (2 time steps between each time point)
+        * Current frame: 125
+
+            Timeline
+            Frames:     (12)⌄    (15)⌄                  (125)⌄
+                            *  +  +  *  ...   *  +  +  *  +  +  *  +  +  *  ...
+            Time points: (0)⌃     (1)⌃    (36)⌃    (37)⌃    (38)⌃    (39)⌃
+
+        Returns: {"time_points": [37, 38], "ids": [123, 126]}
+
+    Args:
+        blender_mesh (Mesh): mesh from which to get the information
+        threshold (float, optional): threshold on the shape_key value. Defaults to 0.0001.
+
+    Returns:
+        dict[list[int], list[float]]: sorted lists of time_points and their corresponding frames
+    """
+
+    output = {"time_points": [], "frames": []}
+    fcurves = blender_mesh.shape_keys.animation_data.action.fcurves
+    for fcurve, key_id in zip(fcurves, range(1, len(fcurves) + 1, 1)
+                              ):  # Start from 1 because there is one more shape_key ('Basis')
+        if blender_mesh.shape_keys.key_blocks[key_id].value > threshold:
+            output["frames"].append(fcurve.keyframe_points[1].co[0])
+            output["time_points"].append(key_id)
+
+    if len(output["time_points"]) == 1:
+        # If the time point is not an existing time point (value is not 1.0 for the shape_key)
+        if blender_mesh.shape_keys.key_blocks[output["time_points"][0]].value != 1.0:
+            # Check if it is between time points 0 and 1
+            if output["time_points"][0] == 1:
+                output["time_points"].append(0)
+                output["frames"].append(fcurves[0].keyframe_points[0].co[0])
+            else:
+                output["time_points"].append(len(fcurves))
+                output["frames"].append(fcurves[-1].keyframe_points[-1].co[0])
+
+    # Make sure it is always sorted
+    output["frames"].sort()
+    output["time_points"].sort()
+
+    return output
