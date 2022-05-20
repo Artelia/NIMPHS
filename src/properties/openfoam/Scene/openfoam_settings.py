@@ -33,8 +33,8 @@ class TBB_OpenfoamSettings(TBB_ModuleSceneSettings):
         name="Case type",
         description="The property indicates whether decomposed mesh or reconstructed mesh should be read",
         items=[
-            ("0", "Reconstructed", "Reconstructed mesh should be read"),
-            ("1", "Decomposed", "Decomposed mesh should be read"),
+            ("1", "Reconstructed", "Reconstructed mesh should be read"),
+            ("0", "Decomposed", "Decomposed mesh should be read"),
         ]
     )
 
