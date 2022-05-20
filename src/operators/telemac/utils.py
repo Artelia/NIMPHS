@@ -67,6 +67,8 @@ def run_one_step_create_mesh_sequence_telemac(context: Context, current_frame: i
         seq_obj.tbb.settings.telemac.is_mesh_sequence = True
         seq_obj.tbb.settings.telemac.mesh_sequence.import_point_data = settings.import_point_data
         seq_obj.tbb.settings.telemac.mesh_sequence.list_point_data = settings.list_point_data
+        seq_obj.tbb.settings.telemac.mesh_sequence.is_3d_simulation = tmp_data.is_3d
+        seq_obj.tbb.settings.telemac.mesh_sequence.file_path = settings.file_path
 
         # Parent objects
         for child in objects:
@@ -595,9 +597,9 @@ def update_telemac_streaming_sequence_mesh(obj: Object, settings: TBB_TelemacStr
 
     # Check if tmp_data is loaded
     tmp_data = settings.tmp_data
-    if not settings.tmp_data.is_ok():
+    if not tmp_data.is_ok():
         try:
-            settings.tmp_data.update(settings.file_path)
+            tmp_data.update(settings.file_path)
         except Exception as tmp_data_error:
             raise tmp_data_error from tmp_data_error
 
@@ -641,36 +643,56 @@ def update_telemac_streaming_sequence_mesh(obj: Object, settings: TBB_TelemacStr
 
 @persistent
 def update_telemac_mesh_sequences(scene: Scene) -> None:
-    tmp_data = scene.tbb.settings.telemac.tmp_data
-
     if not scene.tbb.create_sequence_is_running:
         for obj in scene.objects:
             obj_settings = obj.tbb.settings.telemac
 
             if obj_settings.is_mesh_sequence and obj_settings.mesh_sequence.import_point_data:
-                try:
-                    update_telemac_mesh_sequence_vertex_colors(obj, scene.frame_current, obj_settings.mesh_sequence,
-                                                               tmp_data)
-                except Exception as error:
-                    print("ERROR::update_telemac_mesh_sequences: " + obj.name + ", " + str(error))
+                # try:
+                update_telemac_mesh_sequence_vertex_colors(obj, scene.frame_current)
+                # except Exception as error:
+                #     print("ERROR::update_telemac_mesh_sequences: " + obj.name + ", " + str(error))
 
 
-def update_telemac_mesh_sequence_vertex_colors(seq_obj: Object, frame: int,
-                                               seq_settings: TBB_TelemacMeshSequenceProperty,
-                                               tmp_data: TBB_TelemacTemporaryData) -> None:
+def update_telemac_mesh_sequence_vertex_colors(seq_obj: Object, frame: int) -> None:
+    seq_settings = seq_obj.tbb.settings.telemac.mesh_sequence
+
+    # Check if tmp_data is loaded
+    tmp_data = seq_settings.tmp_data
+    if not tmp_data.is_ok():
+        try:
+            tmp_data.update(seq_settings.file_path)
+        except Exception as tmp_data_error:
+            raise tmp_data_error from tmp_data_error
+
     objects = seq_obj.children
     point_data = seq_settings.list_point_data.split(";")
+
     for obj, obj_id in zip(objects, range(len(objects))):
         info = get_read_time_point_from_active_shape_keys(obj.data)
         time_point = frame - info["frame_start"]
-        time_steps = np.abs(info["frames"][0] - info["frames"][1])
-        offset = id if tmp_data.is_3d else 0
-        res = prepare_telemac_point_data_linear_interp(obj, tmp_data, time_point, time_steps, point_data, offset=obj_id)
-        generate_vertex_colors(obj.data, *res)
+
+        # Make sure the time point is correct
+        if info["frame_start"] <= frame <= info["frame_end"] and time_point >= 0:
+            if len(info["frames"]) <= 1:  # Existing time point
+                time_steps = 0
+                time_point = info["time_points"][0]
+            else:
+                time_steps = np.abs(info["frames"][0] - info["frames"][1])
+
+            offset = obj_id if seq_settings.is_3d_simulation else 0
+
+            # Remove existing vertex colors
+            while obj.data.vertex_colors:
+                obj.data.vertex_colors.remove(obj.data.vertex_colors[0])
+
+            res = prepare_telemac_point_data_linear_interp(obj, tmp_data, time_point, time_steps,
+                                                           point_data, offset=offset)
+            generate_vertex_colors(obj.data, *res)
 
 
 def get_read_time_point_from_active_shape_keys(blender_mesh: Mesh,
-                                               threshold: float = 0.0001) -> dict[list[int], list[float], int]:
+                                               threshold: float = 0.0001) -> dict[list[int], list[float], int, int]:
     """
     Get time points information for the currently read TELEMAC mesh sequence. Example of output:
 
@@ -693,12 +715,18 @@ def get_read_time_point_from_active_shape_keys(blender_mesh: Mesh,
         threshold (float, optional): threshold on the shape_key value. Defaults to 0.0001.
 
     Returns:
-        dict[list[int], list[float], int]: sorted lists of time_points and their corresponding frames \
-             + starting frame of the sequence
+        dict[list[int], list[float], int, int]: sorted lists of time_points and their corresponding frames \
+             + start frame of the sequence + end frame of the sequence
     """
 
     fcurves = blender_mesh.shape_keys.animation_data.action.fcurves
-    output = {"time_points": [], "frames": [], "frame_start": fcurves[0].keyframe_points[0].co[0]}
+    output = {
+        "time_points": [],
+        "frames": [],
+        "frame_start": fcurves[0].keyframe_points[0].co[0],
+        "frame_end": fcurves[-1].keyframe_points[-1].co[0]
+    }
+
     for fcurve, key_id in zip(fcurves, range(1, len(fcurves) + 1, 1)
                               ):  # Start from 1 because there is one more shape_key ('Basis')
         if blender_mesh.shape_keys.key_blocks[key_id].value > threshold:
