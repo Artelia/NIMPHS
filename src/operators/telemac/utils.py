@@ -5,10 +5,10 @@ from bpy.types import Mesh, Object, Context, Scene
 
 import time
 import numpy as np
-from typing import Union
 
 from src.properties.telemac.temporary_data import TBB_TelemacTemporaryData
 from src.properties.telemac.telemac_interpolate import TBB_TelemacInterpolateProperty
+from src.properties.telemac.Object.telemac_mesh_sequence import TBB_TelemacMeshSequenceProperty
 from src.properties.telemac.Object.telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
 from src.operators.utils import (
     generate_object_from_data,
@@ -52,7 +52,6 @@ def run_one_step_create_mesh_sequence_telemac(context: Context, current_frame: i
             for obj in objects:
                 # Add 'Basis' shape key
                 obj.shape_key_add(name="Basis", from_mix=False)
-                obj.tbb.settings.telemac.is_mesh_sequence = True
                 # Add the object to the collection
                 collection.objects.link(obj)
 
@@ -65,6 +64,9 @@ def run_one_step_create_mesh_sequence_telemac(context: Context, current_frame: i
 
         # Create the sequence object
         seq_obj = bpy.data.objects.new(name=seq_obj_name, object_data=None)
+        seq_obj.tbb.settings.telemac.is_mesh_sequence = True
+        seq_obj.tbb.settings.telemac.mesh_sequence.import_point_data = settings.import_point_data
+        seq_obj.tbb.settings.telemac.mesh_sequence.list_point_data = settings.list_point_data
 
         # Parent objects
         for child in objects:
@@ -639,21 +641,38 @@ def update_telemac_streaming_sequence_mesh(obj: Object, settings: TBB_TelemacStr
 
 @persistent
 def update_telemac_mesh_sequences(scene: Scene) -> None:
-    frame = scene.frame_current
+    tmp_data = scene.tbb.settings.telemac.tmp_data
 
     if not scene.tbb.create_sequence_is_running:
         for obj in scene.objects:
-            settings = obj.tbb.settings.telemac
+            obj_settings = obj.tbb.settings.telemac
 
-            if settings.is_mesh_sequence:
-                time_points = get_read_time_point_from_active_shape_keys(obj.data)
-                print(time_points)
+            if obj_settings.is_mesh_sequence and obj_settings.mesh_sequence.import_point_data:
+                try:
+                    update_telemac_mesh_sequence_vertex_colors(obj, scene.frame_current, obj_settings.mesh_sequence,
+                                                               tmp_data)
+                except Exception as error:
+                    print("ERROR::update_telemac_mesh_sequences: " + obj.name + ", " + str(error))
+
+
+def update_telemac_mesh_sequence_vertex_colors(seq_obj: Object, frame: int,
+                                               seq_settings: TBB_TelemacMeshSequenceProperty,
+                                               tmp_data: TBB_TelemacTemporaryData) -> None:
+    objects = seq_obj.children
+    point_data = seq_settings.list_point_data.split(";")
+    for obj, obj_id in zip(objects, range(len(objects))):
+        info = get_read_time_point_from_active_shape_keys(obj.data)
+        time_point = frame - info["frame_start"]
+        time_steps = np.abs(info["frames"][0] - info["frames"][1])
+        offset = id if tmp_data.is_3d else 0
+        res = prepare_telemac_point_data_linear_interp(obj, tmp_data, time_point, time_steps, point_data, offset=obj_id)
+        generate_vertex_colors(obj.data, *res)
 
 
 def get_read_time_point_from_active_shape_keys(blender_mesh: Mesh,
-                                               threshold: float = 0.0001) -> dict[list[int], list[float]]:
+                                               threshold: float = 0.0001) -> dict[list[int], list[float], int]:
     """
-    Get left and right time points information for the currently read TELEMAC mesh sequence. Example of output:
+    Get time points information for the currently read TELEMAC mesh sequence. Example of output:
 
     .. code-block:: text
 
@@ -667,18 +686,19 @@ def get_read_time_point_from_active_shape_keys(blender_mesh: Mesh,
                             *  +  +  *  ...   *  +  +  *  +  +  *  +  +  *  ...
             Time points: (0)⌃     (1)⌃    (36)⌃    (37)⌃    (38)⌃    (39)⌃
 
-        Returns: {"time_points": [37, 38], "ids": [123, 126]}
+        Returns: {"time_points": [37, 38], "ids": [123, 126], "frame_start": 12}
 
     Args:
         blender_mesh (Mesh): mesh from which to get the information
         threshold (float, optional): threshold on the shape_key value. Defaults to 0.0001.
 
     Returns:
-        dict[list[int], list[float]]: sorted lists of time_points and their corresponding frames
+        dict[list[int], list[float], int]: sorted lists of time_points and their corresponding frames \
+             + starting frame of the sequence
     """
 
-    output = {"time_points": [], "frames": []}
     fcurves = blender_mesh.shape_keys.animation_data.action.fcurves
+    output = {"time_points": [], "frames": [], "frame_start": fcurves[0].keyframe_points[0].co[0]}
     for fcurve, key_id in zip(fcurves, range(1, len(fcurves) + 1, 1)
                               ):  # Start from 1 because there is one more shape_key ('Basis')
         if blender_mesh.shape_keys.key_blocks[key_id].value > threshold:

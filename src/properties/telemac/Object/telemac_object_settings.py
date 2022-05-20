@@ -3,6 +3,7 @@ from bpy.types import PropertyGroup
 from bpy.props import PointerProperty, StringProperty, BoolProperty
 
 from src.properties.telemac.Object.telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
+from src.properties.telemac.Object.telemac_mesh_sequence import TBB_TelemacMeshSequenceProperty
 
 
 class TBB_TelemacObjectSettings(PropertyGroup):
@@ -26,5 +27,8 @@ class TBB_TelemacObjectSettings(PropertyGroup):
         default=False
     )
 
-    #: TBB_TelemacStreamingSequenceProperty: TELEMAC streaming sequence properties
+    #: TBB_TelemacStreamingSequenceProperty: TELEMAC 'streaming sequence' properties
     streaming_sequence: PointerProperty(type=TBB_TelemacStreamingSequenceProperty)
+
+    #: TBB_TelemacMeshSequenceProperty: TELEMAC 'mesh sequence' properties
+    mesh_sequence: PointerProperty(type=TBB_TelemacMeshSequenceProperty)
