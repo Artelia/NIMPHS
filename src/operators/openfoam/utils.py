@@ -462,15 +462,12 @@ def load_openfoam_file(file_path: str, case_type: int = 1, decompose_polyhedra: 
     if not file.exists():
         return False, None
 
-    print("VALUE", case_type)
-
     if case_type == 1:
         # TODO: does this line can throw exceptions? How to manage errors here?
         file_reader = OpenFOAMReader(file_path)
     else:
         file_reader = POpenFOAMReader(file_path)
         file_reader.case_type = case_type
-        print("CASE TYPE:", file_reader.case_type)
         
     file_reader.decompose_polyhedra = decompose_polyhedra
     return True, file_reader
