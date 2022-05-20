@@ -1,6 +1,6 @@
 # <pep8 compliant>
 from bpy.types import PropertyGroup
-from bpy.props import PointerProperty, StringProperty
+from bpy.props import PointerProperty, StringProperty, BoolProperty
 
 from src.properties.telemac.Object.telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
 
@@ -17,6 +17,13 @@ class TBB_TelemacObjectSettings(PropertyGroup):
         name="Name of z-value",
         description="Name of the variable used for the 'z-values' of the vertices",
         default=""
+    )
+
+    #: bpy.props.BoolProperty: Indicate whether this object is part of a mesh sequence or not
+    is_mesh_sequence: BoolProperty(
+        name="Is part of a mesh sequence",
+        description="Indicate whether this object is part of a mesh sequence or not",
+        default=False
     )
 
     #: TBB_TelemacStreamingSequenceProperty: TELEMAC streaming sequence properties

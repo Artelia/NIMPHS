@@ -52,6 +52,7 @@ def run_one_step_create_mesh_sequence_telemac(context: Context, current_frame: i
             for obj in objects:
                 # Add 'Basis' shape key
                 obj.shape_key_add(name="Basis", from_mix=False)
+                obj.tbb.settings.telemac.is_mesh_sequence = True
                 # Add the object to the collection
                 collection.objects.link(obj)
 
@@ -634,3 +635,15 @@ def update_telemac_streaming_sequence_mesh(obj: Object, settings: TBB_TelemacStr
             generate_vertex_colors(obj.data, *res)
         except Exception as point_data_error:
             raise point_data_error from point_data_error
+
+
+@persistent
+def update_telemac_mesh_sequence(scene: Scene) -> None:
+    frame = scene.frame_current
+
+    if not scene.tbb.create_sequence_is_running:
+        for obj in scene.objects:
+            settings = obj.tbb.settings.telemac
+
+            if settings.is_mesh_sequence:
+                pass

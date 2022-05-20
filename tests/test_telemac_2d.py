@@ -198,6 +198,7 @@ def test_mesh_sequence_telemac_2d(mesh_sequence):
     # Test sequence data
     for obj in mesh_sequence.children:
         assert len(obj.data.shape_keys.key_blocks) == 5
+        assert obj.tbb.settings.telemac.is_mesh_sequence == True
 
 
 def test_geometry_mesh_sequence_telemac_2d(mesh_sequence):
