@@ -28,6 +28,32 @@ def streaming_sequence():
     return bpy.data.objects.get("My_TELEMAC_Streaming_Sim_3D_sequence", None)
 
 
+@pytest.fixture
+def frame_change_post():
+
+    def get_handler(name: str):
+        for handler in bpy.app.handlers.frame_change_post:
+            if handler.__name__ == name:
+                return handler
+
+        return None
+
+    return get_handler
+
+
+@pytest.fixture
+def frame_change_pre():
+
+    def get_handler(name: str):
+        for handler in bpy.app.handlers.frame_change_pre:
+            if handler.__name__ == name:
+                return handler
+
+        return None
+
+    return get_handler
+
+
 def test_import_telemac_3d():
     assert bpy.ops.tbb.import_telemac_file('EXEC_DEFAULT', filepath=FILE_PATH) == {"FINISHED"}
 
@@ -142,14 +168,33 @@ def test_create_streaming_sequence_telemac_3d():
     assert bpy.ops.tbb.telemac_create_sequence('EXEC_DEFAULT') == {"FINISHED"}
 
 
-def test_geometry_streaming_sequence_telemac_3d(streaming_sequence):
+def test_streaming_sequence_telemac_3d(streaming_sequence, frame_change_pre):
     assert streaming_sequence is not None
     assert len(streaming_sequence.children) == 16
 
-    # Change frame to load another time point for the streaming sequence
-    bpy.context.scene.frame_set(21)
+    # Force update telemac streaming sequences
+    handler = frame_change_pre("update_telemac_streaming_sequences")
+    assert handler is not None
+    handler(bpy.context.scene)
     # Disable updates for this sequence object during the next tests
     streaming_sequence.tbb.settings.telemac.streaming_sequence.update = False
+
+    # Test streaming sequence settings
+    assert streaming_sequence.tbb.is_streaming_sequence
+    seq_settings = streaming_sequence.tbb.settings.telemac.streaming_sequence
+    assert seq_settings is not None
+    assert seq_settings.name == "My_TELEMAC_Streaming_Sim_3D_sequence"
+    assert seq_settings.update == False
+    assert seq_settings.frame_start == 1
+    assert seq_settings.max_length == 31
+    assert seq_settings.anim_length == 31
+    assert seq_settings.import_point_data == True
+    assert seq_settings.list_point_data == "VITESSE U;SALINITE;VITESSE V;FOND;"
+
+
+def test_geometry_streaming_sequence_telemac_3d(streaming_sequence):
+    assert streaming_sequence is not None
+    assert len(streaming_sequence.children) == 16
 
     # Test geometry
     for obj in streaming_sequence.children:
@@ -164,13 +209,13 @@ def test_point_data_streaming_sequence_telemac_3d(streaming_sequence):
 
     # Test point data (only test if they exist)
     # TODO: fix this, it is not working ...
-    # for obj in streaming_sequence.children:
-    #     vertex_colors = obj.data.vertex_colors
-    #     assert len(vertex_colors) == 2
-    #     vu_s_vv_colors = vertex_colors.get("VITESSE U, SALINITE, VITESSE V", None)
-    #     assert vu_s_vv_colors is not None
-    #     f_colors = vertex_colors.get("FOND, None, None", None)
-    #     assert f_colors is not None
+    for obj in streaming_sequence.children:
+        vertex_colors = obj.data.vertex_colors
+        assert len(vertex_colors) == 2
+        vu_s_vv_colors = vertex_colors.get("VITESSE U, SALINITE, VITESSE V", None)
+        assert vu_s_vv_colors is not None
+        f_colors = vertex_colors.get("FOND, None, None", None)
+        assert f_colors is not None
 
     # TODO: compare values (warning: color data are ramapped into [0; 1])
 
@@ -182,23 +227,34 @@ def test_create_mesh_sequence_telemac_3d():
     settings["start_time_point"] = 0
     settings["end_time_point"] = 3
     settings.import_point_data = True
-    settings.list_point_data = "VITESSE U;VITESSE V;SALINITE"
+    settings.list_point_data = "VITESSE U;SALINITE;VITESSE V;FOND;"
     settings.sequence_name = "My_TELEMAC_Sim_3D"
 
     assert bpy.ops.tbb.telemac_create_sequence('EXEC_DEFAULT', mode='NORMAL') == {"FINISHED"}
 
 
-def test_mesh_sequence_telemac_3d(mesh_sequence):
+def test_mesh_sequence_telemac_3d(mesh_sequence, frame_change_post):
     assert mesh_sequence is not None
     assert len(mesh_sequence.children) == 16
 
-    # Change frame to load another time point for the mesh sequence
-    bpy.context.scene.frame_set(2)
+    # Force update telemac mesh sequences
+    handler = frame_change_post("update_telemac_mesh_sequences")
+    assert handler is not None
+    handler(bpy.context.scene)
+
+    # Test sequence object
+    assert mesh_sequence.tbb.settings.telemac.is_mesh_sequence == True
+    seq_settings = mesh_sequence.tbb.settings.telemac.mesh_sequence
+    assert seq_settings is not None
+    assert seq_settings.import_point_data == True
+    assert seq_settings.list_point_data == "VITESSE U;SALINITE;VITESSE V;FOND;"
+    assert seq_settings.file_path == FILE_PATH
+    assert seq_settings.is_3d_simulation == True
+    assert seq_settings.tmp_data is not None
 
     # Test sequence data
     for obj in mesh_sequence.children:
         assert len(obj.data.shape_keys.key_blocks) == 3
-        assert obj.tbb.settings.telemac.is_mesh_sequence == True
 
 
 def test_geometry_mesh_sequence_telemac_3d(mesh_sequence):

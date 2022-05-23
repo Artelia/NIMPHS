@@ -122,7 +122,7 @@ class SetupPlugin:
 
 
 try:
-    pytest_main_args = [TESTS_PATH, "-v", "-x"]
+    pytest_main_args = [TESTS_PATH]
     if COVERAGE_REPORTING is not False:
         pytest_main_args += ["--cov", "--cov-report", "term", "--cov-report", "xml"]
     exit_val = pytest.main(pytest_main_args, plugins=[SetupPlugin(ADDON)])

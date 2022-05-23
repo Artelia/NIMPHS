@@ -1,3 +1,4 @@
+# <pep8 compliant>
 import pytest
 from blender_addon_tester.addon_helper import get_version
 

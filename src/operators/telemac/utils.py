@@ -655,7 +655,7 @@ def update_telemac_streaming_sequence_mesh(obj: Object, settings: TBB_TelemacStr
 @persistent
 def update_telemac_mesh_sequences(scene: Scene) -> None:
     """
-    Update all TELEMAC 'mesh seuqhece' objects.
+    Update all TELEMAC 'mesh sequence' objects.
 
     Args:
         scene (Scene): scene

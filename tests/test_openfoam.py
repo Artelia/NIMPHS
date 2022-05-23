@@ -269,7 +269,7 @@ def test_create_mesh_sequence_openfoam():
     settings.list_point_data = "U;alpha.water;p;p_rgh"
     settings.sequence_name = "My_OpenFOAM_Sim"
 
-    bpy.context.scene.frame_set(1)
+    bpy.context.scene.frame_set(4)
     assert bpy.ops.tbb.openfoam_create_sequence('EXEC_DEFAULT', mode='NORMAL') == {"FINISHED"}
 
 
