@@ -315,7 +315,7 @@ def rescale_objects(objects: list[Object], dimensions: list[float], apply: bool 
             obj.select_set(False)
 
 
-def compute_interp_time_point(time_point: int, time_steps: int) -> Union[int, int, bool]:
+def compute_interp_time_point(time_point: int, time_steps: int) -> tuple[int, int, bool]:
     """
     Compute left time point and right time point for interpolation. It also indicates if
     the current time point is an existing time point.
@@ -325,7 +325,7 @@ def compute_interp_time_point(time_point: int, time_steps: int) -> Union[int, in
         time_steps (int): number of time steps between each time point
 
     Returns:
-        Union[int, int, bool]: left time point, right time point, existing time point
+        tuple[int, int, bool]: left time point, right time point, existing time point
     """
 
     modulo = time_point % (time_steps + 1)

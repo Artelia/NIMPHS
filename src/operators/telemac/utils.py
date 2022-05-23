@@ -470,9 +470,10 @@ def prepare_telemac_point_data_linear_interp(obj: Object, tmp_data: TBB_TelemacS
         tmp_data (TBB_TelemacStreamingSequenceProperty): temporary data
         time_info (dict): \
             {
-                "time_point" (int): current time point,
+                "frame" (int): current frame,
                 "time_steps" (int): number of time steps between time points,
                 "l_time_point (int): left time point,
+                "l_frame" (int): frame which corresponds to the left time point,
                 "r_time_point (int): right time point,
                 "existing_time_point" (bool): if the time point is an existing time point
             }
@@ -501,7 +502,8 @@ def prepare_telemac_point_data_linear_interp(obj: Object, tmp_data: TBB_TelemacS
         except Exception as point_data_error:
             raise point_data_error from point_data_error
 
-        percentage = (time_info["time_point"] % (time_info["time_steps"] + 1)) / (time_info["time_steps"] + 1)
+        percentage = np.abs(time_info["frame"] - time_info["l_frame"]) / (time_info["time_steps"] + 1)
+        print("PERCENTAGE:", percentage)
 
         # Linearly interpolate
         color_data = l_color_data
@@ -570,7 +572,7 @@ def update_telemac_streaming_sequences(scene: Scene) -> None:
                         objects = obj.children
                         for obj, id in zip(objects, range(len(objects))):
                             update_telemac_streaming_sequence_mesh(obj, settings, time_point, id, interpolate,
-                                                                point_data)
+                                                                   point_data)
 
                     except Exception as error:
                         print("ERROR::update_telemac_streaming_sequences: " + settings.name + ", " + str(error))
@@ -672,89 +674,18 @@ def update_telemac_mesh_sequence_vertex_colors(seq_obj: Object, frame: int) -> N
     point_data = seq_settings.list_point_data.split(";")
 
     for obj, obj_id in zip(objects, range(len(objects))):
-        info = get_read_time_point_from_active_shape_keys(obj.data)
-        time_point = frame - info["frame_start"]
 
-        # Make sure the time point is correct
-        if info["frame_start"] <= frame <= info["frame_end"] and time_point >= 0:
-            if len(info["frames"]) == 0:  # First time point
-                time_steps = 0
-                time_point = 0
-            elif len(info["frames"]) == 1:
-                time_steps = 0
-                time_point = info["time_points"][0]
-            else:
-                time_steps = np.abs(info["frames"][0] - info["frames"][1])
+        offset = obj_id if seq_settings.is_3d_simulation else 0
 
-            offset = obj_id if seq_settings.is_3d_simulation else 0
+        # Remove existing vertex colors
+        while obj.data.vertex_colors:
+            obj.data.vertex_colors.remove(obj.data.vertex_colors[0])
 
-            # Remove existing vertex colors
-            while obj.data.vertex_colors:
-                obj.data.vertex_colors.remove(obj.data.vertex_colors[0])
-
-            time_info = get_time_info_liear_interp(time_point, time_steps)
+        time_info = get_time_info_linear_interp_mesh_sequence(obj, frame)
+        print(time_info)
+        if time_info is not None:
             res = prepare_telemac_point_data_linear_interp(obj, tmp_data, time_info, point_data, offset=offset)
             generate_vertex_colors(obj.data, *res)
-
-
-def get_read_time_point_from_active_shape_keys(blender_mesh: Mesh,
-                                               threshold: float = 0.0001) -> dict[list[int], list[float], int, int]:
-    """
-    Get time points information for the currently read TELEMAC mesh sequence. Example of output:
-
-    .. code-block:: text
-
-        Context:
-        * TELEMAC mesh sequence: frame start = 12, anim length = 50.
-        * Shape keys are linearly interpolated (2 time steps between each time point)
-        * Current frame: 125
-
-            Timeline
-            Frames:     (12)⌄    (15)⌄                  (125)⌄
-                            *  +  +  *  ...   *  +  +  *  +  +  *  +  +  *  ...
-            Time points: (0)⌃     (1)⌃    (36)⌃    (37)⌃    (38)⌃    (39)⌃
-
-        Returns: {"time_points": [37, 38], "ids": [123, 126], "frame_start": 12}
-
-    Args:
-        blender_mesh (Mesh): mesh from which to get the information
-        threshold (float, optional): threshold on the shape_key value. Defaults to 0.0001.
-
-    Returns:
-        dict[list[int], list[float], int, int]: sorted lists of time_points and their corresponding frames \
-             + start frame of the sequence + end frame of the sequence
-    """
-
-    fcurves = blender_mesh.shape_keys.animation_data.action.fcurves
-    output = {
-        "time_points": [],
-        "frames": [],
-        "frame_start": fcurves[0].keyframe_points[0].co[0],
-        "frame_end": fcurves[-1].keyframe_points[-1].co[0]
-    }
-
-    for fcurve, key_id in zip(fcurves, range(1, len(fcurves) + 1, 1)
-                              ):  # Start from 1 because there is one more shape_key ('Basis')
-        if blender_mesh.shape_keys.key_blocks[key_id].value > threshold:
-            output["frames"].append(fcurve.keyframe_points[1].co[0])
-            output["time_points"].append(key_id)
-
-    if len(output["time_points"]) == 1:
-        # If the time point is not an existing time point (value is not 1.0 for the shape_key)
-        if blender_mesh.shape_keys.key_blocks[output["time_points"][0]].value != 1.0:
-            # Check if it is between time points 0 and 1
-            if output["time_points"][0] == 1:
-                output["time_points"].append(0)
-                output["frames"].append(fcurves[0].keyframe_points[0].co[0])
-            else:
-                output["time_points"].append(len(fcurves))
-                output["frames"].append(fcurves[-1].keyframe_points[-1].co[0])
-
-    # Make sure it is always sorted
-    output["frames"].sort()
-    output["time_points"].sort()
-
-    return output
 
 
 def get_time_info_liear_interp(time_point: int, time_steps: int):
@@ -773,3 +704,115 @@ def get_time_info_liear_interp(time_point: int, time_steps: int):
     time_info["time_steps"] = time_steps
 
     return time_info
+
+
+def get_time_info_linear_interp_mesh_sequence(obj: Object, frame: int):
+    # Get info from shape keys
+    info = get_time_info_from_active_shape_keys(obj.data)
+
+    # Make sure the time point is correct
+    if info["frame_start"] <= frame <= info["frame_end"]:
+        if info["state"] == 'BASIS':
+            return {"frame": frame,
+                    "time_steps": 0,
+                    "l_time_point": 0,
+                    "l_frame": info["frame_start"],
+                    "r_time_point": 1,
+                    "existing_time_point": True}
+        elif info["state"] == 'EXISTING':
+            return {"frame": frame,
+                    "time_steps": 0,
+                    "l_time_point": info["time_points"][0],
+                    "l_frame": info["frames"][0],
+                    "r_time_point": info["time_points"][0] + 1,
+                    "existing_time_point": True}
+        elif info["state"] == 'INTERPOLATED':
+            return {"frame": frame,
+                    "time_steps": np.abs(info["frames"][0] - info["frames"][1]) - 1,
+                    "l_time_point": info["time_points"][0],
+                    "l_frame": info["frames"][0],
+                    "r_time_point": info["time_points"][1],
+                    "existing_time_point": False}
+        else:
+            return None
+
+    else:
+        return None
+
+
+def get_time_info_from_active_shape_keys(blender_mesh: Mesh,
+                                         threshold: float = 0.0001) -> dict[str, list[int], list[float], int, int]:
+    """
+    Get time points information for the currently read TELEMAC mesh sequence.
+
+    .. code-block:: text
+
+        Example of output:
+        * TELEMAC mesh sequence: frame start = 12, anim length = 50.
+        * Shape keys are linearly interpolated (2 time steps between each time point)
+        * Current frame: 125
+
+            Timeline
+            Frames:     (12)⌄    (15)⌄                  (125)⌄                       (159)⌄
+                            *  +  +  *  ...   *  +  +  *  +  +  *  +  +  *  ...  *  +  +  *
+            Time points: (0)⌃     (1)⌃    (36)⌃    (37)⌃    (38)⌃    (39)⌃            (49)⌃
+
+        Returns:
+        {
+            "state": enum in ['BASIS', 'EXISTING', 'INTERPOLATED'] here 'INTERPOLATED',
+            "time_points": [37, 38],
+            "ids": [123, 126],
+            "frame_start": 12,
+            "frame_end": 159
+        }
+
+    Args:
+        blender_mesh (Mesh): mesh from which to get the information
+        threshold (float, optional): threshold on the shape_key value. Defaults to 0.0001.
+
+    Returns:
+        dict[str, list[int], list[float], int, int]: time point information
+    """
+
+    fcurves = blender_mesh.shape_keys.animation_data.action.fcurves
+    output = {
+        "state": "",
+        "time_points": [],
+        "frames": [],
+        "frame_start": fcurves[0].keyframe_points[0].co[0],
+        "frame_end": fcurves[-1].keyframe_points[-1].co[0]
+    }
+
+    # Range starts from 1 because there is one more shape_key ('Basis')
+    for fcurve, key_id in zip(fcurves, range(1, len(fcurves) + 1, 1)):
+        if blender_mesh.shape_keys.key_blocks[key_id].value > threshold:
+            output["frames"].append(fcurve.keyframe_points[1].co[0])
+            output["time_points"].append(key_id)
+
+    # Check more precise info on time points
+    if len(output["time_points"]) == 0:
+        output["state"] = 'BASIS'
+    elif len(output["time_points"]) == 1:
+        # If the time point is not an existing time point (value is not 1.0 for the shape_key)
+        if blender_mesh.shape_keys.key_blocks[output["time_points"][0]].value != 1.0:
+            # Check if it is between time points 0 and 1
+            if output["time_points"][0] == 1:
+                # First time point
+                output["state"] = 'INTERPOLATED'
+                output["time_points"].append(0)
+                output["frames"].append(fcurves[0].keyframe_points[0].co[0])
+            else:
+                # Last time point
+                output["state"] = 'INTERPOLATED'
+                output["time_points"].append(len(fcurves))
+                output["frames"].append(fcurves[-1].keyframe_points[-1].co[0])
+        else:
+            output["state"] = 'EXISTING'
+    elif len(output["time_points"]) == 2:
+        output["state"] = 'INTERPOLATED'
+
+    # Make sure it is always sorted
+    output["frames"].sort()
+    output["time_points"].sort()
+
+    return output
