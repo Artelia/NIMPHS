@@ -109,7 +109,8 @@ class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
         try:
             start = time.time()
             run_one_step_create_mesh_sequence_telemac(context, self.current_frame, time_point,
-                                                      self.start_time_point, self.user_sequence_name)
+                                                      self.start_time_point, self.end_time_point,
+                                                      self.user_sequence_name)
             el_time = "{:.4f}".format(time.time() - start)  # el_time = elapsed time
             print("CreateSequence::TELEMAC: " + el_time + "s, time_point = " + str(time_point))
         except Exception as error:

@@ -21,7 +21,7 @@ from src.operators.utils import (
 
 
 def run_one_step_create_mesh_sequence_telemac(context: Context, current_frame: int, current_time_point: int,
-                                              start_time_point: int, user_sequence_name: str):
+                                              start_time_point: int, end_time_point: int, user_sequence_name: str):
     """
     Run one step of the 'create mesh sequence' for the TELEMAC module.
 
@@ -30,6 +30,7 @@ def run_one_step_create_mesh_sequence_telemac(context: Context, current_frame: i
         current_frame (int): current frame
         current_time_point (int): current time point
         start_time_point (int): start time point
+        end_time_point (int): end time point
         user_sequence_name (str): user defined sequence name
 
     Raises:
@@ -87,7 +88,7 @@ def run_one_step_create_mesh_sequence_telemac(context: Context, current_frame: i
             else:
                 vertices = generate_mesh_data(tmp_data, mesh_is_3d=True, offset=id, time_point=time_point)
 
-            set_new_shape_key(obj, vertices.flatten(), str(time_point), current_frame)
+            set_new_shape_key(obj, vertices.flatten(), str(time_point), current_frame, time_point == end_time_point)
 
 
 def generate_mesh_data(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, offset: int = 0,
@@ -507,7 +508,6 @@ def prepare_telemac_point_data_linear_interp(obj: Object, tmp_data: TBB_TelemacS
             raise point_data_error from point_data_error
 
         percentage = np.abs(time_info["frame"] - time_info["l_frame"]) / (time_info["time_steps"] + 1)
-        print("PERCENTAGE:", percentage)
 
         # Linearly interpolate
         color_data = l_color_data
@@ -520,7 +520,7 @@ def prepare_telemac_point_data_linear_interp(obj: Object, tmp_data: TBB_TelemacS
         return l_color_data  # If it is an existing time point, no need to interpolate
 
 
-def set_new_shape_key(obj: Object, vertices: np.ndarray, name: str, frame: int) -> None:
+def set_new_shape_key(obj: Object, vertices: np.ndarray, name: str, frame: int, end: bool = False) -> None:
     """
     Add a shape key to the object using the given vertices. It also set a keyframe with value = 1.0 at the given frame
     and add keyframes at value = 0.0 around the frame (-1 and +1).
@@ -530,6 +530,7 @@ def set_new_shape_key(obj: Object, vertices: np.ndarray, name: str, frame: int) 
         vertices (np.ndarray): new vertices values
         name (str): name of the shape key
         frame (int): the frame on which the keyframe is inserted
+        end (bool): indicate if this the shape key to add is the last one. Defaults to False.
     """
 
     obj.data.vertices.foreach_set("co", vertices.flatten())
@@ -541,7 +542,8 @@ def set_new_shape_key(obj: Object, vertices: np.ndarray, name: str, frame: int) 
     block.keyframe_insert("value", frame=frame, index=-1)
     block.value = 0.0
     block.keyframe_insert("value", frame=frame - 1, index=-1)
-    block.keyframe_insert("value", frame=frame + 1, index=-1)
+    if not end:
+        block.keyframe_insert("value", frame=frame + 1, index=-1)
 
 
 @persistent
@@ -567,7 +569,7 @@ def update_telemac_streaming_sequences(scene: Scene) -> None:
                 # Compute limit
                 limit = settings.frame_start + settings.anim_length
                 if interpolate.type != 'NONE':
-                    limit += settings.anim_length * (interpolate.time_steps + 1) - interpolate.time_steps
+                    limit += (settings.anim_length - 1) * interpolate.time_steps
 
                 if frame >= settings.frame_start and frame < limit:
                     start = time.time()
@@ -723,7 +725,7 @@ def get_time_info_interp_mesh_sequence(obj: Object, frame: int):
             return {
                 "frame": frame,
                 "time_steps": 0,
-                "l_time_point": 0,
+                "l_time_point": info["start_offset"],
                 "l_frame": info["frame_start"],
                 "r_time_point": 1,
                 "existing_time_point": True
@@ -753,8 +755,7 @@ def get_time_info_interp_mesh_sequence(obj: Object, frame: int):
         return None
 
 
-def compute_interp_time_info_mesh_sequence(blender_mesh: Mesh,
-                                           threshold: float = 0.0001) -> dict[str, list[int], list[float], int, int]:
+def compute_interp_time_info_mesh_sequence(blender_mesh: Mesh, threshold: float = 0.0001) -> dict:
     """
     Get time points information for the currently read TELEMAC mesh sequence.
 
@@ -773,6 +774,7 @@ def compute_interp_time_info_mesh_sequence(blender_mesh: Mesh,
         Returns:
         {
             "state": enum in ['BASIS', 'EXISTING', 'INTERPOLATED'] here 'INTERPOLATED',
+            "start_offset": 0,
             "time_points": [37, 38],
             "ids": [123, 126],
             "frame_start": 12,
@@ -784,12 +786,14 @@ def compute_interp_time_info_mesh_sequence(blender_mesh: Mesh,
         threshold (float, optional): threshold on the shape_key value. Defaults to 0.0001.
 
     Returns:
-        dict[str, list[int], list[float], int, int]: time point information
+        dict: time point information
     """
 
     fcurves = blender_mesh.shape_keys.animation_data.action.fcurves
+    start_offset = int(blender_mesh.shape_keys.key_blocks[1].name) - 1
     output = {
         "state": "",
+        "start_offset": start_offset,
         "time_points": [],
         "frames": [],
         "frame_start": fcurves[0].keyframe_points[0].co[0],
@@ -800,19 +804,19 @@ def compute_interp_time_info_mesh_sequence(blender_mesh: Mesh,
     for fcurve, key_id in zip(fcurves, range(1, len(fcurves) + 1, 1)):
         if blender_mesh.shape_keys.key_blocks[key_id].value > threshold:
             output["frames"].append(fcurve.keyframe_points[1].co[0])
-            output["time_points"].append(key_id)
+            output["time_points"].append(key_id + start_offset)
 
     # Check more precise info on time points
     if len(output["time_points"]) == 0:
         output["state"] = 'BASIS'
     elif len(output["time_points"]) == 1:
         # If the time point is not an existing time point (value is not 1.0 for the shape_key)
-        if blender_mesh.shape_keys.key_blocks[output["time_points"][0]].value != 1.0:
+        if blender_mesh.shape_keys.key_blocks[output["time_points"][0] - start_offset].value != 1.0:
             # Check if it is between time points 0 and 1
             if output["time_points"][0] == 1:
                 # First time point
                 output["state"] = 'INTERPOLATED'
-                output["time_points"].append(0)
+                output["time_points"].append(start_offset)
                 output["frames"].append(fcurves[0].keyframe_points[0].co[0])
             else:
                 # Last time point
