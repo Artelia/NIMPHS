@@ -161,7 +161,7 @@ def test_create_streaming_sequence_telemac_3d():
     settings.sequence_name = "My_TELEMAC_Streaming_Sim_3D"
     settings.import_point_data = True
     settings.list_point_data = "VITESSE U;SALINITE;VITESSE V;FOND;"
-    settings.frame_start = 1
+    settings.frame_start = 0
     settings.anim_length = 31
     settings.sequence_type = "streaming_sequence"
 
@@ -185,7 +185,7 @@ def test_streaming_sequence_telemac_3d(streaming_sequence, frame_change_pre):
     assert seq_settings is not None
     assert seq_settings.name == "My_TELEMAC_Streaming_Sim_3D_sequence"
     assert seq_settings.update == False
-    assert seq_settings.frame_start == 1
+    assert seq_settings.frame_start == 0
     assert seq_settings.max_length == 31
     assert seq_settings.anim_length == 31
     assert seq_settings.import_point_data == True
@@ -203,9 +203,14 @@ def test_geometry_streaming_sequence_telemac_3d(streaming_sequence):
         assert len(obj.data.polygons) == 24199
 
 
-def test_point_data_streaming_sequence_telemac_3d(streaming_sequence):
+def test_point_data_streaming_sequence_telemac_3d(streaming_sequence, frame_change_pre):
     assert streaming_sequence is not None
     assert len(streaming_sequence.children) == 16
+
+    # Force update telemac streaming sequences
+    handler = frame_change_pre("update_telemac_streaming_sequences")
+    assert handler is not None
+    handler(bpy.context.scene)
 
     # Test point data (only test if they exist)
     # TODO: fix this, it is not working ...
@@ -268,18 +273,22 @@ def test_geometry_mesh_sequence_telemac_3d(mesh_sequence):
         assert len(obj.data.polygons) == 24199
 
 
-def test_point_data_mesh_sequence_telemac_3d(mesh_sequence):
+def test_point_data_mesh_sequence_telemac_3d(mesh_sequence, frame_change_post):
     assert mesh_sequence is not None
     assert len(mesh_sequence.children) == 16
 
+    # Force update telemac mesh sequences
+    handler = frame_change_post("update_telemac_mesh_sequences")
+    assert handler is not None
+    handler(bpy.context.scene)
+
     # Test point data (only test if they exist)
-    # TODO: add this, not implemented yet
-    # for obj in mesh_sequence.children:
-    #     vertex_colors = obj.data.vertex_colors
-    #     assert len(vertex_colors) == 2
-    #     vu_s_vv_colors = vertex_colors.get("VITESSE U, SALINITE, VITESSE V", None)
-    #     assert vu_s_vv_colors is not None
-    #     f_colors = vertex_colors.get("FOND, None, None", None)
-    #     assert f_colors is not None
+    for obj in mesh_sequence.children:
+        vertex_colors = obj.data.vertex_colors
+        assert len(vertex_colors) == 2
+        vu_s_vv_colors = vertex_colors.get("VITESSE U, SALINITE, VITESSE V", None)
+        assert vu_s_vv_colors is not None
+        f_colors = vertex_colors.get("FOND, None, None", None)
+        assert f_colors is not None
 
     # TODO: compare values (warning: color data are ramapped into [0; 1])

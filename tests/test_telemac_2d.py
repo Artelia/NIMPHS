@@ -57,6 +57,10 @@ def frame_change_pre():
 def test_import_telemac_2d():
     assert bpy.ops.tbb.import_telemac_file('EXEC_DEFAULT', filepath=FILE_PATH) == {"FINISHED"}
 
+    # Change frame to load another time point for the mesh sequence
+    # WARNING: next tests are based on the following frame
+    bpy.context.scene.frame_set(1)
+
     # Test temporary data default parameters
     tmp_data = bpy.context.scene.tbb.settings.telemac.tmp_data
     assert tmp_data is not None

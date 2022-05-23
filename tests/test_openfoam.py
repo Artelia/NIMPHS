@@ -227,7 +227,8 @@ def test_streaming_sequence_openfoam(streaming_sequence):
 def test_geometry_streaming_sequence_openfoam(streaming_sequence):
     assert streaming_sequence is not None
 
-    # Change frame to load another time point for the streaming sequence
+    # Change frame to load another time point for the mesh sequence
+    # WARNING: next tests are based on the following frame
     bpy.context.scene.frame_set(11)
     # Disable updates for this sequence object during the next tests
     streaming_sequence.tbb.settings.openfoam.streaming_sequence.update = False
@@ -269,6 +270,8 @@ def test_create_mesh_sequence_openfoam():
     settings.list_point_data = "U;alpha.water;p;p_rgh"
     settings.sequence_name = "My_OpenFOAM_Sim"
 
+    # Change frame to create the mesh sequence from another frame
+    # WARNING: next tests are based on the following frame
     bpy.context.scene.frame_set(4)
     assert bpy.ops.tbb.openfoam_create_sequence('EXEC_DEFAULT', mode='NORMAL') == {"FINISHED"}
 
@@ -277,6 +280,7 @@ def test_mesh_sequence_openfoam(mesh_sequence):
     assert mesh_sequence is not None
 
     # Change frame to load another time point for the mesh sequence
+    # WARNING: next tests are based on the following frame
     bpy.context.scene.frame_set(11)
 
     # Test mesh sequence (settings from Stop-Motion-OBJ)
