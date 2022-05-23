@@ -43,6 +43,10 @@ Object
 .. autoclass:: src.properties.telemac.Object.telemac_streaming_sequence.TBB_TelemacStreamingSequenceProperty
    :members:
    :show-inheritance:
+
+.. autoclass:: src.properties.telemac.Object.telemac_mesh_sequence.TBB_TelemacMeshSequenceProperty
+   :members:
+   :show-inheritance:
    
 .. _telemac_properties_utils:
 

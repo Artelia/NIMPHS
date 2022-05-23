@@ -171,14 +171,14 @@ def generate_mesh_data_linear_interp(obj: Object, tmp_data: TBB_TelemacStreaming
         obj (Object): object to interpolate
         tmp_data (TBB_TelemacStreamingSequenceProperty): temporary data
         time_info (dict): \
-            {
-                "frame" (int): current frame,
-                "time_steps" (int): number of time steps between time points,
-                "l_time_point (int): left time point,
-                "l_frame" (int): frame which corresponds to the left time point,
-                "r_time_point (int): right time point,
-                "existing_time_point" (bool): if the time point is an existing time point
-            }
+            { \
+                "frame" (int): current frame, \
+                "time_steps" (int): number of time steps between time points, \
+                "l_time_point (int): left time point, \
+                "l_frame" (int): frame which corresponds to the left time point, \
+                "r_time_point (int): right time point, \
+                "existing_time_point" (bool): if the time point is an existing time point \
+            } \
         offset (int): corresponds to 'plane id' for meshes from 3D simulations. Defaults to 0.
 
     Raises:
@@ -475,14 +475,14 @@ def prepare_telemac_point_data_linear_interp(obj: Object, tmp_data: TBB_TelemacS
         obj (Object): object to interpolate
         tmp_data (TBB_TelemacStreamingSequenceProperty): temporary data
         time_info (dict): \
-            {
-                "frame" (int): current frame,
-                "time_steps" (int): number of time steps between time points,
-                "l_time_point (int): left time point,
-                "l_frame" (int): frame which corresponds to the left time point,
-                "r_time_point (int): right time point,
-                "existing_time_point" (bool): if the left time point is an existing time point
-            }
+            { \
+                "frame" (int): current frame, \
+                "time_steps" (int): number of time steps between time points, \
+                "l_time_point (int): left time point, \
+                "l_frame" (int): frame which corresponds to the left time point, \
+                "r_time_point (int): right time point, \
+                "existing_time_point" (bool): if the left time point is an existing time point \
+            } \
         point_data (list[str]): list of point data to import as vertex colors
         offset (int): corresponds to 'plane id' for meshes from 3D simulations. Defaults to 0.
 
@@ -742,7 +742,8 @@ def get_time_info_interp_streaming_sequence(frame: int, frame_start: int, time_s
                 "l_time_point" (int): left time point,
                 "l_frame" (int): corresponding frame for the left time point,
                 "r_time_point" (int): right time point,
-                "existing_time_point" (bool): indicate whether the left time point is an existing time point or not
+                "existing_time_point" (bool): indicate whether the left time point is an
+                existing time point or not
             }
     """
 
@@ -808,7 +809,8 @@ def get_time_info_interp_mesh_sequence(obj: Object, frame: int) -> Union[dict, N
                 "l_time_point" (int): left time point,
                 "l_frame" (int): corresponding frame for the left time point,
                 "r_time_point" (int): right time point,
-                "existing_time_point" (bool): indicate whether the left time point is an existing time point or not
+                "existing_time_point" (bool): indicate whether the left time point is an
+                existing time point or not
             }
     """
 

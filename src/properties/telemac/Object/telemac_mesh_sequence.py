@@ -19,6 +19,9 @@ class TBB_TelemacMeshSequenceProperty(PropertyGroup):
         default="",
     )
 
+    #: TBB_TelemacTemporaryData: temporary data.
+    tmp_data = TBB_TelemacTemporaryData()
+
     #: bpy.types.BoolProperty: Import point data as vertex color groups
     import_point_data: BoolProperty(
         name="Import point data",
@@ -39,5 +42,3 @@ class TBB_TelemacMeshSequenceProperty(PropertyGroup):
         description="Indicate whether this mesh sequence is from a 3D simulation or not",
         default=False
     )
-
-    tmp_data = TBB_TelemacTemporaryData()
