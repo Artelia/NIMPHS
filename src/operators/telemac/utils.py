@@ -664,33 +664,42 @@ def update_telemac_mesh_sequences(scene: Scene) -> None:
     if not scene.tbb.create_sequence_is_running:
         for obj in scene.objects:
             obj_settings = obj.tbb.settings.telemac
+            seq_settings = obj_settings.mesh_sequence
 
             if obj_settings.is_mesh_sequence and obj_settings.mesh_sequence.import_point_data:
-                time_info = get_time_info_interp_mesh_sequence(obj, scene.frame_current)
+                # Upate children objects of 'mesh sequence'
+                cumulated_time = 0.0
 
-                if time_info is not None:
-                    start = time.time()
-                    try:
-                        update_telemac_mesh_sequence_vertex_colors(obj, time_info)
-                    except Exception as error:
-                        print("ERROR::update_telemac_mesh_sequences: " + obj.name + ", " + str(error))
+                objects = obj.children
+                for child, child_id in zip(objects, range(len(objects))):
+                    time_info = get_time_info_interp_mesh_sequence(child, scene.frame_current)
 
-                    print("Update::TELEMAC: " + obj.name + ", " + "{:.4f}".format(time.time() - start) + "s")
+                    if time_info is not None:
+                        try:
+                            start = time.time()
+                            update_telemac_mesh_sequence_vertex_colors(child, child_id, seq_settings, time_info)
+                            cumulated_time += time.time() - start
+                        except Exception as error:
+                            print("ERROR::update_telemac_mesh_sequences: " + child.name + ", " + str(error))
+
+                if cumulated_time > 0.0:
+                    print("Update::TELEMAC: " + obj.name + ", " + "{:.4f}".format(cumulated_time) + "s")
 
 
-def update_telemac_mesh_sequence_vertex_colors(seq_obj: Object, time_info: dict) -> None:
+def update_telemac_mesh_sequence_vertex_colors(obj: Object, obj_id: int, seq_settings: TBB_TelemacMeshSequenceProperty,
+                                               time_info: dict) -> None:
     """
-    Update vertex colors of the given TELEMAC 'mesh sequence'.
+    Update vertex colors of the given TELEMAC 'mesh sequence' child object.
 
     Args:
-        seq_obj (Object): mesh sequence object
+        obj (Object): object to update
+        obj_id (int): object id (child id)
+        seq_settings (TBB_TelemacMeshSequenceProperty): mesh sequence settings
         time_info (dict): time information for interpolation
 
     Raises:
         tmp_data_error: if something went wrong updating temporary data
     """
-
-    seq_settings = seq_obj.tbb.settings.telemac.mesh_sequence
 
     # Check if tmp_data is loaded
     tmp_data = seq_settings.tmp_data
@@ -700,20 +709,16 @@ def update_telemac_mesh_sequence_vertex_colors(seq_obj: Object, time_info: dict)
         except Exception as tmp_data_error:
             raise tmp_data_error from tmp_data_error
 
-    objects = seq_obj.children
     point_data = seq_settings.list_point_data.split(";")
+    offset = obj_id if seq_settings.is_3d_simulation else 0
 
-    for obj, obj_id in zip(objects, range(len(objects))):
+    # Remove existing vertex colors
+    while obj.data.vertex_colors:
+        obj.data.vertex_colors.remove(obj.data.vertex_colors[0])
 
-        offset = obj_id if seq_settings.is_3d_simulation else 0
-
-        # Remove existing vertex colors
-        while obj.data.vertex_colors:
-            obj.data.vertex_colors.remove(obj.data.vertex_colors[0])
-
-        if time_info is not None:
-            res = prepare_telemac_point_data_linear_interp(obj, tmp_data, time_info, point_data, offset=offset)
-            generate_vertex_colors(obj.data, *res)
+    if time_info is not None:
+        res = prepare_telemac_point_data_linear_interp(obj, tmp_data, time_info, point_data, offset=offset)
+        generate_vertex_colors(obj.data, *res)
 
 
 def get_time_info_interp_streaming_sequence(frame: int, frame_start: int, time_steps: int) -> dict:
