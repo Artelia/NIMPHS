@@ -17,8 +17,7 @@ from src.operators.utils import (
     generate_vertex_colors_groups,
     generate_vertex_colors,
     get_object_dimensions_from_mesh,
-    normalize_objects,
-    compute_interp_time_point)
+    normalize_objects)
 
 
 def run_one_step_create_mesh_sequence_telemac(context: Context, current_frame: int, current_time_point: int,
@@ -162,15 +161,22 @@ def generate_mesh_data(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, off
 
 
 def generate_mesh_data_linear_interp(obj: Object, tmp_data: TBB_TelemacStreamingSequenceProperty,
-                                     time_point: int, time_steps: int, offset: int = 0) -> np.ndarray:
+                                     time_info: dict, offset: int = 0) -> np.ndarray:
     """
     Linearly interpolates the mesh of the given TELEMAC object.
 
     Args:
         obj (Object): object to interpolate
         tmp_data (TBB_TelemacStreamingSequenceProperty): temporary data
-        time_point (int): current time point
-        time_steps (int): number of time temps between each time point
+        time_info (dict): \
+            {
+                "frame" (int): current frame,
+                "time_steps" (int): number of time steps between time points,
+                "l_time_point (int): left time point,
+                "l_frame" (int): frame which corresponds to the left time point,
+                "r_time_point (int): right time point,
+                "existing_time_point" (bool): if the time point is an existing time point
+            }
         offset (int): corresponds to 'plane id' for meshes from 3D simulations. Defaults to 0.
 
     Raises:
@@ -180,24 +186,22 @@ def generate_mesh_data_linear_interp(obj: Object, tmp_data: TBB_TelemacStreaming
         np.ndarray: vertices
     """
 
-    l_time_point, r_time_point, existing_time_point = compute_interp_time_point(time_point, time_steps)
-
     # Get data from left time point
     try:
-        l_vertices = generate_mesh_data(tmp_data, tmp_data.is_3d, offset=offset, time_point=l_time_point,
+        l_vertices = generate_mesh_data(tmp_data, tmp_data.is_3d, offset=offset, time_point=time_info["l_time_point"],
                                         type=obj.tbb.settings.telemac.z_name)
     except Exception as vertices_error:
         raise vertices_error from vertices_error
 
-    if not existing_time_point:
+    if not time_info["existing_time_point"]:
         # Get data from right time point
         try:
-            r_vertices = generate_mesh_data(tmp_data, tmp_data.is_3d, offset=offset, time_point=r_time_point,
+            r_vertices = generate_mesh_data(tmp_data, tmp_data.is_3d, offset=offset, time_point=time_info["r_time_point"],
                                             type=obj.tbb.settings.telemac.z_name)
         except Exception as vertices_error:
             raise vertices_error from vertices_error
 
-        percentage = (time_point % (time_steps + 1)) / (time_steps + 1)
+        percentage = np.abs(time_info["frame"] - time_info["l_frame"]) / (time_info["time_steps"] + 1)
 
         return (l_vertices.T + (r_vertices.T - l_vertices.T) * percentage).T
 
@@ -557,31 +561,30 @@ def update_telemac_streaming_sequences(scene: Scene) -> None:
             settings = obj.tbb.settings.telemac.streaming_sequence
 
             if obj.tbb.is_streaming_sequence and settings.update:
-                time_point = frame - settings.frame_start
                 interpolate = settings.interpolate
                 point_data = settings.list_point_data.split(";")
 
                 # Compute limit
-                limit = settings.anim_length
+                limit = settings.frame_start + settings.anim_length
                 if interpolate.type != 'NONE':
-                    limit = limit * (interpolate.time_steps + 1) - interpolate.time_steps
+                    limit += settings.anim_length * (interpolate.time_steps + 1) - interpolate.time_steps
 
-                if time_point >= 0 and time_point < limit:
+                if frame >= settings.frame_start and frame < limit:
                     start = time.time()
-                    try:
-                        objects = obj.children
-                        for obj, id in zip(objects, range(len(objects))):
-                            update_telemac_streaming_sequence_mesh(obj, settings, time_point, id, interpolate,
-                                                                   point_data)
+                    # try:
+                    objects = obj.children
+                    for obj, id in zip(objects, range(len(objects))):
+                        update_telemac_streaming_sequence_mesh(obj, settings, frame, id, interpolate,
+                                                               point_data)
 
-                    except Exception as error:
-                        print("ERROR::update_telemac_streaming_sequences: " + settings.name + ", " + str(error))
+                    # except Exception as error:
+                    #     print("ERROR::update_telemac_streaming_sequences: " + settings.name + ", " + str(error))
 
                     print("Update::TELEMAC: " + settings.name + ", " + "{:.4f}".format(time.time() - start) + "s")
 
 
 def update_telemac_streaming_sequence_mesh(obj: Object, settings: TBB_TelemacStreamingSequenceProperty,
-                                           time_point: int, id: int, interpolate: TBB_TelemacInterpolateProperty,
+                                           frame: int, id: int, interpolate: TBB_TelemacInterpolateProperty,
                                            point_data: list[str]) -> None:
     """
     Update the mesh of the given object from a TELEMAC sequence object.
@@ -589,7 +592,7 @@ def update_telemac_streaming_sequence_mesh(obj: Object, settings: TBB_TelemacStr
     Args:
         obj (Object): object from a TELEMAC sequence object
         settings (TBB_TelemacStreamingSequenceProperty): 'streaming sequence' settings
-        time_point (int): time point
+        frame (int): current frame
         id (int): id of the current object (used for meshes from 3D simulations, corresponds to the 'plane id')
         interpolate (TBB_TelemacInterpolateProperty): interpolation settings
         point_data (list[str]): list of point data to import as vertex colors
@@ -612,14 +615,13 @@ def update_telemac_streaming_sequence_mesh(obj: Object, settings: TBB_TelemacStr
     # Filter the given list
     point_data = list(filter(None, point_data))
 
-    # Compute left time point if interpolate option is 'on'
     if interpolate.type == 'LINEAR':
-        time_info = get_time_info_liear_interp(time_point, interpolate.time_steps)
-        time_point = time_info["l_time_point"]
+        time_info = get_time_info_interp_streaming_sequence(frame, settings.frame_start, interpolate.time_steps)
     else:
-        time_info = {"l_time_point": time_point, "existing_time_point": True}
+        time_info = {"l_time_point": frame - settings.frame_start, "existing_time_point": True}
 
     # Check if time poit is ok
+    time_point = time_info["l_time_point"]
     if time_point > tmp_data.nb_time_points:
         raise ValueError("time point '" + str(time_point) + "' does not exist. Available time points: " +
                          str(tmp_data.nb_time_points))
@@ -627,7 +629,7 @@ def update_telemac_streaming_sequence_mesh(obj: Object, settings: TBB_TelemacStr
     # Update mesh
     offset = id if tmp_data.is_3d else 0
     try:
-        vertices = generate_mesh_data_linear_interp(obj, tmp_data, time_point, interpolate.time_steps, offset)
+        vertices = generate_mesh_data_linear_interp(obj, tmp_data, time_info, offset)
         obj = generate_object_from_data(vertices, tmp_data.faces, obj.name)
     except Exception as mesh_error:
         raise mesh_error from mesh_error
@@ -681,58 +683,69 @@ def update_telemac_mesh_sequence_vertex_colors(seq_obj: Object, frame: int) -> N
         while obj.data.vertex_colors:
             obj.data.vertex_colors.remove(obj.data.vertex_colors[0])
 
-        time_info = get_time_info_linear_interp_mesh_sequence(obj, frame)
-        print(time_info)
+        time_info = get_time_info_interp_mesh_sequence(obj, frame)
         if time_info is not None:
             res = prepare_telemac_point_data_linear_interp(obj, tmp_data, time_info, point_data, offset=offset)
             generate_vertex_colors(obj.data, *res)
 
 
-def get_time_info_liear_interp(time_point: int, time_steps: int):
-    time_info = dict()
+def get_time_info_interp_streaming_sequence(frame: int, frame_start: int, time_steps: int):
+    time_point = frame - frame_start
+
     if time_steps == 0:  # Existing time point
-        time_info["l_time_point"] = time_point
-        time_info["r_time_point"] = None
-        time_info["existing_time_point"] = True
-    else:
-        res = compute_interp_time_point(time_point, time_steps)
-        time_info["l_time_point"] = res[0]
-        time_info["r_time_point"] = res[1]
-        time_info["existing_time_point"] = res[2]
+        return {
+            "frame": frame,
+            "time_steps": 0,
+            "l_time_point": time_point,
+            "l_frame": frame,
+            "r_time_point": None,
+            "existing_time_point": True
+        }
+    else:  # Interpolated time point
+        info = compute_interp_time_info_streaming_sequence(time_point, time_steps)
+        return {
+            "frame": frame,
+            "time_steps": time_steps,
+            "l_time_point": info[0],
+            "l_frame": frame_start + (time_steps + 1) * info[0],
+            "r_time_point": info[1],
+            "existing_time_point": info[2]
+        }
 
-    time_info["time_point"] = time_point
-    time_info["time_steps"] = time_steps
 
-    return time_info
-
-
-def get_time_info_linear_interp_mesh_sequence(obj: Object, frame: int):
+def get_time_info_interp_mesh_sequence(obj: Object, frame: int):
     # Get info from shape keys
-    info = get_time_info_from_active_shape_keys(obj.data)
+    info = compute_interp_time_info_mesh_sequence(obj.data)
 
     # Make sure the time point is correct
     if info["frame_start"] <= frame <= info["frame_end"]:
         if info["state"] == 'BASIS':
-            return {"frame": frame,
-                    "time_steps": 0,
-                    "l_time_point": 0,
-                    "l_frame": info["frame_start"],
-                    "r_time_point": 1,
-                    "existing_time_point": True}
+            return {
+                "frame": frame,
+                "time_steps": 0,
+                "l_time_point": 0,
+                "l_frame": info["frame_start"],
+                "r_time_point": 1,
+                "existing_time_point": True
+            }
         elif info["state"] == 'EXISTING':
-            return {"frame": frame,
-                    "time_steps": 0,
-                    "l_time_point": info["time_points"][0],
-                    "l_frame": info["frames"][0],
-                    "r_time_point": info["time_points"][0] + 1,
-                    "existing_time_point": True}
+            return {
+                "frame": frame,
+                "time_steps": 0,
+                "l_time_point": info["time_points"][0],
+                "l_frame": info["frames"][0],
+                "r_time_point": info["time_points"][0] + 1,
+                "existing_time_point": True
+            }
         elif info["state"] == 'INTERPOLATED':
-            return {"frame": frame,
-                    "time_steps": np.abs(info["frames"][0] - info["frames"][1]) - 1,
-                    "l_time_point": info["time_points"][0],
-                    "l_frame": info["frames"][0],
-                    "r_time_point": info["time_points"][1],
-                    "existing_time_point": False}
+            return {
+                "frame": frame,
+                "time_steps": np.abs(info["frames"][0] - info["frames"][1]) - 1,
+                "l_time_point": info["time_points"][0],
+                "l_frame": info["frames"][0],
+                "r_time_point": info["time_points"][1],
+                "existing_time_point": False
+            }
         else:
             return None
 
@@ -740,8 +753,8 @@ def get_time_info_linear_interp_mesh_sequence(obj: Object, frame: int):
         return None
 
 
-def get_time_info_from_active_shape_keys(blender_mesh: Mesh,
-                                         threshold: float = 0.0001) -> dict[str, list[int], list[float], int, int]:
+def compute_interp_time_info_mesh_sequence(blender_mesh: Mesh,
+                                           threshold: float = 0.0001) -> dict[str, list[int], list[float], int, int]:
     """
     Get time points information for the currently read TELEMAC mesh sequence.
 
@@ -816,3 +829,23 @@ def get_time_info_from_active_shape_keys(blender_mesh: Mesh,
     output["time_points"].sort()
 
     return output
+
+
+def compute_interp_time_info_streaming_sequence(time_point: int, time_steps: int) -> tuple[int, int, bool]:
+    """
+    Compute left time point and right time point for interpolation. It also indicates if
+    the current time point is an existing time point.
+
+    Args:
+        time_point (int): current time point
+        time_steps (int): number of time steps between each time point
+
+    Returns:
+        tuple[int, int, bool]: left time point, right time point, existing time point
+    """
+
+    modulo = time_point % (time_steps + 1)
+    l_time_point = int((time_point - modulo) / (time_steps + 1))
+    r_time_point = l_time_point + 1
+
+    return l_time_point, r_time_point, modulo == 0
