@@ -115,7 +115,9 @@ class SetupPlugin:
         print("PyTest unconfigure...")
 
         cleanup(self.addon, self.bpy_module, self.addon_dir)
+        cleanup(self.addon, os.environ.get("STOP_MOTION_OBJ_MODULE", None), self.addon_dir)
         # Cleanup zip files
+        print("Cleaning up - zip files")
         remove_files_matching_pattern(self.root, exclude_folders=[os.path.abspath("./cache")], pattern="*.zip")
 
         print("PyTest unconfigure successfull!")

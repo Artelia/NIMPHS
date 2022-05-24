@@ -15,6 +15,11 @@ FILE_PATH = os.path.abspath("./data/openfoam_sample_a/foam.foam")
 
 
 @pytest.fixture
+def scene_settings():
+    return bpy.context.scene.tbb.settings.openfoam
+
+
+@pytest.fixture
 def preview_object():
     return bpy.data.objects.get("TBB_OpenFOAM_preview", None)
 
@@ -29,10 +34,10 @@ def streaming_sequence():
     return bpy.data.objects.get("My_OpenFOAM_Streaming_Sim_sequence", None)
 
 
-def test_import_openfoam():
+def test_import_openfoam(scene_settings):
     assert bpy.ops.tbb.import_openfoam_file('EXEC_DEFAULT', filepath=FILE_PATH) == {"FINISHED"}
 
-    tmp_data = bpy.context.scene.tbb.settings.openfoam.tmp_data
+    tmp_data = scene_settings.tmp_data
 
     # Test temporary data default parameters
     assert tmp_data.time_point == 0
@@ -52,11 +57,11 @@ def test_geometry_imported_preview_object_openfoam(preview_object):
     assert len(preview_object.data.polygons) == 121092
 
 
-def test_reload_openfoam():
+def test_reload_openfoam(scene_settings):
     assert bpy.ops.tbb.reload_openfoam_file('EXEC_DEFAULT') == {"FINISHED"}
 
     # Test temporary data parameters
-    tmp_data = bpy.context.scene.tbb.settings.openfoam.tmp_data
+    tmp_data = scene_settings.tmp_data
     assert tmp_data.time_point == 0
     assert tmp_data.module_name == "OpenFOAM"
     assert tmp_data.file_reader is not None
@@ -65,13 +70,12 @@ def test_reload_openfoam():
     assert tmp_data.nb_time_points == 21
 
 
-def test_normal_preview_object_openfoam():
+def test_normal_preview_object_openfoam(scene_settings):
     # Set preview settings
-    settings = bpy.context.scene.tbb.settings.openfoam
-    settings.decompose_polyhedra = False
-    settings.triangulate = False
-    settings.case_type = '1'
-    settings.preview_point_data = "alpha.water@value"
+    scene_settings.decompose_polyhedra = False
+    scene_settings.triangulate = False
+    scene_settings.case_type = '1'
+    scene_settings.preview_point_data = "alpha.water@value"
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
 
@@ -85,13 +89,12 @@ def test_geometry_normal_preview_object(preview_object):
     assert len(preview_object.data.polygons) == 59882
 
 
-def test_normal_decompose_polyhedra_preview_object_openfoam():
+def test_normal_decompose_polyhedra_preview_object_openfoam(scene_settings):
     # Set preview settings
-    settings = bpy.context.scene.tbb.settings.openfoam
-    settings.decompose_polyhedra = True
-    settings.triangulate = False
-    settings.case_type = '1'
-    settings.preview_point_data = "alpha.water@value"
+    scene_settings.decompose_polyhedra = True
+    scene_settings.triangulate = False
+    scene_settings.case_type = '1'
+    scene_settings.preview_point_data = "alpha.water@value"
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
 
@@ -105,13 +108,12 @@ def test_geometry_normal_decompose_polyhedra_preview_object_openfoam(preview_obj
     assert len(preview_object.data.polygons) == 61202
 
 
-def test_triangulated_preview_object_openfoam():
+def test_triangulated_preview_object_openfoam(scene_settings):
     # Set preview settings
-    settings = bpy.context.scene.tbb.settings.openfoam
-    settings.decompose_polyhedra = False
-    settings.triangulate = True
-    settings.case_type = '1'
-    settings.preview_point_data = "alpha.water@value"
+    scene_settings.decompose_polyhedra = False
+    scene_settings.triangulate = True
+    scene_settings.case_type = '1'
+    scene_settings.preview_point_data = "alpha.water@value"
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
 
@@ -125,13 +127,12 @@ def test_geometry_triangulated_preview_object_openfoam(preview_object):
     assert len(preview_object.data.polygons) == 121092
 
 
-def test_triangulated_decompose_polyhedra_preview_object_openfoam():
+def test_triangulated_decompose_polyhedra_preview_object_openfoam(scene_settings):
     # Set preview settings
-    settings = bpy.context.scene.tbb.settings.openfoam
-    settings.decompose_polyhedra = True
-    settings.triangulate = True
-    settings.case_type = '1'
-    settings.preview_point_data = "alpha.water@value"
+    scene_settings.decompose_polyhedra = True
+    scene_settings.triangulate = True
+    scene_settings.case_type = '1'
+    scene_settings.preview_point_data = "alpha.water@value"
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
 
@@ -176,25 +177,24 @@ def test_preview_material_openfoam():
     assert link.to_socket == principled_bsdf_node.inputs[0]
 
 
-def test_create_streaming_sequence_openfoam():
+def test_create_streaming_sequence_openfoam(scene_settings):
     # Set file settings
-    settings = bpy.context.scene.tbb.settings.openfoam
-    settings.decompose_polyhedra = True
-    settings.triangulate = True
-    settings.case_type = '1'
+    scene_settings.decompose_polyhedra = True
+    scene_settings.triangulate = True
+    scene_settings.case_type = '1'
 
     # Set clip settings
-    settings.clip.type = 'scalar'
-    settings.clip.scalar.name = 'alpha.water@value'
-    settings.clip.scalar.value = 0.5
+    scene_settings.clip.type = 'scalar'
+    scene_settings.clip.scalar.name = 'alpha.water@value'
+    scene_settings.clip.scalar.value = 0.5
 
     # Set sequence settings
-    settings.sequence_type = "streaming_sequence"
-    settings.frame_start = 1
-    settings["anim_length"] = 21
-    settings.import_point_data = True
-    settings.list_point_data = "U;alpha.water;p;p_rgh"
-    settings.sequence_name = "My_OpenFOAM_Streaming_Sim"
+    scene_settings.sequence_type = "streaming_sequence"
+    scene_settings.frame_start = 1
+    scene_settings["anim_length"] = 21
+    scene_settings.import_point_data = True
+    scene_settings.list_point_data = "U;alpha.water;p;p_rgh"
+    scene_settings.sequence_name = "My_OpenFOAM_Streaming_Sim"
 
     assert bpy.ops.tbb.openfoam_create_sequence('EXEC_DEFAULT') == {"FINISHED"}
 
@@ -253,22 +253,19 @@ def test_point_data_streaming_sequence_openfoam(streaming_sequence):
     # TODO: compare values (warning: color data are ramapped into [0; 1])
 
 
-def test_create_mesh_sequence_openfoam():
-    settings = bpy.context.scene.tbb.settings.openfoam
-    assert settings is not None
-
+def test_create_mesh_sequence_openfoam(scene_settings):
     # Set clip settings
-    settings.clip.type = 'scalar'
-    settings.clip.scalar.name = 'alpha.water@value'
-    settings.clip.scalar.value = 0.5
+    scene_settings.clip.type = 'scalar'
+    scene_settings.clip.scalar.name = 'alpha.water@value'
+    scene_settings.clip.scalar.value = 0.5
 
     # Set sequence settings
-    settings.sequence_type = "mesh_sequence"
-    settings["start_time_point"] = 0
-    settings["end_time_point"] = 11
-    settings.import_point_data = True
-    settings.list_point_data = "U;alpha.water;p;p_rgh"
-    settings.sequence_name = "My_OpenFOAM_Sim"
+    scene_settings.sequence_type = "mesh_sequence"
+    scene_settings["start_time_point"] = 0
+    scene_settings["end_time_point"] = 11
+    scene_settings.import_point_data = True
+    scene_settings.list_point_data = "U;alpha.water;p;p_rgh"
+    scene_settings.sequence_name = "My_OpenFOAM_Sim"
 
     # Change frame to create the mesh sequence from another frame
     # WARNING: next tests are based on the following frame

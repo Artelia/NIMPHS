@@ -14,6 +14,11 @@ FILE_PATH = os.path.abspath("./data/telemac_sample_b.slf")
 
 
 @pytest.fixture
+def scene_settings():
+    return bpy.context.scene.tbb.settings.telemac
+
+
+@pytest.fixture
 def preview_object():
     return [bpy.data.objects.get("TBB_TELEMAC_preview_plane_" + str(i), None) for i in range(16)]
 
@@ -54,11 +59,11 @@ def frame_change_pre():
     return get_handler
 
 
-def test_import_telemac_3d():
+def test_import_telemac_3d(scene_settings):
     assert bpy.ops.tbb.import_telemac_file('EXEC_DEFAULT', filepath=FILE_PATH) == {"FINISHED"}
 
     # Test temporary data default parameters
-    tmp_data = bpy.context.scene.tbb.settings.telemac.tmp_data
+    tmp_data = scene_settings.tmp_data
     assert tmp_data is not None
     assert tmp_data.module_name == "TELEMAC"
     assert tmp_data.file is not None
@@ -84,11 +89,11 @@ def test_geometry_imported_preview_object_telemac_3d(preview_object):
         assert len(obj.data.polygons) == 24199
 
 
-def test_reload_telemac_3d():
+def test_reload_telemac_3d(scene_settings):
     assert bpy.ops.tbb.reload_telemac_file('EXEC_DEFAULT') == {"FINISHED"}
 
     # Test temporary data
-    tmp_data = bpy.context.scene.tbb.settings.telemac.tmp_data
+    tmp_data = scene_settings.tmp_data
     assert tmp_data is not None
     assert tmp_data.module_name == "TELEMAC"
     assert tmp_data.file is not None
@@ -103,11 +108,10 @@ def test_reload_telemac_3d():
     assert tmp_data.is_3d == True
 
 
-def test_preview_telemac_3d():
+def test_preview_telemac_3d(scene_settings):
     # Set preview settings
-    settings = bpy.context.scene.tbb.settings.telemac
-    settings.normalize_preview_obj = False
-    settings.preview_point_data = '1'
+    scene_settings.normalize_preview_obj = False
+    scene_settings.preview_point_data = '1'
 
     assert bpy.ops.tbb.telemac_preview('EXEC_DEFAULT') == {"FINISHED"}
 
@@ -137,11 +141,10 @@ def test_point_data_preview_object_telemac_3d(preview_object):
     # TODO: compare values (warning: color data are ramapped into [0; 1])
 
 
-def test_normalize_preview_telemac_3d():
+def test_normalize_preview_telemac_3d(scene_settings):
     # Set preview settings
-    settings = bpy.context.scene.tbb.settings.telemac
-    settings.normalize_preview_obj = True
-    settings.preview_point_data = '0'
+    scene_settings.normalize_preview_obj = True
+    scene_settings.preview_point_data = '0'
 
     assert bpy.ops.tbb.telemac_preview('EXEC_DEFAULT') == {"FINISHED"}
 
@@ -155,15 +158,14 @@ def test_dimensions_normalized_preview_object_telemac_3d(preview_object):
         assert obj.dimensions[0] <= 1.0 and obj.dimensions[1] <= 1.0 and obj.dimensions[2] <= 1.0
 
 
-def test_create_streaming_sequence_telemac_3d():
+def test_create_streaming_sequence_telemac_3d(scene_settings):
     # Set sequence settings
-    settings = bpy.context.scene.tbb.settings.telemac
-    settings.sequence_name = "My_TELEMAC_Streaming_Sim_3D"
-    settings.import_point_data = True
-    settings.list_point_data = "VITESSE U;SALINITE;VITESSE V;FOND;"
-    settings.frame_start = 0
-    settings.anim_length = 31
-    settings.sequence_type = "streaming_sequence"
+    scene_settings.sequence_name = "My_TELEMAC_Streaming_Sim_3D"
+    scene_settings.import_point_data = True
+    scene_settings.list_point_data = "VITESSE U;SALINITE;VITESSE V;FOND;"
+    scene_settings.frame_start = 0
+    scene_settings.anim_length = 31
+    scene_settings.sequence_type = "streaming_sequence"
 
     assert bpy.ops.tbb.telemac_create_sequence('EXEC_DEFAULT') == {"FINISHED"}
 
@@ -203,14 +205,9 @@ def test_geometry_streaming_sequence_telemac_3d(streaming_sequence):
         assert len(obj.data.polygons) == 24199
 
 
-def test_point_data_streaming_sequence_telemac_3d(streaming_sequence, frame_change_pre):
+def test_point_data_streaming_sequence_telemac_3d(streaming_sequence):
     assert streaming_sequence is not None
     assert len(streaming_sequence.children) == 16
-
-    # Force update telemac streaming sequences
-    handler = frame_change_pre("update_telemac_streaming_sequences")
-    assert handler is not None
-    handler(bpy.context.scene)
 
     # Test point data (only test if they exist)
     # TODO: fix this, it is not working ...
@@ -225,15 +222,14 @@ def test_point_data_streaming_sequence_telemac_3d(streaming_sequence, frame_chan
     # TODO: compare values (warning: color data are ramapped into [0; 1])
 
 
-def test_create_mesh_sequence_telemac_3d():
+def test_create_mesh_sequence_telemac_3d(scene_settings):
     # Set sequence settings
-    settings = bpy.context.scene.tbb.settings.telemac
-    settings.sequence_type = "mesh_sequence"
-    settings["start_time_point"] = 0
-    settings["end_time_point"] = 3
-    settings.import_point_data = True
-    settings.list_point_data = "VITESSE U;SALINITE;VITESSE V;FOND;"
-    settings.sequence_name = "My_TELEMAC_Sim_3D"
+    scene_settings.sequence_type = "mesh_sequence"
+    scene_settings["start_time_point"] = 0
+    scene_settings["end_time_point"] = 3
+    scene_settings.import_point_data = True
+    scene_settings.list_point_data = "VITESSE U;SALINITE;VITESSE V;FOND;"
+    scene_settings.sequence_name = "My_TELEMAC_Sim_3D"
 
     assert bpy.ops.tbb.telemac_create_sequence('EXEC_DEFAULT', mode='NORMAL') == {"FINISHED"}
 
@@ -273,14 +269,9 @@ def test_geometry_mesh_sequence_telemac_3d(mesh_sequence):
         assert len(obj.data.polygons) == 24199
 
 
-def test_point_data_mesh_sequence_telemac_3d(mesh_sequence, frame_change_post):
+def test_point_data_mesh_sequence_telemac_3d(mesh_sequence):
     assert mesh_sequence is not None
     assert len(mesh_sequence.children) == 16
-
-    # Force update telemac mesh sequences
-    handler = frame_change_post("update_telemac_mesh_sequences")
-    assert handler is not None
-    handler(bpy.context.scene)
 
     # Test point data (only test if they exist)
     for obj in mesh_sequence.children:
