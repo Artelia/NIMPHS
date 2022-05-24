@@ -71,6 +71,11 @@ def run_one_step_create_mesh_sequence_telemac(context: Context, current_frame: i
         seq_obj.tbb.settings.telemac.mesh_sequence.is_3d_simulation = tmp_data.is_3d
         seq_obj.tbb.settings.telemac.mesh_sequence.file_path = settings.file_path
 
+        # Add tmp_data to the dict of tmp_data in TBB_Object
+        seq_obj.tbb.uid = str(time.time())
+        seq_obj.tbb.tmp_data[str(seq_obj.tbb.uid)] = TBB_TelemacTemporaryData()
+        seq_obj.tbb.tmp_data[str(seq_obj.tbb.uid)].update(settings.file_path)
+
         # Parent objects
         for child in objects:
             child.parent = seq_obj
@@ -441,11 +446,16 @@ def prepare_telemac_point_data(blender_mesh: Mesh, list_point_data: list[str], t
     # Filter elements which evaluates to 'False', ex: ''
     list_point_data = list(filter(None, list_point_data))
     # Filter variables if they do not exist and build to output
-    filtered_variables = []
+    filtered_variables, appened = [], False
     for var_name in list_point_data:
         for name, id in zip(tmp_data.file.nomvar, range(tmp_data.nb_vars)):
             if var_name in name:
                 filtered_variables.append({"name": var_name, "type": 'SCALAR', "id": id})
+                appened = True
+                continue
+
+        if not appened:
+            print("WARNING::prepare_telemac_point_data: point data named '" + str(var_name) + "' does not exist.")
 
     # Prepare data
     prepared_data, data = dict(), tmp_data.read(time_point)
@@ -469,7 +479,7 @@ def prepare_telemac_point_data_linear_interp(obj: Object, tmp_data: TBB_TelemacS
                                              time_info: dict, point_data: list[str],
                                              offset: int = 0) -> tuple[list[dict], dict, int]:
     """
-    Linearly interpolates the mesh of the given TELEMAC object.
+    Prepare point data for linear interpolation of TELEMAC sequences.
 
     Args:
         obj (Object): object to interpolate
@@ -586,7 +596,7 @@ def update_telemac_streaming_sequences(scene: Scene) -> None:
                     print("Update::TELEMAC: " + settings.name + ", " + "{:.4f}".format(time.time() - start) + "s")
 
 
-def update_telemac_streaming_sequence_mesh(obj: Object, settings: TBB_TelemacStreamingSequenceProperty,
+def update_telemac_streaming_sequence_mesh(obj: Object, seq_settings: TBB_TelemacStreamingSequenceProperty,
                                            frame: int, id: int, interpolate: TBB_TelemacInterpolateProperty,
                                            point_data: list[str]) -> None:
     """
@@ -609,10 +619,10 @@ def update_telemac_streaming_sequence_mesh(obj: Object, settings: TBB_TelemacStr
     """
 
     # Check if tmp_data is loaded
-    tmp_data = settings.tmp_data
+    tmp_data = seq_settings.tmp_data
     if not tmp_data.is_ok():
         try:
-            tmp_data.update(settings.file_path)
+            tmp_data.update(seq_settings.file_path)
         except Exception as tmp_data_error:
             raise tmp_data_error from tmp_data_error
 
@@ -620,9 +630,9 @@ def update_telemac_streaming_sequence_mesh(obj: Object, settings: TBB_TelemacStr
     point_data = list(filter(None, point_data))
 
     if interpolate.type == 'LINEAR':
-        time_info = get_time_info_interp_streaming_sequence(frame, settings.frame_start, interpolate.time_steps)
+        time_info = get_time_info_interp_streaming_sequence(frame, seq_settings.frame_start, interpolate.time_steps)
     else:
-        time_info = {"l_time_point": frame - settings.frame_start, "existing_time_point": True}
+        time_info = {"l_time_point": frame - seq_settings.frame_start, "existing_time_point": True}
 
     # Check if time poit is ok
     time_point = time_info["l_time_point"]
@@ -664,11 +674,19 @@ def update_telemac_mesh_sequences(scene: Scene) -> None:
     if not scene.tbb.create_sequence_is_running:
         for obj in scene.objects:
             obj_settings = obj.tbb.settings.telemac
-            seq_settings = obj_settings.mesh_sequence
+            seq_settings = obj.tbb.settings.telemac.mesh_sequence
 
-            if obj_settings.is_mesh_sequence and obj_settings.mesh_sequence.import_point_data:
+            if obj_settings.is_mesh_sequence and seq_settings.import_point_data:
                 # Upate children objects of 'mesh sequence'
                 cumulated_time = 0.0
+
+                # Get temporary data
+                tmp_data = obj.tbb.tmp_data[obj.tbb.uid]
+                if not tmp_data.is_ok():
+                    try:
+                        tmp_data.update(seq_settings.file_path)
+                    except Exception as error:
+                        print("ERROR::update_telemac_mesh_sequences: " + obj.name + ", " + str(error))
 
                 objects = obj.children
                 for child, child_id in zip(objects, range(len(objects))):
@@ -677,7 +695,8 @@ def update_telemac_mesh_sequences(scene: Scene) -> None:
                     if time_info is not None:
                         try:
                             start = time.time()
-                            update_telemac_mesh_sequence_vertex_colors(child, child_id, seq_settings, time_info)
+                            update_telemac_mesh_sequence_vertex_colors(child, child_id, seq_settings, time_info,
+                                                                       tmp_data)
                             cumulated_time += time.time() - start
                         except Exception as error:
                             print("ERROR::update_telemac_mesh_sequences: " + child.name + ", " + str(error))
@@ -687,7 +706,7 @@ def update_telemac_mesh_sequences(scene: Scene) -> None:
 
 
 def update_telemac_mesh_sequence_vertex_colors(obj: Object, obj_id: int, seq_settings: TBB_TelemacMeshSequenceProperty,
-                                               time_info: dict) -> None:
+                                               time_info: dict, tmp_data: TBB_TelemacTemporaryData) -> None:
     """
     Update vertex colors of the given TELEMAC 'mesh sequence' child object.
 
@@ -700,14 +719,6 @@ def update_telemac_mesh_sequence_vertex_colors(obj: Object, obj_id: int, seq_set
     Raises:
         tmp_data_error: if something went wrong updating temporary data
     """
-
-    # Check if tmp_data is loaded
-    tmp_data = seq_settings.tmp_data
-    if not tmp_data.is_ok():
-        try:
-            tmp_data.update(seq_settings.file_path)
-        except Exception as tmp_data_error:
-            raise tmp_data_error from tmp_data_error
 
     point_data = seq_settings.list_point_data.split(";")
     offset = obj_id if seq_settings.is_3d_simulation else 0

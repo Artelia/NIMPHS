@@ -15,12 +15,9 @@ class TBB_TelemacMeshSequenceProperty(PropertyGroup):
     #: bpy.props.StringProperty: File to read when updating the sequence.
     file_path: StringProperty(
         name="File path",
-        description="File to read when updating the sequence",
+        description="File to read when  updating the sequence",
         default="",
     )
-
-    #: TBB_TelemacTemporaryData: temporary data.
-    tmp_data = TBB_TelemacTemporaryData()
 
     #: bpy.types.BoolProperty: Import point data as vertex color groups
     import_point_data: BoolProperty(

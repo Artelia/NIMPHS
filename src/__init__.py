@@ -18,7 +18,7 @@ bl_info = {
     "author": "Thibault Oudart, Félix Olart",
     "version": (0, 2, 0),
     "blender": (3, 0, 0),
-    "location": "View3D",
+    "location": "View3D > Sidebar",
     "warning": "This version is still in development.",
     "category": "Import",
     "doc_url": "https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/wikis/home",

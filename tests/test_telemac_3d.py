@@ -178,20 +178,21 @@ def test_streaming_sequence_telemac_3d(streaming_sequence, frame_change_pre):
     handler = frame_change_pre("update_telemac_streaming_sequences")
     assert handler is not None
     handler(bpy.context.scene)
-    # Disable updates for this sequence object during the next tests
-    streaming_sequence.tbb.settings.telemac.streaming_sequence.update = False
 
     # Test streaming sequence settings
     assert streaming_sequence.tbb.is_streaming_sequence
     seq_settings = streaming_sequence.tbb.settings.telemac.streaming_sequence
     assert seq_settings is not None
     assert seq_settings.name == "My_TELEMAC_Streaming_Sim_3D_sequence"
-    assert seq_settings.update == False
+    assert seq_settings.update == True
     assert seq_settings.frame_start == 0
     assert seq_settings.max_length == 11
     assert seq_settings.anim_length == 11
     assert seq_settings.import_point_data == True
     assert seq_settings.list_point_data == "ELEVATION Z;VELOCITY U;VELOCITY V;VELOCITY W;"
+
+    # Disable updates for this sequence object during the next tests
+    streaming_sequence.tbb.settings.telemac.streaming_sequence.update = False
 
 
 def test_geometry_streaming_sequence_telemac_3d(streaming_sequence):

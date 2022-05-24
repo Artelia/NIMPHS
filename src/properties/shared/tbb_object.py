@@ -1,6 +1,6 @@
 # <pep8 compliant>
 from bpy.types import PropertyGroup
-from bpy.props import PointerProperty, BoolProperty
+from bpy.props import PointerProperty, BoolProperty, StringProperty
 
 from src.properties.shared.tbb_object_settings import TBB_ObjectSettings
 
@@ -12,6 +12,8 @@ class TBB_Object(PropertyGroup):
     register_cls = True
     is_custom_base_cls = False
 
+    tmp_data = {}
+
     #: TBB_ObjectSettings: Holds object settings for both OpenFOAM and TELEMAC modules
     settings: PointerProperty(type=TBB_ObjectSettings)
 
@@ -20,4 +22,10 @@ class TBB_Object(PropertyGroup):
         name="Is on frame change sequence",
         description="Describe if this object is a sequence which updates when the frame changes",
         default=False,
+    )
+
+    uid: StringProperty(
+        name="UID",
+        description="Unique identifier",
+        default="None",
     )
