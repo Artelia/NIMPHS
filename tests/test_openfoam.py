@@ -261,7 +261,7 @@ def test_create_mesh_sequence_openfoam(scene_settings):
 
     # Set sequence settings
     scene_settings.sequence_type = "mesh_sequence"
-    scene_settings["start_time_point"] = 0
+    scene_settings["start_time_point"] = 8
     scene_settings["end_time_point"] = 11
     scene_settings.import_point_data = True
     scene_settings.list_point_data = "U;alpha.water;p;p_rgh"
@@ -269,7 +269,7 @@ def test_create_mesh_sequence_openfoam(scene_settings):
 
     # Change frame to create the mesh sequence from another frame
     # WARNING: next tests are based on the following frame
-    bpy.context.scene.frame_set(4)
+    bpy.context.scene.frame_set(9)
     assert bpy.ops.tbb.openfoam_create_sequence('EXEC_DEFAULT', mode='NORMAL') == {"FINISHED"}
 
 
@@ -281,8 +281,8 @@ def test_mesh_sequence_openfoam(mesh_sequence):
     bpy.context.scene.frame_set(11)
 
     # Test mesh sequence (settings from Stop-Motion-OBJ)
-    assert mesh_sequence.mesh_sequence_settings.numMeshes == 12
-    assert mesh_sequence.mesh_sequence_settings.numMeshesInMemory == 12
+    assert mesh_sequence.mesh_sequence_settings.numMeshes == 4
+    assert mesh_sequence.mesh_sequence_settings.numMeshesInMemory == 4
     assert mesh_sequence.mesh_sequence_settings.startFrame == 1
     assert mesh_sequence.mesh_sequence_settings.speed == 1.0
     assert mesh_sequence.mesh_sequence_settings.streamDuringPlayback == True

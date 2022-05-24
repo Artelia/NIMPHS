@@ -3,14 +3,14 @@ import os
 import bpy
 import pytest
 
-# Sample A:
-# Number of variables = 8
+# Sample 2D:
+# Number of variables = 8 (FOND, VITESSE U, VITESSE V, SALINITE, HAUTEUR D'EAU, SURFACE LIBRE, DEBIT SOL EN X, DEBIT SOL EN Y)
 # Number of planes = 0
 # Is not from a 3D simulation
 # Number of time points = 31
 # Triangulated mesh: Vertices = 12,506 | Edges = 36,704 | Faces = 24,199 | Triangles = 24,199
 
-FILE_PATH = os.path.abspath("./data/telemac_sample_a.slf")
+FILE_PATH = os.path.abspath("./data/telemac_sample_2d.slf")
 
 
 @pytest.fixture
