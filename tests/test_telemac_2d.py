@@ -249,13 +249,14 @@ def test_mesh_sequence_telemac_2d(mesh_sequence, frame_change_post):
 
     # Test sequence object
     assert mesh_sequence.tbb.settings.telemac.is_mesh_sequence == True
+    assert mesh_sequence.tbb.uid != "None"
+    assert mesh_sequence.tbb.tmp_data[mesh_sequence.tbb.uid] is not None
     seq_settings = mesh_sequence.tbb.settings.telemac.mesh_sequence
     assert seq_settings is not None
     assert seq_settings.import_point_data == True
     assert seq_settings.list_point_data == "VITESSE U;SALINITE;VITESSE V;FOND;"
     assert seq_settings.file_path == FILE_PATH
     assert seq_settings.is_3d_simulation == False
-    assert seq_settings.tmp_data is not None
 
     # Disable updates for this sequence object during the next tests
     mesh_sequence.tbb.settings.telemac.mesh_sequence.import_point_data = False
