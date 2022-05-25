@@ -13,9 +13,10 @@ class TBB_ObjectSettings(PropertyGroup):
     register_cls = True
     is_custom_base_cls = False
 
+    #: bpy.props.StringProperty: Module name
     module: StringProperty(
         name="Module name",
-        description="Streaming sequence module name, enum in ['None', 'OpenFOAM', 'TELEMAC']",
+        description="Module name, enum in ['None', 'OpenFOAM', 'TELEMAC']",
         default="None",
     )
 

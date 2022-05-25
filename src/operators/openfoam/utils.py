@@ -443,7 +443,8 @@ def update_openfoam_streaming_sequence_mesh(obj: Object, settings: TBB_OpenfoamS
         generate_vertex_colors(blender_mesh, *res)
 
 
-def load_openfoam_file(file_path: str, case_type: int = 1, decompose_polyhedra: bool = False) -> tuple[bool, Union[OpenFOAMReader, POpenFOAMReader]]:
+def load_openfoam_file(file_path: str, case_type: int = 1,
+                       decompose_polyhedra: bool = False) -> tuple[bool, Union[OpenFOAMReader, POpenFOAMReader]]:
     """
     Load an OpenFOAM file and return the file_reader. Also returns if it succeeded to read.
 
@@ -468,6 +469,6 @@ def load_openfoam_file(file_path: str, case_type: int = 1, decompose_polyhedra: 
     else:
         file_reader = POpenFOAMReader(file_path)
         file_reader.case_type = case_type
-        
+
     file_reader.decompose_polyhedra = decompose_polyhedra
     return True, file_reader

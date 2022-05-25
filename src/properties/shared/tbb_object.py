@@ -12,7 +12,8 @@ class TBB_Object(PropertyGroup):
     register_cls = True
     is_custom_base_cls = False
 
-    tmp_data = {}
+    #: dict: Dictionnary of temporary data used for streaming and mesh sequences. Shape is ```{"uid": tmp_data, "uid": tmp_data, ...}```
+    tmp_data: dict = {}
 
     #: TBB_ObjectSettings: Holds object settings for both OpenFOAM and TELEMAC modules
     settings: PointerProperty(type=TBB_ObjectSettings)
@@ -24,6 +25,7 @@ class TBB_Object(PropertyGroup):
         default=False,
     )
 
+    #: bpy.props.StringProperty: Unique identifier for each 'tbb object'
     uid: StringProperty(
         name="UID",
         description="Unique identifier",
