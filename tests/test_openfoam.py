@@ -74,7 +74,7 @@ def test_normal_preview_object_openfoam(scene_settings):
     # Set preview settings
     scene_settings.decompose_polyhedra = False
     scene_settings.triangulate = False
-    scene_settings.case_type = '1'
+    scene_settings.case_type = 'reconstructed'
     scene_settings.preview_point_data = "alpha.water@value"
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
@@ -93,7 +93,7 @@ def test_normal_decompose_polyhedra_preview_object_openfoam(scene_settings):
     # Set preview settings
     scene_settings.decompose_polyhedra = True
     scene_settings.triangulate = False
-    scene_settings.case_type = '1'
+    scene_settings.case_type = 'reconstructed'
     scene_settings.preview_point_data = "alpha.water@value"
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
@@ -112,7 +112,7 @@ def test_triangulated_preview_object_openfoam(scene_settings):
     # Set preview settings
     scene_settings.decompose_polyhedra = False
     scene_settings.triangulate = True
-    scene_settings.case_type = '1'
+    scene_settings.case_type = 'reconstructed'
     scene_settings.preview_point_data = "alpha.water@value"
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
@@ -131,7 +131,7 @@ def test_triangulated_decompose_polyhedra_preview_object_openfoam(scene_settings
     # Set preview settings
     scene_settings.decompose_polyhedra = True
     scene_settings.triangulate = True
-    scene_settings.case_type = '1'
+    scene_settings.case_type = 'reconstructed'
     scene_settings.preview_point_data = "alpha.water@value"
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
@@ -181,7 +181,7 @@ def test_create_streaming_sequence_openfoam(scene_settings):
     # Set file settings
     scene_settings.decompose_polyhedra = True
     scene_settings.triangulate = True
-    scene_settings.case_type = '1'
+    scene_settings.case_type = 'reconstructed'
 
     # Set clip settings
     scene_settings.clip.type = 'scalar'
@@ -217,7 +217,7 @@ def test_streaming_sequence_openfoam(streaming_sequence):
     # Test OpenFOAM settings
     assert seq_settings.decompose_polyhedra == True
     assert seq_settings.triangulate == True
-    assert seq_settings.case_type == '1'
+    assert seq_settings.case_type == 'reconstructed'
     assert seq_settings.clip.type == 'scalar'
     assert seq_settings.clip.scalar.value == 0.5
     assert seq_settings.clip.scalar.name == "alpha.water@value"

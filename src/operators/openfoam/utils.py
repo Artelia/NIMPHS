@@ -7,8 +7,7 @@ import time
 import numpy as np
 from typing import Union
 from pathlib import Path
-from pyvista.utilities.reader import POpenFOAMReader
-from pyvista import OpenFOAMReader, UnstructuredGrid
+from pyvista import OpenFOAMReader, POpenFOAMReader, UnstructuredGrid
 
 from src.properties.openfoam.openfoam_clip import TBB_OpenfoamClipProperty
 from src.operators.utils import remap_array, generate_vertex_colors_groups, generate_vertex_colors, get_collection
@@ -202,7 +201,7 @@ def generate_mesh_for_sequence(context: Context, time_point: int, name: str = "T
     settings = context.scene.tbb.settings.openfoam
 
     # Read data from the given OpenFoam file
-    success, file_reader = load_openfoam_file(settings.file_path, int(settings.case_type), settings.decompose_polyhedra)
+    success, file_reader = load_openfoam_file(settings.file_path, settings.case_type, settings.decompose_polyhedra)
     if not success:
         raise AttributeError("The given file does not exist (" + str(settings.file_path) + ")")
 
@@ -418,7 +417,7 @@ def update_openfoam_streaming_sequence_mesh(obj: Object, settings: TBB_OpenfoamS
         ValueError: if the given time point does no exists
     """
 
-    success, file_reader = load_openfoam_file(settings.file_path, int(settings.case_type), settings.decompose_polyhedra)
+    success, file_reader = load_openfoam_file(settings.file_path, settings.case_type, settings.decompose_polyhedra)
     if not success:
         raise OSError("Unable to read the given file")
 
@@ -443,7 +442,7 @@ def update_openfoam_streaming_sequence_mesh(obj: Object, settings: TBB_OpenfoamS
         generate_vertex_colors(blender_mesh, *res)
 
 
-def load_openfoam_file(file_path: str, case_type: int = 1,
+def load_openfoam_file(file_path: str, case_type: str = 'reconstructed',
                        decompose_polyhedra: bool = False) -> tuple[bool, Union[OpenFOAMReader, POpenFOAMReader]]:
     """
     Load an OpenFOAM file and return the file_reader. Also returns if it succeeded to read.
@@ -452,8 +451,8 @@ def load_openfoam_file(file_path: str, case_type: int = 1,
         file_path (str): path to the file
         decompose_polyhedra (bool, optional): whether polyhedra are to be decomposed when read.\
             If `True`, decompose polyhedra into tetrahedra and pyramids. Defaults to `False`.
-        case_type (int): indicate whether decomposed mesh or reconstructed mesh should be read. \
-            If ``0``, decomposed mesh should be read. Defaults to `1`.
+        case_type (str, optional): indicate whether decomposed mesh or reconstructed mesh should be read. \
+            If ``'decomposed'``, decomposed mesh should be read. Defaults to `reconstructed`.
 
     Returns:
         tuple[bool, OpenFOAMReader]: success, the file reader

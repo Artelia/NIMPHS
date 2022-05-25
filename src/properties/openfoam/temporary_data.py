@@ -1,5 +1,6 @@
 # <pep8 compliant>
-from pyvista import OpenFOAMReader, DataSet, UnstructuredGrid
+from typing import Union
+from pyvista import OpenFOAMReader, POpenFOAMReader, DataSet, UnstructuredGrid
 
 
 class TBB_OpenfoamTemporaryData():
@@ -9,7 +10,7 @@ class TBB_OpenfoamTemporaryData():
 
     # str: name of the module
     module_name = "OpenFOAM"
-    #: OpenFOAMReader: file reader
+    #: Union[OpenFOAMReader, POpenFOAMReader]: file reader
     file_reader = None
     #: Dataset: data read from the file_reader at time_point
     data = None
@@ -20,7 +21,8 @@ class TBB_OpenfoamTemporaryData():
     #: int: nimber of time points
     nb_time_points = 1
 
-    def __init__(self, file_reader: OpenFOAMReader = None, new_data: DataSet = None, new_mesh: UnstructuredGrid = None):
+    def __init__(self, file_reader: Union[OpenFOAMReader, POpenFOAMReader] = None,
+                 new_data: DataSet = None, new_mesh: UnstructuredGrid = None):
         self.module_name = "OpenFOAM"
         self.file_reader = file_reader
         self.data = new_data
@@ -28,8 +30,8 @@ class TBB_OpenfoamTemporaryData():
         self.time_point = 0
         self.nb_time_points = 1
 
-    def update(self, new_file_reader: OpenFOAMReader, time_point: int = 0, new_data: DataSet = None,
-               new_mesh: UnstructuredGrid = None) -> None:
+    def update(self, new_file_reader: Union[OpenFOAMReader, POpenFOAMReader], time_point: int = 0,
+               new_data: DataSet = None, new_mesh: UnstructuredGrid = None) -> None:
         """
         Update temporary data with the given data.
 

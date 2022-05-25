@@ -31,8 +31,8 @@ class TBB_OpenfoamStreamingSequenceProperty(TBB_ModuleStreamingSequenceSettings)
         name="Case type",
         description="The property indicates whether decomposed mesh or reconstructed mesh should be read",
         items=[
-            ("1", "Reconstructed", "Reconstructed mesh should be read"),
-            ("0", "Decomposed", "Decomposed mesh should be read"),
+            ("reconstructed", "Reconstructed", "Reconstructed mesh should be read"),
+            ("decomposed", "Decomposed", "Decomposed mesh should be read"),
         ]
     )
 
