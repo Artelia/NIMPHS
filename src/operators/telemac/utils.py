@@ -113,10 +113,6 @@ def generate_mesh_data(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, off
         time_point (int, optional): time point from which to read data. Defaults to 0.
         type (str, optional): type of the object, enum in ['BOTTOM', 'WATER_DEPTH']. Defaults to 'BOTTOM'.
 
-    Raises:
-        NameError: if the given type is undefined
-        error: if an error occurred reading data
-
     Returns:
         np.ndarray: vertices of the mesh, shape is (number_of_vertices, 3)
     """
@@ -124,24 +120,28 @@ def generate_mesh_data(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, off
     if not mesh_is_3d and type not in ['BOTTOM', 'WATER_DEPTH']:
         raise NameError("Undefined type, please use one in ['BOTTOM', 'WATER_DEPTH']")
 
-    # Manage 2D / 3D meshes
+    # If file from a 3D simulation
     if mesh_is_3d:
         possible_var_names = ["ELEVATION Z", "COTE Z"]
         try:
             z_values, var_name = tmp_data.get_data_from_possible_var_names(possible_var_names, time_point)
-        except Exception as error:
-            raise error
+        except Exception as warning:
+            z_values = np.zeros((tmp_data.nb_vertices, 1))
+            print(f"WARNING::generate_mesh_data: {warning}")
 
         # Ids from where to read data in the z_values array
         start_id, end_id = offset * tmp_data.nb_vertices, offset * tmp_data.nb_vertices + tmp_data.nb_vertices
         vertices = np.hstack((tmp_data.vertices, z_values[start_id:end_id]))
+
+    # If file from a 2D simulation
     else:
         if type == 'BOTTOM':
             possible_var_names = ["BOTTOM", "FOND"]
             try:
                 z_values, var_name = tmp_data.get_data_from_possible_var_names(possible_var_names, time_point)
-            except Exception as error:
-                raise error
+            except Exception as warning:
+                z_values = np.zeros((tmp_data.nb_vertices, 1))
+                print(f"WARNING::generate_mesh_data: {warning}")
 
             vertices = np.hstack((tmp_data.vertices, z_values))
 
@@ -155,15 +155,11 @@ def generate_mesh_data(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, off
                     bottom, var_name = tmp_data.get_data_from_possible_var_names(["BOTTOM", "FOND"], time_point)
                     z_values += bottom
 
-            except Exception as error:
-                raise error
+            except Exception as warning:
+                z_values = np.zeros((tmp_data.nb_vertices, 1))
+                print(f"WARNING::generate_mesh_data: {warning}")
 
             vertices = np.hstack((tmp_data.vertices, z_values))
-
-    # TODO: where to add this option? (Set object's origin to center of the world)
-    # Set the object at the origin of the scene
-    # obj.select_set(state=True, view_layer=context.view_layer)
-    # bpy.ops.object.origin_set(type='GEOMETRY_ORIGIN')
 
     return vertices
 

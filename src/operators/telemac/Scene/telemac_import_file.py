@@ -57,16 +57,16 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         # Update properties values
         update_scene_settings_dynamic_props(settings, tmp_data)
 
-        try:
-            objects = generate_preview_objects(context)
+        # try:
+        objects = generate_preview_objects(context)
 
-            # Reset preview object dimensions
-            settings.preview_obj_dimensions = get_object_dimensions_from_mesh(objects[0])
+        # Reset preview object dimensions
+        settings.preview_obj_dimensions = get_object_dimensions_from_mesh(objects[0])
 
-        except Exception as error:
-            print("ERROR::TBB_OT_TelemacImportFile: " + str(error))
-            self.report({'ERROR'}, "Something went wrong building the mesh")
-            return {'FINISHED'}
+        # except Exception as error:
+        #     print("ERROR::TBB_OT_TelemacImportFile: " + str(error))
+        #     self.report({'ERROR'}, "Something went wrong building the mesh")
+        #     return {'FINISHED'}
 
         self.report({'INFO'}, "File successfully imported")
         print("Import::TELEMAC: " + "{:.4f}".format(time.time() - start) + "s")

@@ -189,7 +189,7 @@ class TBB_TelemacTemporaryData():
                 return z_values, var_name
 
         if z_values is None:
-            raise NameError("ERROR::get_data_from_possible_var_names: undefined variables " + str(possible_var_names))
+            raise NameError("Undefined variables " + str(possible_var_names))
         else:
             return z_values, var_name
 
