@@ -15,8 +15,11 @@ It also comes with new features for the OpenFOAM module. See the *added* section
 
 ### Changed
 
-* Global file architecture
-*
+* Files
+
+    * Global file architecture (changed module name from 'src' to 'tbb')
+    * Now using absolute paths instead of relative paths for imports
+    
 
 ## [0.1.0] - 2022-04-19
 
