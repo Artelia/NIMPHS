@@ -20,6 +20,6 @@ help:
 
 # Comment '@persistent' decorator because fake-bpy-module defines it at 'None', which is not callable and causes errors during 'sphinx-build'
 %: Makefile
-	find ../src/ -type f -name "*.py" -exec sed -i 's/@persistent/#@persistent/g' {} +
+	find ../tbb/ -type f -name "*.py" -exec sed -i 's/@persistent/#@persistent/g' {} +
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
-	find ../src/ -type f -name "*.py" -exec sed -i 's/#@persistent/@persistent/g' {} +
+	find ../tbb/ -type f -name "*.py" -exec sed -i 's/#@persistent/@persistent/g' {} +

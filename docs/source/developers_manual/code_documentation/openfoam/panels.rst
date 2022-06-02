@@ -9,15 +9,15 @@ Panels
 Scene
 #####
 
-.. autoclass:: src.panels.openfoam.Scene.openfoam_main_panel.TBB_PT_OpenfoamMainPanel
+.. autoclass:: tbb.panels.openfoam.Scene.openfoam_main_panel.TBB_PT_OpenfoamMainPanel
    :members:
    :show-inheritance:
 
-.. autoclass:: src.panels.openfoam.Scene.openfoam_create_sequence.TBB_PT_OpenfoamCreateSequence
+.. autoclass:: tbb.panels.openfoam.Scene.openfoam_create_sequence.TBB_PT_OpenfoamCreateSequence
    :members:
    :show-inheritance:
 
-.. autoclass:: src.panels.openfoam.Scene.openfoam_clip.TBB_PT_OpenfoamClip
+.. autoclass:: tbb.panels.openfoam.Scene.openfoam_clip.TBB_PT_OpenfoamClip
    :members:
    :show-inheritance:
 
@@ -26,10 +26,10 @@ Scene
 Object
 ######
 
-.. autoclass:: src.panels.openfoam.Object.openfoam_streaming_sequence.TBB_PT_OpenfoamStreamingSequence
+.. autoclass:: tbb.panels.openfoam.Object.openfoam_streaming_sequence.TBB_PT_OpenfoamStreamingSequence
    :members:
    :show-inheritance:
 
-.. autoclass:: src.panels.openfoam.Object.openfoam_streaming_sequence_clip.TBB_PT_OpenfoamStreamingSequenceClip
+.. autoclass:: tbb.panels.openfoam.Object.openfoam_streaming_sequence_clip.TBB_PT_OpenfoamStreamingSequenceClip
    :members:
    :show-inheritance:

@@ -14,18 +14,18 @@ Other
 Temporary data
 --------------
 
-.. autoclass:: src.properties.openfoam.temporary_data.TBB_OpenfoamTemporaryData
+.. autoclass:: tbb.properties.openfoam.temporary_data.TBB_OpenfoamTemporaryData
    :members:
    :show-inheritance:
 
 Clip
 ----
 
-.. autoclass:: src.properties.openfoam.openfoam_clip.TBB_OpenfoamClipProperty
+.. autoclass:: tbb.properties.openfoam.openfoam_clip.TBB_OpenfoamClipProperty
    :members:
    :show-inheritance:
 
-.. autoclass:: src.properties.openfoam.openfoam_clip.TBB_OpenfoamClipScalarProperty
+.. autoclass:: tbb.properties.openfoam.openfoam_clip.TBB_OpenfoamClipScalarProperty
    :members:
    :show-inheritance:
 
@@ -34,7 +34,7 @@ Clip
 Scene
 #####
 
-.. autoclass:: src.properties.openfoam.Scene.openfoam_settings.TBB_OpenfoamSettings
+.. autoclass:: tbb.properties.openfoam.Scene.openfoam_settings.TBB_OpenfoamSettings
    :members:
    :show-inheritance:
 
@@ -43,7 +43,7 @@ Scene
 Object
 ######
 
-.. autoclass:: src.properties.openfoam.Object.openfoam_streaming_sequence.TBB_OpenfoamStreamingSequenceProperty
+.. autoclass:: tbb.properties.openfoam.Object.openfoam_streaming_sequence.TBB_OpenfoamStreamingSequenceProperty
    :members:
    :show-inheritance:
 
@@ -52,5 +52,5 @@ Object
 Utils
 #####
 
-.. automodule:: src.properties.openfoam.utils
+.. automodule:: tbb.properties.openfoam.utils
    :members:

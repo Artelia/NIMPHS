@@ -29,7 +29,7 @@ Auto-loader
 
 | This addon is loaded using an 'autoloader' helper. This is one is mostly inspired from the 'autoloader' used in `animation nodes <https://github.com/JacquesLucke/animation_nodes>`_.
 
-| Consequently, every folder in the ``src`` directory must contain an empty ``__init__.py`` file.
+| Consequently, every folder in the ``tbb`` directory must contain an empty ``__init__.py`` file.
 
 | For each class, you need to defined two attributes:
 

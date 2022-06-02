@@ -106,7 +106,7 @@ parser.add_argument(
     metavar="Name",
     type=str,
     nargs='?',
-    default="src",
+    default="tbb",
     help="Name to give to the zip file"
 )
 parser.add_argument(
@@ -114,7 +114,7 @@ parser.add_argument(
     metavar="Addon path",
     type=str,
     nargs='?',
-    default=os.path.join(os.path.abspath("."), "src"),
+    default=os.path.join(os.path.abspath("."), "tbb"),
     help="Addon path to test, can be a path to a directory (will be zipped for you) or to a .zip file.\
         The Python module name will be that of the (directory or) zip file without extension,\
         try to make it as pythonic as possible for Blender's Python importer to work properly\
