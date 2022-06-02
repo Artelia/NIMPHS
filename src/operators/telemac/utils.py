@@ -581,7 +581,7 @@ def update_telemac_streaming_sequences(scene: Scene) -> None:
                 point_data = seq_settings.list_point_data.split(";")
 
                 # Get temporary data
-                tmp_data = obj.tbb.tmp_data[obj.tbb.uid]
+                tmp_data = get_streaming_sequence_temporary_data(obj)
                 if not tmp_data.is_ok():
                     try:
                         tmp_data.update(seq_settings.file_path)
@@ -948,3 +948,23 @@ def compute_interp_time_info_mesh_sequence(blender_mesh: Mesh, threshold: float 
     output["time_points"].sort()
 
     return output
+
+
+def get_streaming_sequence_temporary_data(obj: Object) -> TBB_TelemacTemporaryData:
+    """
+    Get temporary data for streaming sequences from their uid.
+
+    Args:
+        obj (Object): streaming sequence object
+
+    Returns:
+        TBB_TelemacTemporaryData: temporary data
+    """
+
+    try:
+        tmp_data = obj.tbb.tmp_data[obj.tbb.uid]
+    except KeyError:
+        obj.tbb.tmp_data[obj.tbb.uid] = TBB_TelemacTemporaryData()
+        tmp_data = obj.tbb.tmp_data[obj.tbb.uid]
+
+    return tmp_data
