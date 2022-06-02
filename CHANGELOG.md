@@ -1,12 +1,30 @@
 # Change log
 
+## [0.2.0] - 2022-06-02
+
+This version implements new features to manipulate TELEMAC files.
+It also comes with new features for the OpenFOAM module. See the *added* section for more details.
+
+### Added
+
+* **View 3D > Blender toolsbox panel > OpenFOAM**
+
+    * 
+
+### Fixed
+
+### Changed
+
+* Global file architecture
+*
+
 ## [0.1.0] - 2022-04-19
 
 First release of the add-on. This version implements the first features. See the *added* section for more details.
 
 ### Added
 
-* **View 3D > Blender toolsbox panel > OpenFOAM**
+* **View 3D > Sidebar > Blender toolsbox panel > OpenFOAM**
 
     * Import an OpenFOAM file (.foam)
         * Reload the file when temporary data is not loaded
@@ -45,7 +63,3 @@ First release of the add-on. This version implements the first features. See the
                 * Select a scalar
                 * Type a value
                 * Invert
-
-### Fixed
-
-### Changed
