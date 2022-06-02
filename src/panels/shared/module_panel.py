@@ -24,11 +24,11 @@ class TBB_ModulePanel(Panel):
 
         Args:
             settings (TBB_ModuleSceneSettings): scene settings
-            tmp_data (TBB_OpenfoamTemporaryData | TBB_TelemacTemporaryData): temporary data
+            tmp_data Union[TBB_OpenfoamTemporaryData, TBB_TelemacTemporaryData]: temporary data
             context (Context): context
 
         Returns:
-            tuple[bool, Object | None]: enable rows, selected object
+            tuple[bool, Union[Object, None]]: enable rows, selected object
         """
 
         layout = self.layout

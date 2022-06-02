@@ -23,7 +23,7 @@ class TBB_CreateSequencePanel(Panel):
         If false, hides the panel.
 
         Args:
-            tmp_data (TBB_OpenfoamTemporaryData | TBB_TelemacTemporaryData): temporary data
+            tmp_data Union[TBB_OpenfoamTemporaryData, TBB_TelemacTemporaryData]: temporary data
             context (Context): context
 
         Returns:

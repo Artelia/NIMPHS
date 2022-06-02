@@ -56,7 +56,7 @@ def get_selected_object(context: Context) -> Union[Object, None]:
         context (Context): context
 
     Returns:
-        Object | None: selected object
+        Union[Object, None]: selected object
     """
 
     obj = context.active_object

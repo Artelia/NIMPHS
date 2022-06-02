@@ -157,7 +157,7 @@ def setup_streaming_sequence_object(obj: Object, seq_settings: Union[TBB_Openfoa
 
     Args:
         obj (Object): sequence object
-        seq_settings (TBB_OpenfoamStreamingSequenceProperty | TBB_TelemacStreamingSequenceProperty): sequence settings
+        seq_settings Union[TBB_OpenfoamStreamingSequenceProperty, TBB_TelemacStreamingSequenceProperty]: sequence settings
         time_points (int): number of available time points
         settings (TBB_ModuleSceneSettings): scene settings
         module (str): name of the module, enum in ['OpenFOAM', 'TELEMAC']
@@ -187,7 +187,7 @@ def update_scene_settings_dynamic_props(settings: TBB_ModuleSceneSettings,
 
     Args:
         settings (TBB_ModuleSceneSettings): scene settings
-        tmp_data (TBB_OpenfoamSettings | TBB_TelemacSettings): temporary data
+        tmp_data Union[TBB_OpenfoamSettings, TBB_TelemacSettings]: temporary data
     """
 
     # This works because TBB_TelemacTemporaryData and TBB_OpenfoamTemporaryData have the same nb_time_points attribute

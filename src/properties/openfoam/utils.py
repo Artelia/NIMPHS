@@ -133,7 +133,7 @@ def get_value_range_from_name(value_ranges: str, name: str, value_type: str) -> 
         value_type (str): type of the scalar ("value" or "vector_value_dim")
 
     Returns:
-        dict | None: value range
+        Union[dict, None]: value range
     """
 
     values = value_ranges.split(";")
@@ -197,7 +197,7 @@ def get_clip_values(self) -> Union[float, list]:
     Function triggered when the UI fetches a clip value. Defaults to np.inf.
 
     Returns:
-        float | list : value
+        Union[float, list]: value
     """
 
     if self.name is not None:
