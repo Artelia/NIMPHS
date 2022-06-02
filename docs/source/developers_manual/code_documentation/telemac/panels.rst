@@ -9,11 +9,11 @@ Panels
 Scene
 #####
 
-.. autoclass:: src.panels.telemac.Scene.telemac_main_panel.TBB_PT_TelemacMainPanel
+.. autoclass:: tbb.panels.telemac.Scene.telemac_main_panel.TBB_PT_TelemacMainPanel
    :members:
    :show-inheritance:
 
-.. autoclass:: src.panels.telemac.Scene.telemac_create_sequence.TBB_PT_TelemacCreateSequence
+.. autoclass:: tbb.panels.telemac.Scene.telemac_create_sequence.TBB_PT_TelemacCreateSequence
    :members:
    :show-inheritance:
 
@@ -22,10 +22,10 @@ Scene
 Object
 ######
 
-.. autoclass:: src.panels.telemac.Object.telemac_streaming_sequence.TBB_PT_TelemacStreamingSequence
+.. autoclass:: tbb.panels.telemac.Object.telemac_streaming_sequence.TBB_PT_TelemacStreamingSequence
    :members:
    :show-inheritance:
 
-.. autoclass:: src.panels.telemac.Object.telemac_streaming_sequence_interpolate.TBB_PT_TelemacStreamingSequenceInterpolate
+.. autoclass:: tbb.panels.telemac.Object.telemac_streaming_sequence_interpolate.TBB_PT_TelemacStreamingSequenceInterpolate
    :members:
    :show-inheritance:

@@ -14,14 +14,14 @@ Other
 Temporary data
 --------------
 
-.. autoclass:: src.properties.telemac.temporary_data.TBB_TelemacTemporaryData
+.. autoclass:: tbb.properties.telemac.temporary_data.TBB_TelemacTemporaryData
    :members:
    :show-inheritance:
 
 Interpolation
 -------------
 
-.. autoclass:: src.properties.telemac.telemac_interpolate.TBB_TelemacInterpolateProperty
+.. autoclass:: tbb.properties.telemac.telemac_interpolate.TBB_TelemacInterpolateProperty
    :members:
    :show-inheritance:
 
@@ -30,7 +30,7 @@ Interpolation
 Scene
 #####
 
-.. autoclass:: src.properties.telemac.Scene.telemac_settings.TBB_TelemacSettings
+.. autoclass:: tbb.properties.telemac.Scene.telemac_settings.TBB_TelemacSettings
    :members:
    :show-inheritance:
 
@@ -40,11 +40,11 @@ Scene
 Object
 ######
 
-.. autoclass:: src.properties.telemac.Object.telemac_streaming_sequence.TBB_TelemacStreamingSequenceProperty
+.. autoclass:: tbb.properties.telemac.Object.telemac_streaming_sequence.TBB_TelemacStreamingSequenceProperty
    :members:
    :show-inheritance:
 
-.. autoclass:: src.properties.telemac.Object.telemac_mesh_sequence.TBB_TelemacMeshSequenceProperty
+.. autoclass:: tbb.properties.telemac.Object.telemac_mesh_sequence.TBB_TelemacMeshSequenceProperty
    :members:
    :show-inheritance:
    
@@ -53,5 +53,5 @@ Object
 Utils
 #####
 
-.. automodule:: src.properties.telemac.utils
+.. automodule:: tbb.properties.telemac.utils
    :members:

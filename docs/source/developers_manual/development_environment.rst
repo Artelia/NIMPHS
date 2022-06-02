@@ -100,11 +100,11 @@ Usage
 
 * Arguments for ``run_tests.py``
 
-    * -a (str, optional, defaults to ``"[current_directory]/src"`` then you have to run this script for the root folder (`toolsbox_blender`))
+    * -a (str, optional, defaults to ``"[current_directory]/tbb"`` then you have to run this script for the root folder (`toolsbox_blender`))
   
         | Addon path to test, can be a path to a directory or a .zip file.
 
-    * -n (str, optional, default to ``"src"``)
+    * -n (str, optional, default to ``"tbb"``)
 
         | Name to give to the zip file (in case the path to the addon is a directory)
 
