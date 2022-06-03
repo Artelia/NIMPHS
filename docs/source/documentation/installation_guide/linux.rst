@@ -4,8 +4,8 @@ Linux
 .. important::
     This tutorial is written for Ubuntu
 
-#. Install `Blender <https://www.blender.org/download/>`_ (at least version 3.1)
-#. Install dependancies:
+#. Install `Blender <https://www.blender.org/download/>`_ (at least version 3.0)
+#. Install dependencies:
     * Blender add-on: `Stop-motion-OBJ <https://github.com/neverhood311/Stop-motion-OBJ/releases>`_ (at least version 2.2.0.alpha.18)
     * Python packages:
 

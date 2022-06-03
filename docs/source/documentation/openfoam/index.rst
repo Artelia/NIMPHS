@@ -6,7 +6,8 @@ OpenFOAM
 * :ref:`openfoam_create_sequence`
 
 .. important::
-    Useful information are printed in the console (times, errors, warnings, etc). Do not hesitate to open it. On Windows, ``Window ‣ Toggle System Console``
+    Useful information are printed in the console (times, errors, warnings, etc).
+    Do not hesitate to open it. On Windows, ``Window ‣ Toggle System Console``.
 
 
 .. _openfoam_import_file:
@@ -22,7 +23,7 @@ Import a file
     For large meshes (> 100k vertices), this operation can take several seconds to complete.
 
 .. image:: /images/openfoam/import_file.png
-    :width: 35%
+    :width: 45%
     :alt: Import an OpenFOAM file (button)
     :align: center
 
@@ -37,18 +38,21 @@ Previewing tools
   You can select the ``TBB_OpenFOAM_preview`` object and hit ``.`` on your numpad to center the view on it.
 
 .. image:: /images/openfoam/preview_panel.png
-    :width: 35%
+    :width: 45%
     :alt: Preview panel
     :align: center
 
 |
 
-* **Reload**: reloads the selected file (`when something went wrong or temporary data is not available anymore`)
-* **Time step**: time step to preview
-* **Points**: point data to preview as vertex colors (`switch to material preview to see it`)
-* **Decompose polyhedra**: whether polyhedra are to be decomposed when read. If True, decompose polyhedra into tetrahedra and pyramids
-* **Triangulate**: more complex polygons will be broken down into triangles
-* **Preview**: preview the mesh with the selected parameters
+* **Reload**: reloads the selected file (`when something went wrong or temporary data is not available anymore`).
+* **Time step**: time step to preview.
+* **Points**: point data to preview as vertex colors (`switch to material preview to see it`).
+* **Decompose polyhedra**: indicate whether polyhedra are to be decomposed when read. If True, decompose polyhedra into tetrahedra and pyramids.
+* **Triangulate**: more complex polygons will be broken down into triangles.
+* **Case**: indicate whether decomposed mesh or reconstructed mesh should be read.
+* **Preview**: preview the mesh with the selected parameters.
+
+.. _openfoam_clip:
 
 Clip
 ----
@@ -59,7 +63,7 @@ Clip
 | You can clip a mesh as you would do in ParaView.
 
 .. image:: /images/openfoam/clip_panel.png
-    :width: 35%
+    :width: 45%
     :alt: Preview panel
     :align: center
 
@@ -68,9 +72,9 @@ Clip
 * **Type**: clipping method (Scalars, box, etc)
 
     * **Scalars clipping method**
-        * **Scalars**: name of scalar to clip on
-        * **Value**: set the clipping value
-        * **Invert**: flag on whether to flip/invert the clip. When True, only the mesh below 'value' will be kept. When False, only values above 'value' will be kept
+        * **Scalars**: name of scalar to clip on.
+        * **Value**: set the clipping value.
+        * **Invert**: flag on whether to flip/invert the clip. When True, only the mesh below 'value' will be kept. When False, only values above 'value' will be kept.
 
 .. _openfoam_create_sequence:
 
@@ -87,17 +91,17 @@ Mesh sequence
 | It is built using the `Stop-motion-OBJ <https://github.com/neverhood311/Stop-motion-OBJ/wiki>`_. Thus you can use the features associated for this sequence.
 
 .. image:: /images/openfoam/create_mesh_sequence.png
-    :width: 35%
+    :width: 45%
     :alt: Preview panel
     :align: center
 
 |
 
-* **Start**: starting point of the sequence (time step)
-* **End**: ending point of the sequence (time step)
-* **Import point data**: flag to indicate that it must import some point data as vertex colors
-* **List**: list of point data to import (separate each with a ``;``)
-* **Name**: name of the sequence
+* **Start**: starting point of the sequence (time step).
+* **End**: ending point of the sequence (time step).
+* **Import point data**: flag to indicate that it must import some point data as vertex colors.
+* **List**: list of point data to import (separate each with a ``;``).
+* **Name**: name of the sequence.
 
 Streaming sequence
 ------------------
@@ -106,14 +110,37 @@ Streaming sequence
 | The mesh automatically updates when the frame changes.
 
 .. image:: /images/openfoam/create_streaming_sequence.png
-    :width: 35%
+    :width: 45%
     :alt: Preview panel
     :align: center
 
 |
 
-* **Frame start**: starting point of the sequence (frame)
-* **Length**: length of the animation (time steps)
-* **Import point data**: flag to indicate that it must import some point data as vertex colors
-* **List**: list of point data to import (separate each with a ``;``)
-* **Name**: name of the sequence
+* **Frame start**: starting point of the sequence (frame).
+* **Length**: length of the animation (time steps).
+* **Import point data**: flag to indicate that it must import some point data as vertex colors.
+* **List**: list of point data to import (separate each with a ``;``).
+* **Name**: name of the sequence.
+
+Edit streaming sequence settings
+********************************
+
+| You can edit streaming sequences settings in the `Object properties` panel.
+
+.. image:: /images/openfoam/edit_streaming_sequence.png
+    :width: 45%
+    :alt: Preview panel
+    :align: center
+
+|
+
+* **Update**: update this sequence whenever the frame changes.
+* **Frame start**: starting point of the sequence (frame).
+* **Length**: length of the animation (time steps).
+* **Shade smooth**: whether to use smooth shading or not (flat shading).
+* **Import point data**: import point data as vertex color groups.
+* **List**: list of point data to import (separate each with a ``;``).
+* **Decompose polyhedra**: indicate whether polyhedra are to be decomposed when read. If True, decompose polyhedra into tetrahedra and pyramids.
+* **Triangulate**: more complex polygons will be broken down into triangles.
+* **Case**: indicate whether decomposed mesh or reconstructed mesh should be read.
+* **Clip**: see :ref:`openfoam_clip`

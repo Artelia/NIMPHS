@@ -66,8 +66,6 @@ release:
     tag_name: "${VERSION}"
     assets:
       links:
-        # - name: "Download Test_addon v${VERSION}"
-        #   url: "https://gitlab.arteliagroup.com/felix.olart/gitlab-ci-cd-tests/-/jobs/${GE_JOB_ID}/artifacts/file/${OUTPUT_FILE_NAME}.zip"
         - name: "Download Toolsbox blender v${VERSION}"
           url: "${PACKAGE_REGISTRY_URL}/${OUTPUT_FILE_NAME}.zip"
 
