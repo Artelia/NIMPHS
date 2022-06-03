@@ -78,7 +78,7 @@ def remove_folders_matching_pattern(root_folder: str, pattern: str = "__pycache_
                 os.rmdir(os.path.join(rootDir, subdir))
 
 
-def download_stop_motion_obj_addon(dest: str, version: str = "v2.2.0.alpha.18") -> tuple[str, str]:
+def download_stop_motion_obj_addon(dest: str, version: str = "v2.2.0.alpha.20") -> tuple[str, str]:
     module_name = "Stop-motion-OBJ"
     filename = module_name + "-" + version + ".zip"
     path = os.path.abspath(os.path.join(dest, filename))

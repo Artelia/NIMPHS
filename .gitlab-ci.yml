@@ -1,0 +1,102 @@
+stages:
+  - generate_addon
+  - release
+  - deploy
+
+
+variables:
+  VERSION: "0.2.0"
+  _VERSION: "_0_2_0"
+  MODULE_NAME: "tbb"
+  PACKAGE_NAME: "toolsbox_blender"
+  OUTPUT_FILE_NAME: "${PACKAGE_NAME}${_VERSION}"
+  PACKAGE_REGISTRY_URL: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${VERSION}"
+
+
+generate_addon:
+  stage: generate_addon
+  image: python:latest
+
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main" # Run this job when commits are pushed or merged to the main branch
+
+  before_script:
+    - echo $PACKAGE_REGISTRY_URL
+    - echo $CI_JOB_ID
+    - echo GE_JOB_ID=$CI_JOB_ID >> generate_addon.env
+
+  script:
+    - python --version
+    - apt-get update
+    - apt-get install -y zip unzip
+    - ls
+    - zip -r "${MODULE_NAME}" ${OUTPUT_FILE_NAME}
+    - ls
+    - |
+      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file ${OUTPUT_FILE_NAME}.zip ${PACKAGE_REGISTRY_URL}/${OUTPUT_FILE_NAME}.zip
+    - echo "Add-on successfully generated!"
+
+  artifacts:
+    paths:
+      - ${OUTPUT_FILE_NAME}.zip
+
+    reports:
+      dotenv: generate_addon.env
+
+
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never # Do not run this job when a tag is created manually
+    - if: $CI_COMMIT_BRANCH == "main"
+
+  needs:
+    - job: generate_addon
+      artifacts: true
+
+  script:
+    - echo "Running release job"
+
+  release:
+    name: "Toolsbox blender v${VERSION}"
+    description: "Release created using the release-ci"
+    tag_name: "${VERSION}"
+    assets:
+      links:
+        # - name: "Download Test_addon v${VERSION}"
+        #   url: "https://gitlab.arteliagroup.com/felix.olart/gitlab-ci-cd-tests/-/jobs/${GE_JOB_ID}/artifacts/file/${OUTPUT_FILE_NAME}.zip"
+        - name: "Download Toolsbox blender v${VERSION}"
+          url: "${PACKAGE_REGISTRY_URL}/${OUTPUT_FILE_NAME}.zip"
+
+
+pages:
+  stage: deploy
+  image: python:latest
+
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+  needs:
+    - job: release
+  
+  before_script:
+    - echo $CI_PAGES_DOMAIN
+    - echo $CI_PAGES_URL
+    - pip install -U sphinx
+    - pip install -U sphinxemoji
+    - pip install -U sphinx_rtd_theme
+    - pip install -U fake-bpy-module-latest
+    - pip install -U https://github.com/pyvista/pyvista-wheels/raw/main/vtk-9.1.0.dev0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+
+  script:
+    # Comment '@persistent' decorators because fake-bpy-module defines it at 'None', which is not callable and causes errors during 'sphinx-build'
+    - find src/ -type f -name "*.py" -exec sed -i 's/@persistent/#@persistent/g' {} +
+    - sphinx-build -b html docs/source public
+    - find src/ -type f -name "*.py" -exec sed -i 's/#@persistent/@persistent/g' {} +
+  
+  artifacts:
+    paths:
+      - public

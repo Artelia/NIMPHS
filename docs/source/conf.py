@@ -18,8 +18,8 @@ sys.path.insert(0, os.path.abspath('../../'))
 # -- Project information -----------------------------------------------------
 
 project = 'Toolsbox blender 0.2.0'
-copyright = '2022, Félix Olart'
-author = 'Félix Olart'
+copyright = '2022, Thibault Oudart, Félix Olart'
+author = 'Thibault Oudart, Félix Olart'
 
 # The full version, including alpha/beta/rc tags
 release = '0.2.0'
