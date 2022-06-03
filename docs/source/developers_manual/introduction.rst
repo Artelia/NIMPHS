@@ -31,7 +31,7 @@ Auto-loader
 
 | Consequently, every folder in the ``tbb`` directory must contain an empty ``__init__.py`` file.
 
-| For each class, you need to defined two attributes:
+| For each class, you need to define two attributes:
 
 * The ``register_cls`` attribute (bool), indicates if this class has to be registerd
 * The ``is_custom_base_cls`` attribute (bool), indicates if this class is a custom base class of other classes
