@@ -99,7 +99,7 @@ def download_stop_motion_obj_addon(dest: str, version: str = "v2.2.0.alpha.20") 
     return path, module_name
 
 
-# Parser for run_tests.py
+# Parser for run_tests.py
 parser = argparse.ArgumentParser(description="Test addon")
 parser.add_argument(
     "-n",

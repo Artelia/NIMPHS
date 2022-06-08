@@ -26,12 +26,9 @@ class TBB_TelemacSettings(TBB_ModuleSceneSettings):
     #: bpy.types.EnumProperty: Select a sequence type
     sequence_type: EnumProperty(
         items=[
-            ("mesh_sequence",
-             "Mesh sequence",
-             "Make a sequence by adding shape keys for each time step (good option for small meshes)"),
-            ("streaming_sequence",
-             "Streaming sequence",
-             "TODO (good option for large meshes)"),
+            ("mesh_sequence", "Mesh sequence", "Make a sequence by adding shape keys for each time step\
+             (good option for small meshes)"),  # noqa: F821
+            ("streaming_sequence", "Streaming sequence", "TODO (good option for large meshes)"),  # noqa: F821
         ],
         name="Sequence type",
         description="Select a sequence type",

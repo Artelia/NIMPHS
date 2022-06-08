@@ -67,11 +67,11 @@ def run_one_step_create_mesh_sequence_openfoam(context: Context, current_frame: 
         obj.mesh_sequence_settings.curMeshIdx = meshIdx
         obj.keyframe_insert(
             data_path='mesh_sequence_settings.curMeshIdx',
-            frame=context.scene.frame_current)
+            frame=current_frame)
 
         # make the interpolation constant for this keyframe
         newKeyAtFrame = next(
-            (keyframe for keyframe in meshIdxCurve.keyframe_points if keyframe.co.x == context.scene.frame_current), None)
+            (keyframe for keyframe in meshIdxCurve.keyframe_points if keyframe.co.x == current_frame), None)
         newKeyAtFrame.interpolation = 'CONSTANT'
 
 
@@ -211,7 +211,7 @@ def generate_mesh_for_sequence(context: Context, time_point: int, name: str = "T
     # Create mesh from python data
     blender_mesh = bpy.data.meshes.new(name + "_mesh")
     blender_mesh.from_pydata(vertices, [], faces)
-    # Use fake user so Blender will save our mesh in the .blend file
+    # Use fake user so Blender will save our mesh in the .blend file
     blender_mesh.use_fake_user = True
 
     # Import point data as vertex colors
@@ -343,8 +343,8 @@ def prepare_openfoam_point_data(mesh: UnstructuredGrid, blender_mesh: Mesh, list
             # When the list is given by the user, the type is not provided.
             if key not in mesh.point_data.keys():
                 if key != "None":
-                    print("WARNING::prepare_openfoam_point_data: the field array named '" +
-                          key + "' does not exist (time point = " + str(time_point) + ")")
+                    print("WARNING::prepare_openfoam_point_data: the field array named '" + key + "' does not exist\
+                          (time point = " + str(time_point) + ")")
 
                 continue
             else:
@@ -423,8 +423,8 @@ def update_openfoam_streaming_sequence_mesh(obj: Object, settings: TBB_OpenfoamS
 
     # Check if time point is ok
     if time_point >= file_reader.number_time_points:
-        raise ValueError("time point '" + str(time_point) + "' does not exist. Available time points: " +
-                         str(file_reader.number_time_points))
+        raise ValueError("time point '" + str(time_point) + "' does not exist. Available time\
+                         points: " + str(file_reader.number_time_points))
 
     vertices, faces, mesh = generate_mesh_data(file_reader, time_point, triangulate=settings.triangulate,
                                                clip=settings.clip)

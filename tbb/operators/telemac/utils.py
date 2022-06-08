@@ -200,8 +200,8 @@ def generate_mesh_data_linear_interp(obj: Object, tmp_data: TBB_TelemacStreaming
     if not time_info["existing_time_point"]:
         # Get data from right time point
         try:
-            r_vertices = generate_mesh_data(tmp_data, tmp_data.is_3d, offset=offset, time_point=time_info["r_time_point"],
-                                            type=obj.tbb.settings.telemac.z_name)
+            r_vertices = generate_mesh_data(tmp_data, tmp_data.is_3d, offset=offset,
+                                            time_point=time_info["r_time_point"], type=obj.tbb.settings.telemac.z_name)
         except Exception as vertices_error:
             raise vertices_error from vertices_error
 
@@ -642,8 +642,8 @@ def update_telemac_streaming_sequence_mesh(obj: Object, seq_settings: TBB_Telema
     # Check if time poit is ok
     time_point = time_info["l_time_point"]
     if time_point > tmp_data.nb_time_points:
-        raise ValueError("time point '" + str(time_point) + "' does not exist. Available time points: " +
-                         str(tmp_data.nb_time_points))
+        raise ValueError("time point '" + str(time_point) + "' does not exist. Available time\
+                         points: " + str(tmp_data.nb_time_points))
 
     # Update mesh
     offset = id if tmp_data.is_3d else 0

@@ -157,7 +157,7 @@ def setup_streaming_sequence_object(obj: Object, seq_settings: Union[TBB_Openfoa
 
     Args:
         obj (Object): sequence object
-        seq_settings Union[TBB_OpenfoamStreamingSequenceProperty, TBB_TelemacStreamingSequenceProperty]: sequence settings
+        seq_settings Union[TBB_OpenfoamStreamingSequenceProperty, TBB_TelemacStreamingSequenceProperty]: settings
         time_points (int): number of available time points
         settings (TBB_ModuleSceneSettings): scene settings
         module (str): name of the module, enum in ['OpenFOAM', 'TELEMAC']

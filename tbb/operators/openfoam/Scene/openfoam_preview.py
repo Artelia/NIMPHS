@@ -5,7 +5,11 @@ import time
 
 from tbb.properties.openfoam.utils import encode_value_ranges, encode_scalar_names
 from tbb.operators.utils import generate_object_from_data, get_collection, generate_vertex_colors
-from tbb.operators.openfoam.utils import generate_mesh_data, prepare_openfoam_point_data, generate_preview_material, load_openfoam_file
+from tbb.operators.openfoam.utils import (
+    generate_mesh_data,
+    prepare_openfoam_point_data,
+    generate_preview_material,
+    load_openfoam_file)
 
 
 class TBB_OT_OpenfoamPreview(Operator):
@@ -42,7 +46,7 @@ class TBB_OT_OpenfoamPreview(Operator):
             return {'FINISHED'}
 
         if clip.type != "" and clip.scalar.name == "":
-            self.report({'ERROR'}, "Please select a scalar to clip on. You may need to reload the file if none are shown.")
+            self.report({'ERROR'}, "Select a scalar to clip on. You may need to reload the file if none are shown")
             return {'FINISHED'}
 
         start = time.time()
@@ -79,7 +83,7 @@ class TBB_OT_OpenfoamPreview(Operator):
         # Update temporary data. We do not update it just after the reading of the file. Here is why.
         # This line will update the list of available scalars. If the choosen scalar is not available at
         # the selected time point, the program will automatically choose another scalar due to the update function
-        # of the enum property. This is surely not what the user was expecting.
+        # of the enum property. This is surely not what the user was expecting.
         tmp_data.update(file_reader, prw_time_point, data, raw_mesh)
 
         try:

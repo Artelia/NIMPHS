@@ -76,4 +76,5 @@ def register_custom_progress_bar() -> None:
 
 
 # A variable where we can store the original draw funtion
-def info_header_draw(s, c): return None
+def info_header_draw(s, c):
+    return None

@@ -34,7 +34,7 @@ class TBB_CreateSequence(Operator):
     mode: StringProperty(
         name="Create sequence mode",
         description="Wether the operator should run modal or not, enum in ['MODAL', 'NORMAL']",
-        default="MODAL"
+        default="MODAL"  # noqa: F821
     )
 
     def __init__(self) -> None:
@@ -106,8 +106,8 @@ class TBB_CreateSequence(Operator):
             elif self.mode == 'NORMAL':
                 return {'NORMAL'}  # custom value to run the process whithout modal mode (used in tests)
             else:
-                print("WARNING::TBB_CreateSequence: undefined operator mode '" +
-                      str(self.mode) + "', running modal by default.")
+                print("WARNING::TBB_CreateSequence: undefined operator mode '" + str(self.mode) + "', running\
+                       modal by default.")
                 return {'RUNNING_MODAL'}
 
         elif settings.sequence_type == "streaming_sequence":
@@ -127,7 +127,7 @@ class TBB_CreateSequence(Operator):
             context.scene.collection.objects.link(obj)
 
             # As mentionned here, lock the interface because the custom handler will alter data on frame change
-            # https://docs.blender.org/api/current/bpy.app.handlers.html?highlight=app%20handlers#module-bpy.app.handlers
+            # https://docs.blender.org/api/current/bpy.app.handlers.html?highlight=app%20handlers#module-bpy.app.handlers
             RenderSettings.use_lock_interface = True
 
             self.report({'INFO'}, "Sequence successfully created")

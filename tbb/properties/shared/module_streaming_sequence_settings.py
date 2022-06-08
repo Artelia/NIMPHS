@@ -15,7 +15,7 @@ class TBB_ModuleStreamingSequenceSettings(PropertyGroup):
 
     #: bpy.props.StringProperty: Name of the sequence.
     name: StringProperty(
-        name="Name",
+        name="Name",  # noqa: F821
         description="Name of the sequence",
         default="",
     )

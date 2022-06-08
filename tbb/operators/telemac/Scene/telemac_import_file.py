@@ -24,7 +24,7 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
     #: bpy.props.StringProperty: List of allowed file extensions.
     filter_glob: StringProperty(
         default="*.slf",  # multiple allowed types: "*.slf;*.[];*.[]" etc ...
-        options={"HIDDEN"}
+        options={"HIDDEN"}  # noqa: F821
     )
 
     def execute(self, context: Context) -> set:

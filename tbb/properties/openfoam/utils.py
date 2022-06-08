@@ -82,7 +82,7 @@ def encode_value_ranges(mesh: UnstructuredGrid) -> str:
 
     .. code-block:: text
 
-        Pattern: "name_of_scalar@value/min/max;name_of_other_scalar@vector_value_dimension/min.x/max.x/min.y/max.y/min.z/min.z/..."
+        Pattern: "name_of_scalar@value/min/max;name_of_other_scalar@vector_value_dimension/min.x/max.x/min.y/max.y/..."
         Example: "U@vector_value_3/0.0/1.0/-1.0/2.0/2.5/3.5;alpha.water@value/0.0/1.0"
 
     Args:

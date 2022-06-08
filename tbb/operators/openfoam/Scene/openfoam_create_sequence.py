@@ -113,8 +113,7 @@ class TBB_OT_OpenfoamCreateSequence(TBB_CreateSequence):
             print("CreateSequence::OpenFOAM: " + el_time + "s, time_point = " + str(time_point))
         except Exception as error:
             print("ERROR::TBB_OT_OpenfoamCreateSequence: " + str(error))
-            self.report({'ERROR'}, "An error occurred creating the sequence, (time_step = " +
-                        str(time_point) + ")")
+            self.report({'ERROR'}, "An error occurred creating the sequence, (time_step = " + str(time_point) + ")")
             super().stop(context)
             return {'CANCELLED'}
 

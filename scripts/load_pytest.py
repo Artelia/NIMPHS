@@ -59,7 +59,8 @@ except Exception:
     from bpy.app import version
     if version > (3, 0, 0):
         install(
-            "https://github.com/pyvista/pyvista-wheels/raw/main/vtk-9.1.0.dev0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+            "https://github.com/pyvista/pyvista-wheels/raw/main/vtk-9.1.0.dev0-cp310-cp310-manylinux_2_17_x86_64.\
+             manylinux2014_x86_64.whl",
             True)
         install_local_package(os.path.join(os.path.abspath("./../"), "pyvista"), True)
     elif version == (3, 0, 0):

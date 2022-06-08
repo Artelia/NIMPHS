@@ -115,8 +115,7 @@ class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
             print("CreateSequence::TELEMAC: " + el_time + "s, time_point = " + str(time_point))
         except Exception as error:
             print("ERROR::TBB_OT_TelemacCreateSequence: " + str(error))
-            self.report({'ERROR'}, "An error occurred creating the sequence, (time_step = " +
-                        str(time_point) + ")")
+            self.report({'ERROR'}, "An error occurred creating the sequence, (time_step = " + str(time_point) + ")")
             super().stop(context)
             return {'CANCELLED'}
 

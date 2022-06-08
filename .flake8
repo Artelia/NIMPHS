@@ -1,0 +1,22 @@
+[flake8]
+max-line-length = 120
+exclude =
+    .git,
+    .pytest_cache,
+    .vscode,
+    cache,
+    docs,
+    __pycache__,
+    tbb/**/__init__.py,
+    tbb/properties/telemac/serafin.py,
+ignore =
+    # Imported but unused
+    F401,
+    # Module level import not at top of file
+    E402,
+    # Redefinition of unused module
+    F811,
+    # Syntax error in annotation
+    F722,
+    # Double quotes found but single quotes preferred
+    Q000,

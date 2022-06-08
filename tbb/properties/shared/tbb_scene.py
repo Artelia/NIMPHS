@@ -32,13 +32,13 @@ class TBB_Scene(PropertyGroup):
         max=101.0,
         soft_max=100.0,
         precision=1,
-        subtype="PERCENTAGE",
+        subtype="PERCENTAGE",  # noqa: F821
         update=update_progress_bar,
     )
 
     #: bpy.props.StringProperty: Label displayed on the progress bar
     progress_label: StringProperty(
         name="Progress label",
-        default="Progress",
+        default="Progress",  # noqa: F821
         update=update_progress_bar,
     )

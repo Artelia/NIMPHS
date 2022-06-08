@@ -162,7 +162,7 @@ def test_preview_material_openfoam():
     # Test preview material
     prw_mat = bpy.data.materials.get("TBB_OpenFOAM_preview_material", None)
     assert prw_mat is not None
-    assert prw_mat.use_nodes == True
+    assert prw_mat.use_nodes is True
     # Test nodes
     principled_bsdf_node = prw_mat.node_tree.nodes.get("Principled BSDF", None)
     assert principled_bsdf_node is not None
@@ -201,27 +201,27 @@ def test_create_streaming_sequence_openfoam(scene_settings):
 
 def test_streaming_sequence_openfoam(streaming_sequence):
     assert streaming_sequence is not None
-    assert streaming_sequence.tbb.is_streaming_sequence == True
+    assert streaming_sequence.tbb.is_streaming_sequence is True
 
     # Test common settings
     seq_settings = streaming_sequence.tbb.settings.openfoam.streaming_sequence
     assert seq_settings.name == "My_OpenFOAM_Streaming_Sim_sequence"
-    assert seq_settings.update == True
+    assert seq_settings.update is True
     assert seq_settings.file_path == FILE_PATH
     assert seq_settings.frame_start == 1
     assert seq_settings.max_length == 21
     assert seq_settings.anim_length == 21
-    assert seq_settings.import_point_data == True
+    assert seq_settings.import_point_data is True
     assert seq_settings.list_point_data == "U;alpha.water;p;p_rgh"
 
     # Test OpenFOAM settings
-    assert seq_settings.decompose_polyhedra == True
-    assert seq_settings.triangulate == True
+    assert seq_settings.decompose_polyhedra is True
+    assert seq_settings.triangulate is True
     assert seq_settings.case_type == 'reconstructed'
     assert seq_settings.clip.type == 'scalar'
     assert seq_settings.clip.scalar.value == 0.5
     assert seq_settings.clip.scalar.name == "alpha.water@value"
-    assert seq_settings.clip.scalar.invert == False
+    assert seq_settings.clip.scalar.invert is False
 
 
 def test_geometry_streaming_sequence_openfoam(streaming_sequence):
@@ -285,16 +285,16 @@ def test_mesh_sequence_openfoam(mesh_sequence):
     assert mesh_sequence.mesh_sequence_settings.numMeshesInMemory == 4
     assert mesh_sequence.mesh_sequence_settings.startFrame == 1
     assert mesh_sequence.mesh_sequence_settings.speed == 1.0
-    assert mesh_sequence.mesh_sequence_settings.streamDuringPlayback == True
-    assert mesh_sequence.mesh_sequence_settings.showAsSingleMesh == False
-    assert mesh_sequence.mesh_sequence_settings.perFrameMaterial == False
-    assert mesh_sequence.mesh_sequence_settings.loaded == True
-    assert mesh_sequence.mesh_sequence_settings.initialized == True
+    assert mesh_sequence.mesh_sequence_settings.streamDuringPlayback is True
+    assert mesh_sequence.mesh_sequence_settings.showAsSingleMesh is False
+    assert mesh_sequence.mesh_sequence_settings.perFrameMaterial is False
+    assert mesh_sequence.mesh_sequence_settings.loaded is True
+    assert mesh_sequence.mesh_sequence_settings.initialized is True
     assert mesh_sequence.mesh_sequence_settings.name == ""
     assert mesh_sequence.mesh_sequence_settings.meshNames == ""
     assert mesh_sequence.mesh_sequence_settings.meshNameArray is not None
     assert mesh_sequence.mesh_sequence_settings.frameMode == '4'
-    assert mesh_sequence.mesh_sequence_settings.isImported == False
+    assert mesh_sequence.mesh_sequence_settings.isImported is False
     assert mesh_sequence.mesh_sequence_settings.fileName == ""
 
 

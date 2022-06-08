@@ -14,7 +14,7 @@ class TBB_OpenfoamClipScalarProperty(PropertyGroup):
 
     #: bpy.types.FloatProperty: Set the clipping value
     value: FloatProperty(
-        name="Value",
+        name="Value",  # noqa: F821
         description="Set the clipping value",
         default=0.5,
         precision=6,
@@ -25,7 +25,7 @@ class TBB_OpenfoamClipScalarProperty(PropertyGroup):
 
     #: bpy.types.FloatProperty: Set the clipping value
     vector_value: FloatVectorProperty(
-        name="Value",
+        name="Value",  # noqa: F821
         description="Set the clipping value",
         default=(0.5, 0.5, 0.5),
         precision=6,
@@ -44,7 +44,7 @@ class TBB_OpenfoamClipScalarProperty(PropertyGroup):
     #: bpy.types.EnumProperty: Name of scalars to clip on
     name: EnumProperty(
         items=update_scalar_names,
-        name="Scalars",
+        name="Scalars",  # noqa: F821
         description="Name of scalars to clip on",
     )
 
@@ -55,10 +55,12 @@ class TBB_OpenfoamClipScalarProperty(PropertyGroup):
         default="",
     )
 
-    #: bpy.types.BoolProperty: Flag on whether to flip/invert the clip. When True, only the mesh below 'value' will be kept. When False, only values above 'value' will be kept
+    #: bpy.types.BoolProperty: Flag on whether to flip/invert the clip. When True, only the mesh below 'value' will be
+    #                          kept. When False, only values above 'value' will be kept
     invert: BoolProperty(
-        name="Invert",
-        description="Flag on whether to flip/invert the clip. When True, only the mesh below 'value' will be kept. When False, only values above 'value' will be kept",
+        name="Invert",  # noqa: F821
+        description="Flag on whether to flip/invert the clip. When True, only the mesh below 'value' will be kept.\
+                     When False, only values above 'value' will be kept",
         default=False,
     )
 
@@ -73,13 +75,13 @@ class TBB_OpenfoamClipProperty(PropertyGroup):
     #: bpy.types.EnumProperty: Choose the clipping method
     type: EnumProperty(
         items=[
-            ("no_clip", "None", "Do not clip"),
-            ("scalar", "Scalars", "Clip a dataset by a scalar"),
+            ("no_clip", "None", "Do not clip"),  # noqa: F821
+            ("scalar", "Scalars", "Clip a dataset by a scalar"),  # noqa: F821
             # ("box", "Box", "Clip a dataset by a bounding box defined by the bounds"),
         ],
-        name="Type",
+        name="Type",  # noqa: F821
         description="Choose the clipping method",
-        default="no_clip",
+        default="no_clip",  # noqa: F821
     )
 
     #: TBB_OpenfoamClipScalarProperty: Clip scalar settings

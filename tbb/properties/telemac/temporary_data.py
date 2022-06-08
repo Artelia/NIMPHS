@@ -140,7 +140,7 @@ class TBB_TelemacTemporaryData():
         except Exception as error:
             raise error
 
-        # Get the id of the variable name if Serafin.nomvar
+        # Get the id of the variable name if Serafin.nomvar
         var_id = np.inf
         for name, id in zip(self.vars_info["names"], range(self.nb_vars)):
             if var_name == name:
@@ -151,8 +151,8 @@ class TBB_TelemacTemporaryData():
 
         # By default, always output with 'COL' shape, even the given shape is not defined.
         if output_shape not in ['ROW', 'COL']:
-            print("WARNING::get_data_from_var_name: unknown output_shape '" +
-                  str(output_shape) + "', default output to 'COL' mode.")
+            print("WARNING::get_data_from_var_name: unknown output_shape '" + str(output_shape) + "', default\
+                  output to 'COL' mode.")
         if output_shape == 'ROW':
             return data[var_id]
         else:

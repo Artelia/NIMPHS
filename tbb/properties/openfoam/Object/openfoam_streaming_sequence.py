@@ -15,13 +15,14 @@ class TBB_OpenfoamStreamingSequenceProperty(TBB_ModuleStreamingSequenceSettings)
     #: bpy.types.BoolProperty: If `True`, decompose polyhedra into tetrahedra and pyramids
     decompose_polyhedra: BoolProperty(
         name="Decompose polyhedra",
-        description="Whether polyhedra are to be decomposed when read. If True, decompose polyhedra into tetrahedra and pyramids",
+        description="Whether polyhedra are to be decomposed when read. If True,\
+                     decompose polyhedra into tetrahedra and pyramids",
         default=False
     )
 
     #: bpy.types.BoolProperty: If `True`, more complex polygons will be broken down into triangles
     triangulate: BoolProperty(
-        name="Triangule",
+        name="Triangulate",  # noqa: F821
         description="More complex polygons will be broken down into triangles",
         default=True
     )
@@ -31,8 +32,8 @@ class TBB_OpenfoamStreamingSequenceProperty(TBB_ModuleStreamingSequenceSettings)
         name="Case type",
         description="The property indicates whether decomposed mesh or reconstructed mesh should be read",
         items=[
-            ("reconstructed", "Reconstructed", "Reconstructed mesh should be read"),
-            ("decomposed", "Decomposed", "Decomposed mesh should be read"),
+            ("reconstructed", "Reconstructed", "Reconstructed mesh should be read"),  # noqa: F821
+            ("decomposed", "Decomposed", "Decomposed mesh should be read"),  # noqa: F821
         ]
     )
 

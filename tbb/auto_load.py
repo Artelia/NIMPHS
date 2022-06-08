@@ -1,5 +1,5 @@
 # <pep8 compliant>
-# Code taken here: https://github.com/JacquesLucke/animation_nodes/blob/master/animation_nodes/auto_load.py
+# Code taken here: https://github.com/JacquesLucke/animation_nodes/blob/master/animation_nodes/auto_load.py
 import bpy
 import typing
 import inspect
