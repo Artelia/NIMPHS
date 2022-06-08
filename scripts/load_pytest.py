@@ -16,11 +16,24 @@ from scripts.utils import (
 print(f"{bcolors.OKBLUE}{get_centered_message(' LOAD PYTEST ', '=')}{bcolors.ENDC}")
 print("Running file:", __file__, "from Blender")
 
+# TODO: fix this
+# Not the best solution but it works.
+# Blender_addon_tester should not be installed in the Blender python folder.
+# We should be able to add it through this line: sys.path.append(os.environ["LOCAL_PYTHONPATH"])
 try:
-    import pytest
-except Exception as e:
-    print(e)
-    sys.exit(1)
+    import blender_addon_tester
+except Exception:
+    pass
+
+if "blender_addon_tester" not in globals():
+    try:
+        print("Blender_addon_tester not found. Installaing...")
+        install("blender_addon_tester", True)
+    except Exception as e:
+        print(e)
+        sys.exit(1)
+else:
+    print("Blender_addon_tester - found")
 
 
 # Make sure to have BLENDER_ADDON_TO_TEST set as an environment variable first
@@ -41,6 +54,7 @@ TESTS_PATH = os.environ.get("BLENDER_ADDON_TESTS_PATH", default_tests_dir.as_pos
 try:
     import numpy
     import matplotlib
+    import pytest
     # import pyvista
 except Exception:
     try:
@@ -50,43 +64,34 @@ except Exception:
         sys.exit(1)
 
 # TODO: fix this
-# Temporary workaround to install a local custom version of pyvista and vtk
-# Reasons: no vtk support for python 3.10+ and a small edit in pyvista which will be available later
+# Temporary workaround to install a local custom version of vtk
+# Reason: no vtk support for python 3.10+
 try:
-    import pyvista
-    assert pyvista.__version__ == "0.35.dev0"
+    import vtkmodules
 except Exception:
     from bpy.app import version
-    if version > (3, 0, 0):
-        install(
-            "https://github.com/pyvista/pyvista-wheels/raw/main/vtk-9.1.0.dev0-cp310-cp310-manylinux_2_17_x86_64.\
-             manylinux2014_x86_64.whl",
-            True)
-        install_local_package(os.path.join(os.path.abspath("./../"), "pyvista"), True)
-    elif version == (3, 0, 0):
-        install_local_package(os.path.join(os.path.abspath("./../"), "pyvista"), True)
+    if version >= (3, 1, 0):
+        install('https://github.com/pyvista/pyvista-wheels/raw/main/\
+vtk-9.1.0.dev0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl', True)
+    elif version >= (3, 0, 0):
+        install("vtk", True)
     else:
-        print("This addon is not supported for Blender versions under 3.0.0")
+        print('This addon is not supported for Blender versions under 3.0.0')
         sys.exit(1)
 
 # TODO: fix this
-# Not the best solution but it works.
-# Blender_addon_tester should not be installed in the Blender python folder.
-# We should be able to add it through this line: sys.path.append(os.environ["LOCAL_PYTHONPATH"])
+# Temporary workaround to install a local custom version of pyvista
+# Reasons: small edit in pyvista which will be available later
 try:
-    import blender_addon_tester
+    import pyvista
+    assert pyvista.__version__ >= '0.35.dev0'
 except Exception:
-    pass
-
-if "blender_addon_tester" not in globals():
-    try:
-        print("Blender_addon_tester not found. Installaing...")
-        install("blender_addon_tester", True)
-    except Exception as e:
-        print(e)
+    from bpy.app import version
+    if version >= (3, 0, 0):
+        install_local_package(os.path.join(os.path.abspath('./../'), 'pyvista'))
+    else:
+        print('This addon is not supported for Blender versions under 3.0.0')
         sys.exit(1)
-else:
-    print("Blender_addon_tester - found")
 
 # Import utils functions
 from blender_addon_tester.addon_helper import zip_addon, change_addon_dir, install_addon, cleanup
@@ -142,6 +147,7 @@ class SetupPlugin:
 
 
 try:
+    import pytest
     pytest_main_args = [TESTS_PATH]
     if COVERAGE_REPORTING is not False:
         pytest_main_args += ["--cov", "--cov-report", "term", "--cov-report", "xml"]

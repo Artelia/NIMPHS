@@ -49,11 +49,12 @@ def main():
     here = Path(__file__).parent
 
     try:
-        # Cleanup '__pychache__' folders in the 'src' folder
-        remove_folders_matching_pattern(os.path.join(os.path.abspath("."), "src"))
+        # Cleanup '__pychache__' folders in the 'tbb' folder
+        remove_folders_matching_pattern(os.path.join(os.path.abspath("."), "tbb"))
 
         # Download addons on which this addon depends
-        smo_path, smo_module_name = download_stop_motion_obj_addon(here.joinpath("../cache").as_posix())
+        smo_addon_dest = os.path.abspath(here.joinpath("../cache").as_posix())
+        smo_path, smo_module_name = download_stop_motion_obj_addon(smo_addon_dest)
         os.environ["STOP_MOTION_OBJ_PATH"] = smo_path
         os.environ["STOP_MOTION_OBJ_MODULE"] = smo_module_name
 
@@ -71,10 +72,10 @@ def main():
 
     # Custom configuration
     config = {
-        "blender_load_tests_script": here.joinpath("load_pytest.py").as_posix(),
+        "blender_load_tests_script": os.path.abspath(here.joinpath("load_pytest.py").as_posix()),
         "coverage": False,
-        "tests": here.joinpath("../tests").as_posix(),
-        "blender_cache": here.joinpath("../cache").as_posix()
+        "tests": os.path.abspath(here.joinpath("../tests").as_posix()),
+        "blender_cache": os.path.abspath(here.joinpath("../cache").as_posix())
     }
 
     try:
