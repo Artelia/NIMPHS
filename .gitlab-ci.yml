@@ -1,24 +1,100 @@
+include:
+  - local: ".gitlab/rules.yml"
+
+
 stages:
-  - generate_addon
+  - check-style-docstring
+  - build
+  - test
+  - generate-addon
   - release
   - deploy
 
 
 variables:
-  VERSION: "0.2.0"
-  _VERSION: "_0_2_0"
+  DEPLOY_DOCS:
+    value: "false"
+    description: "Indicate whether to deploy documentation or not."
+
+  ADDON_NAME: "Toolsbox blender"
   MODULE_NAME: "tbb"
-  PACKAGE_NAME: "toolsbox_blender"
-  OUTPUT_FILE_NAME: "${PACKAGE_NAME}${_VERSION}"
+  PACKAGE_NAME: "toolsbox-blender"
+
+  VERSION: "${CI_COMMIT_TAG}"
+  ADDON_FILE_NAME: "${PACKAGE_NAME}"
+  DOC_FILE_NAME: "${PACKAGE_NAME}_documentation"
   PACKAGE_REGISTRY_URL: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${VERSION}"
 
 
-generate_addon:
-  stage: generate_addon
+check-style-docstring:
+  stage: check-style-docstring
   image: python:latest
 
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main" # Run this job when commits are pushed or merged to the main branch
+  extends:
+    - .run_automatically
+
+  before_script:
+    - pip install -U pre-commit
+
+  script:
+    - pre-commit run --all-files
+
+
+build-doc:
+  stage: build
+  image: python:latest
+
+  needs:
+    - job: check-style-docstring
+
+  extends:
+    - .run_automatically
+
+  before_script:
+    - pip install -r docs/requirements.txt
+    - pip install -U https://github.com/pyvista/pyvista-wheels/raw/main/vtk-9.1.0.dev0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+
+  script:
+    # Comment '@persistent' decorators because fake-bpy-module defines it at 'None', which is not callable and causes errors during 'sphinx-build'
+    - find cicd_tests/ -type f -name "*.py" -exec sed -i 's/@persistent/#@persistent/g' {} +
+    - sphinx-build -b html docs/source build_docs
+    - find cicd_tests/ -type f -name "*.py" -exec sed -i 's/#@persistent/@persistent/g' {} +
+
+  artifacts:
+    paths:
+      - build_docs
+    expire_in: 1 hour
+
+
+test-addon:
+  stage: test
+  image: python:latest
+
+  needs:
+    - job: check-style-docstring
+
+  extends:
+    - .run_automatically_no_deploy
+
+  before_script:
+    - pip3 install -U blender_addon_tester
+
+  script:
+      - echo "Not implemented yet..."
+    # - python3 -m scripts.run_tests.py
+
+
+generate-addon:
+  stage: generate-addon
+  image: python:latest
+
+  needs:
+    - job: test-addon
+    - job: build-doc
+      artifacts: true
+
+  extends:
+    - .tag_only
 
   before_script:
     - echo $PACKAGE_REGISTRY_URL
@@ -26,19 +102,27 @@ generate_addon:
     - echo GE_JOB_ID=$CI_JOB_ID >> generate_addon.env
 
   script:
+    - echo $ADDON_FILE_NAME
     - python --version
     - apt-get update
     - apt-get install -y zip unzip
-    - ls
-    - zip -r "${MODULE_NAME}" ${OUTPUT_FILE_NAME}
-    - ls
+
+    # Upload addon
+    - zip -r "${MODULE_NAME}" "${MODULE_NAME}"
+    - mv "${MODULE_NAME}.zip" "${ADDON_FILE_NAME}.zip"
     - |
-      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file ${OUTPUT_FILE_NAME}.zip ${PACKAGE_REGISTRY_URL}/${OUTPUT_FILE_NAME}.zip
-    - echo "Add-on successfully generated!"
+      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file ${ADDON_FILE_NAME}.zip ${PACKAGE_REGISTRY_URL}/${ADDON_FILE_NAME}.zip
+
+    # Upload documentation
+    - zip -r "build_docs" "build_docs"
+    - mv "build_docs.zip" "${DOC_FILE_NAME}.zip"
+    - |
+      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file ${DOC_FILE_NAME}.zip ${PACKAGE_REGISTRY_URL}/${DOC_FILE_NAME}.zip
 
   artifacts:
     paths:
-      - ${OUTPUT_FILE_NAME}.zip
+      - ${ADDON_FILE_NAME}.zip
+      - ${DOC_FILE_NAME}.zip
 
     reports:
       dotenv: generate_addon.env
@@ -48,52 +132,45 @@ release:
   stage: release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
 
-  rules:
-    - if: $CI_COMMIT_TAG
-      when: never # Do not run this job when a tag is created manually
-    - if: $CI_COMMIT_BRANCH == "main"
-
   needs:
-    - job: generate_addon
+    - job: generate-addon
       artifacts: true
+
+  extends:
+    - .tag_only
 
   script:
     - echo "Running release job"
 
   release:
-    name: "Toolsbox blender v${VERSION}"
-    description: "Release created using the release-ci"
+    name: "${ADDON_NAME} v${VERSION}"
+    description: "${ADDON_NAME} v${VERSION}"
     tag_name: "${VERSION}"
     assets:
       links:
-        - name: "Download Toolsbox blender v${VERSION}"
-          url: "${PACKAGE_REGISTRY_URL}/${OUTPUT_FILE_NAME}.zip"
+        - name: "Download ${ADDON_NAME} v${VERSION}"
+          url: "${PACKAGE_REGISTRY_URL}/${ADDON_FILE_NAME}.zip"
+        - name: "Download documentation v${VERSION}"
+          url: "${PACKAGE_REGISTRY_URL}/${DOC_FILE_NAME}.zip"
 
 
 pages:
   stage: deploy
   image: python:latest
 
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main"
-
   needs:
-    - job: release
+    - job: build-doc
+      artifacts: true
+
+  extends:
+    - .deploy_only
   
   before_script:
     - echo $CI_PAGES_DOMAIN
     - echo $CI_PAGES_URL
-    - pip install -U sphinx
-    - pip install -U sphinxemoji
-    - pip install -U sphinx_rtd_theme
-    - pip install -U fake-bpy-module-latest
-    - pip install -U https://github.com/pyvista/pyvista-wheels/raw/main/vtk-9.1.0.dev0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
 
   script:
-    # Comment '@persistent' decorators because fake-bpy-module defines it at 'None', which is not callable and causes errors during 'sphinx-build'
-    - find src/ -type f -name "*.py" -exec sed -i 's/@persistent/#@persistent/g' {} +
-    - sphinx-build -b html docs/source public
-    - find src/ -type f -name "*.py" -exec sed -i 's/#@persistent/@persistent/g' {} +
+    - mv build_docs public
   
   artifacts:
     paths:
