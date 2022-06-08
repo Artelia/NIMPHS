@@ -94,14 +94,29 @@ from blender_addon_tester.addon_helper import zip_addon, change_addon_dir, insta
 
 # Setup class for PyTest
 class SetupPlugin:
-    def __init__(self, addon):
+    """Setup class for pytest"""
+
+    def __init__(self, addon: str):
+        """
+        Init method of the class.
+
+        Args:
+            addon (sstr): absolute path to the addon (zip file)
+        """
         self.root = Path(__file__).parent.parent
         self.addon = addon
         self.addon_dir = "local_addon"
         self.bpy_module = None
         self.zfile = None
 
-    def pytest_configure(self, config):
+    def pytest_configure(self, config: dict):
+        """
+        Configure pytest.
+
+        Args:
+            config (dict): configuration
+        """
+
         print("PyTest configure...")
 
         (self.bpy_module, self.zfile) = zip_addon(self.addon, self.addon_dir)
@@ -113,6 +128,8 @@ class SetupPlugin:
         print("PyTest configure successful!")
 
     def pytest_unconfigure(self):
+        """Unconfigure pytest."""
+
         print("PyTest unconfigure...")
 
         cleanup(self.addon, self.bpy_module, self.addon_dir)

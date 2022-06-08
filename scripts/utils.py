@@ -11,6 +11,8 @@ import subprocess
 
 
 class bcolors:
+    """List of color which can be used to color texts in the terminal."""
+
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
     OKCYAN = '\033[96m'

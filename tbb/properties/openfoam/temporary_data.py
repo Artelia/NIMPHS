@@ -23,6 +23,15 @@ class TBB_OpenfoamTemporaryData():
 
     def __init__(self, file_reader: Union[OpenFOAMReader, POpenFOAMReader] = None,
                  new_data: DataSet = None, new_mesh: UnstructuredGrid = None):
+        """
+        Init method of the class.
+
+        Args:
+            file_reader (Union[OpenFOAMReader, POpenFOAMReader], optional): new file reader. Defaults to None.
+            new_data (DataSet, optional): new dataset. Defaults to None.
+            new_mesh (UnstructuredGrid, optional): new mesh. Defaults to None.
+        """
+
         self.module_name = "OpenFOAM"
         self.file_reader = file_reader
         self.data = new_data

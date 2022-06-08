@@ -13,3 +13,15 @@ ignore =
     D212,
     # 1 blank line required before class docstring
     D203,
+    # Missing dashed underline after section
+    D407,
+    D402,
+    D413,
+    D204,
+    D406,
+    D205,
+    D415,
+    D400,
+    D417,
+    D401,
+    D103

@@ -38,6 +38,8 @@ class TBB_CreateSequence(Operator):
     )
 
     def __init__(self) -> None:
+        """Init method of the class"""
+
         super().__init__()
         self.timer = None
         self.sequence_name = ""

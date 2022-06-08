@@ -35,6 +35,8 @@ class TBB_TelemacTemporaryData():
     is_3d = False
 
     def __init__(self) -> None:
+        """Init method of the class"""
+
         self.module_name = "TELEMAC"
         self.file = None
         self.vertices = None

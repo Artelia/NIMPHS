@@ -886,7 +886,7 @@ def compute_interp_time_info_mesh_sequence(blender_mesh: Mesh, threshold: float 
                             *  +  +  *  ...   *  +  +  *  +  +  *  +  +  *  ...  *  +  +  *
             Time points: (0)⌃     (1)⌃    (36)⌃    (37)⌃    (38)⌃    (39)⌃            (49)⌃
 
-        Returns:
+        Outputs:
         {
             "state": enum in ['BASIS', 'EXISTING', 'INTERPOLATED'] here 'INTERPOLATED',
             "start_offset": 0,
