@@ -75,6 +75,6 @@ def register_custom_progress_bar() -> None:
         VIEW3D_HT_tool_header.draw = new_draw
 
 
-# A variable where we can store the original draw funtion
+# A variable where we can store the original draw function
 def info_header_draw(s, c):
     return None

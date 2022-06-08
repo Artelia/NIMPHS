@@ -54,10 +54,10 @@ class TBB_OT_OpenfoamPreview(Operator):
         # again... We would like to use the file_reader from tbb.settings.openfoam.tmp_data.
         success, file_reader = load_openfoam_file(settings.file_path, settings.case_type, settings.decompose_polyhedra)
         if not success:
-            self.report({'ERROR'}, "The choosen file does not exist.")
+            self.report({'ERROR'}, "The chosen file does not exist.")
             return {'FINISHED'}
 
-        # Read data at the choosen time point
+        # Read data at the chosen time point
         try:
             file_reader.set_active_time_point(prw_time_point)
         except ValueError as error:
@@ -81,7 +81,7 @@ class TBB_OT_OpenfoamPreview(Operator):
             return {'FINISHED'}
 
         # Update temporary data. We do not update it just after the reading of the file. Here is why.
-        # This line will update the list of available scalars. If the choosen scalar is not available at
+        # This line will update the list of available scalars. If the chosen scalar is not available at
         # the selected time point, the program will automatically choose another scalar due to the update function
         # of the enum property. This is surely not what the user was expecting.
         tmp_data.update(file_reader, prw_time_point, data, raw_mesh)

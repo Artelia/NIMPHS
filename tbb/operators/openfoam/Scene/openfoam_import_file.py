@@ -47,7 +47,7 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         success, file_reader = load_openfoam_file(self.filepath, settings.case_type, settings.decompose_polyhedra)
 
         if not success:
-            self.report({'ERROR'}, "The choosen file does not exist")
+            self.report({'ERROR'}, "The chosen file does not exist")
             return {'FINISHED'}
 
         settings.file_path = self.filepath

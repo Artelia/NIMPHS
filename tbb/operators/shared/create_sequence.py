@@ -30,10 +30,10 @@ class TBB_CreateSequence(Operator):
     #: int: Current frame during the 'create sequence' process (different from time point)
     current_frame = 0
 
-    #: bpy.props.StringProperty: Wether the operator should run modal or not, enum in ['MODAL', 'NORMAL']
+    #: bpy.props.StringProperty: Whether the operator should run modal or not, enum in ['MODAL', 'NORMAL']
     mode: StringProperty(
         name="Create sequence mode",
-        description="Wether the operator should run modal or not, enum in ['MODAL', 'NORMAL']",
+        description="Whether the operator should run modal or not, enum in ['MODAL', 'NORMAL']",
         default="MODAL"  # noqa: F821
     )
 
@@ -104,7 +104,7 @@ class TBB_CreateSequence(Operator):
             if self.mode == 'MODAL':
                 return {'RUNNING_MODAL'}
             elif self.mode == 'NORMAL':
-                return {'NORMAL'}  # custom value to run the process whithout modal mode (used in tests)
+                return {'NORMAL'}  # custom value to run the process without modal mode (used in tests)
             else:
                 print("WARNING::TBB_CreateSequence: undefined operator mode '" + str(self.mode) + "', running\
                        modal by default.")
@@ -126,7 +126,7 @@ class TBB_CreateSequence(Operator):
 
             context.scene.collection.objects.link(obj)
 
-            # As mentionned here, lock the interface because the custom handler will alter data on frame change
+            # As mentioned here, lock the interface because the custom handler will alter data on frame change
             # https://docs.blender.org/api/current/bpy.app.handlers.html?highlight=app%20handlers#module-bpy.app.handlers
             RenderSettings.use_lock_interface = True
 

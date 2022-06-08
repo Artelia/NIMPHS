@@ -97,7 +97,7 @@ It also comes with new features for the OpenFOAM module. See the *added* section
 
 * **UI**
 
-    * Splitted 'Blender toolsbox panel' into two different panels (OpenFOAM / TELEMAC)
+    * Split 'Blender toolsbox panel' into two different panels (OpenFOAM / TELEMAC)
 
 * **OpenFOAM**
 

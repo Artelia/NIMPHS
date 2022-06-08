@@ -376,7 +376,7 @@ def prepare_openfoam_point_data(mesh: UnstructuredGrid, blender_mesh: Mesh, list
 @persistent
 def update_openfoam_streaming_sequences(scene: Scene) -> None:
     """
-    App handler appened to the frame_change_pre handlers.
+    App handler appended to the frame_change_pre handlers.
     Updates all the OpenFOAM 'streaming sequences' of the scene.
 
     Args:

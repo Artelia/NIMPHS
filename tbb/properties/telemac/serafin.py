@@ -727,7 +727,7 @@ class Serafin:
 
     def read(self, time2read, var2del=[], is_time=True, specific_frame=False, num_file=0):
         """
-        Read all the value of a specific time (or a specifc position of time)
+        Read all the value of a specific time (or a specific position of time)
         :param time2read:
         :param var2del:
         :param is_time:

@@ -12,7 +12,7 @@ class TBB_Object(PropertyGroup):
     register_cls = True
     is_custom_base_cls = False
 
-    #: dict: Dictionnary of temporary data used for streaming and mesh sequences.
+    #: dict: Dictionary of temporary data used for streaming and mesh sequences.
     #        Shape is ```{"uid": tmp_data, "uid": tmp_data, ...}```
     tmp_data: dict = {}
 

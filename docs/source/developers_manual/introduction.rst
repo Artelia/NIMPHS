@@ -33,7 +33,7 @@ Auto-loader
 
 | For each class, you need to define two attributes:
 
-* The ``register_cls`` attribute (bool), indicates if this class has to be registerd
+* The ``register_cls`` attribute (bool), indicates if this class has to be registered
 * The ``is_custom_base_cls`` attribute (bool), indicates if this class is a custom base class of other classes
 
 .. _coding_style:

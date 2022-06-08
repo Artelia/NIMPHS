@@ -8,7 +8,7 @@ import pytest
 # Non-triangulated mesh: Vertices = 60,548 | Edges = 120,428 | Faces = 59,882 | Triangles = 121,092
 # Non-triangulated-mesh (decomp. polyh.): Vertices = 60,548 | Edges = 121,748 | Faces = 61,202 | Triangles = 121,092
 # Triangulated mesh (w/wo decomp. polyh.): Vertices = 61,616 | Edges = 182,698 | Faces = 121,092 | Triangles = 121,092
-# Time point 11, clip aplha.water (value = 0.5):
+# Time point 11, clip alpha.water (value = 0.5):
 # Vertices = 55,718 | Edges = 159,953 | Faces = 104,450 | Triangles = 104,450
 
 FILE_PATH = os.path.abspath("./data/openfoam_sample_a/foam.foam")

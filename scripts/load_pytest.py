@@ -32,7 +32,7 @@ if not ADDON:
 # Set any value to the BLENDER_ADDON_COVERAGE_REPORTING environment variable to enable it
 COVERAGE_REPORTING = os.environ.get("BLENDER_ADDON_COVERAGE_REPORTING", False)
 
-# The Pytest tests/ path can be overriden through the BLENDER_ADDON_TESTS_PATH environment variable
+# The Pytest tests/ path can be overridden through the BLENDER_ADDON_TESTS_PATH environment variable
 default_tests_dir = Path(ADDON).parent.joinpath("tests")
 TESTS_PATH = os.environ.get("BLENDER_ADDON_TESTS_PATH", default_tests_dir.as_posix())
 
@@ -51,7 +51,7 @@ except Exception:
 
 # TODO: fix this
 # Temporary workaround to install a local custom version of pyvista and vtk
-# Reasons: no vtk support for pytyon 3.10+ and a small edit in pyvista which will be available later
+# Reasons: no vtk support for python 3.10+ and a small edit in pyvista which will be available later
 try:
     import pyvista
     assert pyvista.__version__ == "0.35.dev0"
@@ -66,7 +66,7 @@ except Exception:
     elif version == (3, 0, 0):
         install_local_package(os.path.join(os.path.abspath("./../"), "pyvista"), True)
     else:
-        print("This addon is not suported for Blender versions under 3.0.0")
+        print("This addon is not supported for Blender versions under 3.0.0")
         sys.exit(1)
 
 # TODO: fix this
@@ -110,7 +110,7 @@ class SetupPlugin:
         install_addon(self.bpy_module, self.zfile)
         config.cache.set("bpy_module", self.bpy_module)
 
-        print("PyTest configure successfull!")
+        print("PyTest configure successful!")
 
     def pytest_unconfigure(self):
         print("PyTest unconfigure...")
@@ -121,7 +121,7 @@ class SetupPlugin:
         print("Cleaning up - zip files")
         remove_files_matching_pattern(self.root, exclude_folders=[os.path.abspath("./cache")], pattern="*.zip")
 
-        print("PyTest unconfigure successfull!")
+        print("PyTest unconfigure successful!")
 
 
 try:

@@ -71,7 +71,7 @@ def run_one_step_create_mesh_sequence_telemac(context: Context, current_frame: i
         seq_obj.tbb.settings.telemac.mesh_sequence.is_3d_simulation = tmp_data.is_3d
         seq_obj.tbb.settings.telemac.mesh_sequence.file_path = settings.file_path
 
-        # Add temporary data to the dictonary of tmp_data in TBB_Object
+        # Add temporary data to the dictionary of tmp_data in TBB_Object
         # WARNING: temporary data dictionary is also temporary (class attribute, not saved in the .blend file)
         seq_obj.tbb.uid = str(time.time())
         seq_obj.tbb.tmp_data[seq_obj.tbb.uid] = TBB_TelemacTemporaryData()
@@ -395,7 +395,7 @@ def generate_telemac_streaming_sequence_obj(context: Context, name: str) -> Obje
 
     # Create objects
     seq_obj = bpy.data.objects.new(name=name + "_sequence", object_data=None)
-    # Add temporary data to the dictonary of tmp_data in TBB_Object
+    # Add temporary data to the dictionary of tmp_data in TBB_Object
     # WARNING: temporary data dictionary is also temporary (class attribute, not saved in the .blend file)
     seq_obj.tbb.uid = str(time.time())
     seq_obj.tbb.tmp_data[seq_obj.tbb.uid] = TBB_TelemacTemporaryData()
@@ -449,15 +449,15 @@ def prepare_telemac_point_data(blender_mesh: Mesh, list_point_data: list[str], t
     # Filter elements which evaluates to 'False', ex: ''
     list_point_data = list(filter(None, list_point_data))
     # Filter variables if they do not exist and build to output
-    filtered_variables, appened = [], False
+    filtered_variables, appended = [], False
     for var_name in list_point_data:
         for name, id in zip(tmp_data.file.nomvar, range(tmp_data.nb_vars)):
             if var_name in name:
                 filtered_variables.append({"name": var_name, "type": 'SCALAR', "id": id})
-                appened = True
+                appended = True
                 continue
 
-        if not appened:
+        if not appended:
             print("WARNING::prepare_telemac_point_data: point data named '" + str(var_name) + "' does not exist.")
 
     # Prepare data
@@ -563,7 +563,7 @@ def set_new_shape_key(obj: Object, vertices: np.ndarray, name: str, frame: int, 
 @persistent
 def update_telemac_streaming_sequences(scene: Scene) -> None:
     """
-    App handler appened to the frame_change_pre handlers.
+    App handler appended to the frame_change_pre handlers.
     Updates all the TELEMAC 'streaming sequences' of the scene.
 
     Args:
@@ -639,7 +639,7 @@ def update_telemac_streaming_sequence_mesh(obj: Object, seq_settings: TBB_Telema
     else:
         time_info = {"l_time_point": frame - seq_settings.frame_start, "existing_time_point": True}
 
-    # Check if time poit is ok
+    # Check if time point is ok
     time_point = time_info["l_time_point"]
     if time_point > tmp_data.nb_time_points:
         raise ValueError("time point '" + str(time_point) + "' does not exist. Available time\
@@ -682,7 +682,7 @@ def update_telemac_mesh_sequences(scene: Scene) -> None:
             seq_settings = obj.tbb.settings.telemac.mesh_sequence
 
             if obj_settings.is_mesh_sequence and seq_settings.import_point_data:
-                # Upate children objects of 'mesh sequence'
+                # Update children objects of 'mesh sequence'
                 cumulated_time = 0.0
 
                 # Get temporary data
@@ -863,7 +863,7 @@ def get_time_info_interp_mesh_sequence(obj: Object, frame: int) -> Union[dict, N
                 "existing_time_point": False
             }
         else:
-            print("WARNING::get_time_info_interp_mesh_sequence: unkown state '" + str(info["state"]) + "'.")
+            print("WARNING::get_time_info_interp_mesh_sequence: unknown state '" + str(info["state"]) + "'.")
             return None  # Unknown state
 
     else:

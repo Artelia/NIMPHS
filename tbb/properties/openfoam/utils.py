@@ -45,7 +45,7 @@ def encode_scalar_names(mesh: UnstructuredGrid) -> str:
 def update_scalar_names(self, _context: Context) -> list:
     """
     Update the list of scalar names for EnumProperties.
-    If no scalars are availabe, return ("None@None", "None", "None").
+    If no scalars are available, return ("None@None", "None", "None").
 
     Args:
         _context (Context): context
