@@ -56,9 +56,9 @@ build-doc:
 
   script:
     # Comment '@persistent' decorators because fake-bpy-module defines it at 'None', which is not callable and causes errors during 'sphinx-build'
-    - find cicd_tests/ -type f -name "*.py" -exec sed -i 's/@persistent/#@persistent/g' {} +
+    - find ${MODULE_NAME}/ -type f -name "*.py" -exec sed -i 's/@persistent/#@persistent/g' {} +
     - sphinx-build -b html docs/source build_docs
-    - find cicd_tests/ -type f -name "*.py" -exec sed -i 's/#@persistent/@persistent/g' {} +
+    - find ${MODULE_NAME}/ -type f -name "*.py" -exec sed -i 's/#@persistent/@persistent/g' {} +
 
   artifacts:
     paths:
