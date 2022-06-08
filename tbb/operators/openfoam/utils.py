@@ -80,8 +80,8 @@ def generate_mesh_data(file_reader: OpenFOAMReader, time_point: int, triangulate
                        mesh: UnstructuredGrid = None) -> tuple[np.array, np.array, UnstructuredGrid]:
     """
     Generate mesh data for Blender using the given file reader. Applies the clip if defined.
-    If 'mesh' is not defined, it will be read from the given OpenFOAMReader (file_reader).
 
+    If 'mesh' is not defined, it will be read from the given OpenFOAMReader (file_reader).
     **Warning**: the given mesh will be modified (clip, extract_surface, triangulation and compute_normals).
 
     Args:
@@ -377,6 +377,7 @@ def prepare_openfoam_point_data(mesh: UnstructuredGrid, blender_mesh: Mesh, list
 def update_openfoam_streaming_sequences(scene: Scene) -> None:
     """
     App handler appended to the frame_change_pre handlers.
+
     Updates all the OpenFOAM 'streaming sequences' of the scene.
 
     Args:

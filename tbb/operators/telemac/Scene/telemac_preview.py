@@ -7,9 +7,8 @@ from tbb.operators.telemac.utils import normalize_objects, generate_preview_obje
 
 
 class TBB_OT_TelemacPreview(Operator):
-    """
-    Preview the mesh using the loaded file and selected parameters.
-    """
+    """Preview the mesh using the loaded file and selected parameters."""
+
     register_cls = True
     is_custom_base_cls = False
 
@@ -19,7 +18,7 @@ class TBB_OT_TelemacPreview(Operator):
 
     def execute(self, context: Context) -> set:
         """
-        Main function of the operator. Preview the mesh.
+        Preview the mesh.
 
         Args:
             context (Context): context

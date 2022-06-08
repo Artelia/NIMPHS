@@ -101,9 +101,9 @@ def run_one_step_create_mesh_sequence_telemac(context: Context, current_frame: i
 def generate_mesh_data(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, offset: int = 0,
                        time_point: int = 0, type: str = 'BOTTOM') -> np.ndarray:
     """
-    Generate the mesh of the selected file. If the selected file is a 2D simulation, you can precise
-    which part of the mesh you want ('BOTTOM' or 'WATER_DEPTH'). If the file is a 3D simulation, you can
-    precise an offset for data reading (this offsets is somehow the id of the plane to generate)
+    Generate the mesh of the selected file. If the selected file is a 2D simulation, you can precise\
+    which part of the mesh you want ('BOTTOM' or 'WATER_DEPTH'). If the file is a 3D simulation, you can\
+    precise an offset for data reading (this offsets is somehow the id of the plane to generate).
 
     Args:
         tmp_data (TBB_TelemacTemporaryData): temporary data
@@ -217,6 +217,7 @@ def generate_base_objects(context: Context, time_point: int, name: str, import_p
                           list_point_data: list[str] = [""]) -> list[Object]:
     """
     Generate objects using settings defined by the user. This function generates objects and vertex colors.
+
     If the file is a 2D simulation, this will generate two objects ("Bottom" and "Water depth"). If the file
     is a 3D simulation, this will generate one object per plane.
 
@@ -271,6 +272,7 @@ def generate_base_objects(context: Context, time_point: int, name: str, import_p
 def generate_preview_objects(context: Context, time_point: int = 0, name: str = "TBB_TELEMAC_preview") -> list[Object]:
     """
     Generate preview objects using settings defined by the user. Calls 'generate_base_objects'.
+
     This function also generate preview materials.
 
     Args:
@@ -320,6 +322,7 @@ def generate_preview_objects(context: Context, time_point: int = 0, name: str = 
 def generate_preview_material(obj: Object, var_name: str, name: str = "TBB_TELEMAC_preview_material") -> None:
     """
     Generate the preview material (if not generated yet). Update it otherwise (with the new variable).
+
     This generates the following node tree:
 
     .. code-block:: text
@@ -536,7 +539,7 @@ def prepare_telemac_point_data_linear_interp(obj: Object, tmp_data: TBB_TelemacS
 
 def set_new_shape_key(obj: Object, vertices: np.ndarray, name: str, frame: int, end: bool = False) -> None:
     """
-    Add a shape key to the object using the given vertices. It also set a keyframe with value = 1.0 at the given frame
+    Add a shape key to the object using the given vertices. It also set a keyframe with value = 1.0 at the given frame\
     and add keyframes at value = 0.0 around the frame (-1 and +1).
 
     Args:
@@ -564,6 +567,7 @@ def set_new_shape_key(obj: Object, vertices: np.ndarray, name: str, frame: int, 
 def update_telemac_streaming_sequences(scene: Scene) -> None:
     """
     App handler appended to the frame_change_pre handlers.
+
     Updates all the TELEMAC 'streaming sequences' of the scene.
 
     Args:
@@ -612,8 +616,9 @@ def update_telemac_streaming_sequence_mesh(obj: Object, seq_settings: TBB_Telema
                                            frame: int, id: int, interpolate: TBB_TelemacInterpolateProperty,
                                            point_data: list[str], tmp_data: TBB_TelemacTemporaryData) -> None:
     """
-    Update the mesh of the given object from a TELEMAC 'streaming sequence' object. It also manages
-    interpolation.
+    Update the mesh of the given object from a TELEMAC 'streaming sequence' object.
+
+    It also manages interpolation.
 
     Args:
         obj (Object): object from a TELEMAC sequence object

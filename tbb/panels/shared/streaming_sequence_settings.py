@@ -6,9 +6,8 @@ from tbb.properties.shared.module_streaming_sequence_settings import TBB_ModuleS
 
 
 class TBB_StreamingSequenceSettingsPanel(Panel):
-    """
-    Base UI panel for OpenFOAM and TELEMAC 'streaming sequence' settings.
-    """
+    """Base UI panel for OpenFOAM and TELEMAC 'streaming sequence' settings."""
+
     register_cls = False
     is_custom_base_cls = True
 

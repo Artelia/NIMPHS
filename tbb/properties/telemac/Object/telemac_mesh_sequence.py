@@ -6,9 +6,8 @@ from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
 
 
 class TBB_TelemacMeshSequenceProperty(PropertyGroup):
-    """
-    'Mesh sequence' settings for the TELEMAC module.
-    """
+    """'Mesh sequence' settings for the TELEMAC module."""
+
     register_cls = True
     is_custom_base_cls = False
 

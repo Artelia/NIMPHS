@@ -7,9 +7,7 @@ from tbb.properties.telemac.utils import remove_spaces_telemac_var_name
 
 
 class TBB_TelemacTemporaryData():
-    """
-    Hold temporary data for the TELEMAC module.
-    """
+    """Hold temporary data for the TELEMAC module."""
 
     # str: name of the module
     module_name = "TELEMAC"
@@ -35,7 +33,7 @@ class TBB_TelemacTemporaryData():
     is_3d = False
 
     def __init__(self) -> None:
-        """Init method of the class"""
+        """Init method of the class."""
 
         self.module_name = "TELEMAC"
         self.file = None
@@ -164,6 +162,7 @@ class TBB_TelemacTemporaryData():
                                          time_point: int) -> tuple[np.ndarray, str]:
         """
         Get data from the file and check for every possible given names.
+
         When one is found, return the associated data.
 
         Args:

@@ -6,9 +6,8 @@ from tbb.properties.openfoam.Object.openfoam_streaming_sequence import TBB_Openf
 
 
 class TBB_OpenfoamObjectSettings(PropertyGroup):
-    """
-    Data structure which holds object related settings for the OpenFOAM module.
-    """
+    """Data structure which holds object related settings for the OpenFOAM module."""
+
     register_cls = True
     is_custom_base_cls = False
 

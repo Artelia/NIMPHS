@@ -5,9 +5,8 @@ from tbb.panels.utils import get_selected_object
 
 
 class TBB_PT_TelemacStreamingSequenceInterpolate(Panel):
-    """
-    UI panel to manage interpolation settings for TELEMAC 'streaming sequences'.
-    """
+    """UI panel to manage interpolation settings for TELEMAC 'streaming sequences'."""
+
     register_cls = True
     is_custom_base_cls = False
 

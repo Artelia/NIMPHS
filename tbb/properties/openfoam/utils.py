@@ -1,5 +1,6 @@
 # <pep8 compliant>
 from bpy.types import Context
+from bpy.props import FloatProperty, FloatVectorProperty
 
 from typing import Union
 
@@ -10,6 +11,7 @@ from pyvista import UnstructuredGrid
 def encode_scalar_names(mesh: UnstructuredGrid) -> str:
     """
     Encode scalar names for the *list* attribute of TBB_OpenfoamClipProperty.
+
     List of point data are stored as follows:
 
     .. code-block:: text
@@ -45,6 +47,7 @@ def encode_scalar_names(mesh: UnstructuredGrid) -> str:
 def update_scalar_names(self, _context: Context) -> list:
     """
     Update the list of scalar names for EnumProperties.
+
     If no scalars are available, return ("None@None", "None", "None").
 
     Args:
@@ -120,7 +123,8 @@ def encode_value_ranges(mesh: UnstructuredGrid) -> str:
 def get_value_range_from_name(value_ranges: str, name: str, value_type: str) -> Union[dict, None]:
     """
     Return the value range corresponding to the given scalar name.
-    Return a dict with the following members:
+
+    Output is a dict with the following members:
 
     .. code-block:: text
 
@@ -156,12 +160,15 @@ def get_value_range_from_name(value_ranges: str, name: str, value_type: str) -> 
     return None
 
 
-def set_clip_values(self, value: float) -> None:
+def set_clip_values(self: Union[FloatProperty, FloatVectorProperty], value: float) -> None:
     """
+    Set clip values.
+
     Function triggered when the user sets a new clip value. This let us to make sure the new value
     is in the value range of the selected scalar. Set the value to the nearest bound if outside the range.
 
     Args:
+        self (Union[FloatProperty, FloatVectorProperty]): property
         value (float): new value
     """
 
@@ -194,6 +201,8 @@ def set_clip_values(self, value: float) -> None:
 
 def get_clip_values(self) -> Union[float, list]:
     """
+    Get clip values.
+
     Function triggered when the UI fetches a clip value. Defaults to np.inf.
 
     Returns:

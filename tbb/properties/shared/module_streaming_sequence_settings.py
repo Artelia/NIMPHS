@@ -8,8 +8,10 @@ from tbb.properties.utils import set_sequence_anim_length, get_sequence_anim_len
 class TBB_ModuleStreamingSequenceSettings(PropertyGroup):
     """
     'Streaming sequence' properties.
+
     This data structure holds common data used in both OpenFOAM and TELEMAC modules.
     """
+
     register_cls = True
     is_custom_base_cls = True
 

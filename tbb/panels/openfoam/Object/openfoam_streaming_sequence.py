@@ -8,8 +8,10 @@ from tbb.panels.shared.streaming_sequence_settings import TBB_StreamingSequenceS
 class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
     """
     Main panel of the OpenFOAM 'streaming sequence' settings.
+
     This is the 'parent' panel.
     """
+
     register_cls = True
     is_custom_base_cls = False
 
@@ -22,7 +24,7 @@ class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
     @classmethod
     def poll(cls, context: Context) -> bool:
         """
-        If false, hides the panel. Calls 'super().poll(...)'.
+        If false, hides the panel. Calls parent poll function.
 
         Args:
             context (Context): context
@@ -35,7 +37,7 @@ class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
 
     def draw(self, context: Context) -> None:
         """
-        Layout of the panel. Calls 'super().draw(...)'.
+        Layout of the panel. Calls parent draw function.
 
         Args:
             context (Context): context

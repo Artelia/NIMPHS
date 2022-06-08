@@ -11,9 +11,8 @@ from tbb.operators.utils import generate_object_from_data, get_collection, updat
 
 
 class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
-    """
-    Import an OpenFOAM file. This operator manages the file browser and its filtering options.
-    """
+    """Import an OpenFOAM file. This operator manages the file browser and its filtering options."""
+
     register_cls = True
     is_custom_base_cls = False
 
@@ -29,7 +28,8 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
 
     def execute(self, context: Context) -> set:
         """
-        Main function of the operator. Import the selected file.
+        Import the selected file.
+
         It also generates the preview object, updates temporary data and 'dynamic' scene settings.
 
         Args:

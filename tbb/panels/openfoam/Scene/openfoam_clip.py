@@ -5,9 +5,8 @@ from tbb.panels.utils import get_selected_object
 
 
 class TBB_PT_OpenfoamClip(Panel):
-    """
-    UI panel to manage clip settings used for previewing and creating sequences.
-    """
+    """UI panel to manage clip settings used for previewing and creating sequences."""
+
     register_cls = True
     is_custom_base_cls = False
 

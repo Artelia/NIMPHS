@@ -11,9 +11,8 @@ from tbb.operators.utils import update_scene_settings_dynamic_props
 
 
 class TBB_OT_TelemacImportFile(Operator, ImportHelper):
-    """
-    Import a TELEMAC file. This operator manages the file browser and its filtering options.
-    """
+    """Import a TELEMAC file. This operator manages the file browser and its filtering options."""
+
     register_cls = True
     is_custom_base_cls = False
 
@@ -29,7 +28,8 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
 
     def execute(self, context: Context) -> set:
         """
-        Main function of the operator. Import the selected file.
+        Import the selected file.
+
         It also generates the preview object, updates temporary data and 'dynamic' scene settings.
 
         Args:

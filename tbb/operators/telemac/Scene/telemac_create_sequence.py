@@ -8,10 +8,9 @@ from tbb.operators.telemac.utils import run_one_step_create_mesh_sequence_telema
 
 
 class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
-    """
-    Create an OpenFOAM sequence using the settings defined in the
-    main panel of the module and the 'create sequence' panel.
-    """
+    """Create an OpenFOAM sequence using the settings defined in the\
+    main panel of the module and the 'create sequence' panel."""
+
     register_cls = True
     is_custom_base_cls = True
 
@@ -22,7 +21,7 @@ class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
     @classmethod
     def poll(cls, context: Context) -> bool:
         """
-        If false, locks the UI button of the operator. Calls 'super().poll(...)'.
+        If false, locks the UI button of the operator. Calls parent poll function.
 
         Args:
             context (Context): context
@@ -35,7 +34,8 @@ class TBB_OT_TelemacCreateSequence(TBB_CreateSequence):
 
     def execute(self, context: Context) -> set:
         """
-        Main function of the operator. Calls 'super().execute(...)'.
+        Call parent execute function.
+
         If mode is set to 'NORMAL', run the operator without using the modal method (locks blender UI).
 
         Args:

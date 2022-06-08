@@ -7,9 +7,8 @@ from tbb.properties.telemac.Object.telemac_mesh_sequence import TBB_TelemacMeshS
 
 
 class TBB_TelemacObjectSettings(PropertyGroup):
-    """
-    Data structure which holds object related settings for the TELEMAC module.
-    """
+    """Data structure which holds object related settings for the TELEMAC module."""
+
     register_cls = True
     is_custom_base_cls = False
 

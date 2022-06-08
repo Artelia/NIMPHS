@@ -12,8 +12,10 @@ from tbb.properties.shared.module_scene_settings import TBB_ModuleSceneSettings
 class TBB_ModulePanel(Panel):
     """
     Base UI panel for OpenFOAM and TELEMAC modules.
+
     Specific settings are added in the classes which derive from this one.
     """
+
     register_cls = False
     is_custom_base_cls = True
 

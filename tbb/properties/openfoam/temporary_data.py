@@ -4,9 +4,7 @@ from pyvista import OpenFOAMReader, POpenFOAMReader, DataSet, UnstructuredGrid
 
 
 class TBB_OpenfoamTemporaryData():
-    """
-    Hold temporary data for the OpenFOAM module.
-    """
+    """Hold temporary data for the OpenFOAM module."""
 
     # str: name of the module
     module_name = "OpenFOAM"

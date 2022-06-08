@@ -15,7 +15,9 @@ from tbb.properties.shared.module_scene_settings import scene_settings_dynamic_p
 
 def generate_vertex_colors_groups(variables: list[dict]) -> list[dict]:
     """
-    Generate optimized vertex colors groups. Some examples of outputs:
+    Generate optimized vertex colors groups.
+
+    Some examples of outputs:
 
     .. code-block:: text
 
@@ -153,11 +155,11 @@ def setup_streaming_sequence_object(obj: Object, seq_settings: Union[TBB_Openfoa
                                     TBB_TelemacStreamingSequenceProperty], time_points: int,
                                     settings: TBB_ModuleSceneSettings, module: str) -> None:
     """
-    Setup streaming sequence settings for both OpenFOAM and TELEMAC modules.
+    Generate streaming sequence settings for both OpenFOAM and TELEMAC modules.
 
     Args:
         obj (Object): sequence object
-        seq_settings Union[TBB_OpenfoamStreamingSequenceProperty, TBB_TelemacStreamingSequenceProperty]: settings
+        seq_settings (Union[TBB_OpenfoamStreamingSequenceProperty, TBB_TelemacStreamingSequenceProperty]): settings
         time_points (int): number of available time points
         settings (TBB_ModuleSceneSettings): scene settings
         module (str): name of the module, enum in ['OpenFOAM', 'TELEMAC']
@@ -183,11 +185,12 @@ def update_scene_settings_dynamic_props(settings: TBB_ModuleSceneSettings,
                                         tmp_data: Union[TBB_OpenfoamSettings, TBB_TelemacSettings]) -> None:
     """
     Update 'dynamic' settings of the main panel.
+
     It adapts the max values of properties in function of the imported file.
 
     Args:
         settings (TBB_ModuleSceneSettings): scene settings
-        tmp_data Union[TBB_OpenfoamSettings, TBB_TelemacSettings]: temporary data
+        tmp_data (Union[TBB_OpenfoamSettings, TBB_TelemacSettings]): temporary data
     """
 
     # This works because TBB_TelemacTemporaryData and TBB_OpenfoamTemporaryData have the same nb_time_points attribute

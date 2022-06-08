@@ -7,9 +7,8 @@ from tbb.properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
 
 
 class TBB_SceneSettings(PropertyGroup):
-    """
-    Data structure which holds scene settings for all the modules.
-    """
+    """Data structure which holds scene settings for all the modules."""
+
     register_cls = True
     is_custom_base_cls = False
 

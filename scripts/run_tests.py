@@ -22,6 +22,8 @@ except Exception as e:
 
 
 def main():
+    """Execute the tests suite."""
+
     arguments = parser.parse_args()
     # Get addon path
 

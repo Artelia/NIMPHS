@@ -94,7 +94,7 @@ from blender_addon_tester.addon_helper import zip_addon, change_addon_dir, insta
 
 # Setup class for PyTest
 class SetupPlugin:
-    """Setup class for pytest"""
+    """Setup class for pytest."""
 
     def __init__(self, addon: str):
         """

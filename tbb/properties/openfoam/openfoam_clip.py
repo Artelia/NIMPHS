@@ -6,9 +6,8 @@ from tbb.properties.openfoam.utils import update_scalar_names, set_clip_values, 
 
 
 class TBB_OpenfoamClipScalarProperty(PropertyGroup):
-    """
-    Clip scalar settings.
-    """
+    """Clip scalar settings."""
+
     register_cls = True
     is_custom_base_cls = False
 
@@ -66,9 +65,8 @@ class TBB_OpenfoamClipScalarProperty(PropertyGroup):
 
 
 class TBB_OpenfoamClipProperty(PropertyGroup):
-    """
-    Clip settings.
-    """
+    """Clip settings."""
+
     register_cls = True
     is_custom_base_cls = False
 

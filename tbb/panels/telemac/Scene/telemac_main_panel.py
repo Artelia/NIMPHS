@@ -5,9 +5,8 @@ from tbb.panels.shared.module_panel import TBB_ModulePanel
 
 
 class TBB_PT_TelemacMainPanel(TBB_ModulePanel):
-    """
-    Main panel of the TELEMAC module. This is the 'parent' panel.
-    """
+    """Main panel of the TELEMAC module. This is the 'parent' panel."""
+
     register_cls = True
     is_custom_base_cls = False
 
@@ -20,7 +19,7 @@ class TBB_PT_TelemacMainPanel(TBB_ModulePanel):
 
     def draw(self, context: Context) -> None:
         """
-        Layout of the panel. Calls 'super().draw(...)'.
+        Layout of the panel. Calls parent draw function.
 
         Args:
             context (Context): context

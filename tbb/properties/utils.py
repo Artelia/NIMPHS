@@ -1,15 +1,19 @@
 # <pep8 compliant>
 from bpy.types import Context, VIEW3D_HT_tool_header
+from bpy.props import IntProperty
 
 DEV_MODE = True
 
 
 def set_sequence_anim_length(self, value: int) -> None:
     """
+    Set length of the animation.
+
     Function triggered when the user sets a new animation length. This let us to make sure the new value
     is not higher than the available time steps.
 
     Args:
+        self (IntProperty): property
         value (int): new value
     """
 
@@ -48,9 +52,7 @@ def update_progress_bar(_self, context: Context):
 
 # Inspired by: https://blog.michelanders.nl/2017/04/how-to-add-progress-indicator-to-the-info-header-in-blender.html
 def register_custom_progress_bar() -> None:
-    """
-    Register the custom progress bar.
-    """
+    """Register the custom progress bar."""
 
     # Save the original draw method of Info header
     global info_header_draw
@@ -76,5 +78,5 @@ def register_custom_progress_bar() -> None:
 
 
 # A variable where we can store the original draw function
-def info_header_draw(s, c):
+def info_header_draw(s, c):  # noqa: D103
     return None

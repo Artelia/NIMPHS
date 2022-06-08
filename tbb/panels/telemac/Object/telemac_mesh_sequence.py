@@ -5,9 +5,8 @@ from tbb.panels.utils import get_selected_object
 
 
 class TBB_PT_TelemacMeshSequence(Panel):
-    """
-    UI panel for TELEMAC 'mesh sequence' settings.
-    """
+    """UI panel for TELEMAC 'mesh sequence' settings."""
+
     register_cls = True
     is_custom_base_cls = False
 

@@ -7,9 +7,8 @@ from tbb.properties.openfoam.Object.openfoam_object_settings import TBB_Openfoam
 
 
 class TBB_ObjectSettings(PropertyGroup):
-    """
-    Data structure which holds object related settings for all the modules.
-    """
+    """Data structure which holds object related settings for all the modules."""
+
     register_cls = True
     is_custom_base_cls = False
 

@@ -9,9 +9,8 @@ from tbb.operators.openfoam.utils import generate_openfoam_streaming_sequence_ob
 
 
 class TBB_CreateSequence(Operator):
-    """
-    Base class of the 'CreateSequence' operators.
-    """
+    """Base class of the 'CreateSequence' operators."""
+
     register_cls = False
     is_custom_base_cls = True
 
@@ -38,7 +37,7 @@ class TBB_CreateSequence(Operator):
     )
 
     def __init__(self) -> None:
-        """Init method of the class"""
+        """Init method of the class."""
 
         super().__init__()
         self.timer = None
@@ -72,7 +71,7 @@ class TBB_CreateSequence(Operator):
 
     def execute(self, settings: TBB_ModuleSceneSettings, context: Context, module: str) -> set:
         """
-        Main method of the operator.
+        Create a sequence.
 
         Args:
             settings (TBB_ModuleSceneSettings): scene settings
@@ -142,6 +141,8 @@ class TBB_CreateSequence(Operator):
 
     def stop(self, context: Context, cancelled: bool = False) -> None:
         """
+        Stop the 'create sequence' process.
+
         Common stop function for OpenFOAM and TELEMAC 'create sequence' operators.
 
         Args:

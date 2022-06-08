@@ -12,8 +12,10 @@ from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 class TBB_CreateSequencePanel(Panel):
     """
     Base UI panel for OpenFOAM and TELEMAC modules.
+
     Specific settings are added in the classes which derive from this one.
     """
+
     register_cls = False
     is_custom_base_cls = True
 

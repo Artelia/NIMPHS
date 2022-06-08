@@ -5,9 +5,8 @@ from tbb.panels.utils import get_selected_object
 
 
 class TBB_PT_OpenfoamStreamingSequenceClip(Panel):
-    """
-    UI panel to manage clip settings of an OpenFOAM 'streaming sequence'.
-    """
+    """UI panel to manage clip settings of an OpenFOAM 'streaming sequence'."""
+
     register_cls = True
     is_custom_base_cls = False
 

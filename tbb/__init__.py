@@ -72,7 +72,7 @@ from tbb.properties.utils import register_custom_progress_bar
 auto_load.init()
 
 
-def register():
+def register():  # noqa: D103
     auto_load.register()
 
     # Register custom properties
@@ -98,7 +98,7 @@ def register():
     print("Registered Toolsbox OpenFOAM/TELEMAC")
 
 
-def unregister():
+def unregister():  # noqa: D103
     auto_load.unregister()
 
     # Remove icons

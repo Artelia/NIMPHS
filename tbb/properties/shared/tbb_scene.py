@@ -7,9 +7,8 @@ from tbb.properties.shared.tbb_scene_settings import TBB_SceneSettings
 
 
 class TBB_Scene(PropertyGroup):
-    """
-    Main property of the Toolsbox blender add-on. This data structure holds all Scene data for the add-on.
-    """
+    """Main property of the Toolsbox blender add-on. This data structure holds all Scene data for the add-on."""
+
     register_cls = True
     is_custom_base_cls = False
 

@@ -7,9 +7,8 @@ from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
 
 
 class TBB_TelemacStreamingSequenceProperty(TBB_ModuleStreamingSequenceSettings):
-    """
-    'Streaming sequence' settings for the TELEMAC module.
-    """
+    """'Streaming sequence' settings for the TELEMAC module."""
+
     register_cls = True
     is_custom_base_cls = False
 

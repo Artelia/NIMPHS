@@ -7,9 +7,8 @@ from tbb.properties.shared.module_scene_settings import TBB_ModuleSceneSettings
 
 
 class TBB_TelemacSettings(TBB_ModuleSceneSettings):
-    """
-    TELEMAC module settings.
-    """
+    """TELEMAC module settings."""
+
     register_cls = True
     is_custom_base_cls = False
 

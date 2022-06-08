@@ -20,7 +20,7 @@ repos:
   rev: 6.1.1
   hooks:
   - id: pydocstyle
-    exclude: 'tbb/properties/telemac/serafin.py'
+    exclude: tbb/properties/telemac/serafin.py|tbb/auto_load.py|tests/
     args: [
-      # "-e"
+      "-e"
     ]

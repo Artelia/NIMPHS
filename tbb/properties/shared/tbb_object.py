@@ -6,9 +6,8 @@ from tbb.properties.shared.tbb_object_settings import TBB_ObjectSettings
 
 
 class TBB_Object(PropertyGroup):
-    """
-    Main property of the Toolsbox blender add-on for objects. This data structure holds all Object data for the add-on.
-    """
+    """Main property of the Toolsbox blender addon for objects. This holds all Object data for the addon."""
+
     register_cls = True
     is_custom_base_cls = False
 

@@ -6,9 +6,8 @@ from tbb.panels.shared.create_sequence import TBB_CreateSequencePanel
 
 
 class TBB_PT_OpenfoamCreateSequence(TBB_CreateSequencePanel):
-    """
-    UI panel to manage the creation of new OpenFOAM sequences.
-    """
+    """UI panel to manage the creation of new OpenFOAM sequences."""
+
     register_cls = True
     is_custom_base_cls = False
 
@@ -22,7 +21,7 @@ class TBB_PT_OpenfoamCreateSequence(TBB_CreateSequencePanel):
     @classmethod
     def poll(cls, context: Context) -> bool:
         """
-        If false, hides the panel. Calls 'super().poll(...)'.
+        If false, hides the panel. Calls parent poll function.
 
         Args:
             context (Context): context
@@ -35,7 +34,7 @@ class TBB_PT_OpenfoamCreateSequence(TBB_CreateSequencePanel):
 
     def draw(self, context: Context) -> None:
         """
-        Layout of the panel. Calls 'super().draw(...)'.
+        Layout of the panel. Calls parent draw function.
 
         Args:
             context (Context): context

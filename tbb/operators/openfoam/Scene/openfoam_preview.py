@@ -13,9 +13,8 @@ from tbb.operators.openfoam.utils import (
 
 
 class TBB_OT_OpenfoamPreview(Operator):
-    """
-    Preview the mesh using the loaded file and selected parameters.
-    """
+    """Preview the mesh using the loaded file and selected parameters."""
+
     register_cls = True
     is_custom_base_cls = False
 
@@ -25,7 +24,8 @@ class TBB_OT_OpenfoamPreview(Operator):
 
     def execute(self, context: Context) -> set:
         """
-        Main function of the operator. Preview the mesh.
+        Preview the mesh.
+
         It also updates temporary data with this new preview.
 
         Args:
