@@ -1,4 +1,5 @@
 # <pep8 compliant>
+import bpy
 from bpy.utils import previews
 from bpy.types import Scene, Object
 from bpy.props import PointerProperty
@@ -69,6 +70,11 @@ from tbb.operators.openfoam.utils import update_openfoam_streaming_sequences
 from tbb.operators.telemac.utils import update_telemac_streaming_sequences, update_telemac_mesh_sequences
 from tbb.properties.utils import register_custom_progress_bar
 
+# Setup logger
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
 auto_load.init()
 
 
@@ -93,9 +99,13 @@ def register():  # noqa: D103
     icons.load("openfoam", os.path.join(icons_dir, "openfoam_32_px.png"), 'IMAGE')
     icons.load("telemac", os.path.join(icons_dir, "telemac_32_px.png"), 'IMAGE')
 
+    # Setup logger using user preferences (this will affect all child loggers)
+    prefs = bpy.context.preferences.addons[__package__].preferences.settings
+    logger.setLevel(logging.getLevelName(prefs.log_level))
+
     Scene.tbb_icons = {"main": icons}
 
-    print("Registered Toolsbox OpenFOAM/TELEMAC")
+    logger.debug("Registered Toolsbox OpenFOAM/TELEMAC")
 
 
 def unregister():  # noqa: D103
@@ -106,4 +116,4 @@ def unregister():  # noqa: D103
         previews.remove(collection)
     Scene.tbb_icons.clear()
 
-    print("Unregistered Toolsbox OpenFOAM/TELEMAC")
+    logger.debug("Unregistered Toolsbox OpenFOAM/TELEMAC")
