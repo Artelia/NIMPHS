@@ -1,0 +1,5 @@
+sphinx
+sphinxemoji
+sphinx_rtd_theme
+fake-bpy-module-latest
+#pyvista

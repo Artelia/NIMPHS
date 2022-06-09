@@ -1,6 +1,6 @@
 # Toolsbox Blender
 
-Import OpenFOAM files inside Blender and generate astonishing renders!
+Import OpenFOAM / TELEMAC files inside Blender and generate astonishing renders!
 
 ## Main features
 
@@ -13,6 +13,29 @@ Import OpenFOAM files inside Blender and generate astonishing renders!
 * Clip by a scalar
 
 ## Screenshots
-![Main panel of the add-on](https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.1.0/imgs/screenshot_a.png "Main panel")
 
-![Object properties panel for streaming sequences](https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.1.0/imgs/screenshot_b.png "Object properties panel")
+Main panel - material preview |  Main panel - wireframe preview
+:----------------------------:|:-------------------------------:
+![Material preview](https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.2.0/docs/source/images/readme/screenshot_openfoam_a.png)  |  ![Wireframe preview](https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.2.0/docs/source/images/readme/screenshot_openfoam_b.png)
+
+<p align="center">
+  <img alt="Shading preview" width="716" height="460" src="https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.2.0/docs/source/images/readme/screenshot_openfoam_c.png"/>
+</p>
+
+### TELEMAC
+
+* Preview the imported file in the viewport (works with 2D / 3D simulations)
+* Create a sequence
+    * Mesh sequence (generates a shape key for each time point in the selected time range, ideal short sequences)
+    * Streaming sequence (generates a mesh when the frame changes and only keeps one mesh in memory, ideal for long sequences)
+* Interpolate mesh and vertex colors
+
+## Screenshots
+
+Main panel - material preview |  Main panel - wireframe preview
+:----------------------------:|:-------------------------------:
+![Material preview](https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.2.0/docs/source/images/readme/screenshot_telemac_a.png)  |  ![Wireframe preview](https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.2.0/docs/source/images/readme/screenshot_telemac_b.png)
+
+<p align="center">
+  <img alt="Shading preview" width="694" height="430" src="https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.2.0/docs/source/images/readme/screenshot_telemac_c.png"/>
+</p>

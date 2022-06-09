@@ -6,3 +6,15 @@
 *.blend[1-9]
 __pycache__
 /dist/
+
+# Docs
+docs/_build/
+*.xml.bkp
+*.xml.dtmp
+*.bkp
+
+# Tests
+data/
+cache/
+local_addon/
+.pytest_cache/

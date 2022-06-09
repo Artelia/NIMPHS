@@ -1,0 +1,3 @@
+[codespell]
+skip = *.pyc,*.txt,*.gif,*.png,*.jpg,*.js,*.html,*.doctree,*.ipynb,.git/*,*.yml,docs/_build/*,tbb/properties/telemac/serafin.py
+ignore-words-list = Toolsbox,toolsbox,tbb
