@@ -144,7 +144,7 @@ release:
 
   release:
     name: "${ADDON_NAME} v${VERSION}"
-    description: "${ADDON_NAME} v${VERSION}"
+    description: "Minimal Blender version required: 3.0."
     tag_name: "${VERSION}"
     assets:
       links:

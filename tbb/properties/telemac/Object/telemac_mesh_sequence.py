@@ -18,7 +18,7 @@ class TBB_TelemacMeshSequenceProperty(PropertyGroup):
         default="",
     )
 
-    #: bpy.types.BoolProperty: Import point data as vertex color groups
+    #: bpy.props.BoolProperty: Import point data as vertex color groups
     import_point_data: BoolProperty(
         name="Import point data",
         description="Import point data as vertex color groups",

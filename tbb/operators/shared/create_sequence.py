@@ -14,7 +14,7 @@ class TBB_CreateSequence(Operator):
     register_cls = False
     is_custom_base_cls = True
 
-    #: bpy.types.Timer: Timer which triggers the 'modal' method of operators
+    #: bpy.props.Timer: Timer which triggers the 'modal' method of operators
     timer = None
     #: str: Name of the sequence object
     sequence_name = ""

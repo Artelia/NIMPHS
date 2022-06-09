@@ -34,34 +34,34 @@ class TBB_ModuleSceneSettings(PropertyGroup):
 
     # anim_length: IntProperty dynamically created
 
-    #: bpy.types.IntProperty: Starting point of the sequence
+    #: bpy.props.IntProperty: Starting point of the sequence
     frame_start: IntProperty(
         name="Frame start",
         description="Starting point of the sequence",
         default=1
     )
 
-    #: bpy.types.StringProperty: Path to the file
+    #: bpy.props.StringProperty: Path to the file
     file_path: StringProperty(
         name="File path",
         description="Path to the imported file",
     )
 
-    #: bpy.types.BoolProperty: Import point data as vertex color groups
+    #: bpy.props.BoolProperty: Import point data as vertex color groups
     import_point_data: BoolProperty(
         name="Import point data",
         description="Import point data as vertex color groups",
         default=False,
     )
 
-    #: bpy.types.StringProperty: List of point data to import as vertex color groups. Separate each with a semicolon
+    #: bpy.props.StringProperty: List of point data to import as vertex color groups. Separate each with a semicolon
     list_point_data: StringProperty(
         name="Point data list",
         description="List of point data to import as vertex color groups. Separate each with a semicolon",
         default="",
     )
 
-    #: bpy.types.StringProperty: Name of the sequence object
+    #: bpy.props.StringProperty: Name of the sequence object
     sequence_name: StringProperty(
         name="Sequence name",
         description="Name of the sequence object",

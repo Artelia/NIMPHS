@@ -15,14 +15,14 @@ class TBB_TelemacSettings(TBB_ModuleSceneSettings):
     #: TBB_TelemacTemporaryData: temporary data
     tmp_data = TBB_TelemacTemporaryData()
 
-    #: bpy.types.EnumProperty: Name of point data to preview
+    #: bpy.props.EnumProperty: Name of point data to preview
     preview_point_data: EnumProperty(
         items=update_var_names,
         name="Point data",
         description="Name of point data to preview",
     )
 
-    #: bpy.types.EnumProperty: Select a sequence type
+    #: bpy.props.EnumProperty: Select a sequence type
     sequence_type: EnumProperty(
         items=[
             ("mesh_sequence", "Mesh sequence", "Make a sequence by adding shape keys for each time step\
@@ -33,21 +33,21 @@ class TBB_TelemacSettings(TBB_ModuleSceneSettings):
         description="Select a sequence type",
     )
 
-    #: bpy.types.FloatVectorProperty: Hold original dimensions of the mesh
+    #: bpy.props.FloatVectorProperty: Hold original dimensions of the mesh
     preview_obj_dimensions: FloatVectorProperty(
         name="Preview object dimensions",
         description="Dimensions of the preview object",
         default=(1.0, 1.0, 1.0),
     )
 
-    #: bpy.types.BoolProperty: Option to normalize vertices coordinates (remap values in [-1;1])
+    #: bpy.props.BoolProperty: Option to normalize vertices coordinates (remap values in [-1;1])
     normalize_preview_obj: BoolProperty(
         name="Normalize coordinates",
         description="Option to normalize vertices coordinates (remap values in [-1;1])",
         default=False
     )
 
-    #: bpy.types.BoolProperty: Option to normalize vertices coordinates (remap values in [-1;1])
+    #: bpy.props.BoolProperty: Option to normalize vertices coordinates (remap values in [-1;1])
     normalize_sequence_obj: BoolProperty(
         name="Normalize coordinates",
         description="Option to normalize vertices coordinates (remap values in [-1;1])",

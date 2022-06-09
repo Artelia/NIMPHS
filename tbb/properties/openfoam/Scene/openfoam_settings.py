@@ -13,7 +13,7 @@ class TBB_OpenfoamSettings(TBB_ModuleSceneSettings):
     register_cls = True
     is_custom_base_cls = False
 
-    #: bpy.types.BoolProperty: If `True`, decompose polyhedra into tetrahedra and pyramids
+    #: bpy.props.BoolProperty: If `True`, decompose polyhedra into tetrahedra and pyramids
     decompose_polyhedra: BoolProperty(
         name="Decompose polyhedra",
         description="Whether polyhedra are to be decomposed when read. If True,\
@@ -21,14 +21,14 @@ class TBB_OpenfoamSettings(TBB_ModuleSceneSettings):
         default=False,
     )
 
-    #: bpy.types.BoolProperty: If `True`, more complex polygons will be broken down into triangles
+    #: bpy.props.BoolProperty: If `True`, more complex polygons will be broken down into triangles
     triangulate: BoolProperty(
         name="Triangulate",  # noqa: F821
         description="More complex polygons will be broken down into triangles",
         default=True,
     )
 
-    #: bpy.types.EnumProperty: The property indicates whether decomposed mesh or reconstructed mesh should be read
+    #: bpy.props.EnumProperty: The property indicates whether decomposed mesh or reconstructed mesh should be read
     case_type: EnumProperty(
         name="Case type",
         description="The property indicates whether decomposed mesh or reconstructed mesh should be read",
@@ -41,14 +41,14 @@ class TBB_OpenfoamSettings(TBB_ModuleSceneSettings):
     #: TBB_OpenfoamTemporaryData: temporary data
     tmp_data = TBB_OpenfoamTemporaryData()
 
-    #: bpy.types.EnumProperty: Name of point data to preview
+    #: bpy.props.EnumProperty: Name of point data to preview
     preview_point_data: EnumProperty(
         items=update_scalar_names,
         name="Point data",
         description="Name of point data to preview",
     )
 
-    #: bpy.types.EnumProperty: Select a sequence type
+    #: bpy.props.EnumProperty: Select a sequence type
     sequence_type: EnumProperty(
         items=[
             ("mesh_sequence", "Mesh sequence", "Make a sequence by creating a mesh for each time step\

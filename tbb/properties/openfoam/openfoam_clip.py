@@ -11,7 +11,7 @@ class TBB_OpenfoamClipScalarProperty(PropertyGroup):
     register_cls = True
     is_custom_base_cls = False
 
-    #: bpy.types.FloatProperty: Set the clipping value
+    #: bpy.props.FloatProperty: Set the clipping value
     value: FloatProperty(
         name="Value",  # noqa: F821
         description="Set the clipping value",
@@ -22,7 +22,7 @@ class TBB_OpenfoamClipScalarProperty(PropertyGroup):
         get=get_clip_values,
     )
 
-    #: bpy.types.FloatProperty: Set the clipping value
+    #: bpy.props.FloatProperty: Set the clipping value
     vector_value: FloatVectorProperty(
         name="Value",  # noqa: F821
         description="Set the clipping value",
@@ -33,28 +33,28 @@ class TBB_OpenfoamClipScalarProperty(PropertyGroup):
         get=get_clip_values,
     )
 
-    #: bpy.types.StringProperty: Save the value ranges of each scalar
+    #: bpy.props.StringProperty: Save the value ranges of each scalar
     value_ranges: StringProperty(
         name="Value ranges",
         description="Save the value ranges of each scalar",
         default="",
     )
 
-    #: bpy.types.EnumProperty: Name of scalars to clip on
+    #: bpy.props.EnumProperty: Name of scalars to clip on
     name: EnumProperty(
         items=update_scalar_names,
         name="Scalars",  # noqa: F821
         description="Name of scalars to clip on",
     )
 
-    #: bpy.types.StringProperty: Save the list of available scalars
+    #: bpy.props.StringProperty: Save the list of available scalars
     list: StringProperty(
         name="Clip scalars list",
         description="Save the list of available scalars",
         default="",
     )
 
-    #: bpy.types.BoolProperty: Flag on whether to flip/invert the clip. When True, only the mesh below 'value' will be
+    #: bpy.props.BoolProperty: Flag on whether to flip/invert the clip. When True, only the mesh below 'value' will be
     #                          kept. When False, only values above 'value' will be kept
     invert: BoolProperty(
         name="Invert",  # noqa: F821
@@ -70,7 +70,7 @@ class TBB_OpenfoamClipProperty(PropertyGroup):
     register_cls = True
     is_custom_base_cls = False
 
-    #: bpy.types.EnumProperty: Choose the clipping method
+    #: bpy.props.EnumProperty: Choose the clipping method
     type: EnumProperty(
         items=[
             ("no_clip", "None", "Do not clip"),  # noqa: F821

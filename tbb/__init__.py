@@ -16,7 +16,7 @@ bl_info = {
     "name": "Toolsbox OpenFOAM/TELEMAC",
     "description": "Load, visualize and manipulate OpenFOAM/TELEMAC files",
     "author": "Thibault Oudart, Félix Olart",
-    "version": (0, 2, 0),
+    "version": (0, 3, 0),
     "blender": (3, 0, 0),
     "location": "View3D > Sidebar",
     "warning": "This version is still in development.",
