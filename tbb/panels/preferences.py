@@ -13,7 +13,9 @@ class TBB_Preferences(AddonPreferences):
 
     bl_idname = __package__.removesuffix(".panels")
 
-    preferences: PointerProperty(type=TBB_Preferences)
+    #: bpy.props.PointerProperty: Preferences of the addon.
+    # Access through `context.preferences.addons['tbb'].preferences.settings`.
+    settings: PointerProperty(type=TBB_Preferences)
 
     def draw(self, context: Context) -> None:
         """
@@ -25,5 +27,23 @@ class TBB_Preferences(AddonPreferences):
 
         layout = self.layout
 
-        row = layout.row()
-        row.prop(self.preferences, "log_level", text="Log")
+        # Files preferences
+        box = layout.box()
+
+        row = box.row()
+        row.label(text="Files")
+
+        row = box.row()
+        row.prop(self.settings, "openfoam_extensions", text="OpenFOAM")
+
+        row = box.row()
+        row.prop(self.settings, "telemac_extensions", text="TELEMAC")
+
+        # System preferences
+        box = layout.box()
+
+        row = box.row()
+        row.label(text="System")
+
+        row = box.row()
+        row.prop(self.settings, "log_level", text="Log")
