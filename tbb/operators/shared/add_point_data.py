@@ -103,18 +103,18 @@ class TBB_OT_AddPointData(Operator):
         """
 
         obj = get_selected_object(context)
-        seq_settings = get_sequence_settings(obj)
+        sequence = get_sequence_settings(obj)
 
         # TODO: use this for both modules
         if obj.tbb.settings.module == 'TELEMAC':
-            point_data = json.loads(seq_settings.point_data)
+            point_data = json.loads(sequence.point_data)
 
             selected_point_data = json.loads(self.point_data)
             point_data["names"].append(selected_point_data["name"])
             point_data["units"].append(selected_point_data["unit"])
             point_data["ranges"].append(None)
 
-            seq_settings.point_data = json.dumps(point_data)
+            sequence.point_data = json.dumps(point_data)
         else:
             log.warning("Not implemented yet for other modules.")
             return {'CANCELLED'}

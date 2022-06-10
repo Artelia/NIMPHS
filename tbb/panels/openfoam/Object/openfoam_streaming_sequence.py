@@ -45,15 +45,15 @@ class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
 
         obj = get_selected_object(context)
         if obj is not None:
-            seq_settings = obj.tbb.settings.openfoam.streaming_sequence
-            super().draw(obj, seq_settings)
+            sequence = obj.tbb.settings.s_sequence
+            super().draw(obj, sequence)
 
-            if seq_settings.update:
+            if sequence.update:
                 layout = self.layout
 
                 row = layout.row()
-                row.prop(seq_settings, "decompose_polyhedra", text="Decompose polyhedra")
+                row.prop(sequence, "decompose_polyhedra", text="Decompose polyhedra")
                 row = layout.row()
-                row.prop(seq_settings, "triangulate", text="Triangulate")
+                row.prop(sequence, "triangulate", text="Triangulate")
                 row = layout.row()
-                row.prop(seq_settings, "case_type", text="Case")
+                row.prop(sequence, "case_type", text="Case")

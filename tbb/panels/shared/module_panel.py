@@ -40,9 +40,9 @@ class TBB_ModulePanel(Panel):
 
         if obj is not None:
             if module == 'OpenFOAM':
-                sequence_settings = obj.tbb.settings.openfoam.streaming_sequence
+                sequence_settings = obj.tbb.settings.s_sequence
             if module == 'TELEMAC':
-                sequence_settings = obj.tbb.settings.telemac.streaming_sequence
+                sequence_settings = obj.tbb.settings.s_sequence
         else:
             sequence_settings = None
 

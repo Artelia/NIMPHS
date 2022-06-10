@@ -118,12 +118,12 @@ class TBB_CreateSequence(Operator):
 
             if module == 'OpenFOAM':
                 obj = generate_openfoam_streaming_sequence_obj(context, settings.sequence_name)
-                seq_settings = obj.tbb.settings.openfoam.streaming_sequence
+                sequence = obj.tbb.settings.openfoam.s_sequence
             if module == 'TELEMAC':
                 obj = generate_telemac_streaming_sequence_obj(context, settings.sequence_name)
-                seq_settings = obj.tbb.settings.telemac.streaming_sequence
+                sequence = obj.tbb.settings.telemac.s_sequence
 
-            setup_streaming_sequence_object(obj, seq_settings, settings.tmp_data.nb_time_points, settings, module)
+            setup_streaming_sequence_object(obj, sequence, settings.tmp_data.nb_time_points, settings, module)
 
             context.scene.collection.objects.link(obj)
 

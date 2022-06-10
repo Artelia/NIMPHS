@@ -21,8 +21,8 @@ class TBB_TelemacTemporaryData():
     nb_vars = 0
     #: int: Number of time points
     nb_time_points = 0
-    #: dict: Information on variables (names, units and value ranges)
-    vars_info = {"names": [], "units": [], "ranges": []}
+    #: dict: Information on variables
+    vars_info = {"names": [], "units": [], "ranges": [], "types": [], "dimensions": []}
     #: int: Number of planes
     nb_planes = 0
     #: int: Number of vertices
@@ -81,6 +81,8 @@ class TBB_TelemacTemporaryData():
         self.vars_info["names"].clear()
         self.vars_info["units"].clear()
         self.vars_info["ranges"].clear()
+        self.vars_info["types"].clear()
+        self.vars_info["dimensions"].clear()
         # Construct variables information data
         for var_info in self.file.nomvar:
             # var_info is always 32 chars long with 16 chars for the name and 16 for the unit name
@@ -89,6 +91,8 @@ class TBB_TelemacTemporaryData():
             self.vars_info["names"].append(name)
             self.vars_info["units"].append(unit)
             self.vars_info["ranges"].append(None)
+            self.vars_info["types"].append('SCALAR')
+            self.vars_info["dimensions"].append(1)
 
     def is_ok(self) -> bool:
         """

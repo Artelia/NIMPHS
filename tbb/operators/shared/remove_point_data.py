@@ -39,7 +39,7 @@ class TBB_OT_RemovePointData(Operator):
 
         Args:
             context (Context): context
-            seq_settings (TBB_ModuleStreamingSequenceSettings): sequence settings
+            sequence (TBB_ModuleStreamingSequenceSettings): sequence settings
             name (str): name of point data
 
         Returns:
@@ -48,13 +48,13 @@ class TBB_OT_RemovePointData(Operator):
 
         obj = bpy.data.objects.get(self.obj_name, None)
         if obj is not None:
-            seq_settings = get_sequence_settings(obj)
-            point_data = json.loads(seq_settings.point_data)
+            sequence = get_sequence_settings(obj)
+            point_data = json.loads(sequence.point_data)
             index = point_data["names"].index(self.var_name)
             point_data["names"].pop(index)
             point_data["units"].pop(index)
             point_data["ranges"].pop(index)
-            obj.tbb.settings.telemac.streaming_sequence.point_data = json.dumps(point_data)
+            obj.tbb.settings.s_sequence.point_data = json.dumps(point_data)
         else:
             log.warning(f"Object with name {self.obj_name} does not exist.")
             return {'CANCELLED'}

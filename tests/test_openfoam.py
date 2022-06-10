@@ -204,24 +204,24 @@ def test_streaming_sequence_openfoam(streaming_sequence):
     assert streaming_sequence.tbb.is_streaming_sequence is True
 
     # Test common settings
-    seq_settings = streaming_sequence.tbb.settings.openfoam.streaming_sequence
-    assert seq_settings.name == "My_OpenFOAM_Streaming_Sim_sequence"
-    assert seq_settings.update is True
-    assert seq_settings.file_path == FILE_PATH
-    assert seq_settings.frame_start == 1
-    assert seq_settings.max_length == 21
-    assert seq_settings.anim_length == 21
-    assert seq_settings.import_point_data is True
-    assert seq_settings.point_data == "U;alpha.water;p;p_rgh"
+    sequence = streaming_sequence.tbb.settings.openfoam.s_sequence
+    assert sequence.name == "My_OpenFOAM_Streaming_Sim_sequence"
+    assert sequence.update is True
+    assert sequence.file_path == FILE_PATH
+    assert sequence.frame_start == 1
+    assert sequence.max_length == 21
+    assert sequence.anim_length == 21
+    assert sequence.import_point_data is True
+    assert sequence.point_data == "U;alpha.water;p;p_rgh"
 
     # Test OpenFOAM settings
-    assert seq_settings.decompose_polyhedra is True
-    assert seq_settings.triangulate is True
-    assert seq_settings.case_type == 'reconstructed'
-    assert seq_settings.clip.type == 'scalar'
-    assert seq_settings.clip.scalar.value == 0.5
-    assert seq_settings.clip.scalar.name == "alpha.water@value"
-    assert seq_settings.clip.scalar.invert is False
+    assert sequence.decompose_polyhedra is True
+    assert sequence.triangulate is True
+    assert sequence.case_type == 'reconstructed'
+    assert sequence.clip.type == 'scalar'
+    assert sequence.clip.scalar.value == 0.5
+    assert sequence.clip.scalar.name == "alpha.water@value"
+    assert sequence.clip.scalar.invert is False
 
 
 def test_geometry_streaming_sequence_openfoam(streaming_sequence):
@@ -231,7 +231,7 @@ def test_geometry_streaming_sequence_openfoam(streaming_sequence):
     # WARNING: next tests are based on the following frame
     bpy.context.scene.frame_set(11)
     # Disable updates for this sequence object during the next tests
-    streaming_sequence.tbb.settings.openfoam.streaming_sequence.update = False
+    streaming_sequence.tbb.settings.openfoam.s_sequence.update = False
 
     # Test geometry (tp 11, clip on alpha.water, 0.5, triangulated, decompose polyhedra)
     assert len(streaming_sequence.data.vertices) == 55718

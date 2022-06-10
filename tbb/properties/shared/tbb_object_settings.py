@@ -12,13 +12,6 @@ class TBB_ObjectSettings(PropertyGroup):
     register_cls = True
     is_custom_base_cls = False
 
-    #: bpy.props.StringProperty: Module name
-    module: StringProperty(
-        name="Module name",
-        description="Module name, enum in ['None', 'OpenFOAM', 'TELEMAC']",
-        default="None",
-    )
-
     #: TBB_OpenfoamObjectSettings: OpenFOAM object properties
     openfoam: PointerProperty(type=TBB_OpenfoamObjectSettings)
 

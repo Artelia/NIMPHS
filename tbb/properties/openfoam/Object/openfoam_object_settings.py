@@ -11,5 +11,5 @@ class TBB_OpenfoamObjectSettings(PropertyGroup):
     register_cls = True
     is_custom_base_cls = False
 
-    #: TBB_OpenfoamStreamingSequenceProperty: OpenFOAM streaming sequence properties
-    streaming_sequence: PointerProperty(type=TBB_OpenfoamStreamingSequenceProperty)
+    #: TBB_OpenfoamStreamingSequenceProperty: OpenFOAM streaming sequence properties.
+    s_sequence: PointerProperty(type=TBB_OpenfoamStreamingSequenceProperty)

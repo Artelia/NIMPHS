@@ -153,7 +153,7 @@ def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, name: str
     return obj
 
 
-def setup_streaming_sequence_object(obj: Object, seq_settings: Union[TBB_OpenfoamStreamingSequenceProperty,
+def setup_streaming_sequence_object(obj: Object, sequence: Union[TBB_OpenfoamStreamingSequenceProperty,
                                     TBB_TelemacStreamingSequenceProperty], time_points: int,
                                     settings: TBB_ModuleSceneSettings, module: str) -> None:
     """
@@ -161,26 +161,26 @@ def setup_streaming_sequence_object(obj: Object, seq_settings: Union[TBB_Openfoa
 
     Args:
         obj (Object): sequence object
-        seq_settings (Union[TBB_OpenfoamStreamingSequenceProperty, TBB_TelemacStreamingSequenceProperty]): settings
+        sequence (Union[TBB_OpenfoamStreamingSequenceProperty, TBB_TelemacStreamingSequenceProperty]): settings
         time_points (int): number of available time points
         settings (TBB_ModuleSceneSettings): scene settings
         module (str): name of the module, enum in ['OpenFOAM', 'TELEMAC']
     """
 
     # Setup common settings
-    seq_settings.name = obj.name
-    seq_settings.file_path = settings.file_path
+    sequence.name = obj.name
+    sequence.file_path = settings.file_path
     obj.tbb.is_streaming_sequence = True
-    seq_settings.update = True
+    sequence.update = True
     obj.tbb.settings.module = module
 
     # Set the selected time frame
-    seq_settings.frame_start = settings.frame_start     # Order matters!
-    seq_settings.max_length = time_points               # Check TBB_StreamingSequenceProperty class definition.
-    seq_settings.anim_length = settings["anim_length"]  #
+    sequence.frame_start = settings.frame_start     # Order matters!
+    sequence.max_length = time_points               # Check TBB_StreamingSequenceProperty class definition.
+    sequence.anim_length = settings["anim_length"]  #
 
-    seq_settings.import_point_data = settings.import_point_data
-    # seq_settings.point_data = settings.point_data
+    sequence.import_point_data = settings.import_point_data
+    # sequence.point_data = settings.point_data
 
 
 def update_scene_settings_dynamic_props(settings: TBB_ModuleSceneSettings,
@@ -297,14 +297,14 @@ def get_sequence_settings(obj: Object) -> Union[TBB_OpenfoamStreamingSequencePro
 
     if obj.tbb.settings.module == 'TELEMAC':
         if obj.tbb.is_streaming_sequence:
-            return obj.tbb.settings.telemac.streaming_sequence
-        elif obj.tbb.settings.telemac.is_mesh_sequence:
-            return obj.tbb.settings.telemac.mesh_sequence
+            return obj.tbb.settings.s_sequence
+        elif obj.tbb.is_mesh_sequence:
+            return obj.tbb.settings.telemac.m_sequence
         else:
             return None
     elif obj.tbb.settings.module == 'OpenFOAM':
         if obj.tbb.is_streaming_sequence:
-            return obj.tbb.settings.openfoam.streaming_sequence
+            return obj.tbb.settings.s_sequence
         else:
             return None
     else:

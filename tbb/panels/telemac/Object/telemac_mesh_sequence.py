@@ -30,7 +30,7 @@ class TBB_PT_TelemacMeshSequence(Panel):
 
         obj = get_selected_object(context)
         if obj is not None:
-            return obj.tbb.settings.telemac.is_mesh_sequence
+            return obj.tbb.is_mesh_sequence
         else:
             return False
 
@@ -46,7 +46,7 @@ class TBB_PT_TelemacMeshSequence(Panel):
 
         obj = get_selected_object(context)
         if obj is not None:
-            sequence_settings = obj.tbb.settings.telemac.mesh_sequence
+            sequence_settings = obj.tbb.settings.telemac.m_sequence
 
         row = layout.row()
         row.prop(sequence_settings, "import_point_data", text="Import point data")

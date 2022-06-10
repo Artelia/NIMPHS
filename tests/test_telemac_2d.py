@@ -186,18 +186,18 @@ def test_streaming_sequence_telemac_2d(streaming_sequence, frame_change_pre):
 
     # Test streaming sequence settings
     assert streaming_sequence.tbb.is_streaming_sequence
-    seq_settings = streaming_sequence.tbb.settings.telemac.streaming_sequence
-    assert seq_settings is not None
-    assert seq_settings.name == "My_TELEMAC_Streaming_Sim_2D_sequence"
-    assert seq_settings.update is True
-    assert seq_settings.frame_start == 1
-    assert seq_settings.max_length == 31
-    assert seq_settings.anim_length == 31
-    assert seq_settings.import_point_data is True
-    assert seq_settings.point_data == "VITESSE U;SALINITE;VITESSE V;FOND;"
+    sequence = streaming_sequence.tbb.settings.telemac.s_sequence
+    assert sequence is not None
+    assert sequence.name == "My_TELEMAC_Streaming_Sim_2D_sequence"
+    assert sequence.update is True
+    assert sequence.frame_start == 1
+    assert sequence.max_length == 31
+    assert sequence.anim_length == 31
+    assert sequence.import_point_data is True
+    assert sequence.point_data == "VITESSE U;SALINITE;VITESSE V;FOND;"
 
     # Disable updates for this sequence object during the next tests
-    streaming_sequence.tbb.settings.telemac.streaming_sequence.update = False
+    streaming_sequence.tbb.settings.telemac.s_sequence.update = False
 
 
 def test_geometry_streaming_sequence_telemac_2d(streaming_sequence):
@@ -252,12 +252,12 @@ def test_mesh_sequence_telemac_2d(mesh_sequence, frame_change_post):
     assert mesh_sequence.tbb.settings.telemac.is_mesh_sequence is True
     assert mesh_sequence.tbb.uid != "None"
     assert mesh_sequence.tbb.tmp_data[mesh_sequence.tbb.uid] is not None
-    seq_settings = mesh_sequence.tbb.settings.telemac.mesh_sequence
-    assert seq_settings is not None
-    assert seq_settings.import_point_data is True
-    assert seq_settings.point_data == "VITESSE U;SALINITE;VITESSE V;FOND;"
-    assert seq_settings.file_path == FILE_PATH
-    assert seq_settings.is_3d_simulation is False
+    sequence = mesh_sequence.tbb.settings.telemac.mesh_sequence
+    assert sequence is not None
+    assert sequence.import_point_data is True
+    assert sequence.point_data == "VITESSE U;SALINITE;VITESSE V;FOND;"
+    assert sequence.file_path == FILE_PATH
+    assert sequence.is_3d_simulation is False
 
     # Disable updates for this sequence object during the next tests
     mesh_sequence.tbb.settings.telemac.mesh_sequence.import_point_data = False

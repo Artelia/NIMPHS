@@ -156,28 +156,28 @@ def generate_openfoam_streaming_sequence_obj(context: Context, name: str) -> Obj
 
     # Copy settings
     settings = context.scene.tbb.settings.openfoam
-    seq_settings = obj.tbb.settings.openfoam.streaming_sequence
-    seq_settings.decompose_polyhedra = settings.decompose_polyhedra
-    seq_settings.triangulate = settings.triangulate
-    seq_settings.case_type = settings.case_type
+    sequence = obj.tbb.settings.openfoam.s_sequence
+    sequence.decompose_polyhedra = settings.decompose_polyhedra
+    sequence.triangulate = settings.triangulate
+    sequence.case_type = settings.case_type
 
     # Set clip settings
-    seq_settings.clip.type = settings.clip.type
-    seq_settings.clip.scalar.list = settings.clip.scalar.list
-    seq_settings.clip.scalar.value_ranges = settings.clip.scalar.value_ranges
+    sequence.clip.type = settings.clip.type
+    sequence.clip.scalar.list = settings.clip.scalar.list
+    sequence.clip.scalar.value_ranges = settings.clip.scalar.value_ranges
 
     # Sometimes, the selected scalar may not correspond to ones available in the EnumProperty.
     # This happens when the selected scalar is not available at time point 0
     # (the EnumProperty only reads data at time point 0 to create the list of available items)
     try:
-        seq_settings.clip.scalar.name = settings.clip.scalar.name
+        sequence.clip.scalar.name = settings.clip.scalar.name
     except TypeError as error:
         print("WARNING::setup_openfoam_streaming_sequence_obj: " + str(error))
 
-    seq_settings.clip.scalar.invert = settings.clip.scalar.invert
+    sequence.clip.scalar.invert = settings.clip.scalar.invert
     # 'value' and 'vector_value' may not be defined, so use .get(prop, default_returned_value)
-    seq_settings.clip.scalar["value"] = settings.clip.scalar.get("value", 0.5)
-    seq_settings.clip.scalar["vector_value"] = settings.clip.scalar.get("vector_value", (0.5, 0.5, 0.5))
+    sequence.clip.scalar["value"] = settings.clip.scalar.get("value", 0.5)
+    sequence.clip.scalar["vector_value"] = settings.clip.scalar.get("vector_value", (0.5, 0.5, 0.5))
 
     return obj
 
@@ -388,7 +388,7 @@ def update_openfoam_streaming_sequences(scene: Scene) -> None:
 
     if not scene.tbb.create_sequence_is_running:
         for obj in scene.objects:
-            settings = obj.tbb.settings.openfoam.streaming_sequence
+            settings = obj.tbb.settings.s_sequence
 
             if obj.tbb.is_streaming_sequence and settings.update:
                 time_point = frame - settings.frame_start
