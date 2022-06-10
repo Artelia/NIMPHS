@@ -179,7 +179,7 @@ def setup_streaming_sequence_object(obj: Object, sequence: Union[TBB_OpenfoamStr
     sequence.max_length = time_points               # Check TBB_StreamingSequenceProperty class definition.
     sequence.anim_length = settings["anim_length"]  #
 
-    sequence.import_point_data = settings.import_point_data
+    obj.tbb.settings.import_point_data = settings.import_point_data
     # sequence.point_data = settings.point_data
 
 

@@ -1,6 +1,6 @@
 # <pep8 compliant>
 from bpy.types import PropertyGroup
-from bpy.props import PointerProperty, StringProperty
+from bpy.props import PointerProperty, StringProperty, BoolProperty
 
 from tbb.properties.telemac.Object.telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
 from tbb.properties.telemac.Object.telemac_mesh_sequence import TBB_TelemacMeshSequenceProperty
@@ -17,6 +17,13 @@ class TBB_TelemacObjectSettings(PropertyGroup):
         name="Name of z-value",
         description="Name of the variable used for the 'z-values' of the vertices",
         default=""
+    )
+
+    #: bpy.props.BoolProperty: Indicate whether this mesh sequence is from a 3D simulation or not.
+    is_3d_simulation: BoolProperty(
+        name="Is 3D simulation",
+        description="Indicate whether this mesh sequence is from a 3D simulation or not",
+        default=False
     )
 
     #: TBB_TelemacStreamingSequenceProperty: TELEMAC 'streaming sequence' properties.

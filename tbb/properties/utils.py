@@ -1,8 +1,6 @@
 # <pep8 compliant>
 from bpy.types import Context, VIEW3D_HT_tool_header
 
-from tbb.properties.shared.module_sequence_settings import TBB_ModuleSequenceSettings
-
 DEV_MODE = True
 
 
@@ -49,17 +47,6 @@ def update_progress_bar(_self, context: Context):
     for area in areas:
         if area.type == 'INFO':
             area.tag_redraw()
-
-
-def update_point_data_ranges(sequence: TBB_ModuleSequenceSettings, new_ranges: list[dict[int]]) -> None:
-    """
-    Update ranges of point data.
-
-    Args:
-        sequence (TBB_ModuleSequenceSettings): sequence settings
-        new_ranges (list[dict[int]]): new ranges
-    """
-    pass
 
 
 # Inspired by: https://blog.michelanders.nl/2017/04/how-to-add-progress-indicator-to-the-info-header-in-blender.html

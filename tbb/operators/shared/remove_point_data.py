@@ -6,6 +6,7 @@ from bpy.props import StringProperty
 import json
 import logging
 from tbb.operators.utils import get_sequence_settings
+from tbb.panels.utils import get_selected_object
 log = logging.getLogger(__name__)
 
 from tbb.properties.shared.module_streaming_sequence_settings import TBB_ModuleStreamingSequenceSettings
@@ -46,15 +47,16 @@ class TBB_OT_RemovePointData(Operator):
             set: state of the operator
         """
 
-        obj = bpy.data.objects.get(self.obj_name, None)
+        obj = get_selected_object(context)
+
         if obj is not None:
-            sequence = get_sequence_settings(obj)
-            point_data = json.loads(sequence.point_data)
+            settings = obj.tbb.settings
+            point_data = json.loads(settings.point_data)
             index = point_data["names"].index(self.var_name)
             point_data["names"].pop(index)
             point_data["units"].pop(index)
             point_data["ranges"].pop(index)
-            obj.tbb.settings.telemac.s_sequence.point_data = json.dumps(point_data)
+            obj.tbb.settings.point_data = json.dumps(point_data)
         else:
             log.warning(f"Object with name {self.obj_name} does not exist.")
             return {'CANCELLED'}

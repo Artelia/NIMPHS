@@ -1,6 +1,7 @@
 # <pep8 compliant>
 import time
 import numpy as np
+from typing import Union
 
 from tbb.properties.telemac.serafin import Serafin
 from tbb.properties.telemac.utils import remove_spaces_telemac_var_name
@@ -223,12 +224,12 @@ class TBB_TelemacTemporaryData():
         print("TBB_TelemacTemporaryData::compute_var_value_range: " + "{:.4f}".format(time.time() - start) + "s")
         return (min, max)
 
-    def get_var_value_range(self, var_id: int) -> tuple[float, float]:
+    def get_var_value_range(self, var: Union[int, str]) -> tuple[float, float]:
         """
         Get global min / max values for the given variable.
 
         Args:
-            var_id (int): variable id
+            var (Union[int, str]): variable name or id
 
         Raises:
             ValueError: if the variable id undefined
@@ -236,6 +237,11 @@ class TBB_TelemacTemporaryData():
         Returns:
             tuple[float, float]: min, max
         """
+
+        if type(var).__name__ == "str":
+            var_id = self.vars_info["names"].index(var)
+        else:
+            var_id = var
 
         if var_id < 0 or var_id > self.nb_vars:
             raise ValueError("Undefined variable id '" + str(var_id) + "'")

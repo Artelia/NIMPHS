@@ -32,43 +32,57 @@ class TBB_StreamingSequenceSettingsPanel(Panel):
         else:
             return False
 
-    def draw(self, obj: Object, sequence_settings: TBB_ModuleStreamingSequenceSettings) -> None:
+    def draw(self, obj: Object, sequence: TBB_ModuleStreamingSequenceSettings) -> None:
         """
         Layout of the panel.
 
         Args:
             obj (Object): sequence object
-            sequence_settings (TBB_ModuleStreamingSequenceSettings): 'streaming sequence' settings
+            sequence (TBB_ModuleStreamingSequenceSettings): 'streaming sequence' settings
         """
 
         layout = self.layout
+        settings = obj.tbb.settings
 
         row = layout.row()
-        row.prop(sequence_settings, "update", text="Update")
-        if sequence_settings.update:
+        row.prop(sequence, "update", text="Update")
+        if sequence.update:
             row = layout.row()
-            row.prop(sequence_settings, "frame_start", text="Frame start")
+            row.prop(sequence, "frame_start", text="Frame start")
             row = layout.row()
-            row.prop(sequence_settings, "anim_length", text="Length")
+            row.prop(sequence, "anim_length", text="Length")
 
             row = layout.row()
-            row.prop(sequence_settings, "shade_smooth", text="Shade smooth")
+            row.prop(sequence, "shade_smooth", text="Shade smooth")
 
             row = layout.row()
-            row.prop(sequence_settings, "import_point_data", text="Import point data")
+            row.prop(settings, "import_point_data", text="Import point data")
 
-            if sequence_settings.import_point_data:
+            if settings.import_point_data:
 
-                data = json.loads(sequence_settings.point_data)
+                row = layout.row()
+                row.prop(settings, "remap_method", text="Method")
+
+                # Display selected point data
+                data = json.loads(settings.point_data)
                 for name, unit, values in zip(data["names"], data["units"], data["ranges"]):
                     box = layout.box()
                     row = box.row()
 
-                    range = "[" + str(values["min"]) + ";" + str(values["max"]) + "]" if values is not None else "None"
+                    if values is not None:
+                        if settings.remap_method == 'LOCAL':
+                            values = "[" + str(values["local"]["min"]) + ";" + str(values["local"]["max"]) + "]"
+                        elif settings.remap_method == 'GLOBAL':
+                            values = "[" + str(values["global"]["min"]) + ";" + str(values["global"]["max"]) + "]"
+                        else:
+                            values = "None"
+                    else:
+                        values = "None"
+
                     op = row.operator("tbb.remove_point_data", text="", icon='REMOVE')
                     op.obj_name = obj.name_full
                     op.var_name = name
-                    row.label(text=name + ", (" + str(unit) + ")" + ",  " + range)
+                    row.label(text=name + ", (" + str(unit) + ")" + ",  " + values)
 
                 row = layout.row()
                 row.operator("tbb.add_point_data", text="Add", icon='ADD')

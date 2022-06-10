@@ -19,8 +19,5 @@ class TBB_TelemacStreamingSequenceProperty(TBB_ModuleStreamingSequenceSettings):
         default=False
     )
 
-    #: TBB_TelemacTemporaryData: temporary data
-    tmp_data = TBB_TelemacTemporaryData()
-
     #: bpy.props.TBB_TelemacInterpolateProperty: Interpolation settings
     interpolate: PointerProperty(type=TBB_TelemacInterpolateProperty)

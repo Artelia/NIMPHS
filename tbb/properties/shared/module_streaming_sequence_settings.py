@@ -1,14 +1,13 @@
 # <pep8 compliant>
 from bpy.types import PropertyGroup
-from bpy.props import BoolProperty, IntProperty, StringProperty
+from bpy.props import BoolProperty, IntProperty
 
 import json
 
-from tbb.properties.shared.module_sequence_settings import TBB_ModuleSequenceSettings
 from tbb.properties.utils import set_sequence_anim_length, get_sequence_anim_length
 
 
-class TBB_ModuleStreamingSequenceSettings(TBB_ModuleSequenceSettings):
+class TBB_ModuleStreamingSequenceSettings(PropertyGroup):
     """
     Module 'streaming sequence' properties.
 
