@@ -67,25 +67,23 @@ class TBB_OT_AddPointData(Operator):
         """
 
         obj = get_selected_object(context)
-        seq_settings = get_sequence_settings(obj)
 
         # TODO: use this for both modules
         if obj.tbb.settings.module == 'TELEMAC':
             tmp_data = get_streaming_sequence_temporary_data(obj)
             self.available_point_data = json.dumps(tmp_data.vars_info)
-            print(tmp_data.vars_info)
         else:
             log.warning("Not implemented yet for other modules.")
             return {'CANCELLED'}
 
         return context.window_manager.invoke_props_dialog(self)
 
-    def draw(self, context: Context) -> None:
+    def draw(self, _context: Context) -> None:
         """
         Layout of the popup window.
 
         Args:
-            context (Context): context
+            _context (Context): context
         """
 
         layout = self.layout
@@ -113,7 +111,7 @@ class TBB_OT_AddPointData(Operator):
 
             selected_point_data = json.loads(self.point_data)
             point_data["names"].append(selected_point_data["name"])
-            point_data["uints"].append(selected_point_data["unit"])
+            point_data["units"].append(selected_point_data["unit"])
             point_data["ranges"].append(None)
 
             seq_settings.point_data = json.dumps(point_data)
@@ -121,4 +119,5 @@ class TBB_OT_AddPointData(Operator):
             log.warning("Not implemented yet for other modules.")
             return {'CANCELLED'}
 
+        context.area.tag_redraw()
         return {'FINISHED'}

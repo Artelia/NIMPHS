@@ -1,5 +1,7 @@
 # <pep8 compliant>
-from bpy.types import Panel, Context
+from bpy.types import Panel, Context, Object
+
+import json
 
 from tbb.panels.utils import get_selected_object
 from tbb.properties.shared.module_streaming_sequence_settings import TBB_ModuleStreamingSequenceSettings
@@ -30,11 +32,12 @@ class TBB_StreamingSequenceSettingsPanel(Panel):
         else:
             return False
 
-    def draw(self, sequence_settings: TBB_ModuleStreamingSequenceSettings) -> None:
+    def draw(self, obj: Object, sequence_settings: TBB_ModuleStreamingSequenceSettings) -> None:
         """
         Layout of the panel.
 
         Args:
+            obj (Object): sequence object
             sequence_settings (TBB_ModuleStreamingSequenceSettings): 'streaming sequence' settings
         """
 
@@ -55,5 +58,17 @@ class TBB_StreamingSequenceSettingsPanel(Panel):
             row.prop(sequence_settings, "import_point_data", text="Import point data")
 
             if sequence_settings.import_point_data:
+
+                data = json.loads(sequence_settings.point_data)
+                for name, unit, values in zip(data["names"], data["units"], data["ranges"]):
+                    box = layout.box()
+                    row = box.row()
+
+                    range = "[" + str(values["min"]) + ";" + str(values["max"]) + "]" if values is not None else "None"
+                    op = row.operator("tbb.remove_point_data", text="", icon='REMOVE')
+                    op.obj_name = obj.name_full
+                    op.var_name = name
+                    row.label(text=name + ", (" + str(unit) + ")" + ",  " + range)
+
                 row = layout.row()
-                row.prop(sequence_settings, "point_data", text="List")
+                row.operator("tbb.add_point_data", text="Add", icon='ADD')

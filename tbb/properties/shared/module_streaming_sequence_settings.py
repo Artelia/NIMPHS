@@ -2,6 +2,8 @@
 from bpy.types import PropertyGroup
 from bpy.props import BoolProperty, IntProperty, StringProperty
 
+import json
+
 from tbb.properties.utils import set_sequence_anim_length, get_sequence_anim_length
 
 
@@ -70,7 +72,7 @@ class TBB_ModuleStreamingSequenceSettings(PropertyGroup):
     point_data: StringProperty(
         name="Point data",
         description="List of point data to import as vertex color groups. Separate each with a semicolon",
-        default="",
+        default=json.dumps({"names": [], "units": [], "ranges": []}),  # noqa F821
     )
 
     #: bpy.props.BoolProperty: Whether to use smooth shading or not (flat shading)

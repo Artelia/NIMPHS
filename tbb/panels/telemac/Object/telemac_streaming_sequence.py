@@ -48,11 +48,8 @@ class TBB_PT_TelemacStreamingSequence(TBB_StreamingSequenceSettingsPanel):
         obj = get_selected_object(context)
         if obj is not None:
             obj_settings = obj.tbb.settings.telemac.streaming_sequence
-            super().draw(obj_settings)
+            super().draw(obj, obj_settings)
 
             if obj_settings.update:
                 row = layout.row()
                 row.prop(obj_settings, "normalize", text="Normalize")
-
-                row = layout.row()
-                row.operator("tbb.add_point_data", text="Add", icon='ADD')
