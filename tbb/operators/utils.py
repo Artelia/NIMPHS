@@ -5,6 +5,8 @@ from bpy.types import Collection, Object, Context, Mesh
 
 import numpy as np
 from typing import Any, Union
+from tbb.properties.shared.module_streaming_sequence_settings import TBB_ModuleStreamingSequenceSettings
+from tbb.properties.telemac.Object.telemac_mesh_sequence import TBB_TelemacMeshSequenceProperty
 
 from tbb.properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
 from tbb.properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
@@ -277,6 +279,36 @@ def get_object_dimensions_from_mesh(obj: Object) -> list[float]:
     dimensions.append(np.max(vertices[:, 1]) - np.min(vertices[:, 1]))
     dimensions.append(np.max(vertices[:, 2]) - np.min(vertices[:, 2]))
     return dimensions
+
+
+def get_sequence_settings(obj: Object) -> Union[TBB_OpenfoamStreamingSequenceProperty,
+                                                TBB_TelemacStreamingSequenceProperty,
+                                                TBB_TelemacMeshSequenceProperty, None]:
+    """
+    Get sequence settings of the given sequence object.
+
+    Args:
+        obj (Object): sequence object
+
+    Returns:
+        Union[TBB_OpenfoamStreamingSequenceProperty, TBB_TelemacStreamingSequenceProperty,\
+              TBB_TelemacMeshSequenceProperty, None]: sequence settings
+    """
+
+    if obj.tbb.settings.module == 'TELEMAC':
+        if obj.tbb.is_streaming_sequence:
+            return obj.tbb.settings.telemac.streaming_sequence
+        elif obj.tbb.settings.telemac.is_mesh_sequence:
+            return obj.tbb.settings.telemac.mesh_sequence
+        else:
+            return None
+    elif obj.tbb.settings.module == 'OpenFOAM':
+        if obj.tbb.is_streaming_sequence:
+            return obj.tbb.settings.openfoam.streaming_sequence
+        else:
+            return None
+    else:
+        return None
 
 
 def normalize_objects(objects: list[Object], dimensions: list[float]) -> None:
