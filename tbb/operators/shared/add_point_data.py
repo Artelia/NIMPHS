@@ -5,9 +5,10 @@ from bpy.props import EnumProperty, StringProperty
 import json
 import logging
 log = logging.getLogger(__name__)
+from copy import deepcopy
+
 
 from tbb.panels.utils import get_selected_object
-from tbb.operators.utils import get_sequence_settings
 from tbb.operators.telemac.utils import get_streaming_sequence_temporary_data
 
 
@@ -71,7 +72,25 @@ class TBB_OT_AddPointData(Operator):
         # TODO: use this for both modules
         if obj.tbb.module == 'TELEMAC':
             tmp_data = get_streaming_sequence_temporary_data(obj)
-            self.available_point_data = json.dumps(tmp_data.vars_info)
+            available = deepcopy(tmp_data.vars_info)
+
+            # Remove already chosen variables from the list of available point data
+            ids_to_remove = []
+            chosen_point_data = json.loads(obj.tbb.settings.point_data)
+            for name, id in zip(available["names"], range(len(available["names"]))):
+                if name in chosen_point_data["names"]:
+                    ids_to_remove.append(id)
+
+            for id in ids_to_remove:
+                available["names"].pop(id)
+                available["units"].pop(id)
+                available["ranges"].pop(id)
+                available["types"].pop(id)
+                available["dimensions"].pop(id)
+
+            self.available_point_data = json.dumps(available)
+            print(available)
+
         else:
             log.warning("Not implemented yet for other modules.")
             return {'CANCELLED'}
@@ -113,6 +132,8 @@ class TBB_OT_AddPointData(Operator):
             point_data["names"].append(selected_point_data["name"])
             point_data["units"].append(selected_point_data["unit"])
             point_data["ranges"].append(None)
+            point_data["types"].append(None)
+            point_data["dimensions"].append(None)
 
             settings.point_data = json.dumps(point_data)
         else:

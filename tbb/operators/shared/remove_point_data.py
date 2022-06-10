@@ -56,6 +56,8 @@ class TBB_OT_RemovePointData(Operator):
             point_data["names"].pop(index)
             point_data["units"].pop(index)
             point_data["ranges"].pop(index)
+            point_data["types"].pop(index)
+            point_data["dimensions"].pop(index)
             obj.tbb.settings.point_data = json.dumps(point_data)
         else:
             log.warning(f"Object with name {self.obj_name} does not exist.")

@@ -687,6 +687,9 @@ def update_point_data_ranges(obj: Object, tmp_data: TBB_TelemacTemporaryData,
                 point_data["ranges"][id]["global"]["min"] = min
                 point_data["ranges"][id]["global"]["max"] = max
 
+    obj.tbb.settings.point_data = json.dumps(point_data)
+    print(point_data)
+
 
 @persistent
 def update_telemac_mesh_sequences(scene: Scene) -> None:
