@@ -53,3 +53,6 @@ class TBB_PT_TelemacStreamingSequence(TBB_StreamingSequenceSettingsPanel):
             if obj_settings.update:
                 row = layout.row()
                 row.prop(obj_settings, "normalize", text="Normalize")
+
+                row = layout.row()
+                row.operator("tbb.add_point_data", text="Add", icon='ADD')

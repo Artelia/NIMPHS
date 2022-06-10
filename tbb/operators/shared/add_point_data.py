@@ -8,6 +8,7 @@ log = logging.getLogger(__name__)
 
 from tbb.panels.utils import get_selected_object
 from tbb.operators.utils import get_sequence_settings
+from tbb.operators.telemac.utils import get_streaming_sequence_temporary_data
 
 
 class TBB_OT_AddPointData(Operator):
@@ -33,12 +34,11 @@ class TBB_OT_AddPointData(Operator):
 
         items = []
         if self.available_point_data != "":
-            for variable in json.loads(self.available_point_data):
-                items.append((
-                    variable["name"],
-                    variable["name"] + ", " + variable["unit"] if variable["unit"] != "" else variable["name"],
-                    "Undocumented"
-                ))
+            data = json.loads(self.available_point_data)
+            for name, unit in zip(data["names"], data["units"]):
+                identifier = {"name": name, "unit": unit}
+                ui_name = name + ", (" + unit + ")" if unit != "" else name
+                items.append((json.dumps(identifier), ui_name, "Undocumented"))
 
         return items
 
@@ -71,12 +71,27 @@ class TBB_OT_AddPointData(Operator):
 
         # TODO: use this for both modules
         if obj.tbb.settings.module == 'TELEMAC':
-            self.available_point_data = json.dumps(seq_settings.tmp_data.vars_info)
+            tmp_data = get_streaming_sequence_temporary_data(obj)
+            self.available_point_data = json.dumps(tmp_data.vars_info)
+            print(tmp_data.vars_info)
         else:
             log.warning("Not implemented yet for other modules.")
             return {'CANCELLED'}
 
         return context.window_manager.invoke_props_dialog(self)
+
+    def draw(self, context: Context) -> None:
+        """
+        Layout of the popup window.
+
+        Args:
+            context (Context): context
+        """
+
+        layout = self.layout
+
+        row = layout.row()
+        row.prop(self, "point_data", text="Point data")
 
     def execute(self, context: Context) -> set:
         """
@@ -96,10 +111,10 @@ class TBB_OT_AddPointData(Operator):
         if obj.tbb.settings.module == 'TELEMAC':
             point_data = json.loads(seq_settings.point_data)
 
-            name = self.point_data.split(", ")[0]
-            unit = self.point_data.split(", ")[-1]
-            new_point_data = {"name": name, "unit": unit if name != unit else "", "range": None}
-            point_data.append(new_point_data)
+            selected_point_data = json.loads(self.point_data)
+            point_data["names"].append(selected_point_data["name"])
+            point_data["uints"].append(selected_point_data["unit"])
+            point_data["ranges"].append(None)
 
             seq_settings.point_data = json.dumps(point_data)
         else:
