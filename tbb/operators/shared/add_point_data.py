@@ -77,3 +77,33 @@ class TBB_OT_AddPointData(Operator):
             return {'CANCELLED'}
 
         return context.window_manager.invoke_props_dialog(self)
+
+    def execute(self, context: Context) -> set:
+        """
+        Add chosen point data to the list of point data to import.
+
+        Args:
+            context (Context): context
+
+        Returns:
+            set: state of the operator
+        """
+
+        obj = get_selected_object(context)
+        seq_settings = get_sequence_settings(obj)
+
+        # TODO: use this for both modules
+        if obj.tbb.settings.module == 'TELEMAC':
+            point_data = json.loads(seq_settings.point_data)
+
+            name = self.point_data.split(", ")[0]
+            unit = self.point_data.split(", ")[-1]
+            new_point_data = {"name": name, "unit": unit if name != unit else "", "range": None}
+            point_data.append(new_point_data)
+
+            seq_settings.point_data = json.dumps(point_data)
+        else:
+            log.warning("Not implemented yet for other modules.")
+            return {'CANCELLED'}
+
+        return {'FINISHED'}
