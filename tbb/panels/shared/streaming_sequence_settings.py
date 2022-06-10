@@ -71,18 +71,26 @@ class TBB_StreamingSequenceSettingsPanel(Panel):
 
                     if values is not None:
                         if settings.remap_method == 'LOCAL':
-                            values = "[" + str(values["local"]["min"]) + ";" + str(values["local"]["max"]) + "]"
+                            if values["local"]["min"] is not None and values["local"]["max"] is not None:
+                                info = "[" + "{:.4f}".format(values["local"]["min"]) + " ; "
+                                info += "{:.4f}".format(values["local"]["max"]) + "]"
+                            else:
+                                info = "None"
                         elif settings.remap_method == 'GLOBAL':
-                            values = "[" + str(values["global"]["min"]) + ";" + str(values["global"]["max"]) + "]"
+                            if values["global"]["min"] is not None and values["global"]["max"] is not None:
+                                info = "[" + "{:.4f}".format(values["global"]["min"]) + " ; "
+                                info += "{:.4f}".format(values["global"]["max"]) + "]"
+                            else:
+                                info = "None"
                         else:
-                            values = "None"
+                            info = "None"
                     else:
-                        values = "None"
+                        info = "None"
 
                     op = row.operator("tbb.remove_point_data", text="", icon='REMOVE')
                     op.obj_name = obj.name_full
                     op.var_name = name
-                    row.label(text=name + ", (" + str(unit) + ")" + ",  " + values)
+                    row.label(text=name + ", (" + str(unit) + ")" + ",  " + info)
 
                 row = layout.row()
                 row.operator("tbb.add_point_data", text="Add", icon='ADD')

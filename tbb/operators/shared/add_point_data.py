@@ -73,23 +73,19 @@ class TBB_OT_AddPointData(Operator):
         if obj.tbb.module == 'TELEMAC':
             tmp_data = get_streaming_sequence_temporary_data(obj)
             available = deepcopy(tmp_data.vars_info)
+            to_present = {"names": [], "units": [], "ranges": [], "types": [], "dimensions": []}
 
             # Remove already chosen variables from the list of available point data
-            ids_to_remove = []
             chosen_point_data = json.loads(obj.tbb.settings.point_data)
             for name, id in zip(available["names"], range(len(available["names"]))):
-                if name in chosen_point_data["names"]:
-                    ids_to_remove.append(id)
+                if name not in chosen_point_data["names"]:
+                    to_present["names"].append(available["names"][id])
+                    to_present["units"].append(available["units"][id])
+                    to_present["ranges"].append(available["ranges"][id])
+                    to_present["types"].append(available["types"][id])
+                    to_present["dimensions"].append(available["dimensions"][id])
 
-            for id in ids_to_remove:
-                available["names"].pop(id)
-                available["units"].pop(id)
-                available["ranges"].pop(id)
-                available["types"].pop(id)
-                available["dimensions"].pop(id)
-
-            self.available_point_data = json.dumps(available)
-            print(available)
+            self.available_point_data = json.dumps(to_present)
 
         else:
             log.warning("Not implemented yet for other modules.")
@@ -131,7 +127,7 @@ class TBB_OT_AddPointData(Operator):
             selected_point_data = json.loads(self.point_data)
             point_data["names"].append(selected_point_data["name"])
             point_data["units"].append(selected_point_data["unit"])
-            point_data["ranges"].append(None)
+            point_data["ranges"].append({"local": {"min": None, "max": None}, "global": {"min": None, "max": None}})
             point_data["types"].append(None)
             point_data["dimensions"].append(None)
 
