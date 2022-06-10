@@ -67,8 +67,8 @@ class TBB_ModuleStreamingSequenceSettings(PropertyGroup):
     )
 
     #: bpy.props.StringProperty: List of point data to import as vertex color groups. Separate each with a semicolon.
-    list_point_data: StringProperty(
-        name="Point data list",
+    point_data: StringProperty(
+        name="Point data",
         description="List of point data to import as vertex color groups. Separate each with a semicolon",
         default="",
     )

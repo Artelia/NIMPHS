@@ -162,7 +162,7 @@ def test_create_streaming_sequence_telemac_3d(scene_settings):
     # Set sequence settings
     scene_settings.sequence_name = "My_TELEMAC_Streaming_Sim_3D"
     scene_settings.import_point_data = True
-    scene_settings.list_point_data = "ELEVATION Z;VELOCITY U;VELOCITY V;VELOCITY W;"
+    scene_settings.point_data = "ELEVATION Z;VELOCITY U;VELOCITY V;VELOCITY W;"
     scene_settings.frame_start = 0
     scene_settings.anim_length = 11
     scene_settings.sequence_type = "streaming_sequence"
@@ -189,7 +189,7 @@ def test_streaming_sequence_telemac_3d(streaming_sequence, frame_change_pre):
     assert seq_settings.max_length == 11
     assert seq_settings.anim_length == 11
     assert seq_settings.import_point_data is True
-    assert seq_settings.list_point_data == "ELEVATION Z;VELOCITY U;VELOCITY V;VELOCITY W;"
+    assert seq_settings.point_data == "ELEVATION Z;VELOCITY U;VELOCITY V;VELOCITY W;"
 
     # Disable updates for this sequence object during the next tests
     streaming_sequence.tbb.settings.telemac.streaming_sequence.update = False
@@ -229,7 +229,7 @@ def test_create_mesh_sequence_telemac_3d(scene_settings):
     scene_settings["start_time_point"] = 0
     scene_settings["end_time_point"] = 3
     scene_settings.import_point_data = True
-    scene_settings.list_point_data = "ELEVATION Z;VELOCITY U;VELOCITY V;VELOCITY W;"
+    scene_settings.point_data = "ELEVATION Z;VELOCITY U;VELOCITY V;VELOCITY W;"
     scene_settings.sequence_name = "My_TELEMAC_Sim_3D"
 
     assert bpy.ops.tbb.telemac_create_sequence('EXEC_DEFAULT', mode='NORMAL') == {"FINISHED"}
@@ -251,7 +251,7 @@ def test_mesh_sequence_telemac_3d(mesh_sequence, frame_change_post):
     seq_settings = mesh_sequence.tbb.settings.telemac.mesh_sequence
     assert seq_settings is not None
     assert seq_settings.import_point_data is True
-    assert seq_settings.list_point_data == "ELEVATION Z;VELOCITY U;VELOCITY V;VELOCITY W;"
+    assert seq_settings.point_data == "ELEVATION Z;VELOCITY U;VELOCITY V;VELOCITY W;"
     assert seq_settings.file_path == FILE_PATH
     assert seq_settings.is_3d_simulation is True
 

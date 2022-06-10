@@ -216,7 +216,7 @@ def generate_mesh_for_sequence(context: Context, time_point: int, name: str = "T
 
     # Import point data as vertex colors
     if settings.import_point_data:
-        res = prepare_openfoam_point_data(mesh, blender_mesh, settings.list_point_data.split(";"), time_point)
+        res = prepare_openfoam_point_data(mesh, blender_mesh, settings.point_data.split(";"), time_point)
         generate_vertex_colors(blender_mesh, *res)
 
     return blender_mesh
@@ -289,7 +289,7 @@ def generate_preview_material(obj: Object, scalar: str, name: str = "TBB_OpenFOA
     obj.active_material = material
 
 
-def prepare_openfoam_point_data(mesh: UnstructuredGrid, blender_mesh: Mesh, list_point_data: list[str],
+def prepare_openfoam_point_data(mesh: UnstructuredGrid, blender_mesh: Mesh, point_data: list[str],
                                 time_point: int, normalize: str = 'LOCAL') -> tuple[list[dict], dict, int]:
     """
     Prepare point data for the 'generate_vertex_colors' function.
@@ -317,7 +317,7 @@ def prepare_openfoam_point_data(mesh: UnstructuredGrid, blender_mesh: Mesh, list
     Args:
         mesh (UnstructuredGrid): mesh data read from the OpenFOAMReader
         blender_mesh (Mesh): mesh on which to add vertex colors
-        list_point_data (list[str]): list of point data
+        point_data (list[str]): list of point data
         time_point (int): time point from which to read data
         normalize (str, optional): normalize vertex colors, enum in ['LOCAL', 'GLOBAL']. Defaults to 'LOCAL'.
 
@@ -331,10 +331,10 @@ def prepare_openfoam_point_data(mesh: UnstructuredGrid, blender_mesh: Mesh, list
     vertex_ids = np.array([triangle.vertices for triangle in blender_mesh.loop_triangles]).flatten()
 
     # Filter elements which evaluates to 'False', ex: ''
-    list_point_data = list(filter(None, list_point_data))
+    point_data = list(filter(None, point_data))
     # Filter field arrays (check if they exist)
     filtered_variables = []
-    for raw_key in list_point_data:
+    for raw_key in point_data:
         key = raw_key.split("@")[0]
 
         try:
@@ -439,7 +439,7 @@ def update_openfoam_streaming_sequence_mesh(obj: Object, settings: TBB_OpenfoamS
 
     # Import point data as vertex colors
     if settings.import_point_data:
-        res = prepare_openfoam_point_data(mesh, blender_mesh, settings.list_point_data.split(";"), time_point)
+        res = prepare_openfoam_point_data(mesh, blender_mesh, settings.point_data.split(";"), time_point)
         generate_vertex_colors(blender_mesh, *res)
 
 

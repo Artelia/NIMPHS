@@ -53,4 +53,4 @@ class TBB_PT_TelemacMeshSequence(Panel):
 
         if sequence_settings.import_point_data:
             row = layout.row()
-            row.prop(sequence_settings, "list_point_data", text="List")
+            row.prop(sequence_settings, "point_data", text="List")

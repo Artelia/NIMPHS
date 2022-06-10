@@ -193,7 +193,7 @@ def test_create_streaming_sequence_openfoam(scene_settings):
     scene_settings.frame_start = 1
     scene_settings["anim_length"] = 21
     scene_settings.import_point_data = True
-    scene_settings.list_point_data = "U;alpha.water;p;p_rgh"
+    scene_settings.point_data = "U;alpha.water;p;p_rgh"
     scene_settings.sequence_name = "My_OpenFOAM_Streaming_Sim"
 
     assert bpy.ops.tbb.openfoam_create_sequence('EXEC_DEFAULT') == {"FINISHED"}
@@ -212,7 +212,7 @@ def test_streaming_sequence_openfoam(streaming_sequence):
     assert seq_settings.max_length == 21
     assert seq_settings.anim_length == 21
     assert seq_settings.import_point_data is True
-    assert seq_settings.list_point_data == "U;alpha.water;p;p_rgh"
+    assert seq_settings.point_data == "U;alpha.water;p;p_rgh"
 
     # Test OpenFOAM settings
     assert seq_settings.decompose_polyhedra is True
@@ -264,7 +264,7 @@ def test_create_mesh_sequence_openfoam(scene_settings):
     scene_settings["start_time_point"] = 8
     scene_settings["end_time_point"] = 11
     scene_settings.import_point_data = True
-    scene_settings.list_point_data = "U;alpha.water;p;p_rgh"
+    scene_settings.point_data = "U;alpha.water;p;p_rgh"
     scene_settings.sequence_name = "My_OpenFOAM_Sim"
 
     # Change frame to create the mesh sequence from another frame

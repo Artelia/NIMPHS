@@ -1,5 +1,21 @@
 # Change log
 
+## [0.3.0] - WIP
+
+### Added
+
+* **Edit > Preferences > Addons > Toolsbox blender**
+
+    * Indicate specific settings for:
+        * Logging level
+        * Name of the extensions of files to import for each module
+
+### Fixed
+
+### Changed
+
+--------------------------------------------------------------------------------
+
 ## [0.2.0] - 2022-06-02
 
 This version implements new features to manipulate TELEMAC files.

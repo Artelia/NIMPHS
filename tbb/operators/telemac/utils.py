@@ -67,7 +67,7 @@ def run_one_step_create_mesh_sequence_telemac(context: Context, current_frame: i
         seq_obj = bpy.data.objects.new(name=seq_obj_name, object_data=None)
         seq_obj.tbb.settings.telemac.is_mesh_sequence = True
         seq_obj.tbb.settings.telemac.mesh_sequence.import_point_data = settings.import_point_data
-        seq_obj.tbb.settings.telemac.mesh_sequence.list_point_data = settings.list_point_data
+        seq_obj.tbb.settings.telemac.mesh_sequence.point_data = settings.point_data
         seq_obj.tbb.settings.telemac.mesh_sequence.is_3d_simulation = tmp_data.is_3d
         seq_obj.tbb.settings.telemac.mesh_sequence.file_path = settings.file_path
 
@@ -214,7 +214,7 @@ def generate_mesh_data_linear_interp(obj: Object, tmp_data: TBB_TelemacStreaming
 
 
 def generate_base_objects(context: Context, time_point: int, name: str, import_point_data: bool = False,
-                          list_point_data: list[str] = [""]) -> list[Object]:
+                          point_data: list[str] = [""]) -> list[Object]:
     """
     Generate objects using settings defined by the user. This function generates objects and vertex colors.
 
@@ -226,7 +226,7 @@ def generate_base_objects(context: Context, time_point: int, name: str, import_p
         time_point (int): time point from which to read data
         name (str): name of the objects
         import_point_data (bool, optional): import point data as vertex colors. Defaults to False.
-        list_point_data (list[str], optional): list of point data to import as vertex colors groups. Defaults to [""].
+        point_data (list[str], optional): list of point data to import as vertex colors groups. Defaults to [""].
 
     Returns:
         list[Object]: generated object
@@ -246,7 +246,7 @@ def generate_base_objects(context: Context, time_point: int, name: str, import_p
             obj.scale = [1.0, 1.0, 1.0]
 
             if import_point_data:
-                res = prepare_telemac_point_data(obj.data, list_point_data, tmp_data, time_point, normalize='GLOBAL')
+                res = prepare_telemac_point_data(obj.data, point_data, tmp_data, time_point, normalize='GLOBAL')
                 generate_vertex_colors(obj.data, *res)
 
             objects.append(obj)
@@ -260,7 +260,7 @@ def generate_base_objects(context: Context, time_point: int, name: str, import_p
             obj.scale = [1.0, 1.0, 1.0]
 
             if import_point_data:
-                res = prepare_telemac_point_data(obj.data, list_point_data, tmp_data, time_point,
+                res = prepare_telemac_point_data(obj.data, point_data, tmp_data, time_point,
                                                  mesh_is_3d=True, offset=plane_id, normalize='GLOBAL')
                 generate_vertex_colors(obj.data, *res)
 
@@ -297,7 +297,7 @@ def generate_preview_objects(context: Context, time_point: int = 0, name: str = 
         # Generate vertex colors for all the variables
         # point_data = tmp_data.vars_info["names"]
         objects = generate_base_objects(context, time_point, name, import_point_data=import_point_data,
-                                        list_point_data=point_data)
+                                        point_data=point_data)
         for obj in objects:
             generate_preview_material(obj, vertex_colors_var_name)
     else:
@@ -423,7 +423,7 @@ def generate_telemac_streaming_sequence_obj(context: Context, name: str) -> Obje
     return seq_obj
 
 
-def prepare_telemac_point_data(blender_mesh: Mesh, list_point_data: list[str], tmp_data: TBB_TelemacTemporaryData,
+def prepare_telemac_point_data(blender_mesh: Mesh, point_data: list[str], tmp_data: TBB_TelemacTemporaryData,
                                time_point: int, mesh_is_3d: bool = False, offset: int = 0,
                                normalize: str = 'LOCAL') -> tuple[list[dict], dict, int]:
     """
@@ -431,7 +431,7 @@ def prepare_telemac_point_data(blender_mesh: Mesh, list_point_data: list[str], t
 
     Args:
         blender_mesh (Mesh): mesh on which to add vertex colors
-        list_point_data (list[str]): list of point data
+        point_data (list[str]): list of point data
         tmp_data (TBB_TelemacTemporaryData): temporary data
         time_point (int): time point from which to read data
         mesh_is_3d (bool, optional): if the mesh is from a 3D simulation. Defaults to False.
@@ -450,10 +450,10 @@ def prepare_telemac_point_data(blender_mesh: Mesh, list_point_data: list[str], t
     vertex_ids = np.array([triangle.vertices for triangle in blender_mesh.loop_triangles]).flatten()
 
     # Filter elements which evaluates to 'False', ex: ''
-    list_point_data = list(filter(None, list_point_data))
+    point_data = list(filter(None, point_data))
     # Filter variables if they do not exist and build to output
     filtered_variables, appended = [], False
-    for var_name in list_point_data:
+    for var_name in point_data:
         for name, id in zip(tmp_data.file.nomvar, range(tmp_data.nb_vars)):
             if var_name in name:
                 filtered_variables.append({"name": var_name, "type": 'SCALAR', "id": id})
@@ -582,7 +582,7 @@ def update_telemac_streaming_sequences(scene: Scene) -> None:
 
             if obj.tbb.is_streaming_sequence and seq_settings.update:
                 interpolate = seq_settings.interpolate
-                point_data = seq_settings.list_point_data.split(";")
+                point_data = seq_settings.point_data.split(";")
 
                 # Get temporary data
                 tmp_data = get_streaming_sequence_temporary_data(obj)
@@ -730,7 +730,7 @@ def update_telemac_mesh_sequence_vertex_colors(obj: Object, obj_id: int, seq_set
         tmp_data_error: if something went wrong updating temporary data
     """
 
-    point_data = seq_settings.list_point_data.split(";")
+    point_data = seq_settings.point_data.split(";")
     offset = obj_id if seq_settings.is_3d_simulation else 0
 
     # Remove existing vertex colors

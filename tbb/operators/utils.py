@@ -178,7 +178,7 @@ def setup_streaming_sequence_object(obj: Object, seq_settings: Union[TBB_Openfoa
     seq_settings.anim_length = settings["anim_length"]  #
 
     seq_settings.import_point_data = settings.import_point_data
-    seq_settings.list_point_data = settings.list_point_data
+    seq_settings.point_data = settings.point_data
 
 
 def update_scene_settings_dynamic_props(settings: TBB_ModuleSceneSettings,

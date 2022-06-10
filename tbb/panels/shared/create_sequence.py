@@ -85,6 +85,6 @@ class TBB_CreateSequencePanel(Panel):
         if settings.import_point_data:
             row = layout.row()
             row.enabled = enable_rows
-            row.prop(settings, "list_point_data", text="List")
+            row.prop(settings, "point_data", text="List")
 
         return enable_rows

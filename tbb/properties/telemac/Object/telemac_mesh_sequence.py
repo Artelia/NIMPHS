@@ -26,7 +26,7 @@ class TBB_TelemacMeshSequenceProperty(PropertyGroup):
     )
 
     #: bpy.props.StringProperty: List of point data to import as vertex color groups. Separate each with a semicolon.
-    list_point_data: StringProperty(
+    point_data: StringProperty(
         name="Point data list",
         description="List of point data to import as vertex color groups. Separate each with a semicolon",
         default="",
