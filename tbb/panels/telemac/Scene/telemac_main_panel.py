@@ -31,7 +31,7 @@ class TBB_PT_TelemacMainPanel(TBB_ModulePanel):
 
         layout = self.layout
         if obj is not None:
-            sequence_settings = obj.tbb.settings.s_sequence
+            sequence_settings = obj.tbb.settings.telemac.s_sequence
         else:
             sequence_settings = None
 

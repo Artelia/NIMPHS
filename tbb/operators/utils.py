@@ -172,7 +172,7 @@ def setup_streaming_sequence_object(obj: Object, sequence: Union[TBB_OpenfoamStr
     sequence.file_path = settings.file_path
     obj.tbb.is_streaming_sequence = True
     sequence.update = True
-    obj.tbb.settings.module = module
+    obj.tbb.module = module
 
     # Set the selected time frame
     sequence.frame_start = settings.frame_start     # Order matters!
@@ -295,16 +295,16 @@ def get_sequence_settings(obj: Object) -> Union[TBB_OpenfoamStreamingSequencePro
               TBB_TelemacMeshSequenceProperty, None]: sequence settings
     """
 
-    if obj.tbb.settings.module == 'TELEMAC':
+    if obj.tbb.module == 'TELEMAC':
         if obj.tbb.is_streaming_sequence:
-            return obj.tbb.settings.s_sequence
+            return obj.tbb.settings.telemac.s_sequence
         elif obj.tbb.is_mesh_sequence:
             return obj.tbb.settings.telemac.m_sequence
         else:
             return None
-    elif obj.tbb.settings.module == 'OpenFOAM':
+    elif obj.tbb.module == 'OpenFOAM':
         if obj.tbb.is_streaming_sequence:
-            return obj.tbb.settings.s_sequence
+            return obj.tbb.settings.openfoam.s_sequence
         else:
             return None
     else:

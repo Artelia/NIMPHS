@@ -41,7 +41,7 @@ class TBB_TelemacTemporaryData():
         self.faces = None
         self.nb_vars = 0
         self.nb_time_points = 0
-        self.vars_info = {"names": [], "units": [], "ranges": []}
+        self.vars_info = {"names": [], "units": [], "ranges": [], "types": [], "dimensions": []}
         self.nb_planes = 0
         self.nb_vertices = 0
         self.nb_triangles = 0

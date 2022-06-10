@@ -31,7 +31,7 @@ class TBB_PT_TelemacStreamingSequenceInterpolate(Panel):
         """
 
         obj = get_selected_object(context)
-        return obj.tbb.settings.s_sequence.update
+        return obj.tbb.settings.telemac.s_sequence.update
 
     def draw(self, context: Context) -> None:
         """
@@ -43,7 +43,7 @@ class TBB_PT_TelemacStreamingSequenceInterpolate(Panel):
 
         layout = self.layout
         obj = get_selected_object(context)
-        interpolation = obj.tbb.settings.s_sequence.interpolate
+        interpolation = obj.tbb.settings.telemac.s_sequence.interpolate
 
         row = layout.row()
         row.prop(interpolation, "type", text="Type")

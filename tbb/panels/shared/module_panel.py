@@ -40,11 +40,11 @@ class TBB_ModulePanel(Panel):
 
         if obj is not None:
             if module == 'OpenFOAM':
-                sequence_settings = obj.tbb.settings.s_sequence
+                sequence = obj.tbb.settings.openfoam.s_sequence
             if module == 'TELEMAC':
-                sequence_settings = obj.tbb.settings.s_sequence
+                sequence = obj.tbb.settings.telemac.s_sequence
         else:
-            sequence_settings = None
+            sequence = None
 
         # Check if we need to lock the ui
         enable_rows = not context.scene.tbb.create_sequence_is_running
@@ -65,7 +65,7 @@ class TBB_ModulePanel(Panel):
             row.enabled = enable_rows
             row.operator("tbb.import_" + module.lower() + "_file", text="Import " + module + " file", icon='IMPORT')
 
-        if sequence_settings is None or not obj.tbb.is_streaming_sequence:
+        if sequence is None or not obj.tbb.is_streaming_sequence:
 
             if tmp_data.is_ok():
                 # Preview section

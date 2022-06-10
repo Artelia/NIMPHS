@@ -45,7 +45,7 @@ class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
 
         obj = get_selected_object(context)
         if obj is not None:
-            sequence = obj.tbb.settings.s_sequence
+            sequence = obj.tbb.settings.openfoam.s_sequence
             super().draw(obj, sequence)
 
             if sequence.update:

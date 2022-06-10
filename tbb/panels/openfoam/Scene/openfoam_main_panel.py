@@ -31,7 +31,7 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
 
         layout = self.layout
         if obj is not None:
-            sequence_settings = obj.tbb.settings.s_sequence
+            sequence_settings = obj.tbb.settings.openfoam.s_sequence
         else:
             sequence_settings = None
 

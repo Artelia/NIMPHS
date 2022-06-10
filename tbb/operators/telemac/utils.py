@@ -215,7 +215,7 @@ def generate_mesh_data_linear_interp(obj: Object, tmp_data: TBB_TelemacStreaming
 
 
 def generate_base_objects(context: Context, time_point: int, name: str, import_point_data: bool = False,
-                          point_data: list[str] = [""]) -> list[Object]:
+                          point_data: str = "") -> list[Object]:
     """
     Generate objects using settings defined by the user. This function generates objects and vertex colors.
 
@@ -227,7 +227,8 @@ def generate_base_objects(context: Context, time_point: int, name: str, import_p
         time_point (int): time point from which to read data
         name (str): name of the objects
         import_point_data (bool, optional): import point data as vertex colors. Defaults to False.
-        point_data (list[str], optional): list of point data to import as vertex colors groups. Defaults to [""].
+        point_data (str, optional): JSON stringified deict of point data to import as vertex colors groups.\
+                                    Defaults to "".
 
     Returns:
         list[Object]: generated object
@@ -417,7 +418,7 @@ def generate_telemac_streaming_sequence_obj(context: Context, name: str) -> Obje
         normalize_objects(objects, get_object_dimensions_from_mesh(objects[0]))
 
     # Copy settings
-    sequence = seq_obj.tbb.settings.s_sequence
+    sequence = seq_obj.tbb.settings.telemac.s_sequence
 
     sequence.normalize = settings.normalize_sequence_obj
 
@@ -579,7 +580,7 @@ def update_telemac_streaming_sequences(scene: Scene) -> None:
 
     if not scene.tbb.create_sequence_is_running:
         for obj in scene.objects:
-            sequence = obj.tbb.settings.s_sequence
+            sequence = obj.tbb.settings.telemac.s_sequence
 
             if obj.tbb.is_streaming_sequence and sequence.update:
                 interpolate = sequence.interpolate

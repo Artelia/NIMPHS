@@ -47,7 +47,7 @@ class TBB_PT_TelemacStreamingSequence(TBB_StreamingSequenceSettingsPanel):
 
         obj = get_selected_object(context)
         if obj is not None:
-            obj_settings = obj.tbb.settings.s_sequence
+            obj_settings = obj.tbb.settings.telemac.s_sequence
             super().draw(obj, obj_settings)
 
             if obj_settings.update:

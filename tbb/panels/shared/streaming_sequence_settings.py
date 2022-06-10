@@ -28,7 +28,7 @@ class TBB_StreamingSequenceSettingsPanel(Panel):
 
         obj = get_selected_object(context)
         if obj is not None:
-            return obj.tbb.is_streaming_sequence and obj.tbb.settings.module == module
+            return obj.tbb.is_streaming_sequence and obj.tbb.module == module
         else:
             return False
 

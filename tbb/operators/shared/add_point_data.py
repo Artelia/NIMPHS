@@ -69,7 +69,7 @@ class TBB_OT_AddPointData(Operator):
         obj = get_selected_object(context)
 
         # TODO: use this for both modules
-        if obj.tbb.settings.module == 'TELEMAC':
+        if obj.tbb.module == 'TELEMAC':
             tmp_data = get_streaming_sequence_temporary_data(obj)
             self.available_point_data = json.dumps(tmp_data.vars_info)
         else:
@@ -106,7 +106,7 @@ class TBB_OT_AddPointData(Operator):
         sequence = get_sequence_settings(obj)
 
         # TODO: use this for both modules
-        if obj.tbb.settings.module == 'TELEMAC':
+        if obj.tbb.module == 'TELEMAC':
             point_data = json.loads(sequence.point_data)
 
             selected_point_data = json.loads(self.point_data)
