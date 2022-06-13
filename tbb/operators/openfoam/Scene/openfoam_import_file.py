@@ -88,12 +88,12 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
 
         return {'FINISHED'}
 
-    def draw(self, context: Context) -> None:
+    def draw(self, _context: Context) -> None:
         """
         UI layout of the operator.
 
         Args:
-            context (Context): context
+            _context (Context): context
         """
 
         layout = self.layout

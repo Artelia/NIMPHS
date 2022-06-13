@@ -1,7 +1,6 @@
 # <pep8 compliant>
 from bpy.props import EnumProperty, PointerProperty, BoolProperty
 
-from tbb.properties.openfoam.utils import update_scalar_names
 from tbb.properties.openfoam.openfoam_clip import TBB_OpenfoamClipProperty
 from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 from tbb.properties.shared.module_scene_settings import TBB_ModuleSceneSettings
@@ -40,13 +39,6 @@ class TBB_OpenfoamSettings(TBB_ModuleSceneSettings):
 
     #: TBB_OpenfoamTemporaryData: temporary data
     tmp_data = TBB_OpenfoamTemporaryData()
-
-    #: bpy.props.EnumProperty: Name of point data to preview
-    preview_point_data: EnumProperty(
-        items=update_scalar_names,
-        name="Point data",
-        description="Name of point data to preview",
-    )
 
     #: bpy.props.EnumProperty: Select a sequence type
     sequence_type: EnumProperty(

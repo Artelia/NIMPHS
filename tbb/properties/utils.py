@@ -49,6 +49,44 @@ def update_progress_bar(_self, context: Context):
             area.tag_redraw()
 
 
+def clear_vars_info(data: dict) -> None:
+    """
+    Clear vars_info.
+
+    Args:
+        data (dict): variables information dictionary
+    """
+
+    data["names"].clear()
+    data["units"].clear()
+    data["ranges"].clear()
+    data["types"].clear()
+    data["dimensions"].clear()
+
+
+def append_vars_info(data: dict, name: str, unit: str = "", range: dict = None, type: str = 'SCALAR', dim: int = 1):
+    """
+    Append new data to vars_info.
+
+    Args:
+        data (dict): variables information
+        name (str): name
+        unit (str, optional): unit. Defaults to "".
+        range (dict, optional): value ranges. Defaults to None.
+        type (str, optional): type. Defaults to 'SCALAR'.
+        dim (int, optional): dimension. Defaults to 1.
+    """
+
+    data["names"].append(name)
+    data["units"].append(unit)
+    if range is None:
+        data["ranges"].append({"local": {"min": None, "max": None}, "global": {"min": None, "max": None}})
+    else:
+        data["ranges"].append(range)
+    data["types"].append(type)
+    data["dimensions"].append(dim)
+
+
 # Inspired by: https://blog.michelanders.nl/2017/04/how-to-add-progress-indicator-to-the-info-header-in-blender.html
 def register_custom_progress_bar() -> None:
     """Register the custom progress bar."""

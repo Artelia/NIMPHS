@@ -7,16 +7,13 @@ import numpy as np
 import logging
 log = logging.getLogger(__name__)
 from typing import Any, Union
-from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
-from tbb.properties.shared.module_streaming_sequence_settings import TBB_ModuleStreamingSequenceSettings
-from tbb.properties.telemac.Object.telemac_mesh_sequence import TBB_TelemacMeshSequenceProperty
 
-from tbb.properties.telemac.Scene.telemac_settings import TBB_TelemacSettings
-from tbb.properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
+from tbb.properties.telemac.Object.telemac_mesh_sequence import TBB_TelemacMeshSequenceProperty
 from tbb.properties.telemac.Object.telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
 from tbb.properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
 from tbb.properties.shared.module_scene_settings import scene_settings_dynamic_props, TBB_ModuleSceneSettings
 from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
+from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 
 
 def generate_vertex_colors_groups(variables: list[dict]) -> list[dict]:
@@ -188,7 +185,7 @@ def setup_streaming_sequence_object(obj: Object, sequence: Union[TBB_OpenfoamStr
 
 
 def update_scene_settings_dynamic_props(settings: TBB_ModuleSceneSettings,
-                                        tmp_data: Union[TBB_OpenfoamSettings, TBB_TelemacSettings]) -> None:
+                                        tmp_data: Union[TBB_OpenfoamTemporaryData, TBB_TelemacTemporaryData]) -> None:
     """
     Update 'dynamic' settings of the main panel.
 
@@ -196,7 +193,7 @@ def update_scene_settings_dynamic_props(settings: TBB_ModuleSceneSettings,
 
     Args:
         settings (TBB_ModuleSceneSettings): scene settings
-        tmp_data (Union[TBB_OpenfoamSettings, TBB_TelemacSettings]): temporary data
+        tmp_data (Union[TBB_OpenfoamTemporaryData, TBB_TelemacTemporaryData]): temporary data
     """
 
     # This works because TBB_TelemacTemporaryData and TBB_OpenfoamTemporaryData have the same nb_time_points attribute

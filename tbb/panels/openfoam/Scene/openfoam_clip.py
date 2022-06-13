@@ -64,7 +64,7 @@ class TBB_PT_OpenfoamClip(Panel):
 
         if clip.type == "scalar":
 
-            if clip.scalar.name != "None@None":
+            if clip.scalar.name != "None":
                 row = layout.row()
                 row.enabled = enable_rows
                 row.prop(clip.scalar, "name")

@@ -1,7 +1,8 @@
 # <pep8 compliant>
 from bpy.types import PropertyGroup
-from bpy.props import PointerProperty
+from bpy.props import PointerProperty, EnumProperty, IntProperty
 
+from tbb.properties.openfoam.utils import available_point_data, update_preview_time_point
 from tbb.properties.openfoam.openfoam_clip import TBB_OpenfoamClipProperty
 from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
 from tbb.properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
@@ -12,6 +13,22 @@ class TBB_OpenfoamObjectSettings(PropertyGroup):
 
     register_cls = True
     is_custom_base_cls = False
+
+    #: bpy.props.EnumProperty: Name of point data to preview.
+    preview_point_data: EnumProperty(
+        items=available_point_data,
+        name="Point data",
+        description="Name of point data to preview",
+    )
+
+    preview_time_point: IntProperty(
+        name="Preview time point",
+        description="Time point to preview",
+        default=0,
+        soft_min=0,
+        soft_max=1000,
+        update=update_preview_time_point,
+    )
 
     #: TBB_OpenfoamImportSettings: Import settings.
     import_settings: PointerProperty(type=TBB_OpenfoamImportSettings)

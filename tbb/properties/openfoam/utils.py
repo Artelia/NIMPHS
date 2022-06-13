@@ -1,11 +1,17 @@
 # <pep8 compliant>
+import json
 from bpy.types import Context
 from bpy.props import FloatProperty, FloatVectorProperty
 
-from typing import Union
 
 import numpy as np
+from typing import Union
 from pyvista import UnstructuredGrid
+import logging
+log = logging.getLogger(__name__)
+
+from tbb.panels.utils import get_selected_object
+from tbb.operators.utils import get_temporary_data
 
 
 def encode_scalar_names(mesh: UnstructuredGrid) -> str:
@@ -75,6 +81,52 @@ def update_scalar_names(self, _context: Context) -> list:
         items = [("None@None", "None", "None")]
 
     return items
+
+
+def available_point_data(self, context: Context) -> list:
+    """
+    Generate the list of available point data.
+
+    Args:
+        context (Context): context
+
+    Returns:
+        list: available point data
+    """
+
+    obj = get_selected_object(context)
+    if obj is None:
+        return [("None", "None", "None")]
+
+    tmp_data = get_temporary_data(obj)
+    if tmp_data is None or not tmp_data.is_ok():
+        return [("None", "None", "None")]
+
+    items = []
+    vars = tmp_data.vars_info
+    for name, type, dim in zip(vars["names"], vars["types"], vars["dimensions"]):
+        identifier = {"name": name, "type": type, "dimension": dim}
+        items.append((json.dumps(identifier), name, "Undocumented"))
+
+    return items
+
+
+def update_preview_time_point(self, context: Context) -> None:
+
+    obj = get_selected_object(context)
+    if obj is None:
+        log.error("No selected object. Defaults to 0.", exc_info=1)
+        self.preview_time_point = 0
+
+    tmp_data = get_temporary_data(obj)
+    if tmp_data is None or not tmp_data.is_ok():
+        log.error("No temporary data available. Defaults to 0.", exc_info=1)
+        self.preview_time_point = 0
+
+    if self.preview_time_point > tmp_data.nb_time_points:
+        self.preview_time_point = tmp_data.nb_time_points
+    elif self.preview_time_point < 0:
+        self.preview_time_point = 0
 
 
 def encode_value_ranges(mesh: UnstructuredGrid) -> str:

@@ -32,6 +32,7 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
             import_settings = obj.tbb.settings.openfoam.import_settings
 
             layout = self.layout
+
             layout.separator()
 
             row = layout.row()
@@ -47,8 +48,17 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
             row.prop(import_settings, "case_type", text="Case")
 
             layout.separator()
+
             row = layout.row()
             row.label(text="Preview")
+
+            row = layout.row()
+            row.enabled = enable_rows
+            row.prop(obj.tbb.settings.openfoam, "preview_point_data", text="Point")
+
+            row = layout.row()
+            row.enabled = enable_rows
+            row.prop(obj.tbb.settings.openfoam, "preview_time_point", text="Time point")
 
             row = layout.row()
             row.enabled = enable_rows

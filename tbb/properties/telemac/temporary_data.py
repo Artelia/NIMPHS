@@ -6,6 +6,7 @@ from typing import Union
 from tbb.properties.telemac.serafin import Serafin
 from tbb.properties.shared.temporary_data import TemporaryData
 from tbb.properties.telemac.utils import remove_spaces_telemac_var_name
+from tbb.properties.utils import append_vars_info, clear_vars_info
 
 
 class TBB_TelemacTemporaryData(TemporaryData):
@@ -79,22 +80,13 @@ class TBB_TelemacTemporaryData(TemporaryData):
         else:
             self.faces = self.file.ikle2d
 
-        # Clear old variables information
-        self.vars_info["names"].clear()
-        self.vars_info["units"].clear()
-        self.vars_info["ranges"].clear()
-        self.vars_info["types"].clear()
-        self.vars_info["dimensions"].clear()
+        clear_vars_info(self.vars_info)
         # Construct variables information data
         for var_info in self.file.nomvar:
             # var_info is always 32 chars long with 16 chars for the name and 16 for the unit name
             name = remove_spaces_telemac_var_name(var_info[:16])
             unit = remove_spaces_telemac_var_name(var_info[16:])
-            self.vars_info["names"].append(name)
-            self.vars_info["units"].append(unit)
-            self.vars_info["ranges"].append(None)
-            self.vars_info["types"].append('SCALAR')
-            self.vars_info["dimensions"].append(1)
+            append_vars_info(self.vars_info, name, unit=unit)
 
     def is_ok(self) -> bool:
         """
