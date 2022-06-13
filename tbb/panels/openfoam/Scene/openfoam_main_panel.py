@@ -1,5 +1,6 @@
 # <pep8 compliant>
 from bpy.types import Context
+from tbb.operators.utils import get_temporary_data
 
 from tbb.panels.shared.module_panel import TBB_ModulePanel
 
@@ -25,28 +26,30 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
             context (Context): context
         """
 
-        settings = context.scene.tbb.settings.openfoam
-        tmp_data = settings.tmp_data
         enable_rows, obj = super().draw(context)
 
-        layout = self.layout
         if obj is not None:
-            sequence_settings = obj.tbb.settings.openfoam.s_sequence
-        else:
-            sequence_settings = None
+            import_settings = obj.tbb.settings.openfoam.import_settings
 
-        if sequence_settings is None or not obj.tbb.is_streaming_sequence:
+            layout = self.layout
+            layout.separator()
 
-            if tmp_data.is_ok():
-                row = layout.row()
-                row.enabled = enable_rows
-                row.prop(settings, "decompose_polyhedra", text="Decompose polyhedra")
-                row = layout.row()
-                row.enabled = enable_rows
-                row.prop(settings, "triangulate", text="Triangulate")
-                row = layout.row()
-                row.enabled = enable_rows
-                row.prop(settings, "case_type", text="Case")
-                row = layout.row()
-                row.enabled = enable_rows
-                row.operator("tbb.openfoam_preview", text="Preview", icon='HIDE_OFF')
+            row = layout.row()
+            row.label(text="Import settings")
+            row = layout.row()
+            row.enabled = enable_rows
+            row.prop(import_settings, "decompose_polyhedra", text="Decompose polyhedra")
+            row = layout.row()
+            row.enabled = enable_rows
+            row.prop(import_settings, "triangulate", text="Triangulate")
+            row = layout.row()
+            row.enabled = enable_rows
+            row.prop(import_settings, "case_type", text="Case")
+
+            layout.separator()
+            row = layout.row()
+            row.label(text="Preview")
+
+            row = layout.row()
+            row.enabled = enable_rows
+            row.operator("tbb.openfoam_preview", text="Preview", icon='HIDE_OFF')

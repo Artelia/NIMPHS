@@ -31,7 +31,7 @@ class TBB_ModulePanel(Panel):
         obj = get_selected_object(context)
         # If the object is None or is not a TELEMAC or OpenFOAM file
         if obj is None or obj.tbb.module not in ['TELEMAC', 'OpenFOAM']:
-            return False, obj
+            return False, None
 
         layout = self.layout
 
@@ -39,7 +39,7 @@ class TBB_ModulePanel(Panel):
         if obj.tbb.is_streaming_sequence or obj.tbb.is_mesh_sequence:
             row = layout.row()
             row.label(text="Sequence: see Object Properties.", icon='INFO')
-            return False, obj
+            return False, None
 
         # Display file_path information
         box = layout.box()
@@ -58,6 +58,6 @@ class TBB_ModulePanel(Panel):
             row.enabled = enable_rows
             row.label(text="Reload data: ", icon='ERROR')
             row.operator("tbb.reload_" + module.lower() + "_file", text="Reload", icon='FILE_REFRESH')
-            return False, obj
+            return False, None
 
         return enable_rows, obj

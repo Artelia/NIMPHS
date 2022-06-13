@@ -1,5 +1,6 @@
 # <pep8 compliant>
 from bpy.types import Panel, Context
+from tbb.operators.utils import get_temporary_data
 
 from tbb.panels.utils import get_selected_object
 
@@ -30,12 +31,11 @@ class TBB_PT_OpenfoamClip(Panel):
         """
 
         obj = get_selected_object(context)
-
-        tmp_data = context.scene.tbb.settings.openfoam.tmp_data
         if obj is None:
-            return tmp_data.is_ok()
-        else:
-            return tmp_data.is_ok() and not obj.tbb.is_streaming_sequence
+            return False
+
+        tmp_data = get_temporary_data(obj)
+        return tmp_data is not None and tmp_data.is_ok()
 
     def draw(self, context: Context) -> None:
         """
@@ -45,19 +45,18 @@ class TBB_PT_OpenfoamClip(Panel):
             context (Context): context
         """
 
+        obj = get_selected_object(context)
+        tmp_data = get_temporary_data(obj)
         layout = self.layout
-        settings = context.scene.tbb.settings.openfoam
-        tmp_data = settings.tmp_data
-        clip = context.scene.tbb.settings.openfoam.clip
 
-        # Check if temp mesh data is loaded. If not, do not show clip settings and show a message asking to hit preview.
-        if tmp_data.time_point != settings["preview_time_point"]:
-            lock_clip_settings = True
-        else:
-            lock_clip_settings = False
+        # TODO: Check if temp mesh data is loaded. If not, do not show clip
+        # settings and show a message asking to hit preview.
+        lock_clip_settings = False
 
         # Check if we need to lock the ui
         enable_rows = not context.scene.tbb.create_sequence_is_running and not lock_clip_settings
+
+        clip = obj.tbb.settings.openfoam.clip
 
         row = layout.row()
         row.enabled = enable_rows

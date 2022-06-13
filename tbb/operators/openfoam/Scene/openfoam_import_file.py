@@ -128,7 +128,7 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         """
 
         # Copy import settings
-        import_settings = obj.tbb.settings.openfoam.s_sequence.import_settings
+        import_settings = obj.tbb.settings.openfoam.import_settings
 
         obj.tbb.settings.file_path = self.filepath
         import_settings.case_type = self.import_settings.case_type
