@@ -1,6 +1,8 @@
 # <pep8 compliant>
 from typing import Union
 from pyvista import OpenFOAMReader, POpenFOAMReader, DataSet, UnstructuredGrid
+import logging
+log = logging.getLogger(__name__)
 
 
 class TBB_OpenfoamTemporaryData():
@@ -55,8 +57,8 @@ class TBB_OpenfoamTemporaryData():
 
         try:
             self.file_reader.set_active_time_point(time_point)
-        except ValueError as error:
-            print("ERROR::TBB_OpenfoamTemporaryData: " + str(error))
+        except ValueError:
+            log.error("Exception caught setting new active time point", exc_info=1)
 
         if new_data is None:
             self.data = self.file_reader.read()

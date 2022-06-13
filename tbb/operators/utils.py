@@ -126,7 +126,7 @@ def generate_vertex_colors(blender_mesh: Mesh, groups: list[dict], data: np.ndar
         vertex_colors.data.foreach_set("color", colors)
 
 
-def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, name: str) -> Object:
+def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, name: str, new: bool = False) -> Object:
     """
     Generate an object and its mesh using the given vertices and faces.
 
@@ -134,15 +134,15 @@ def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, name: str
         vertices (np.ndarray): vertices, must have the following shape: (n, 3)
         faces (np.ndarray): faces, must have the following shape: (n, 3)
         name (str): name of the object
+        new (bool): force to generate a new object
 
     Returns:
         Object: generated object
     """
 
-    # Create the object (or write over it if it already exists)
-    obj = bpy.data.objects.get(name)
+    obj = bpy.data.objects.get(name) if not new else None
     if obj is None:
-        blender_mesh = bpy.data.meshes.get(name + "_mesh")
+        blender_mesh = bpy.data.meshes.get(name + "_mesh") if not new else None
         if blender_mesh is None:
             blender_mesh = bpy.data.meshes.new(name + "_mesh")
 

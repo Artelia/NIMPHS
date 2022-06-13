@@ -4,6 +4,8 @@ from bpy.app.handlers import persistent
 from bpy.types import Mesh, Object, Scene, Context
 
 import time
+import logging
+log = logging.getLogger(__name__)
 import numpy as np
 from typing import Union
 from pathlib import Path
@@ -96,7 +98,7 @@ def generate_mesh_data(file_reader: OpenFOAMReader, time_point: int, triangulate
         tuple[np.array, np.array, UnstructuredGrid]: vertices, faces and the output mesh (modified)
     """
 
-    # Read data from the given OpenFoam file
+    # Read data from the given OpenFOAM file
     if mesh is None:
         file_reader.set_active_time_point(time_point)
         data = file_reader.read()
@@ -444,7 +446,7 @@ def update_openfoam_streaming_sequence_mesh(obj: Object, settings: TBB_OpenfoamS
 
 
 def load_openfoam_file(file_path: str, case_type: str = 'reconstructed',
-                       decompose_polyhedra: bool = False) -> tuple[bool, Union[OpenFOAMReader, POpenFOAMReader]]:
+                       decompose_polyhedra: bool = False) -> tuple[bool, Union[OpenFOAMReader, POpenFOAMReader, None]]:
     """
     Load an OpenFOAM file and return the file_reader. Also returns if it succeeded to read.
 
@@ -456,19 +458,22 @@ def load_openfoam_file(file_path: str, case_type: str = 'reconstructed',
             If ``'decomposed'``, decomposed mesh should be read. Defaults to `reconstructed`.
 
     Returns:
-        tuple[bool, OpenFOAMReader]: success, the file reader
+        tuple[bool, Union[OpenFOAMReader, POpenFOAMReader, None]]: success, the file reader
     """
 
     file = Path(file_path)
     if not file.exists():
+        log.error(f"Unknown path: {file_path}")
         return False, None
 
-    if case_type == 1:
-        # TODO: does this line can throw exceptions? How to manage errors here?
+    if case_type == 'reconstructed':
         file_reader = OpenFOAMReader(file_path)
-    else:
+    elif case_type == 'decomposed':
         file_reader = POpenFOAMReader(file_path)
         file_reader.case_type = case_type
+    else:
+        log.error(f"Unknown case_type: {case_type}")
+        return False, None
 
     file_reader.decompose_polyhedra = decompose_polyhedra
     return True, file_reader
