@@ -90,9 +90,9 @@ class TBB_OT_OpenfoamPreview(Operator):
             vertices, faces, mesh = generate_mesh_data(
                 file_reader, prw_time_point, triangulate=import_settings.triangulate, clip=clip, mesh=raw_mesh)
         except Exception:
-            log.error("Something went wrong building the mesh", exc_info=1)
             # Update temporary data, please read the comment below.
             tmp_data.update(file_reader, prw_time_point, data, raw_mesh)
+            log.error("Something went wrong building the mesh", exc_info=1)
             self.report({'ERROR'}, "Something went wrong building the mesh")
             return {'FINISHED'}
 
@@ -112,10 +112,12 @@ class TBB_OT_OpenfoamPreview(Operator):
             self.report({'ERROR'}, "Something went generating the object")
             return {'FINISHED'}
 
-            # res = prepare_openfoam_point_data(mesh, blender_mesh, [settings.preview_point_data], prw_time_point)
-            # if len(res[0]) > 0:
-            #     generate_vertex_colors(blender_mesh, *res)
-            #     generate_preview_material(obj, res[0][0]["name"] if len(res[0]) > 0 else 'None')
+        settings = obj.tbb.settings
+        point_data = settings.openfoam.preview_point_data
+        res = prepare_openfoam_point_data(obj, settings, tmp_data, prw_time_point, point_data)
+        if len(res[0]) > 0:
+            generate_vertex_colors(blender_mesh, *res)
+            generate_preview_material(obj, res[0][0]["name"] if len(res[0]) > 0 else 'None')
 
         log.info("{:.4f}".format(time.time() - start) + "s")
         self.report({'INFO'}, "Mesh successfully built: checkout the viewport.")

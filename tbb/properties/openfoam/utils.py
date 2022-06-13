@@ -35,7 +35,7 @@ def available_point_data(_self, context: Context) -> list:
     items = []
     vars = tmp_data.vars_info
     for name, range, type, dim in zip(vars["names"], vars["ranges"], vars["types"], vars["dimensions"]):
-        identifier = {"name": name, "range": range, "type": type, "dimension": dim}
+        identifier = {"names": [name], "ranges": [range], "types": [type], "dimensions": [dim]}
         items.append((json.dumps(identifier, ), name, "Undocumented"))
 
     return items

@@ -5,6 +5,9 @@ from bpy.types import Mesh, Object, Scene, Context
 
 import time
 import logging
+
+from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
+from tbb.properties.shared.tbb_object_settings import TBB_ObjectSettings
 log = logging.getLogger(__name__)
 import numpy as np
 from typing import Union
@@ -292,8 +295,8 @@ def generate_preview_material(obj: Object, scalar: str, name: str = "TBB_OpenFOA
     obj.active_material = material
 
 
-def prepare_openfoam_point_data(mesh: UnstructuredGrid, blender_mesh: Mesh, point_data: list[str],
-                                time_point: int, normalize: str = 'LOCAL') -> tuple[list[dict], dict, int]:
+def prepare_openfoam_point_data(obj: Object, settings: TBB_ObjectSettings, tmp_data: TBB_OpenfoamTemporaryData,
+                                time_point: int, point_data: str) -> tuple[list[dict], dict, int]:
     """
     Prepare point data for the 'generate_vertex_colors' function.
 
@@ -329,51 +332,49 @@ def prepare_openfoam_point_data(mesh: UnstructuredGrid, blender_mesh: Mesh, poin
     """
 
     # Prepare the mesh to loop over all its triangles
-    if len(blender_mesh.loop_triangles) == 0:
-        blender_mesh.calc_loop_triangles()
-    vertex_ids = np.array([triangle.vertices for triangle in blender_mesh.loop_triangles]).flatten()
+    mesh = obj.data
+    if len(mesh.loop_triangles) == 0:
+        mesh.calc_loop_triangles()
 
-    # Filter elements which evaluates to 'False', ex: ''
-    point_data = list(filter(None, point_data))
-    # Filter field arrays (check if they exist)
-    filtered_variables = []
-    for raw_key in point_data:
-        key = raw_key.split("@")[0]
+    vertex_ids = np.array([triangle.vertices for triangle in mesh.loop_triangles]).flatten()
 
-        try:
-            type = raw_key.split("@")[1]
-        except BaseException:
-            # When the list is given by the user, the type is not provided.
-            if key not in mesh.point_data.keys():
-                if key != "None":
-                    print("WARNING::prepare_openfoam_point_data: the field array named '" + key + "' does not exist\
-                          (time point = " + str(time_point) + ")")
-
-                continue
-            else:
-                type = "value" if len(mesh.get_array(key, preference='point').shape) == 1 else "vector_value"
-
-        if key != 'None':
-            filtered_variables.append({"name": key, "type": 'SCALAR' if type == "value" else 'VECTOR', "id": key})
+    # Format variables array
+    variables, dimensions = [], []
+    point_data = json.loads(point_data)
+    for var, type, dim in zip(point_data["names"], point_data["types"], point_data["dimensions"]):
+        variables.append({"name": var, "type": type, "id": var})
+        dimensions.append(dim)
 
     # Prepare data
-    prepared_data, data = dict(), None
+    prepared_data = dict()
+    openfoam_mesh = tmp_data.mesh
 
-    for var in filtered_variables:
-        data = mesh.get_array(var["id"], preference='point')[vertex_ids]
-        if normalize == 'GLOBAL':
-            # TODO: implement global 'normalize' (not implemented yet)
-            min, max = np.inf, -np.inf
-        elif normalize == 'LOCAL':
-            min, max = np.min(data), np.max(data)
+    for var, dim, id in zip(variables, dimensions, range(len(variables))):
+        # Read data
+        data = openfoam_mesh.get_array(var["id"], preference='point')[vertex_ids]
 
-        data = remap_array(data, in_min=min, in_max=max)
-        if var["type"] == 'VECTOR':
-            prepared_data[var["id"]] = [data[:, 0], data[:, 1], data[:, 2]]
-        elif var["type"] == 'SCALAR':
-            prepared_data[var["id"]] = data
+        # Remap data
+        if settings.remap_method == 'LOCAL':
+            if var["type"] == 'SCALAR':
+                min, max = point_data["ranges"][id]["local"]["min"], point_data["ranges"][id]["local"]["max"]
+                prepared_data[var["id"]] = remap_array(np.array(data), in_min=min, in_max=max)
 
-    return generate_vertex_colors_groups(filtered_variables), prepared_data, len(vertex_ids)
+            if var["type"] == 'VECTOR':
+                remapped_data = []
+                for i in range(dim):
+                    min, max = point_data["ranges"][id]["local"]["min"][i], point_data["ranges"][id]["local"]["max"][i]
+                    remapped_data.append(remap_array(np.array(data[:, i]), in_min=min, in_max=max))
+
+                prepared_data[var["id"]] = remapped_data
+
+        elif settings.remap_method == 'GLOBAL':
+            log.warning("'GLOBAL' remapping method not implemented yet.")
+            if var["type"] == 'VECTOR':
+                prepared_data[var["id"]] = [data[:, 0], data[:, 1], data[:, 2]]
+            elif var["type"] == 'SCALAR':
+                prepared_data[var["id"]] = data
+
+    return generate_vertex_colors_groups(variables), prepared_data, len(vertex_ids)
 
 
 @persistent
