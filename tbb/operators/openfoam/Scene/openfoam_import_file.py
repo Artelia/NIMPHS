@@ -1,13 +1,24 @@
 # <pep8 compliant>
-from bpy.props import StringProperty
+from bpy.props import StringProperty, PointerProperty
 from bpy.types import Operator, Context
 from bpy_extras.io_utils import ImportHelper
 
 import time
 
+from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
 from tbb.operators.openfoam.utils import load_openfoam_file, generate_mesh_data
 from tbb.properties.openfoam.utils import encode_value_ranges, encode_scalar_names
 from tbb.operators.utils import generate_object_from_data, get_collection, update_scene_settings_dynamic_props
+
+
+def import_openfoam_menu_draw(self, context: Context):
+    """
+    Draw function which displays the import button in File > Import.
+
+    Args:
+        context (Context): context
+    """
+    self.layout.operator(TBB_OT_OpenfoamImportFile.bl_idname, text="OpenFOAM")
 
 
 class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
@@ -25,6 +36,9 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         default="*.foam",  # multiple allowed types: "*.foam;*.[];*.[]" etc ...
         options={"HIDDEN"}  # noqa: F821
     )
+
+    #: TBB_OpenfoamImportSettings: Import settings.
+    import_settings: PointerProperty(type=TBB_OpenfoamImportSettings)
 
     def execute(self, context: Context) -> set:
         """
@@ -76,3 +90,26 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         self.report({'INFO'}, "File successfully imported")
 
         return {'FINISHED'}
+
+    def draw(self, context: Context) -> None:
+        """
+        UI layout of the operator.
+
+        Args:
+            context (Context): context
+        """
+
+        layout = self.layout
+
+        box = layout.box()
+        row = box.row()
+        row.label(text="Settings")
+
+        row = box.row()
+        row.prop(self.import_settings, "case_type", text="Case")
+
+        row = box.row()
+        row.prop(self.import_settings, "decompose_polyhedra", text="Decompose polyhedra")
+
+        row = box.row()
+        row.prop(self.import_settings, "triangulate", text="Triangulate")

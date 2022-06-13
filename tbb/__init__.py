@@ -1,7 +1,7 @@
 # <pep8 compliant>
 import bpy
 from bpy.utils import previews
-from bpy.types import Scene, Object
+from bpy.types import Scene, Object, TOPBAR_MT_file_import
 from bpy.props import PointerProperty
 from bpy.app import version as bl_version
 from bpy.app.handlers import frame_change_pre, frame_change_post
@@ -69,6 +69,7 @@ from tbb.properties.shared.tbb_object import TBB_Object
 from tbb.operators.openfoam.utils import update_openfoam_streaming_sequences
 from tbb.operators.telemac.utils import update_telemac_streaming_sequences, update_telemac_mesh_sequences
 from tbb.properties.utils import register_custom_progress_bar
+from tbb.operators.openfoam.Scene.openfoam_import_file import import_openfoam_menu_draw
 
 # Setup logger
 import logging
@@ -99,6 +100,9 @@ def register():  # noqa: D103
     icons.load("openfoam", os.path.join(icons_dir, "openfoam_32_px.png"), 'IMAGE')
     icons.load("telemac", os.path.join(icons_dir, "telemac_32_px.png"), 'IMAGE')
 
+    # Add custom import operators in 'File > Import'
+    TOPBAR_MT_file_import.append(import_openfoam_menu_draw)
+
     # Setup logger using user preferences (this will affect all child loggers)
     prefs = bpy.context.preferences.addons[__package__].preferences.settings
     logger.setLevel(logging.getLevelName(prefs.log_level))
@@ -115,5 +119,8 @@ def unregister():  # noqa: D103
     for collection in Scene.tbb_icons.values():
         previews.remove(collection)
     Scene.tbb_icons.clear()
+
+    # Remove custom import operators from 'File > Import'
+    TOPBAR_MT_file_import.remove(import_openfoam_menu_draw)
 
     logger.debug("Unregistered Toolsbox OpenFOAM/TELEMAC")
