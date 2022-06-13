@@ -56,7 +56,7 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         Import the selected file. Generates the object.
 
         Args:
-            _context (Context): context
+            context (Context): context
 
         Returns:
             set: state of the operator

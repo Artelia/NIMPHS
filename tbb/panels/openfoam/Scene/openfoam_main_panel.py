@@ -26,12 +26,11 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
             context (Context): context
         """
 
-        enable_rows, obj = super().draw(context)
+        enable_rows, tmp_data_is_ok, obj = super().draw(context)
+        layout = self.layout
 
-        if obj is not None:
+        if obj is not None and tmp_data_is_ok:
             import_settings = obj.tbb.settings.openfoam.import_settings
-
-            layout = self.layout
 
             layout.separator()
 
@@ -63,3 +62,7 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
             row = layout.row()
             row.enabled = enable_rows
             row.operator("tbb.openfoam_preview", text="Preview", icon='HIDE_OFF')
+
+        elif obj is None:
+            row = layout.row()
+            row.label(text="Select an OpenFOAM object", icon='INFO')

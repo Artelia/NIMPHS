@@ -10,6 +10,7 @@ import numpy as np
 from typing import Union
 from pathlib import Path
 from pyvista import OpenFOAMReader, POpenFOAMReader, UnstructuredGrid
+import json
 
 from tbb.properties.openfoam.openfoam_clip import TBB_OpenfoamClipProperty
 from tbb.operators.utils import remap_array, generate_vertex_colors_groups, generate_vertex_colors, get_collection
@@ -106,13 +107,13 @@ def generate_mesh_data(file_reader: OpenFOAMReader, time_point: int, triangulate
 
     # Apply clip
     if clip is not None and clip.type == "scalar":
-        name, value_type = clip.scalar.name.split("@")[0], clip.scalar.name.split("@")[1]
-        mesh.set_active_scalars(name=name, preference="point")
-        if value_type == "value":
-            mesh.clip_scalar(inplace=True, scalars=name, invert=clip.scalar.invert, value=clip.scalar.value)
-        if value_type == "vector_value":
+        info = json.loads(clip.scalar.name)
+        mesh.set_active_scalars(name=info["name"], preference="point")
+        if info["type"] == 'SCALAR':
+            mesh.clip_scalar(inplace=True, scalars=info["name"], invert=clip.scalar.invert, value=clip.scalar.value)
+        if info["type"] == "vector_value":
             value = np.linalg.norm(clip.scalar.vector_value)
-            mesh.clip_scalar(inplace=True, scalars=name, invert=clip.scalar.invert, value=value)
+            mesh.clip_scalar(inplace=True, scalars=info["name"], invert=clip.scalar.invert, value=value)
         mesh = mesh.extract_surface(nonlinear_subdivision=0)
     else:
         mesh = mesh.extract_surface(nonlinear_subdivision=0)

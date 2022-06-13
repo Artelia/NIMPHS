@@ -93,7 +93,6 @@ class TBB_OpenfoamTemporaryData():
 
             ranges = {"local": {"min": min, "max": max}, "global": {"min": None, "max": None}}
 
-            print(ranges)
             append_vars_info(self.vars_info, name, unit="", range=ranges, type=type, dim=dim)
 
     def is_ok(self) -> bool:
