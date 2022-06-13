@@ -4,10 +4,11 @@ import numpy as np
 from typing import Union
 
 from tbb.properties.telemac.serafin import Serafin
+from tbb.properties.shared.temporary_data import TemporaryData
 from tbb.properties.telemac.utils import remove_spaces_telemac_var_name
 
 
-class TBB_TelemacTemporaryData():
+class TBB_TelemacTemporaryData(TemporaryData):
     """Hold temporary data for the TELEMAC module."""
 
     # str: name of the module

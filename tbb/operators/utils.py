@@ -4,7 +4,10 @@ from rna_prop_ui import rna_idprop_ui_create
 from bpy.types import Collection, Object, Context, Mesh
 
 import numpy as np
+import logging
+log = logging.getLogger(__name__)
 from typing import Any, Union
+from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 from tbb.properties.shared.module_streaming_sequence_settings import TBB_ModuleStreamingSequenceSettings
 from tbb.properties.telemac.Object.telemac_mesh_sequence import TBB_TelemacMeshSequenceProperty
 
@@ -13,6 +16,7 @@ from tbb.properties.openfoam.Scene.openfoam_settings import TBB_OpenfoamSettings
 from tbb.properties.telemac.Object.telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
 from tbb.properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
 from tbb.properties.shared.module_scene_settings import scene_settings_dynamic_props, TBB_ModuleSceneSettings
+from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
 
 
 def generate_vertex_colors_groups(variables: list[dict]) -> list[dict]:
@@ -309,6 +313,36 @@ def get_sequence_settings(obj: Object) -> Union[TBB_OpenfoamStreamingSequencePro
             return None
     else:
         return None
+
+
+def get_temporary_data(obj: Object) -> Union[TBB_TelemacTemporaryData, TBB_OpenfoamTemporaryData, None]:
+    """
+    Get temporary data of the given object. Create new temporary data if it does not exist.
+
+    Args:
+        obj (Object): object
+
+    Returns:
+        Union[TBB_TelemacTemporaryData, TBB_OpenfoamTemporaryData, None]: temporary data
+    """
+
+    try:
+        tmp_data = obj.tbb.tmp_data[obj.tbb.uid]
+    except KeyError:
+        if obj.tbb.module == 'TELEMAC':
+            obj.tbb.tmp_data[obj.tbb.uid] = TBB_TelemacTemporaryData()
+            tmp_data = obj.tbb.tmp_data[obj.tbb.uid]
+        elif obj.tbb.module == 'OpenFOAM':
+            obj.tbb.tmp_data[obj.tbb.uid] = TBB_OpenfoamTemporaryData()
+            tmp_data = obj.tbb.tmp_data[obj.tbb.uid]
+        else:
+            log.error(f"Unknown module name: {obj.tbb.module}")
+            return None
+    except Exception:
+        log.critical(f"Uncaught exception", exc_info=1)
+        return None
+
+    return tmp_data
 
 
 def normalize_objects(objects: list[Object], dimensions: list[float]) -> None:

@@ -22,24 +22,30 @@ class TBB_OT_AddPointData(Operator):
     bl_label = "Add point data"
     bl_description = "Add point data to import as vertex colors"
 
-    def point_data_items(self, _context: Context) -> list:
+    def point_data_items(self, context: Context) -> list:
         """
         Format point data to present to the user.
 
         Args:
-            _context (Context): context
+            context (Context): context
 
         Returns:
             list: point data
         """
 
         items = []
+        obj = get_selected_object(context)
+
         if self.available_point_data != "":
-            data = json.loads(self.available_point_data)
-            for name, unit in zip(data["names"], data["units"]):
-                identifier = {"name": name, "unit": unit}
-                ui_name = name + ", (" + unit + ")" if unit != "" else name
-                items.append((json.dumps(identifier), ui_name, "Undocumented"))
+            if obj.tbb.module == 'TELEMAC':
+                data = json.loads(self.available_point_data)
+                for name, unit in zip(data["names"], data["units"]):
+                    identifier = {"name": name, "unit": unit}
+                    ui_name = name + ", (" + unit + ")" if unit != "" else name
+                    items.append((json.dumps(identifier), ui_name, "Undocumented"))
+
+            elif obj.tbb.module == 'OpenFOAM':
+                return items
 
         return items
 
@@ -69,7 +75,6 @@ class TBB_OT_AddPointData(Operator):
 
         obj = get_selected_object(context)
 
-        # TODO: use this for both modules
         if obj.tbb.module == 'TELEMAC':
             tmp_data = get_streaming_sequence_temporary_data(obj)
             available = deepcopy(tmp_data.vars_info)
@@ -86,6 +91,9 @@ class TBB_OT_AddPointData(Operator):
                     to_present["dimensions"].append(available["dimensions"][id])
 
             self.available_point_data = json.dumps(to_present)
+
+        elif obj.tbb.module == 'OpenFOAM':
+            pass
 
         else:
             log.warning("Not implemented yet for other modules.")
