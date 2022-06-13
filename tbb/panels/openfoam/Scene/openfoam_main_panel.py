@@ -27,7 +27,7 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
 
         settings = context.scene.tbb.settings.openfoam
         tmp_data = settings.tmp_data
-        enable_rows, obj = super().draw(settings, tmp_data, context)
+        enable_rows, obj = super().draw(context)
 
         layout = self.layout
         if obj is not None:

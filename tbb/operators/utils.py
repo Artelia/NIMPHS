@@ -339,7 +339,7 @@ def get_temporary_data(obj: Object) -> Union[TBB_TelemacTemporaryData, TBB_Openf
             log.error(f"Unknown module name: {obj.tbb.module}")
             return None
     except Exception:
-        log.critical(f"Uncaught exception", exc_info=1)
+        log.critical("Uncaught exception", exc_info=1)
         return None
 
     return tmp_data

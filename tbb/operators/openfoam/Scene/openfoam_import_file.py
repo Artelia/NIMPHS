@@ -4,19 +4,18 @@ from bpy.types import Operator, Context, Object
 from bpy_extras.io_utils import ImportHelper
 
 import time
-import logging
-log = logging.getLogger(__name__)
 from typing import Union
 from pyvista import OpenFOAMReader, POpenFOAMReader
+import logging
+log = logging.getLogger(__name__)
 
+from tbb.operators.utils import generate_object_from_data
+from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
 from tbb.operators.openfoam.utils import load_openfoam_file, generate_mesh_data
-from tbb.properties.openfoam.utils import encode_value_ranges, encode_scalar_names
-from tbb.operators.utils import generate_object_from_data, get_collection, update_scene_settings_dynamic_props
-from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 
 
-def import_openfoam_menu_draw(self, _context: Context):
+def import_openfoam_menu_draw(self, _context: Context):  # noqa D417
     """
     Draw function which displays the import button in File > Import.
 
@@ -44,9 +43,9 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
 
     #: bpy.props.StringProperty: Name to give to the imported object.
     name: StringProperty(
-        name="Name",
+        name="Name",  # noqa F821
         description="Name to give to the imported object",
-        default="TBB_OpenFOAM_preview",
+        default="TBB_OpenFOAM_preview",  # noqa F821
     )
 
     #: TBB_OpenfoamImportSettings: Import settings.
@@ -138,6 +137,7 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
 
         # Others
         obj.tbb.uid = str(time.time())
+        obj.tbb.module = 'OpenFOAM'
 
         # Temporary data
         obj.tbb.tmp_data[obj.tbb.uid] = TBB_OpenfoamTemporaryData()
