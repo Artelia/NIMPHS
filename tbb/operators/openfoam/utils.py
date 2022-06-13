@@ -465,6 +465,9 @@ def load_openfoam_file(file_path: str, case_type: str = 'reconstructed',
     if not file.exists():
         log.error(f"Unknown path: {file_path}")
         return False, None
+    elif file.is_dir():
+        log.error("Cannot open files from directories")
+        return False, None
 
     if case_type == 'reconstructed':
         file_reader = OpenFOAMReader(file_path)

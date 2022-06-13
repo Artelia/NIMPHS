@@ -2,7 +2,7 @@
 from bpy.types import PropertyGroup
 from bpy.props import BoolProperty, EnumProperty, PointerProperty, FloatProperty, FloatVectorProperty, StringProperty
 
-from tbb.properties.openfoam.utils import update_scalar_names, set_clip_values, get_clip_values
+from tbb.properties.openfoam.utils import available_point_data, set_clip_values, get_clip_values
 
 
 class TBB_OpenfoamClipScalarProperty(PropertyGroup):
@@ -42,7 +42,7 @@ class TBB_OpenfoamClipScalarProperty(PropertyGroup):
 
     #: bpy.props.EnumProperty: Name of scalars to clip on
     name: EnumProperty(
-        items=update_scalar_names,
+        items=available_point_data,
         name="Scalars",  # noqa: F821
         description="Name of scalars to clip on",
     )

@@ -5,7 +5,6 @@ import time
 
 from tbb.operators.openfoam.utils import load_openfoam_file
 from tbb.operators.utils import update_scene_settings_dynamic_props
-from tbb.properties.openfoam.utils import encode_value_ranges, encode_scalar_names
 
 
 class TBB_OT_OpenfoamReloadFile(Operator):
@@ -46,8 +45,8 @@ class TBB_OT_OpenfoamReloadFile(Operator):
 
         # Update temp data
         tmp_data.update(file_reader, settings.get("preview_time_point", 0))
-        settings.clip.scalar.value_ranges = encode_value_ranges(tmp_data.mesh)
-        settings.clip.scalar.list = encode_scalar_names(tmp_data.mesh)
+        # settings.clip.scalar.value_ranges = encode_value_ranges(tmp_data.mesh)
+        # settings.clip.scalar.list = encode_scalar_names(tmp_data.mesh)
         context.scene.tbb.create_sequence_is_running = False
 
         # Update properties values

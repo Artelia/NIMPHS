@@ -81,8 +81,20 @@ class TBB_OpenfoamTemporaryData():
             data = self.mesh.point_data[name]
             type = 'SCALAR' if len(data.shape) == 1 else 'VECTOR'
             dim = 1 if len(data.shape) == 1 else data.shape[1]
-            range = {"local": {"min": np.min(data), "max": np.max(data)}, "global": {"min": None, "max": None}}
-            append_vars_info(self.vars_info, name, unit="", range=range, type=type, dim=dim)
+            if type == 'VECTOR':
+                min = []
+                max = []
+                for i in range(dim):
+                    min.append(float(np.min(np.array(data[:, i]))))
+                    max.append(float(np.max(np.array(data[:, i]))))
+            elif type == 'SCALAR':
+                min = float(np.min(np.array(data)))
+                max = float(np.max(np.array(data)))
+
+            ranges = {"local": {"min": min, "max": max}, "global": {"min": None, "max": None}}
+
+            print(ranges)
+            append_vars_info(self.vars_info, name, unit="", range=ranges, type=type, dim=dim)
 
     def is_ok(self) -> bool:
         """

@@ -3,7 +3,6 @@ from bpy.types import Operator, Context
 
 import time
 
-from tbb.properties.openfoam.utils import encode_value_ranges, encode_scalar_names
 from tbb.operators.utils import generate_object_from_data, get_collection, generate_vertex_colors
 from tbb.operators.openfoam.utils import (
     generate_mesh_data,
@@ -67,8 +66,8 @@ class TBB_OT_OpenfoamPreview(Operator):
 
         data = file_reader.read()
         raw_mesh = data["internalMesh"]
-        clip.scalar.value_ranges = encode_value_ranges(raw_mesh)
-        clip.scalar.list = encode_scalar_names(raw_mesh)
+        # clip.scalar.value_ranges = encode_value_ranges(raw_mesh)
+        # clip.scalar.list = encode_scalar_names(raw_mesh)
 
         try:
             vertices, faces, mesh = generate_mesh_data(

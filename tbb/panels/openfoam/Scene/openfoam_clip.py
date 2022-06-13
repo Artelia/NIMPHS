@@ -2,6 +2,8 @@
 from bpy.types import Panel, Context
 from tbb.operators.utils import get_temporary_data
 
+import json
+
 from tbb.panels.utils import get_selected_object
 
 
@@ -49,11 +51,8 @@ class TBB_PT_OpenfoamClip(Panel):
         tmp_data = get_temporary_data(obj)
         layout = self.layout
 
-        # TODO: Check if temp mesh data is loaded. If not, do not show clip
-        # settings and show a message asking to hit preview.
-        lock_clip_settings = False
-
         # Check if we need to lock the ui
+        lock_clip_settings = tmp_data.time_point != obj.tbb.settings.openfoam.preview_time_point
         enable_rows = not context.scene.tbb.create_sequence_is_running and not lock_clip_settings
 
         clip = obj.tbb.settings.openfoam.clip
@@ -72,8 +71,7 @@ class TBB_PT_OpenfoamClip(Panel):
                 row = layout.row()
                 row.enabled = enable_rows
 
-                is_vector_scalars = clip.scalar.name.split("@")[1] == "vector_value"
-                if is_vector_scalars:
+                if json.loads(clip.scalar.name)["type"] == 'VECTOR':
                     row.prop(clip.scalar, "vector_value", text="Value")
                 else:
                     row.prop(clip.scalar, "value", text="Value")

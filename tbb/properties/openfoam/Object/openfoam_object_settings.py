@@ -21,6 +21,7 @@ class TBB_OpenfoamObjectSettings(PropertyGroup):
         description="Name of point data to preview",
     )
 
+    #: bpy.props.EnumProperty: Time step to preview.
     preview_time_point: IntProperty(
         name="Preview time point",
         description="Time point to preview",
