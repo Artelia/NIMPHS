@@ -21,4 +21,4 @@ class TBB_MT_OpenfoamCreateSequenceMenu(Menu):
 
         layout = self.layout
 
-        layout.operator("tbb.openfoam_create_sequence", text="Mesh sequence")
+        layout.operator("tbb.openfoam_create_mesh_sequence", text="Mesh sequence")

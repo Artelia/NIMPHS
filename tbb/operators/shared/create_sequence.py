@@ -4,6 +4,7 @@ from bpy.props import StringProperty, EnumProperty
 
 from tbb.operators.utils import setup_streaming_sequence_object
 from tbb.operators.telemac.utils import generate_telemac_streaming_sequence_obj
+from tbb.panels.utils import get_selected_object
 from tbb.properties.shared.module_scene_settings import TBB_ModuleSceneSettings
 from tbb.operators.openfoam.utils import generate_openfoam_streaming_sequence_obj
 
@@ -14,60 +15,46 @@ class TBB_CreateSequence(Operator):
     register_cls = False
     is_custom_base_cls = True
 
-    #: bpy.props.Timer: Timer which triggers the 'modal' method of operators
-    timer = None
-    #: str: Name of the sequence object
-    sequence_name = ""
-    #: str: Sequence name typed by the user
-    user_sequence_name = ""
-    #: int: Starting point of the sequence to generate
-    start_time_point = 0
-    #: int: Ending point of the sequence to generate
-    end_time_point = 0
-    #: int: Time point currently processed when creating a sequence
-    current_time_point = 0
-    #: int: Current frame during the 'create sequence' process (different from time point)
-    current_frame = 0
-
-    #: bpy.props.StringProperty: Whether the operator should run modal or not, enum in ['MODAL', 'NORMAL']
-    mode: StringProperty(
-        name="Create sequence mode",
-        description="Whether the operator should run modal or not, enum in ['MODAL', 'NORMAL']",
-        default="MODAL"  # noqa: F821
+    #: bpy.props.EnumProperty: Indicates whether the operator should run modal or not. Enum in ['MODAL', 'NORMAL']
+    mode: EnumProperty(
+        name="Mode",  # noqa: F821
+        description="Indicates whether the operator should run modal or not. Enum in ['MODAL', 'NORMAL']",
+        items=[
+            ('MODAL', "Modal", "TODO"),  # noqa: F821
+            ('NORMAL', "Normal", "TODO"),  # noqa: F821
+        ],
+        options={'HIDDEN'},
     )
 
-    def __init__(self) -> None:
-        """Init method of the class."""
-
-        super().__init__()
-        self.timer = None
-        self.sequence_name = ""
-        self.user_sequence_name = ""
-        self.start_time_point = 0
-        self.end_time_point = 0
-        self.current_time_point = 0
-        self.current_frame = 0
+    #: bpy.props.EnumProperty: Type of the sequence to create. Enum in ['MESH', 'STREAMING']
+    type: EnumProperty(
+        name="Type",  # noqa: F821
+        description="Type of the sequence to create. Enum in ['MESH', 'STREAMING']",
+        items=[
+            ('MESH', "Mesh", "TODO"),  # noqa: F821
+            ('STREAMING', "Streaming", "TODO"),  # noqa: F821
+        ],
+        options={'HIDDEN'},
+    )
 
     @classmethod
-    def poll(self, settings: TBB_ModuleSceneSettings, context: Context) -> bool:
+    def poll(self, context: Context) -> bool:
         """
         If false, locks the UI button of the operator.
 
         Args:
-            settings (TBB_ModuleSceneSettings): scene settings
             context (Context): context
 
         Returns:
-            bool: state
+            bool: state of the operator
         """
 
-        tbb_csir = context.scene.tbb.create_sequence_is_running  # csir = create sequence is running
-        if settings.sequence_type == "mesh_sequence":
-            return not tbb_csir and settings["start_time_point"] < settings["end_time_point"]
-        elif settings.sequence_type == "streaming_sequence":
-            return not tbb_csir
-        else:  # Lock ui by default
+        csir = context.scene.tbb.create_sequence_is_running  # csir = create sequence is running
+        obj = get_selected_object(context)
+        if obj is None:
             return False
+
+        return obj.tbb.module in ['OpenFOAM', 'TELEMAC'] and not csir
 
     def execute(self, settings: TBB_ModuleSceneSettings, context: Context, module: str) -> set:
         """
