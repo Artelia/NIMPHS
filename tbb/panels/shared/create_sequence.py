@@ -37,7 +37,7 @@ class TBB_CreateSequencePanel(Panel):
             return False
 
         tmp_data = get_temporary_data(obj)
-        return tmp_data.is_ok() and not obj.tbb.is_streaming_sequence
+        return tmp_data is not None and tmp_data.is_ok() and not obj.tbb.is_streaming_sequence
 
     def draw(self, settings: TBB_ModuleSceneSettings, context: Context) -> bool:
         """

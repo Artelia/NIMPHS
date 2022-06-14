@@ -314,8 +314,7 @@ def get_sequence_settings(obj: Object) -> Union[TBB_OpenfoamStreamingSequencePro
 
 def get_temporary_data(obj: Object) -> Union[TBB_TelemacTemporaryData, TBB_OpenfoamTemporaryData, None]:
     """
-    Get temporary data of the given object. Create new temporary data if it does not exist.
-
+    Get temporary data of the given object.
     Args:
         obj (Object): object
 
@@ -326,17 +325,7 @@ def get_temporary_data(obj: Object) -> Union[TBB_TelemacTemporaryData, TBB_Openf
     try:
         tmp_data = obj.tbb.tmp_data[obj.tbb.uid]
     except KeyError:
-        if obj.tbb.module == 'TELEMAC':
-            obj.tbb.tmp_data[obj.tbb.uid] = TBB_TelemacTemporaryData()
-            tmp_data = obj.tbb.tmp_data[obj.tbb.uid]
-        elif obj.tbb.module == 'OpenFOAM':
-            obj.tbb.tmp_data[obj.tbb.uid] = TBB_OpenfoamTemporaryData()
-            tmp_data = obj.tbb.tmp_data[obj.tbb.uid]
-        else:
-            log.error(f"Unknown module name: {obj.tbb.module}")
-            return None
-    except Exception:
-        log.critical("Uncaught exception", exc_info=1)
+        log.critical("No temporary data available")
         return None
 
     return tmp_data

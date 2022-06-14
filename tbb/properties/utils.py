@@ -47,7 +47,6 @@ class VariablesInformation():
             Union[dict, Any, None]: dict containing all information. Defaults to None.
         """
 
-        print(id)
         if isinstance(id, str):
             try:
                 id = self.names.index(id)

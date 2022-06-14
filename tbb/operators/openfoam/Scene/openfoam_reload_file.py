@@ -2,9 +2,12 @@
 from bpy.types import Operator, Context
 
 import time
+import logging
+log = logging.getLogger(__name__)
 
+from tbb.panels.utils import get_selected_object
 from tbb.operators.openfoam.utils import load_openfoam_file
-from tbb.operators.utils import update_scene_settings_dynamic_props
+from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 
 
 class TBB_OT_OpenfoamReloadFile(Operator):
@@ -30,29 +33,25 @@ class TBB_OT_OpenfoamReloadFile(Operator):
             set: state of the operator
         """
 
-        settings = context.scene.tbb.settings.openfoam
-        tmp_data = settings.tmp_data
-
-        if settings.file_path == "":
-            self.report({'ERROR'}, "Please select a file first")
-            return {'FINISHED'}
-
         start = time.time()
-        success, file_reader = load_openfoam_file(settings.file_path, settings.case_type, settings.decompose_polyhedra)
+
+        obj = get_selected_object(context)
+        import_settings = obj.tbb.settings.openfoam.import_settings
+        success, file_reader = load_openfoam_file(obj.tbb.settings.file_path, import_settings.case_type,
+                                                  import_settings.decompose_polyhedra)
+
         if not success:
             self.report({'ERROR'}, "The chosen file does not exist")
             return {'FINISHED'}
 
-        # Update temp data
-        tmp_data.update(file_reader, settings.get("preview_time_point", 0))
-        # settings.clip.scalar.value_ranges = encode_value_ranges(tmp_data.mesh)
-        # settings.clip.scalar.list = encode_scalar_names(tmp_data.mesh)
-        context.scene.tbb.create_sequence_is_running = False
+        # Make sure the object still have an identifier
+        if obj.tbb.uid == "":
+            obj.tbb.uid = str(time.time())
 
-        # Update properties values
-        update_scene_settings_dynamic_props(settings, tmp_data)
+        # Update temporary data
+        obj.tbb.tmp_data[obj.tbb.uid] = TBB_OpenfoamTemporaryData(file_reader)
 
-        print("Reload::OpenFOAM: " + "{:.4f}".format(time.time() - start) + "s")
+        log.info("{:.4f}".format(time.time() - start) + "s")
         self.report({'INFO'}, "Reload successful")
 
         return {'FINISHED'}

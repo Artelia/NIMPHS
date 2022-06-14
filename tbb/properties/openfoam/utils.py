@@ -96,7 +96,7 @@ def set_clip_values(self: Union[FloatProperty, FloatVectorProperty], value: floa
             # self["vector_value"] do not exist until they are manipulated (get/set).
             self["vector_value"] = (0.5, 0.5, 0.5)
 
-            for i in range(data["dimension"]):
+            for i in range(data["dimensions"]):
                 if value[i] < ranges["min"][i]:
                     self["vector_value"][i] = ranges["min"][i]
                 elif value[i] > ranges["max"][i]:
