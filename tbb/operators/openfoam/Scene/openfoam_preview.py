@@ -5,7 +5,7 @@ import time
 import logging
 log = logging.getLogger(__name__)
 
-from tbb.operators.utils import generate_object_from_data, generate_vertex_colors, get_temporary_data
+from tbb.operators.utils import generate_object_from_data, generate_vertex_colors
 from tbb.operators.openfoam.utils import (
     generate_mesh_data,
     prepare_openfoam_point_data,
@@ -39,7 +39,7 @@ class TBB_OT_OpenfoamPreview(Operator):
         if obj is None:
             return False
 
-        tmp_data = get_temporary_data(obj)
+        tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
         return tmp_data is not None and tmp_data.is_ok()
 
     def execute(self, context: Context) -> set:
@@ -58,7 +58,7 @@ class TBB_OT_OpenfoamPreview(Operator):
         start = time.time()
 
         obj = get_selected_object(context)
-        tmp_data = get_temporary_data(obj)
+        tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
         clip = obj.tbb.settings.openfoam.clip
         import_settings = obj.tbb.settings.openfoam.import_settings
         collection = context.scene.collection

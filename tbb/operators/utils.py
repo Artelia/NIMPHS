@@ -312,25 +312,6 @@ def get_sequence_settings(obj: Object) -> Union[TBB_OpenfoamStreamingSequencePro
         return None
 
 
-def get_temporary_data(obj: Object) -> Union[TBB_TelemacTemporaryData, TBB_OpenfoamTemporaryData, None]:
-    """
-    Get temporary data of the given object.
-    Args:
-        obj (Object): object
-
-    Returns:
-        Union[TBB_TelemacTemporaryData, TBB_OpenfoamTemporaryData, None]: temporary data
-    """
-
-    try:
-        tmp_data = obj.tbb.tmp_data[obj.tbb.uid]
-    except KeyError:
-        log.critical("No temporary data available")
-        return None
-
-    return tmp_data
-
-
 def normalize_objects(objects: list[Object], dimensions: list[float]) -> None:
     """
     Rescale the given list of objects so coordinates of all the meshes are now in the range [-1;1].

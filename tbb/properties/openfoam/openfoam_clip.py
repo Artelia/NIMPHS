@@ -73,13 +73,13 @@ class TBB_OpenfoamClipProperty(PropertyGroup):
     #: bpy.props.EnumProperty: Choose the clipping method
     type: EnumProperty(
         items=[
-            ("no_clip", "None", "Do not clip"),  # noqa: F821
-            ("scalar", "Scalars", "Clip a dataset by a scalar"),  # noqa: F821
+            ("NONE", "None", "Do not clip"),  # noqa: F821
+            ("SCALAR", "Scalars", "Clip a dataset by a scalar"),  # noqa: F821
             # ("box", "Box", "Clip a dataset by a bounding box defined by the bounds"),
         ],
         name="Type",  # noqa: F821
         description="Choose the clipping method",
-        default="no_clip",  # noqa: F821
+        default="NONE",  # noqa: F821
     )
 
     #: TBB_OpenfoamClipScalarProperty: Clip scalar settings

@@ -2,9 +2,7 @@
 from bpy.types import Panel, Context, Object
 
 from typing import Union
-from tbb.operators.utils import get_temporary_data
 
-from tbb.panels.utils import get_selected_object
 from tbb.properties.shared.module_scene_settings import TBB_ModuleSceneSettings
 from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
 from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
@@ -36,7 +34,7 @@ class TBB_CreateSequencePanel(Panel):
         if obj is None:
             return False
 
-        tmp_data = get_temporary_data(obj)
+        tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
         return tmp_data is not None and tmp_data.is_ok() and not obj.tbb.is_streaming_sequence
 
     def draw(self, settings: TBB_ModuleSceneSettings, context: Context) -> bool:

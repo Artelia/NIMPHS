@@ -37,6 +37,9 @@ class TBB_CreateSequence(Operator):
         options={'HIDDEN'},
     )
 
+    #: str: Unique identifier.
+    uid: str = "None"
+
     @classmethod
     def poll(self, context: Context) -> bool:
         """

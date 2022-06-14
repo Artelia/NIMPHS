@@ -34,9 +34,6 @@ class TBB_OpenfoamObjectSettings(PropertyGroup):
     #: TBB_OpenfoamImportSettings: Import settings.
     import_settings: PointerProperty(type=TBB_OpenfoamImportSettings)
 
-    #: TBB_OpenfoamImportSettings: Old import settings.
-    old_import_settings: PointerProperty(type=TBB_OpenfoamImportSettings)
-
     #: TBB_OpenfoamClipProperty: Clip settings.
     clip: PointerProperty(type=TBB_OpenfoamClipProperty)
 

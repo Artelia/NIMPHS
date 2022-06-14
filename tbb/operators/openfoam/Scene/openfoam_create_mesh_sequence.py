@@ -4,6 +4,8 @@ from bpy.props import PointerProperty
 
 import time
 import logging
+from tbb.properties.openfoam.openfoam_clip import TBB_OpenfoamClipProperty
+from tbb.properties.utils import VariablesInformation
 log = logging.getLogger(__name__)
 
 from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
@@ -25,6 +27,9 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
 
     #: TBB_OpenfoamImportSettings: import settings
     import_settings: PointerProperty(type=TBB_OpenfoamImportSettings)
+
+    #: TBB_OpenfoamImportSettings: clip settings
+    clip: PointerProperty(type=TBB_OpenfoamClipProperty)
 
     @classmethod
     def poll(self, context: Context) -> bool:
@@ -75,6 +80,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
 
         layout = self.layout
 
+        # Import settings
         box = layout.box()
         box.label(text="Import")
         row = box.row()
@@ -84,6 +90,34 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
         row = box.row()
         row.prop(self.import_settings, "case_type", text="Case")
 
+        # Clip settings
+        box = layout.box()
+        box.label(text="Clip")
+        row = box.row()
+        row.prop(self.clip, "type", text="Type")
+
+        if self.clip.type == 'SCALAR':
+
+            if self.clip.scalar.name != 'NONE':
+                row = box.row()
+                row.prop(self.clip.scalar, "name")
+
+                row = box.row()
+
+                var_type = VariablesInformation(self.clip.scalar.name).get(0, prop='TYPE')
+
+                if var_type == 'VECTOR':
+                    row.prop(self.clip.scalar, "vector_value", text="Value")
+                else:
+                    row.prop(self.clip.scalar, "value", text="Value")
+
+                row = box.row()
+                row.prop(self.clip.scalar, "invert")
+            else:
+                row = box.row()
+                row.label(text="No data available.", icon='ERROR')
+
+        # Sequence settings
         box = layout.box()
         box.label(text="Sequence")
         row = box.row()
@@ -114,7 +148,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
             log.critical(f"Unable to open file '{self.obj.tbb.settings.file_path}'")
             return {'CANCELLED'}
 
-        self.tmp_data = TBB_OpenfoamTemporaryData(file_reader)
+        context.scene.tbb.tmp_data[self.uid] = TBB_OpenfoamTemporaryData(file_reader)
 
         return super().execute(context)
 
@@ -167,7 +201,8 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
         start = time.time()
 
         try:
-            run_one_step_create_mesh_sequence_openfoam(context, self.tmp_data, self.frame,
+            tmp_data = context.scene.tbb.tmp_data[self.uid]
+            run_one_step_create_mesh_sequence_openfoam(context, tmp_data, self.import_settings, self.clip, self.frame,
                                                        self.time_point, self.start, self.name)
         except Exception:
             log.critical(f"Error generating mesh sequence at time point '{self.time_point}'", exc_info=1)

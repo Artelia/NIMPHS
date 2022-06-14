@@ -5,6 +5,8 @@ from bpy.types import Mesh, Object, Scene, Context
 
 import time
 import logging
+
+from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
 log = logging.getLogger(__name__)
 import numpy as np
 from typing import Union
@@ -20,7 +22,9 @@ from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 from tbb.properties.shared.tbb_object_settings import TBB_ObjectSettings
 
 
-def run_one_step_create_mesh_sequence_openfoam(context: Context, tmp_data: TBB_OpenfoamTemporaryData, frame: int,
+def run_one_step_create_mesh_sequence_openfoam(context: Context, tmp_data: TBB_OpenfoamTemporaryData,
+                                               import_settings: TBB_OpenfoamImportSettings,
+                                               clip: TBB_OpenfoamClipProperty, frame: int,
                                                time_point: int, start: int, name: str) -> None:
     """
     Run one step of the 'create mesh sequence' for the OpenFOAM module.
@@ -39,7 +43,7 @@ def run_one_step_create_mesh_sequence_openfoam(context: Context, tmp_data: TBB_O
 
     seq_obj_name = name + "_sequence"
     try:
-        mesh = generate_mesh_for_sequence(context, tmp_data, time_point, name=name)
+        mesh = generate_mesh_for_sequence(tmp_data, import_settings, clip, time_point, name=seq_obj_name)
     except Exception as error:
         raise error
 
@@ -106,12 +110,13 @@ def generate_mesh_data(file_reader: OpenFOAMReader, time_point: int, triangulate
         mesh = file_reader.read()["internalMesh"]
 
     # Apply clip
-    if clip is not None and clip.type == "scalar":
+    if clip is not None and clip.type == 'SCALAR':
         info = VariablesInformation(clip.scalar.name).get(0)
+        print(info)
         mesh.set_active_scalars(name=info["name"], preference="point")
         if info["type"] == 'SCALAR':
             mesh.clip_scalar(inplace=True, scalars=info["name"], invert=clip.scalar.invert, value=clip.scalar.value)
-        if info["type"] == "vector_value":
+        if info["type"] == 'VECTOR':
             value = np.linalg.norm(clip.scalar.vector_value)
             mesh.clip_scalar(inplace=True, scalars=info["name"], invert=clip.scalar.invert, value=value)
         mesh = mesh.extract_surface(nonlinear_subdivision=0)
@@ -185,8 +190,8 @@ def generate_openfoam_streaming_sequence_obj(context: Context, name: str) -> Obj
     return obj
 
 
-def generate_mesh_for_sequence(context: Context, tmp_data: TBB_OpenfoamTemporaryData,
-                               time_point: int, name: str = "TBB") -> Mesh:
+def generate_mesh_for_sequence(tmp_data: TBB_OpenfoamTemporaryData, import_settings: TBB_OpenfoamImportSettings,
+                               clip: TBB_OpenfoamClipProperty, time_point: int, name: str = "TBB") -> Mesh:
     """
     Generate a mesh for an OpenFOAM 'mesh sequence' at the given time point.
 
@@ -204,7 +209,8 @@ def generate_mesh_for_sequence(context: Context, tmp_data: TBB_OpenfoamTemporary
     """
 
     tmp_data.set_active_time_point(time_point)
-    vertices, faces, mesh = generate_mesh_data(tmp_data.file_reader, time_point)
+    vertices, faces, mesh = generate_mesh_data(tmp_data.file_reader, time_point,
+                                               triangulate=import_settings.triangulate, clip=clip)
 
     # Create mesh from python data
     blender_mesh = bpy.data.meshes.new(name + "_mesh")

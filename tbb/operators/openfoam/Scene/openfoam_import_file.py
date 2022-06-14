@@ -76,7 +76,7 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         try:
             vertices, faces, mesh = generate_mesh_data(file_reader, 0, triangulate=settings.triangulate)
             obj = generate_object_from_data(vertices, faces, self.name, new=True)
-            self.setup_generated_obj(obj, file_reader)
+            self.setup_generated_obj(context, obj, file_reader)
             context.scene.collection.objects.link(obj)
         except Exception:
             log.error("Something went wrong building the mesh", exc_info=1)
@@ -118,7 +118,8 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         row = box.row()
         row.prop(self, "name", text="Name")
 
-    def setup_generated_obj(self, obj: Object, file_reader: Union[OpenFOAMReader, POpenFOAMReader]) -> None:
+    def setup_generated_obj(self, context: Context, obj: Object,
+                            file_reader: Union[OpenFOAMReader, POpenFOAMReader]) -> None:
         """
         Copy import settings and setup needed 'tbb' data for the generated object.
 
@@ -140,4 +141,5 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         obj.tbb.module = 'OpenFOAM'
 
         # Temporary data
-        obj.tbb.tmp_data[obj.tbb.uid] = TBB_OpenfoamTemporaryData(file_reader)
+        print(obj.tbb.uid)
+        context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_OpenfoamTemporaryData(file_reader)

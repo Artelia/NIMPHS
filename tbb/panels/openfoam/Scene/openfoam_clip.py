@@ -1,6 +1,5 @@
 # <pep8 compliant>
 from bpy.types import Panel, Context
-from tbb.operators.utils import get_temporary_data
 
 import json
 
@@ -37,7 +36,7 @@ class TBB_PT_OpenfoamClip(Panel):
         if obj is None:
             return False
 
-        tmp_data = get_temporary_data(obj)
+        tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
         return tmp_data is not None and tmp_data.is_ok()
 
     def draw(self, context: Context) -> None:
@@ -49,7 +48,7 @@ class TBB_PT_OpenfoamClip(Panel):
         """
 
         obj = get_selected_object(context)
-        tmp_data = get_temporary_data(obj)
+        tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
         layout = self.layout
 
         # Check if we need to lock the ui
@@ -62,9 +61,9 @@ class TBB_PT_OpenfoamClip(Panel):
         row.enabled = enable_rows
         row.prop(clip, "type")
 
-        if clip.type == "scalar":
+        if clip.type == 'SCALAR':
 
-            if clip.scalar.name != "None":
+            if clip.scalar.name != 'NONE':
                 row = layout.row()
                 row.enabled = enable_rows
                 row.prop(clip.scalar, "name")

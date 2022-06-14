@@ -1,6 +1,5 @@
 # <pep8 compliant>
 from bpy.types import Context
-from tbb.operators.utils import get_temporary_data
 
 from tbb.panels.shared.module_panel import TBB_ModulePanel
 

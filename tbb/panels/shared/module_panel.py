@@ -4,7 +4,6 @@ from bpy.types import Panel, Context, Object
 from typing import Union
 
 from tbb.panels.utils import get_selected_object
-from tbb.operators.utils import get_temporary_data
 
 
 class TBB_ModulePanel(Panel):
@@ -50,7 +49,7 @@ class TBB_ModulePanel(Panel):
         # Check if we need to lock the ui
         enable_rows = not context.scene.tbb.create_sequence_is_running
 
-        tmp_data = get_temporary_data(obj)
+        tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
         module = obj.tbb.module
         # Check temporary data
         if tmp_data is None or not tmp_data.is_ok():

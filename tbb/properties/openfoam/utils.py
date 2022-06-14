@@ -12,10 +12,9 @@ from tbb.properties.utils import VariablesInformation
 log = logging.getLogger(__name__)
 
 from tbb.panels.utils import get_selected_object
-from tbb.operators.utils import get_temporary_data
 
 
-def available_point_data(_self, context: Context) -> list:
+def available_point_data(self, context: Context) -> list:
     """
     Generate the list of available point data.
 
@@ -26,13 +25,22 @@ def available_point_data(_self, context: Context) -> list:
         list: available point data
     """
 
-    obj = get_selected_object(context)
-    if obj is None:
-        return [("None", "None", "None")]
+    try:
+        tmp_data = context.scene.tbb.tmp_data[self.id_data.tbb.uid]  # Works for objects
+    except AttributeError:
+        try:
+            # TODO: I think we can find a better solution to get access the the 'uid' property of the operator.
+            import bpy
+            tmp_data = context.scene.tbb.tmp_data[bpy.types.TBB_OT_openfoam_create_mesh_sequence.uid]
+        except Exception:
+            log.error("No file data available")
+            return [("NONE", "None", "None")]
+    except KeyError:
+        log.error("No file data available")
+        return [("NONE", "None", "None")]
 
-    tmp_data = get_temporary_data(obj)
-    if tmp_data is None or not tmp_data.is_ok():
-        return [("None", "None", "None")]
+    if not tmp_data.is_ok():
+        return [("NONE", "None", "None")]
 
     items = []
     vars = tmp_data.vars_info
@@ -51,15 +59,14 @@ def update_preview_time_point(self, context: Context) -> None:
         context (Context): context
     """
 
-    obj = get_selected_object(context)
-    if obj is None:
-        log.error("No selected object. Defaults to 0.", exc_info=1)
-        self.preview_time_point = 0
+    try:
+        tmp_data = context.scene.tbb.tmp_data[self.id_data.tbb.uid]
+    except KeyError:
+        log.error("No file data available")
+        return [("NONE", "None", "None")]
 
-    tmp_data = get_temporary_data(obj)
-    if tmp_data is None or not tmp_data.is_ok():
-        log.error("No temporary data available. Defaults to 0.", exc_info=1)
-        self.preview_time_point = 0
+    if not tmp_data.is_ok():
+        return [("NONE", "None", "None")]
 
     if self.preview_time_point > tmp_data.nb_time_points:
         self.preview_time_point = tmp_data.nb_time_points
