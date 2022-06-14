@@ -2,6 +2,8 @@
 from bpy.types import Operator, Context, RenderSettings
 from bpy.props import StringProperty, EnumProperty
 
+import time
+
 from tbb.operators.utils import setup_streaming_sequence_object
 from tbb.operators.telemac.utils import generate_telemac_streaming_sequence_obj
 from tbb.panels.utils import get_selected_object
@@ -38,7 +40,7 @@ class TBB_CreateSequence(Operator):
     )
 
     #: str: Unique identifier.
-    uid: str = "None"
+    uid: str = str(time.time())
 
     @classmethod
     def poll(self, context: Context) -> bool:

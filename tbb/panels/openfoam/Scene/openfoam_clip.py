@@ -36,7 +36,11 @@ class TBB_PT_OpenfoamClip(Panel):
         if obj is None:
             return False
 
-        tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
+        try:
+            tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
+        except KeyError:
+            return False
+
         return tmp_data is not None and tmp_data.is_ok()
 
     def draw(self, context: Context) -> None:

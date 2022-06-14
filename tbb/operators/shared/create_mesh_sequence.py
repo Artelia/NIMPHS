@@ -31,8 +31,6 @@ class TBB_CreateMeshSequence(TBB_CreateSequence):
     frame: int = 0
     #: int: Module name. Enum in ['OpenFOAM', 'TELEMAC']
     module: str = 'NONE'
-    #: Union[TBB_OpenfoamTemporaryData, TBB_TelemacTemporaryData]: temporary data
-    tmp_data: Union[TBB_OpenfoamTemporaryData, TBB_TelemacTemporaryData] = None
     #: bpy.types.Object: Selected object
     obj: Object = None
 

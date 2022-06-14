@@ -67,6 +67,16 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
         if self.obj is None:
             return {'CANCELLED'}
 
+        # Load file data
+        succeed, file_reader = load_openfoam_file(self.obj.tbb.settings.file_path,
+                                                  case_type=self.import_settings.case_type,
+                                                  decompose_polyhedra=self.import_settings.decompose_polyhedra)
+        if not succeed:
+            log.critical(f"Unable to open file '{self.obj.tbb.settings.file_path}'")
+            return {'CANCELLED'}
+
+        context.scene.tbb.tmp_data[self.uid] = TBB_OpenfoamTemporaryData(file_reader)
+
         context.window_manager.invoke_props_dialog(self)
         return {'RUNNING_MODAL'}
 
@@ -139,16 +149,6 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
         Returns:
             set: state of the operator
         """
-
-        # Load file data
-        succeed, file_reader = load_openfoam_file(self.obj.tbb.settings.file_path,
-                                                  case_type=self.import_settings.case_type,
-                                                  decompose_polyhedra=self.import_settings.decompose_polyhedra)
-        if not succeed:
-            log.critical(f"Unable to open file '{self.obj.tbb.settings.file_path}'")
-            return {'CANCELLED'}
-
-        context.scene.tbb.tmp_data[self.uid] = TBB_OpenfoamTemporaryData(file_reader)
 
         return super().execute(context)
 

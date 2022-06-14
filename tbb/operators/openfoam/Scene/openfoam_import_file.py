@@ -141,5 +141,4 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         obj.tbb.module = 'OpenFOAM'
 
         # Temporary data
-        print(obj.tbb.uid)
         context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_OpenfoamTemporaryData(file_reader)
