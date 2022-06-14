@@ -352,7 +352,7 @@ def prepare_openfoam_point_data(obj: Object, settings: TBB_ObjectSettings, tmp_d
         var_ranges = info.get(id, prop='RANGE')
 
         # Remap data
-        if settings.remap_method == 'LOCAL':
+        if settings.point_data.remap_method == 'LOCAL':
             if var["type"] == 'SCALAR':
                 min, max = var_ranges["local"]["min"], var_ranges["local"]["max"]
                 prepared_data[var["id"]] = remap_array(np.array(data), in_min=min, in_max=max)
@@ -365,7 +365,7 @@ def prepare_openfoam_point_data(obj: Object, settings: TBB_ObjectSettings, tmp_d
 
                 prepared_data[var["id"]] = remapped_data
 
-        elif settings.remap_method == 'GLOBAL':
+        elif settings.point_data.remap_method == 'GLOBAL':
             log.warning("'GLOBAL' remapping method not implemented yet.")
             if var["type"] == 'VECTOR':
                 prepared_data[var["id"]] = [data[:, 0], data[:, 1], data[:, 2]]

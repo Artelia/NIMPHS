@@ -1,6 +1,6 @@
 # <pep8 compliant>
 from bpy.types import Operator, Context, RenderSettings
-from bpy.props import StringProperty, EnumProperty
+from bpy.props import StringProperty, EnumProperty, BoolProperty, PointerProperty
 
 import time
 
@@ -9,6 +9,8 @@ from tbb.operators.telemac.utils import generate_telemac_streaming_sequence_obj
 from tbb.panels.utils import get_selected_object
 from tbb.properties.shared.module_scene_settings import TBB_ModuleSceneSettings
 from tbb.operators.openfoam.utils import generate_openfoam_streaming_sequence_obj
+from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
+from tbb.properties.utils import VariablesInformation
 
 
 class TBB_CreateSequence(Operator):
@@ -38,6 +40,9 @@ class TBB_CreateSequence(Operator):
         ],
         options={'HIDDEN'},
     )
+
+    #: TBB_PointDataSettings: Point data settings.
+    point_data: PointerProperty(type=TBB_PointDataSettings)
 
     #: str: Unique identifier.
     uid: str = str(time.time())

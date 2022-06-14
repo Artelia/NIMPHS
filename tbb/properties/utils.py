@@ -3,7 +3,7 @@ from bpy.types import Context, VIEW3D_HT_tool_header
 
 import logging
 log = logging.getLogger(__name__)
-from typing import Union, Any
+from typing import Union, Any, overload
 import json
 
 DEV_MODE = True
@@ -62,7 +62,7 @@ class VariablesInformation():
                     "unit": self.units[id],
                     "type": self.types[id],
                     "range": self.ranges[id],
-                    "dimensions": self.dimensions[id],
+                    "dim": self.dimensions[id],
                 }
 
             elif prop in ['NAME', 'UNIT', 'TYPE', 'RANGE', 'DIM']:
@@ -95,26 +95,36 @@ class VariablesInformation():
         self.ranges.clear()
         self.dimensions.clear()
 
-    def append(self, name: str, unit: str = "", range: dict = None, type: str = 'SCALAR', dim: int = 1):
+    def append(self, name: str = 'NONE', unit: str = "", range: dict = None, type: str = 'SCALAR', dim: int = 1,
+               data: dict = None) -> None:
         """
         Append new variable information to the data structure.
 
         Args:
-            name (str): name
+            name (str, optional): name. Defaults to "".
             unit (str, optional): unit. Defaults to "".
             range (dict, optional): value ranges. Defaults to None.
             type (str, optional): type. Defaults to 'SCALAR'.
             dim (int, optional): dimension. Defaults to 1.
+            data (dict, optional): data. Defaults to None.
         """
 
-        self.names.append(name)
-        self.units.append(unit)
-        if range is None:
-            self.ranges.append({"local": {"min": None, "max": None}, "global": {"min": None, "max": None}})
+        if data is not None:
+            self.names.append(data["name"])
+            self.units.append(data["unit"])
+            self.types.append(data["type"])
+            self.ranges.append(data["range"])
+            self.dimensions.append(data["dim"])
+
         else:
-            self.ranges.append(range)
-        self.types.append(type)
-        self.dimensions.append(dim)
+            self.names.append(name)
+            self.units.append(unit)
+            if range is None:
+                self.ranges.append({"local": {"min": None, "max": None}, "global": {"min": None, "max": None}})
+            else:
+                self.ranges.append(range)
+            self.types.append(type)
+            self.dimensions.append(dim)
 
     def dumps(self) -> str:
         """
@@ -125,14 +135,28 @@ class VariablesInformation():
         """
 
         data = {
-            "name": self.names,
-            "unit": self.units,
-            "type": self.types,
-            "range": self.ranges,
+            "names": self.names,
+            "units": self.units,
+            "types": self.types,
+            "ranges": self.ranges,
             "dimensions": self.dimensions,
         }
 
         return json.dumps(data)
+
+    def length(self) -> int:
+        """
+        Get the number of variables.
+
+        Returns:
+            int: number of variables
+        """
+
+        return len(self.names)
+
+    def __str__(self) -> str:
+        return str(self.names) + " / " + str(self.units) + " / " + str(self.ranges) + " / " + str(self.types) + " / \
+" + str(self.dimensions)
 
 
 def set_sequence_anim_length(self, value: int) -> None:

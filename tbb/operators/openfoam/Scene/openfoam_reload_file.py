@@ -49,7 +49,7 @@ class TBB_OT_OpenfoamReloadFile(Operator):
             obj.tbb.uid = str(time.time())
 
         # Update temporary data
-        obj.tbb.tmp_data[obj.tbb.uid] = TBB_OpenfoamTemporaryData(file_reader)
+        context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_OpenfoamTemporaryData(file_reader)
 
         log.info("{:.4f}".format(time.time() - start) + "s")
         self.report({'INFO'}, "Reload successful")

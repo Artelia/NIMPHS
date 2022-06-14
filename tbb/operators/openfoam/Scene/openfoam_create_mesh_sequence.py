@@ -77,10 +77,9 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
 
         context.scene.tbb.tmp_data[self.uid] = TBB_OpenfoamTemporaryData(file_reader)
 
-        context.window_manager.invoke_props_dialog(self)
-        return {'RUNNING_MODAL'}
+        return context.window_manager.invoke_props_dialog(self)
 
-    def draw(self, _context: Context) -> None:
+    def draw(self, context: Context) -> None:
         """
         UI layout of the popup window of the operator.
 
@@ -89,6 +88,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
         """
 
         layout = self.layout
+        tmp_data = context.scene.tbb.tmp_data[self.uid]
 
         # Import settings
         box = layout.box()
@@ -136,6 +136,47 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
         row.prop(self, "end", text="End")
         row = box.row()
         row.prop(self, "name", text="Name")
+        row = box.row()
+        row.prop(self.point_data, "import_data", text="Import point data")
+
+        if self.point_data.import_data:
+
+            row = box.row()
+            row.prop(self.point_data, "remap_method", text="Method")
+
+            # Display selected point data
+            data = VariablesInformation(self.point_data.list)
+            for name, unit, values in zip(data.names, data.units, data.ranges):
+                subbox = box.box()
+                row = subbox.row()
+
+                if values is not None:
+                    if self.point_data.remap_method == 'LOCAL':
+                        if values["local"]["min"] is not None and values["local"]["max"] is not None:
+                            info = "[" + "{:.4f}".format(values["local"]["min"]) + " ; "
+                            info += "{:.4f}".format(values["local"]["max"]) + "]"
+                        else:
+                            info = "None"
+                    elif self.point_data.remap_method == 'GLOBAL':
+                        if values["global"]["min"] is not None and values["global"]["max"] is not None:
+                            info = "[" + "{:.4f}".format(values["global"]["min"]) + " ; "
+                            info += "{:.4f}".format(values["global"]["max"]) + "]"
+                        else:
+                            info = "None"
+                    else:
+                        info = "None"
+                else:
+                    info = "None"
+
+                op = row.operator("tbb.remove_point_data", text="", icon='REMOVE')
+                # op.obj_name = obj.name_full
+                # op.var_name = name
+                row.label(text=name + ", (" + str(unit) + ")" + ",  " + info)
+
+            row = box.row()
+            op = row.operator("tbb.add_point_data", text="Add", icon='ADD')
+            op.available_point_data = tmp_data.vars_info.dumps()
+            op.chosen_point_data = self.point_data.list
 
     def execute(self, context: Context) -> set:
         """

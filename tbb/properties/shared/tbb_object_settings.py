@@ -1,8 +1,9 @@
 # <pep8 compliant>
 from bpy.types import PropertyGroup
-from bpy.props import PointerProperty, StringProperty, BoolProperty, EnumProperty
+from bpy.props import PointerProperty, StringProperty
 
 import json
+from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 
 from tbb.properties.telemac.Object.telemac_object_settings import TBB_TelemacObjectSettings
 from tbb.properties.openfoam.Object.openfoam_object_settings import TBB_OpenfoamObjectSettings
@@ -34,26 +35,5 @@ class TBB_ObjectSettings(PropertyGroup):
         default="",
     )
 
-    #: bpy.props.BoolProperty: Import point data as vertex color groups.
-    import_point_data: BoolProperty(
-        name="Import point data",
-        description="Import point data as vertex color groups",
-        default=False,
-    )
-
-    #: bpy.props.StringProperty: List of point data to import as vertex color groups. Separate each with a semicolon.
-    point_data: StringProperty(
-        name="Point data",
-        description="List of point data to import as vertex color groups. Separate each with a semicolon",
-        default=json.dumps({"names": [], "units": [], "ranges": [], "types": [], "dimensions": []}),  # noqa F821
-    )
-
-    #: bpy.props.EnumProperty: Indicate whether point data should be remapped using local or global value ranges.
-    remap_method: EnumProperty(
-        name="Remap method",
-        description="Remapping method for point data",
-        items=[
-            ("LOCAL", "Local", "Remap point data using a local value range"),  # noqa F821
-            ("GLOBAL", "Global", "Remap point data using a global value range (can take several seconds to compute)"),  # noqa F821
-        ]
-    )
+    #: TBB_PointDataSettings: Point data settings.
+    point_data: PointerProperty(type=TBB_PointDataSettings)
