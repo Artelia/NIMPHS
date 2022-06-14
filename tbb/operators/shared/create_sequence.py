@@ -44,6 +44,9 @@ class TBB_CreateSequence(Operator):
     #: TBB_PointDataSettings: Point data settings.
     point_data: PointerProperty(type=TBB_PointDataSettings)
 
+    #: str: JSON strigified list of point data to import as vertex colors.
+    list: str = VariablesInformation().dumps()
+
     #: str: Unique identifier.
     uid: str = str(time.time())
 

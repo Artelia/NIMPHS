@@ -109,18 +109,20 @@ class VariablesInformation():
             data (dict, optional): data. Defaults to None.
         """
 
+        default_range = {"local": {"min": None, "max": None}, "global": {"min": None, "max": None}}
+
         if data is not None:
-            self.names.append(data["name"])
-            self.units.append(data["unit"])
-            self.types.append(data["type"])
-            self.ranges.append(data["range"])
-            self.dimensions.append(data["dim"])
+            self.names.append(data.get("name", ""))
+            self.units.append(data.get("unit", ""))
+            self.types.append(data.get("type", ""))
+            self.ranges.append(data.get("range", default_range))
+            self.dimensions.append(data.get("dim", ""))
 
         else:
             self.names.append(name)
             self.units.append(unit)
             if range is None:
-                self.ranges.append({"local": {"min": None, "max": None}, "global": {"min": None, "max": None}})
+                self.ranges.append(default_range)
             else:
                 self.ranges.append(range)
             self.types.append(type)

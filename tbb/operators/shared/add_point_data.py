@@ -33,10 +33,11 @@ class TBB_OT_AddPointData(Operator):
         items = []
         vars_info = VariablesInformation(self.available_point_data)
 
-        for name, unit in zip(vars_info.names, vars_info.units):
-            identifier = {"name": name, "unit": unit}
+        for name, unit, id in zip(vars_info.names, vars_info.units, range(vars_info.length())):
+            identifier = VariablesInformation()
+            identifier.append(data=vars_info.get(id))
             ui_name = name + ", (" + unit + ")" if unit != "" else name
-            items.append((json.dumps(identifier), ui_name, "Undocumented"))
+            items.append((identifier.dumps(), ui_name, "Undocumented"))
 
         return items
 
@@ -80,7 +81,6 @@ class TBB_OT_AddPointData(Operator):
                 to_present.append(data=available.get(id))
 
         self.available_point_data = to_present.dumps()
-        print(to_present)
 
         return context.window_manager.invoke_props_dialog(self)
 
@@ -111,15 +111,16 @@ class TBB_OT_AddPointData(Operator):
         try:
             # TODO: I think we can find a better solution to get access to these data.
             import bpy
-            point_data = bpy.types.TBB_OT_openfoam_create_mesh_sequence.point_data
+            point_data = bpy.types.TBB_OT_openfoam_create_mesh_sequence.list
         except Exception:
             log.error("No file data available")
             return {'CANCELLED'}
 
+        add = VariablesInformation(self.point_data)
         point_data = VariablesInformation(point_data)
-        point_data.append(VariablesInformation(self.point_data).get(0))
+        point_data.append(data=add.get(0))
 
-        bpy.types.TBB_OT_openfoam_create_mesh_sequence.point_data = point_data.dumps()
+        bpy.types.TBB_OT_openfoam_create_mesh_sequence.list = point_data.dumps()
 
         context.area.tag_redraw()
         return {'FINISHED'}

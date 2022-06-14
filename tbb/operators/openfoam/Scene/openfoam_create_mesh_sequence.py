@@ -145,7 +145,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
             row.prop(self.point_data, "remap_method", text="Method")
 
             # Display selected point data
-            data = VariablesInformation(self.point_data.list)
+            data = VariablesInformation(self.list)
             for name, unit, values in zip(data.names, data.units, data.ranges):
                 subbox = box.box()
                 row = subbox.row()
@@ -153,6 +153,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
                 if values is not None:
                     if self.point_data.remap_method == 'LOCAL':
                         if values["local"]["min"] is not None and values["local"]["max"] is not None:
+                            print(values["local"]["min"])
                             info = "[" + "{:.4f}".format(values["local"]["min"]) + " ; "
                             info += "{:.4f}".format(values["local"]["max"]) + "]"
                         else:
@@ -169,8 +170,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
                     info = "None"
 
                 op = row.operator("tbb.remove_point_data", text="", icon='REMOVE')
-                # op.obj_name = obj.name_full
-                # op.var_name = name
+                print("UNIT", name)
                 row.label(text=name + ", (" + str(unit) + ")" + ",  " + info)
 
             row = box.row()
