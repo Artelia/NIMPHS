@@ -1,6 +1,6 @@
 # <pep8 compliant>
 from bpy.types import Operator, Context, RenderSettings
-from bpy.props import StringProperty
+from bpy.props import StringProperty, EnumProperty
 
 from tbb.operators.utils import setup_streaming_sequence_object
 from tbb.operators.telemac.utils import generate_telemac_streaming_sequence_obj

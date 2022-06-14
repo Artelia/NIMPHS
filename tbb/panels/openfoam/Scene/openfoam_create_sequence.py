@@ -1,6 +1,5 @@
 # <pep8 compliant>
 from bpy.types import Context
-from tbb.operators.utils import get_temporary_data
 
 from tbb.panels.utils import get_selected_object, lock_create_operator
 from tbb.panels.shared.create_sequence import TBB_CreateSequencePanel
@@ -9,7 +8,7 @@ from tbb.panels.shared.create_sequence import TBB_CreateSequencePanel
 class TBB_PT_OpenfoamCreateSequence(TBB_CreateSequencePanel):
     """UI panel to manage the creation of new OpenFOAM sequences."""
 
-    register_cls = True
+    register_cls = False
     is_custom_base_cls = False
 
     bl_label = "Create sequence"
