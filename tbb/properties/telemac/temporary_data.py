@@ -6,7 +6,7 @@ from typing import Union
 from tbb.properties.telemac.serafin import Serafin
 from tbb.properties.shared.temporary_data import TemporaryData
 from tbb.properties.telemac.utils import remove_spaces_telemac_var_name
-from tbb.properties.utils import append_vars_info, clear_vars_info
+from tbb.properties.utils import VariablesInformation
 
 
 class TBB_TelemacTemporaryData(TemporaryData):
@@ -24,8 +24,8 @@ class TBB_TelemacTemporaryData(TemporaryData):
     nb_vars = 0
     #: int: Number of time points
     nb_time_points = 0
-    #: dict: Information on variables
-    vars_info = {"names": [], "units": [], "ranges": [], "types": [], "dimensions": []}
+    #: VariablesInformation: Information on variables
+    vars_info = VariablesInformation()
     #: int: Number of planes
     nb_planes = 0
     #: int: Number of vertices
@@ -44,7 +44,7 @@ class TBB_TelemacTemporaryData(TemporaryData):
         self.faces = None
         self.nb_vars = 0
         self.nb_time_points = 0
-        self.vars_info = {"names": [], "units": [], "ranges": [], "types": [], "dimensions": []}
+        self.vars_info = VariablesInformation()
         self.nb_planes = 0
         self.nb_vertices = 0
         self.nb_triangles = 0
@@ -80,13 +80,13 @@ class TBB_TelemacTemporaryData(TemporaryData):
         else:
             self.faces = self.file.ikle2d
 
-        clear_vars_info(self.vars_info)
+        self.vars_info.clear()
         # Construct variables information data
         for var_info in self.file.nomvar:
             # var_info is always 32 chars long with 16 chars for the name and 16 for the unit name
             name = remove_spaces_telemac_var_name(var_info[:16])
             unit = remove_spaces_telemac_var_name(var_info[16:])
-            append_vars_info(self.vars_info, name, unit=unit)
+            self.vars_info.append(name, unit=unit)
 
     def is_ok(self) -> bool:
         """

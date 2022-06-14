@@ -5,6 +5,7 @@ from tbb.operators.utils import get_temporary_data
 import json
 
 from tbb.panels.utils import get_selected_object
+from tbb.properties.utils import VariablesInformation
 
 
 class TBB_PT_OpenfoamClip(Panel):
@@ -71,7 +72,9 @@ class TBB_PT_OpenfoamClip(Panel):
                 row = layout.row()
                 row.enabled = enable_rows
 
-                if json.loads(clip.scalar.name)["type"] == 'VECTOR':
+                var_type = VariablesInformation(clip.scalar.name).get(0, prop='TYPE')
+
+                if var_type == 'VECTOR':
                     row.prop(clip.scalar, "vector_value", text="Value")
                 else:
                     row.prop(clip.scalar, "value", text="Value")

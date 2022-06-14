@@ -7,6 +7,8 @@ from bpy.props import FloatProperty, FloatVectorProperty
 import numpy as np
 from typing import Union
 import logging
+
+from tbb.properties.utils import VariablesInformation
 log = logging.getLogger(__name__)
 
 from tbb.panels.utils import get_selected_object
@@ -34,7 +36,7 @@ def available_point_data(_self, context: Context) -> list:
 
     items = []
     vars = tmp_data.vars_info
-    for name, range, type, dim in zip(vars["names"], vars["ranges"], vars["types"], vars["dimensions"]):
+    for name, range, type, dim in zip(vars.names, vars.ranges, vars.types, vars.dimensions):
         identifier = {"names": [name], "ranges": [range], "types": [type], "dimensions": [dim]}
         items.append((json.dumps(identifier, ), name, "Undocumented"))
 
@@ -78,7 +80,7 @@ def set_clip_values(self: Union[FloatProperty, FloatVectorProperty], value: floa
     """
 
     if self.name is not None:
-        data = json.loads(self.name)
+        data = VariablesInformation(self.name).get(0)
         ranges = data["range"]["local"]
 
         if data["type"] == 'SCALAR':
@@ -114,7 +116,7 @@ def get_clip_values(self) -> Union[float, list]:
     """
 
     if self.name is not None:
-        value_type = json.loads(self.name)["type"]
+        value_type = VariablesInformation(self.name).get(0, prop='TYPE')
 
         if value_type == 'SCALAR':
             return self.get("value", 0.5)

@@ -5,7 +5,7 @@ import logging
 log = logging.getLogger(__name__)
 import numpy as np
 
-from tbb.properties.utils import append_vars_info, clear_vars_info
+from tbb.properties.utils import VariablesInformation
 
 
 class TBB_OpenfoamTemporaryData():
@@ -23,8 +23,8 @@ class TBB_OpenfoamTemporaryData():
     time_point = 0
     #: int: number of time points
     nb_time_points = 1
-    #: dict: Information on variables
-    vars_info = {"names": [], "units": [], "ranges": [], "types": [], "dimensions": []}
+    #: VariablesInformation: Information on variables
+    vars_info = VariablesInformation()
 
     def __init__(self, file_reader: Union[OpenFOAMReader, POpenFOAMReader] = None,
                  new_data: DataSet = None, new_mesh: UnstructuredGrid = None):
@@ -43,6 +43,7 @@ class TBB_OpenfoamTemporaryData():
         self.mesh = new_mesh
         self.time_point = 0
         self.nb_time_points = 1
+        self.vars_info = VariablesInformation()
 
     def update(self, new_file_reader: Union[OpenFOAMReader, POpenFOAMReader], time_point: int = 0,
                new_data: DataSet = None, new_mesh: UnstructuredGrid = None) -> None:
@@ -76,7 +77,7 @@ class TBB_OpenfoamTemporaryData():
             self.mesh = new_mesh
 
         # Generate vars_info
-        clear_vars_info(self.vars_info)
+        self.vars_info.clear()
         for name in self.mesh.point_data.keys():
             data = self.mesh.point_data[name]
             type = 'SCALAR' if len(data.shape) == 1 else 'VECTOR'
@@ -93,7 +94,7 @@ class TBB_OpenfoamTemporaryData():
 
             ranges = {"local": {"min": min, "max": max}, "global": {"min": None, "max": None}}
 
-            append_vars_info(self.vars_info, name, unit="", range=ranges, type=type, dim=dim)
+            self.vars_info.append(name, unit="", range=ranges, type=type, dim=dim)
 
     def is_ok(self) -> bool:
         """

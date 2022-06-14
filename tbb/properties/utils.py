@@ -1,7 +1,140 @@
 # <pep8 compliant>
 from bpy.types import Context, VIEW3D_HT_tool_header
 
+import logging
+log = logging.getLogger(__name__)
+from typing import Union, Any
+import json
+
 DEV_MODE = True
+
+
+class VariablesInformation():
+    """Data structure to manage point data information for both modules."""
+
+    def __init__(self, json_string: str = "") -> None:
+        """
+        Init method of the class.
+        Can fill in information given JSON stringified data.
+
+        Args:
+            json_string (str, optional): JSON stringified data. Defaults to "".
+        """
+
+        if json_string == "":
+            self.names = []
+            self.units = []
+            self.types = []
+            self.ranges = []
+            self.dimensions = []
+        else:
+            data = json.loads(json_string)
+            print(data)
+            self.names = data.get("names", [])
+            self.units = data.get("units", [""] * len(self.names))
+            self.types = data.get("types", [])
+            self.ranges = data.get("ranges", [])
+            self.dimensions = data.get("dimensions", [])
+
+    def get(self, id: Union[str, int], prop: str = "") -> Union[dict, Any, None]:
+        """
+        Return information about the variable at the given index.
+
+        Args:
+            id (Union[str, int]): index can be an int or the name of a variable.
+            prop (str, optional): name of a specific property to get. If not set return all. Defaults to "".
+
+        Returns:
+            Union[dict, Any, None]: dict containing all information. Defaults to None.
+        """
+
+        print(id)
+        if isinstance(id, str):
+            try:
+                id = self.names.index(id)
+            except ValueError:
+                log.critical(f"Unkonw id {id}", exc_info=1)
+                return None
+
+        if id < len(self.names):
+
+            if prop == "":
+                output = {
+                    "name": self.names[id],
+                    "unit": self.units[id],
+                    "type": self.types[id],
+                    "range": self.ranges[id],
+                    "dimensions": self.dimensions[id],
+                }
+
+            elif prop in ['NAME', 'UNIT', 'TYPE', 'RANGE', 'DIM']:
+                if prop == 'NAME':
+                    return self.names[id]
+                if prop == 'UNIT':
+                    return self.units[id]
+                if prop == 'TYPE':
+                    return self.types[id]
+                if prop == 'RANGE':
+                    return self.ranges[id]
+                if prop == 'DIM':
+                    return self.dimensions[id]
+
+            else:
+                log.critical(f"Property '{prop}' is undefined")
+
+            return output
+
+        else:
+            log.critical(f"Index '{id}' out of bound (length = {len(self.names)})")
+            return None
+
+    def clear(self):
+        """Clear all data"""
+
+        self.names.clear()
+        self.units.clear()
+        self.types.clear()
+        self.ranges.clear()
+        self.dimensions.clear()
+
+    def append(self, name: str, unit: str = "", range: dict = None, type: str = 'SCALAR', dim: int = 1):
+        """
+        Append new variable information to the data structure.
+
+        Args:
+            name (str): name
+            unit (str, optional): unit. Defaults to "".
+            range (dict, optional): value ranges. Defaults to None.
+            type (str, optional): type. Defaults to 'SCALAR'.
+            dim (int, optional): dimension. Defaults to 1.
+        """
+
+        self.names.append(name)
+        self.units.append(unit)
+        if range is None:
+            self.ranges.append({"local": {"min": None, "max": None}, "global": {"min": None, "max": None}})
+        else:
+            self.ranges.append(range)
+        self.types.append(type)
+        self.dimensions.append(dim)
+
+    def dumps(self) -> str:
+        """
+        Serialize VariablesInformation to a JSON formatted str
+
+        Returns:
+            str: JSON stringified data
+        """
+
+        data = {
+            "name": self.names,
+            "unit": self.units,
+            "type": self.types,
+            "range": self.ranges,
+            "dimensions": self.dimensions,
+        }
+
+        return json.dumps(data)
 
 
 def set_sequence_anim_length(self, value: int) -> None:

@@ -100,21 +100,21 @@ class TBB_OT_OpenfoamPreview(Operator):
         # This line will update the list of available scalars. If the chosen scalar is not available at
         # the selected time point, the program will automatically choose another scalar due to the update function
         # of the enum property. This is surely not what the user was expecting.
-        tmp_data.update(file_reader, prw_time_point, data, raw_mesh)
+        tmp_data.update(file_reader, prw_time_point, data, mesh)
 
         try:
             obj = generate_object_from_data(vertices, faces, "TBB_OpenFOAM_preview")
             blender_mesh = obj.data
             if collection.name not in [col.name for col in obj.users_collection]:
                 collection.objects.link(obj)
-        except Exception as error:
+        except Exception:
             log.error("Something went generating the object", exc_info=1)
             self.report({'ERROR'}, "Something went generating the object")
             return {'FINISHED'}
 
         settings = obj.tbb.settings
         point_data = settings.openfoam.preview_point_data
-        res = prepare_openfoam_point_data(obj, settings, tmp_data, prw_time_point, point_data)
+        res = prepare_openfoam_point_data(obj, settings, tmp_data, point_data)
         if len(res[0]) > 0:
             generate_vertex_colors(blender_mesh, *res)
             generate_preview_material(obj, res[0][0]["name"] if len(res[0]) > 0 else 'None')

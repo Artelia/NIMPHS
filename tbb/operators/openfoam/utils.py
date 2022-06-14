@@ -18,6 +18,7 @@ import json
 from tbb.properties.openfoam.openfoam_clip import TBB_OpenfoamClipProperty
 from tbb.operators.utils import remap_array, generate_vertex_colors_groups, generate_vertex_colors, get_collection
 from tbb.properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
+from tbb.properties.utils import VariablesInformation
 
 
 def run_one_step_create_mesh_sequence_openfoam(context: Context, current_frame: int, current_time_point: int,
@@ -110,7 +111,7 @@ def generate_mesh_data(file_reader: OpenFOAMReader, time_point: int, triangulate
 
     # Apply clip
     if clip is not None and clip.type == "scalar":
-        info = json.loads(clip.scalar.name)
+        info = VariablesInformation(clip.scalar.name).get(0)
         mesh.set_active_scalars(name=info["name"], preference="point")
         if info["type"] == 'SCALAR':
             mesh.clip_scalar(inplace=True, scalars=info["name"], invert=clip.scalar.invert, value=clip.scalar.value)
@@ -296,7 +297,7 @@ def generate_preview_material(obj: Object, scalar: str, name: str = "TBB_OpenFOA
 
 
 def prepare_openfoam_point_data(obj: Object, settings: TBB_ObjectSettings, tmp_data: TBB_OpenfoamTemporaryData,
-                                time_point: int, point_data: str) -> tuple[list[dict], dict, int]:
+                                point_data: str) -> tuple[list[dict], dict, int]:
     """
     Prepare point data for the 'generate_vertex_colors' function.
 
@@ -340,8 +341,8 @@ def prepare_openfoam_point_data(obj: Object, settings: TBB_ObjectSettings, tmp_d
 
     # Format variables array
     variables, dimensions = [], []
-    point_data = json.loads(point_data)
-    for var, type, dim in zip(point_data["names"], point_data["types"], point_data["dimensions"]):
+    info = VariablesInformation(point_data)
+    for var, type, dim in zip(info.names, info.types, info.dimensions):
         variables.append({"name": var, "type": type, "id": var})
         dimensions.append(dim)
 
@@ -352,17 +353,18 @@ def prepare_openfoam_point_data(obj: Object, settings: TBB_ObjectSettings, tmp_d
     for var, dim, id in zip(variables, dimensions, range(len(variables))):
         # Read data
         data = openfoam_mesh.get_array(var["id"], preference='point')[vertex_ids]
+        var_ranges = info.get(id, prop='RANGE')
 
         # Remap data
         if settings.remap_method == 'LOCAL':
             if var["type"] == 'SCALAR':
-                min, max = point_data["ranges"][id]["local"]["min"], point_data["ranges"][id]["local"]["max"]
+                min, max = var_ranges["local"]["min"], var_ranges["local"]["max"]
                 prepared_data[var["id"]] = remap_array(np.array(data), in_min=min, in_max=max)
 
             if var["type"] == 'VECTOR':
                 remapped_data = []
                 for i in range(dim):
-                    min, max = point_data["ranges"][id]["local"]["min"][i], point_data["ranges"][id]["local"]["max"][i]
+                    min, max = var_ranges["local"]["min"][i], var_ranges["local"]["max"][i]
                     remapped_data.append(remap_array(np.array(data[:, i]), in_min=min, in_max=max))
 
                 prepared_data[var["id"]] = remapped_data
