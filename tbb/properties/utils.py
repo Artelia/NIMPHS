@@ -29,7 +29,6 @@ class VariablesInformation():
             self.dimensions = []
         else:
             data = json.loads(json_string)
-            print(data)
             self.names = data.get("names", [])
             self.units = data.get("units", [""] * len(self.names))
             self.types = data.get("types", [])

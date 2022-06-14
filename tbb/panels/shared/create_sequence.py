@@ -1,7 +1,8 @@
 # <pep8 compliant>
-from bpy.types import Panel, Context
+from bpy.types import Panel, Context, Object
 
 from typing import Union
+from tbb.operators.utils import get_temporary_data
 
 from tbb.panels.utils import get_selected_object
 from tbb.properties.shared.module_scene_settings import TBB_ModuleSceneSettings
@@ -20,24 +21,23 @@ class TBB_CreateSequencePanel(Panel):
     is_custom_base_cls = True
 
     @classmethod
-    def poll(cls, tmp_data: Union[TBB_OpenfoamTemporaryData, TBB_TelemacTemporaryData], context: Context) -> bool:
+    def poll(cls, obj: Union[Object, None], context: Context) -> bool:
         """
         If false, hides the panel.
 
         Args:
-            tmp_data Union[TBB_OpenfoamTemporaryData, TBB_TelemacTemporaryData]: temporary data
+            obj (Union[Object, None]): selected object
             context (Context): context
 
         Returns:
             bool: state
         """
 
-        obj = get_selected_object(context)
-
         if obj is None:
-            return tmp_data.is_ok()
-        else:
-            return tmp_data.is_ok() and not obj.tbb.is_streaming_sequence
+            return False
+
+        tmp_data = get_temporary_data(obj)
+        return tmp_data.is_ok() and not obj.tbb.is_streaming_sequence
 
     def draw(self, settings: TBB_ModuleSceneSettings, context: Context) -> bool:
         """

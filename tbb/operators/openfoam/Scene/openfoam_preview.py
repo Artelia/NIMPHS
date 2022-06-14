@@ -11,7 +11,6 @@ from tbb.operators.openfoam.utils import (
     prepare_openfoam_point_data,
     generate_preview_material)
 from tbb.panels.utils import get_selected_object
-from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
 
 
 class TBB_OT_OpenfoamPreview(Operator):
@@ -69,38 +68,28 @@ class TBB_OT_OpenfoamPreview(Operator):
             return {'FINISHED'}
 
         # Setup file_reader
-        file_reader = tmp_data.file_reader
-        file_reader.decompose_polyhedra = import_settings.decompose_polyhedra
-        file_reader.case_type = import_settings.case_type
+        tmp_data.file_reader.decompose_polyhedra = import_settings.decompose_polyhedra
+        tmp_data.file_reader.case_type = import_settings.case_type
 
         prw_time_point = obj.tbb.settings.openfoam.preview_time_point
 
         # Read data at the chosen time point
         try:
-            file_reader.set_active_time_point(prw_time_point)
+            tmp_data.set_active_time_point(prw_time_point)
         except Exception:
             log.error("Error setting active time point", exc_info=1)
             self.report({'ERROR'}, f"Error setting active time point ({prw_time_point})")
             return {'FINISHED'}
 
-        data = file_reader.read()
-        raw_mesh = data["internalMesh"]
-
         try:
-            vertices, faces, mesh = generate_mesh_data(
-                file_reader, prw_time_point, triangulate=import_settings.triangulate, clip=clip, mesh=raw_mesh)
+            vertices, faces, mesh = generate_mesh_data(tmp_data.file_reader, prw_time_point,
+                                                       triangulate=import_settings.triangulate,
+                                                       clip=clip, mesh=tmp_data.raw_mesh)
+            tmp_data.mesh = mesh  # Update mesh
         except Exception:
-            # Update temporary data, please read the comment below.
-            tmp_data.update(file_reader, prw_time_point, data, raw_mesh)
             log.error("Something went wrong building the mesh", exc_info=1)
             self.report({'ERROR'}, "Something went wrong building the mesh")
             return {'FINISHED'}
-
-        # Update temporary data. We do not update it just after the reading of the file. Here is why.
-        # This line will update the list of available scalars. If the chosen scalar is not available at
-        # the selected time point, the program will automatically choose another scalar due to the update function
-        # of the enum property. This is surely not what the user was expecting.
-        tmp_data.update(file_reader, prw_time_point, data, mesh)
 
         try:
             obj = generate_object_from_data(vertices, faces, "TBB_OpenFOAM_preview")

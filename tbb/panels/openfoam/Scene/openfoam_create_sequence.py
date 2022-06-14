@@ -1,7 +1,8 @@
 # <pep8 compliant>
 from bpy.types import Context
+from tbb.operators.utils import get_temporary_data
 
-from tbb.panels.utils import lock_create_operator
+from tbb.panels.utils import get_selected_object, lock_create_operator
 from tbb.panels.shared.create_sequence import TBB_CreateSequencePanel
 
 
@@ -30,7 +31,7 @@ class TBB_PT_OpenfoamCreateSequence(TBB_CreateSequencePanel):
             bool: state
         """
 
-        return super().poll(context.scene.tbb.settings.openfoam.tmp_data, context)
+        return super().poll(get_selected_object(context), context)
 
     def draw(self, context: Context) -> None:
         """

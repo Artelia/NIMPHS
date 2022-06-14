@@ -106,8 +106,7 @@ def generate_mesh_data(file_reader: OpenFOAMReader, time_point: int, triangulate
     # Read data from the given OpenFOAM file
     if mesh is None:
         file_reader.set_active_time_point(time_point)
-        data = file_reader.read()
-        mesh = data["internalMesh"]
+        mesh = file_reader.read()["internalMesh"]
 
     # Apply clip
     if clip is not None and clip.type == "scalar":

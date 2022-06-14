@@ -37,9 +37,6 @@ class TBB_OpenfoamSettings(TBB_ModuleSceneSettings):
         ]
     )
 
-    #: TBB_OpenfoamTemporaryData: temporary data
-    tmp_data = TBB_OpenfoamTemporaryData()
-
     #: bpy.props.EnumProperty: Select a sequence type
     sequence_type: EnumProperty(
         items=[

@@ -1,6 +1,6 @@
 # <pep8 compliant>
 from typing import Union
-from pyvista import OpenFOAMReader, POpenFOAMReader, DataSet, UnstructuredGrid
+from pyvista import OpenFOAMReader, POpenFOAMReader, UnstructuredGrid
 import logging
 log = logging.getLogger(__name__)
 import numpy as np
@@ -15,9 +15,9 @@ class TBB_OpenfoamTemporaryData():
     module_name = "OpenFOAM"
     #: Union[OpenFOAMReader, POpenFOAMReader]: file reader
     file_reader = None
-    #: Dataset: data read from the file_reader at time_point
-    data = None
-    # UnstructuredGrid: 'internalMesh' from data
+    #: UnstructuredGrid: 'internalMesh' from data
+    raw_mesh = None
+    #: UnstructuredGrid: lest generated mesh
     mesh = None
     #: int: current time point
     time_point = 0
@@ -26,60 +26,37 @@ class TBB_OpenfoamTemporaryData():
     #: VariablesInformation: Information on variables
     vars_info = VariablesInformation()
 
-    def __init__(self, file_reader: Union[OpenFOAMReader, POpenFOAMReader] = None,
-                 new_data: DataSet = None, new_mesh: UnstructuredGrid = None):
-        """
-        Init method of the class.
-
-        Args:
-            file_reader (Union[OpenFOAMReader, POpenFOAMReader], optional): new file reader. Defaults to None.
-            new_data (DataSet, optional): new dataset. Defaults to None.
-            new_mesh (UnstructuredGrid, optional): new mesh. Defaults to None.
-        """
+    def __init__(self, file_reader: Union[OpenFOAMReader, POpenFOAMReader]):
+        """Init method of the class."""
 
         self.module_name = "OpenFOAM"
         self.file_reader = file_reader
-        self.data = new_data
-        self.mesh = new_mesh
-        self.time_point = 0
-        self.nb_time_points = 1
-        self.vars_info = VariablesInformation()
 
-    def update(self, new_file_reader: Union[OpenFOAMReader, POpenFOAMReader], time_point: int = 0,
-               new_data: DataSet = None, new_mesh: UnstructuredGrid = None) -> None:
+        # Load data
+        self.set_active_time_point(0)
+        self.mesh = self.file_reader.read()["internalMesh"]
+        self.nb_time_points = self.file_reader.number_time_points
+
+    def set_active_time_point(self, time_point: int) -> None:
         """
-        Update temporary data with the given data.
+        Update file reader, raw mesh and variables information.
 
         Args:
-            new_file_reader (OpenFOAMReader): new file reader
-            time_point (int, optional): current time point. Defaults to 0.
-            new_data (DataSet, optional): new dataset. Defaults to None.
-            new_mesh (UnstructuredGrid, optional): new mesh. Defaults to None.
+            time_point (int): time point to set as active time point.
         """
-
-        self.file_reader = new_file_reader
-        self.time_point = time_point
-        self.nb_time_points = self.file_reader.number_time_points
 
         try:
             self.file_reader.set_active_time_point(time_point)
+            self.raw_mesh = self.file_reader.read()["internalMesh"]
+            self.time_point = time_point
         except ValueError:
-            log.error("Exception caught setting new active time point", exc_info=1)
-
-        if new_data is None:
-            self.data = self.file_reader.read()
-        else:
-            self.data = new_data
-
-        if new_mesh is None:
-            self.mesh = self.data["internalMesh"]
-        else:
-            self.mesh = new_mesh
+            log.critical("Caught exception during update", exc_info=1)
+            return
 
         # Generate vars_info
         self.vars_info.clear()
-        for name in self.mesh.point_data.keys():
-            data = self.mesh.point_data[name]
+        for name in self.raw_mesh.point_data.keys():
+            data = self.raw_mesh.point_data[name]
             type = 'SCALAR' if len(data.shape) == 1 else 'VECTOR'
             dim = 1 if len(data.shape) == 1 else data.shape[1]
             if type == 'VECTOR':
@@ -103,4 +80,4 @@ class TBB_OpenfoamTemporaryData():
         Returns:
             bool: ``True`` if everything is ok
         """
-        return self.file_reader is not None and self.data is not None and self.mesh is not None
+        return self.file_reader is not None and self.raw_mesh is not None and self.mesh is not None
