@@ -10,7 +10,6 @@ log = logging.getLogger(__name__)
 
 from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 from tbb.operators.shared.create_mesh_sequence import TBB_CreateMeshSequence
-from tbb.operators.openfoam.utils import load_openfoam_file, run_one_step_create_mesh_sequence_openfoam
 from tbb.panels.utils import get_selected_object
 from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
 
@@ -62,6 +61,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
         Returns:
             set: state of the operator
         """
+        from tbb.operators.openfoam.utils import load_openfoam_file
 
         self.obj = get_selected_object(context)
         if self.obj is None:
@@ -128,56 +128,6 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
 
         super().draw(context)
 
-    def execute(self, context: Context) -> set:
-        """
-        Call parent execute function.
-
-        If mode is set to 'NORMAL', run the operator without using the modal method (locks blender UI).
-
-        Args:
-            context (Context): context
-
-        Returns:
-            set: state of the operator
-        """
-
-        return super().execute(context)
-
-    def modal(self, context: Context, event: Event) -> set:
-        """
-        Run one step of the OpenFOAM 'create mesh sequence' process.
-
-        Args:
-            context (Context): context
-            event (Event): event
-
-        Returns:
-            set: state of the operator
-        """
-
-        if event.type == 'ESC':
-            super().stop(context, cancelled=True)
-            return {'CANCELLED'}
-
-        if event.type == 'TIMER':
-            if self.time_point <= self.end:
-                state = self.run_one_step(context)
-                if state != {'PASS_THROUGH'}:
-                    return state
-
-            else:
-                super().stop(context)
-                self.report({'INFO'}, "Create sequence finished")
-                return {'FINISHED'}
-
-            # Update the progress bar
-            context.scene.tbb.progress_value = self.time_point / (self.end - self.start)
-            context.scene.tbb.progress_value *= 100
-            self.time_point += 1
-            self.frame += 1
-
-        return {'PASS_THROUGH'}
-
     def run_one_step(self, context: Context) -> set:
         """
         Run one step of the 'create_mesh_sequence' process.
@@ -189,12 +139,11 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
             set: state of the operation, enum in ['PASS_THROUGH', 'CANCELLED']
         """
 
+        from tbb.operators.openfoam.utils import run_one_step_create_mesh_sequence_openfoam
         start = time.time()
 
         try:
-            tmp_data = context.scene.tbb.tmp_data["ops"]
-            run_one_step_create_mesh_sequence_openfoam(context, tmp_data, self.import_settings, self.clip, self.frame,
-                                                       self.time_point, self.start, self.name)
+            run_one_step_create_mesh_sequence_openfoam(context, self)
         except Exception:
             log.critical(f"Error generating mesh sequence at time point '{self.time_point}'", exc_info=1)
             self.report({'ERROR'}, "An error occurred creating the sequence")

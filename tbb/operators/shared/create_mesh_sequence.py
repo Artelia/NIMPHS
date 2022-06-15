@@ -1,20 +1,12 @@
 # <pep8 compliant>
 from bpy.types import Event, Context, Object, Timer
-from bpy.props import StringProperty, EnumProperty, IntProperty
+from bpy.props import StringProperty, IntProperty
 
-import time
 import logging
 
-from tbb.properties.utils import VariablesInformation
 log = logging.getLogger(__name__)
-from typing import Union
 
-from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
-from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
-from tbb.operators.openfoam.utils import run_one_step_create_mesh_sequence_openfoam
-from tbb.operators.telemac.utils import run_one_step_create_mesh_sequence_telemac
 from tbb.operators.shared.create_sequence import TBB_CreateSequence
-from tbb.panels.utils import get_selected_object
 
 
 class TBB_CreateMeshSequence(TBB_CreateSequence):
@@ -47,7 +39,7 @@ class TBB_CreateMeshSequence(TBB_CreateSequence):
     end: IntProperty(
         name="End",  # noqa F821
         description="Ending point of the sequence",
-        default=0
+        default=1
     )
 
     #: bpy.props.StringProperty: Name to give to the generated sequence object.
@@ -57,14 +49,14 @@ class TBB_CreateMeshSequence(TBB_CreateSequence):
         default="Mesh"
     )
 
-    def invoke(self, _context: Context, _event: Event) -> set:
+    def invoke(self, context: Context, event: Event) -> set:
         """
         Prepare operators settings.
         Function triggered before the user can edit settings.
 
         Args:
-            _context (Context): context
-            _event (Event): event
+            context (Context): context
+            event (Event): event
 
         Returns:
             set: state of the operator
@@ -104,6 +96,9 @@ class TBB_CreateMeshSequence(TBB_CreateSequence):
         Returns:
             set: state of the operator
         """
+
+        # Copy data from list into point_data.list
+        self.point_data.list = self.list
 
         # Create timer event
         wm = context.window_manager
@@ -163,12 +158,12 @@ class TBB_CreateMeshSequence(TBB_CreateSequence):
 
         return {'PASS_THROUGH'}
 
-    def run_one_step(self, _context: Context) -> set:
+    def run_one_step(self, context: Context) -> set:
         """
         Run one step of the 'create_mesh_sequence' process.
 
         Args:
-            _context (Context): context
+            context (Context): context
 
         Returns:
             set: state of the operation, enum in ['PASS_THROUGH', 'CANCELLED']

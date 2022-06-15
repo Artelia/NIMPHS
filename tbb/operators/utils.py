@@ -81,12 +81,12 @@ def generate_vertex_colors_groups(variables: list[dict]) -> list[dict]:
     return groups
 
 
-def generate_vertex_colors(blender_mesh: Mesh, groups: list[dict], data: np.ndarray, nb_vertex_ids: int) -> None:
+def generate_vertex_colors(bmesh: Mesh, groups: list[dict], data: np.ndarray, nb_vertex_ids: int) -> None:
     """
     Generate vertex colors for the given mesh.
 
     Args:
-        blender_mesh (Mesh): mesh on which to add vertex colors
+        bmesh (Mesh): mesh on which to add vertex colors
         groups (list[dict]): groups of vertex colors to create.\
             Expected input for one group: ``{"name": str, ids: [Any]}``.
         data (np.ndarray):  prepared data.\
@@ -99,7 +99,7 @@ def generate_vertex_colors(blender_mesh: Mesh, groups: list[dict], data: np.ndar
     zeros = np.zeros((nb_vertex_ids,))
 
     for group in groups:
-        vertex_colors = blender_mesh.vertex_colors.new(name=group["name"], do_init=True)
+        vertex_colors = bmesh.vertex_colors.new(name=group["name"], do_init=True)
 
         colors = []
         # Scalar value

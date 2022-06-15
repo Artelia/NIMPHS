@@ -6,7 +6,7 @@ from bpy.types import Mesh, Object, Scene, Context
 import time
 import logging
 
-from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
+from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 log = logging.getLogger(__name__)
 import numpy as np
 from typing import Union
@@ -19,13 +19,10 @@ from tbb.operators.utils import remap_array, generate_vertex_colors_groups, gene
 from tbb.properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
 from tbb.properties.utils import VariablesInformation
 from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
-from tbb.properties.shared.tbb_object_settings import TBB_ObjectSettings
+from tbb.operators.openfoam.Scene.openfoam_create_mesh_sequence import TBB_OT_OpenfoamCreateMeshSequence
 
 
-def run_one_step_create_mesh_sequence_openfoam(context: Context, tmp_data: TBB_OpenfoamTemporaryData,
-                                               import_settings: TBB_OpenfoamImportSettings,
-                                               clip: TBB_OpenfoamClipProperty, frame: int,
-                                               time_point: int, start: int, name: str) -> None:
+def run_one_step_create_mesh_sequence_openfoam(context: Context, op: TBB_OT_OpenfoamCreateMeshSequence) -> None:
     """
     Run one step of the 'create mesh sequence' for the OpenFOAM module.
 
@@ -41,19 +38,20 @@ def run_one_step_create_mesh_sequence_openfoam(context: Context, tmp_data: TBB_O
         error: if something went wrong generating the mesh
     """
 
-    seq_obj_name = name + "_sequence"
+    seq_obj_name = op.name + "_sequence"
     try:
-        mesh = generate_mesh_for_sequence(tmp_data, import_settings, clip, time_point, name=seq_obj_name)
+        tmp_data = context.scene.tbb.tmp_data["ops"]
+        mesh = generate_mesh_for_sequence(tmp_data, op)
     except Exception as error:
         raise error
 
     # First time point, create the sequence object
-    if time_point == start:
+    if op.time_point == op.start:
         # Create the blender object (which will contain the sequence)
-        obj = bpy.data.objects.new(name, mesh)
+        obj = bpy.data.objects.new(op.name, mesh)
         # The object created from the convert_to_mesh_sequence() method adds
         # "_sequence" at the end of the name
-        get_collection("TBB_OpenFOAM", context).objects.link(obj)
+        context.scene.collection.objects.link(obj)
         # Convert it to a mesh sequence
         context.view_layer.objects.active = obj
 
@@ -62,25 +60,61 @@ def run_one_step_create_mesh_sequence_openfoam(context: Context, tmp_data: TBB_O
     else:
         # Add mesh to the sequence
         obj = bpy.data.objects[seq_obj_name]
-        context.scene.frame_set(frame=frame)
+        context.scene.frame_set(frame=op.frame)
 
         # Code taken from the Stop-motion-OBJ addon
         # Link: https://github.com/neverhood311/Stop-motion-OBJ/blob/rename-module-name/src/panels.py
         # if the object doesn't have a 'curMeshIdx' fcurve, we can't add a mesh to it
         # TODO: manage the case when there is no 'curMeshIdx'. We may throw an exception or something.
-        meshIdxCurve = next(
-            (curve for curve in obj.animation_data.action.fcurves if 'curMeshIdx' in curve.data_path), None)
+        curve = next((curve for curve in obj.animation_data.action.fcurves if 'curMeshIdx' in curve.data_path), None)
 
         # add the mesh to the end of the sequence
         meshIdx = add_mesh_to_sequence(obj, mesh)
 
         # add a new keyframe at this frame number for the new mesh
         obj.mesh_sequence_settings.curMeshIdx = meshIdx
-        obj.keyframe_insert(data_path='mesh_sequence_settings.curMeshIdx', frame=frame)
+        obj.keyframe_insert(data_path='mesh_sequence_settings.curMeshIdx', frame=op.frame)
 
         # make the interpolation constant for this keyframe
-        newKeyAtFrame = next((keyframe for keyframe in meshIdxCurve.keyframe_points if keyframe.co.x == frame), None)
-        newKeyAtFrame.interpolation = 'CONSTANT'
+        newKey = next((keyframe for keyframe in curve.keyframe_points if keyframe.co.x == op.frame), None)
+        newKey.interpolation = 'CONSTANT'
+
+
+def generate_mesh_for_sequence(tmp_data: TBB_OpenfoamTemporaryData, op: TBB_OT_OpenfoamCreateMeshSequence) -> Mesh:
+    """
+    Generate a mesh for an OpenFOAM 'mesh sequence' at the given time point.
+
+    Args:
+        context (Context): context
+        tmp_data (TBB_OpenfoamTemporaryData): temporary data
+        time_point (int): time point from which to read data
+        name (str, optional): name of the output mesh. Defaults to "TBB".
+
+    Raises:
+        AttributeError: if the given file does not exist
+
+    Returns:
+        Mesh: generate mesh
+    """
+
+    tmp_data.set_active_time_point(op.time_point)
+    vertices, faces, mesh = generate_mesh_data(tmp_data.file_reader, op.time_point,
+                                               triangulate=op.import_settings.triangulate, clip=op.clip)
+    tmp_data.mesh = mesh
+
+    # Create mesh from python data
+    bmesh = bpy.data.meshes.new(op.name + "_sequence_mesh")
+    bmesh.from_pydata(vertices, [], faces)
+    # Use fake user so Blender will save our mesh in the .blend file
+    bmesh.use_fake_user = True
+
+    # Import point data as vertex colors
+    if op.point_data.import_data:
+        res = prepare_openfoam_point_data(bmesh, op.point_data, tmp_data)
+        print(*res)
+        generate_vertex_colors(bmesh, *res)
+
+    return bmesh
 
 
 def generate_mesh_data(file_reader: OpenFOAMReader, time_point: int, triangulate: bool = True,
@@ -190,42 +224,6 @@ def generate_openfoam_streaming_sequence_obj(context: Context, name: str) -> Obj
     return obj
 
 
-def generate_mesh_for_sequence(tmp_data: TBB_OpenfoamTemporaryData, import_settings: TBB_OpenfoamImportSettings,
-                               clip: TBB_OpenfoamClipProperty, time_point: int, name: str = "TBB") -> Mesh:
-    """
-    Generate a mesh for an OpenFOAM 'mesh sequence' at the given time point.
-
-    Args:
-        context (Context): context
-        tmp_data (TBB_OpenfoamTemporaryData): temporary data
-        time_point (int): time point from which to read data
-        name (str, optional): name of the output mesh. Defaults to "TBB".
-
-    Raises:
-        AttributeError: if the given file does not exist
-
-    Returns:
-        Mesh: generate mesh
-    """
-
-    tmp_data.set_active_time_point(time_point)
-    vertices, faces, mesh = generate_mesh_data(tmp_data.file_reader, time_point,
-                                               triangulate=import_settings.triangulate, clip=clip)
-
-    # Create mesh from python data
-    blender_mesh = bpy.data.meshes.new(name + "_mesh")
-    blender_mesh.from_pydata(vertices, [], faces)
-    # Use fake user so Blender will save our mesh in the .blend file
-    blender_mesh.use_fake_user = True
-
-    # Import point data as vertex colors
-    # if settings.import_point_data:
-    #     res = prepare_openfoam_point_data(mesh, blender_mesh, settings.point_data.split(";"), time_point)
-    #     generate_vertex_colors(blender_mesh, *res)
-
-    return blender_mesh
-
-
 # Code taken from the Stop-motion-OBJ addon
 # Link: https://github.com/neverhood311/Stop-motion-OBJ/blob/rename-module-name/src/stop_motion_obj.py
 def add_mesh_to_sequence(obj: Object, blender_mesh: Mesh) -> int:
@@ -293,8 +291,8 @@ def generate_preview_material(obj: Object, scalar: str, name: str = "TBB_OpenFOA
     obj.active_material = material
 
 
-def prepare_openfoam_point_data(obj: Object, settings: TBB_ObjectSettings, tmp_data: TBB_OpenfoamTemporaryData,
-                                point_data: str) -> tuple[list[dict], dict, int]:
+def prepare_openfoam_point_data(bmesh: Mesh, point_data: TBB_PointDataSettings,
+                                tmp_data: TBB_OpenfoamTemporaryData) -> tuple[list[dict], dict, int]:
     """
     Prepare point data for the 'generate_vertex_colors' function.
 
@@ -330,15 +328,14 @@ def prepare_openfoam_point_data(obj: Object, settings: TBB_ObjectSettings, tmp_d
     """
 
     # Prepare the mesh to loop over all its triangles
-    mesh = obj.data
-    if len(mesh.loop_triangles) == 0:
-        mesh.calc_loop_triangles()
+    if len(bmesh.loop_triangles) == 0:
+        bmesh.calc_loop_triangles()
 
-    vertex_ids = np.array([triangle.vertices for triangle in mesh.loop_triangles]).flatten()
+    vertex_ids = np.array([triangle.vertices for triangle in bmesh.loop_triangles]).flatten()
 
     # Format variables array
     variables, dimensions = [], []
-    info = VariablesInformation(point_data)
+    info = VariablesInformation(point_data.list)
     for var, type, dim in zip(info.names, info.types, info.dimensions):
         variables.append({"name": var, "type": type, "id": var})
         dimensions.append(dim)
@@ -347,13 +344,15 @@ def prepare_openfoam_point_data(obj: Object, settings: TBB_ObjectSettings, tmp_d
     prepared_data = dict()
     openfoam_mesh = tmp_data.mesh
 
+    print(info)
+
     for var, dim, id in zip(variables, dimensions, range(len(variables))):
         # Read data
         data = openfoam_mesh.get_array(var["id"], preference='point')[vertex_ids]
         var_ranges = info.get(id, prop='RANGE')
 
         # Remap data
-        if settings.point_data.remap_method == 'LOCAL':
+        if point_data.remap_method == 'LOCAL':
             if var["type"] == 'SCALAR':
                 min, max = var_ranges["local"]["min"], var_ranges["local"]["max"]
                 prepared_data[var["id"]] = remap_array(np.array(data), in_min=min, in_max=max)
@@ -366,7 +365,7 @@ def prepare_openfoam_point_data(obj: Object, settings: TBB_ObjectSettings, tmp_d
 
                 prepared_data[var["id"]] = remapped_data
 
-        elif settings.point_data.remap_method == 'GLOBAL':
+        elif point_data.remap_method == 'GLOBAL':
             log.warning("'GLOBAL' remapping method not implemented yet.")
             if var["type"] == 'VECTOR':
                 prepared_data[var["id"]] = [data[:, 0], data[:, 1], data[:, 2]]

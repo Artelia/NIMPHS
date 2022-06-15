@@ -1,6 +1,6 @@
 # <pep8 compliant>
 from bpy.types import Operator, Context, RenderSettings
-from bpy.props import StringProperty, EnumProperty, BoolProperty, PointerProperty
+from bpy.props import EnumProperty, PointerProperty
 
 import time
 
@@ -8,7 +8,6 @@ from tbb.operators.utils import setup_streaming_sequence_object
 from tbb.operators.telemac.utils import generate_telemac_streaming_sequence_obj
 from tbb.panels.utils import get_selected_object
 from tbb.properties.shared.module_scene_settings import TBB_ModuleSceneSettings
-from tbb.operators.openfoam.utils import generate_openfoam_streaming_sequence_obj
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 from tbb.properties.utils import VariablesInformation
 
@@ -180,6 +179,7 @@ class TBB_CreateSequence(Operator):
                 return {'RUNNING_MODAL'}
 
         elif settings.sequence_type == "streaming_sequence":
+            from tbb.operators.openfoam.utils import generate_openfoam_streaming_sequence_obj
             # Warn the user when the selected start frame may be "weird"
             if settings.frame_start < context.scene.frame_start or settings.frame_start > context.scene.frame_end:
                 self.report({"WARNING"}, "Frame start is not in the selected time frame.")
