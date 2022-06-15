@@ -14,8 +14,7 @@ class VariablesInformation():
 
     def __init__(self, json_string: str = "") -> None:
         """
-        Init method of the class.
-        Can fill in information given JSON stringified data.
+        Init method of the class. Can fill in information given JSON stringified data.
 
         Args:
             json_string (str, optional): JSON stringified data. Defaults to "".
@@ -90,7 +89,7 @@ class VariablesInformation():
             return None
 
     def clear(self) -> None:
-        """Clear all data"""
+        """Clear all data."""
 
         self.names.clear()
         self.units.clear()
@@ -100,7 +99,7 @@ class VariablesInformation():
 
     def remove(self, id: int) -> None:
         """
-        Remove variable at the given index
+        Remove variable at the given index.
 
         Args:
             id (int): index of the variable to remove
@@ -150,7 +149,7 @@ class VariablesInformation():
 
     def dumps(self) -> str:
         """
-        Serialize VariablesInformation to a JSON formatted str
+        Serialize VariablesInformation to a JSON formatted str.
 
         Returns:
             str: JSON stringified data
@@ -177,6 +176,13 @@ class VariablesInformation():
         return len(self.names)
 
     def __str__(self) -> str:
+        """
+        Output this data structure as a string.
+
+        Returns:
+            str: output string
+        """
+
         return str(self.names) + " / " + str(self.units) + " / " + str(self.ranges) + " / " + str(self.types) + " / \
 " + str(self.dimensions)
 

@@ -41,8 +41,7 @@ class TBB_OT_OpenfoamCreateStreamingSequence(TBB_CreateStreamingSequence):
 
     def invoke(self, context: Context, _event: Event) -> set:
         """
-        Prepare operators settings.
-        Function triggered before the user can edit settings.
+        Prepare operators settings. Function triggered before the user can edit settings.
 
         Args:
             context (Context): context

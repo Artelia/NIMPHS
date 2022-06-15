@@ -47,7 +47,7 @@ class TBB_OT_AddPointData(Operator):
         name="Point data",
         description="Point data to import as vertex colors",
         items=point_data_items,
-        options={'HIDDEN'},
+        options={'HIDDEN'},  # noqa F821
     )
 
     #: bpy.props.StringProperty: JSON stringified list of available point data.
@@ -55,7 +55,7 @@ class TBB_OT_AddPointData(Operator):
         name="Available point data",
         description="JSON stringified list of available point data",
         default="",
-        options={'HIDDEN'},
+        options={'HIDDEN'},  # noqa F821
     )
 
     #: bpy.props.StringProperty: JSON stringified list of chosen point data.
@@ -63,18 +63,18 @@ class TBB_OT_AddPointData(Operator):
         name="Available point data",
         description="JSON stringified list of chosen point data",
         default="",
-        options={'HIDDEN'},
+        options={'HIDDEN'},  # noqa F821
     )
 
     #: bpy.props.EnumProperty: Indicates the activator of this operator. Enum in ['OBJECT', 'OPERATOR'].
     source: EnumProperty(
-        name="Source",
+        name="Source",  # noqa F821
         description="Indicates the activator of this operator. Enum in ['OBJECT', 'OPERATOR']",
         items=[
-            ("OBJECT", "Object", "Execute in object mode"),
-            ("OPERATOR", "Operator", "Execute in operator mode"),
+            ("OBJECT", "Object", "Execute in object mode"),  # noqa F821
+            ("OPERATOR", "Operator", "Execute in operator mode"),  # noqa F821
         ],
-        options={'HIDDEN'},
+        options={'HIDDEN'},  # noqa F821
     )
 
     def invoke(self, context: Context, _event: Event) -> set:

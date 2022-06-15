@@ -37,17 +37,17 @@ class TBB_CreateStreamingSequence(TBB_CreateSequence):
         name="Max length",  # noqa F821
         description="Maximum length of the sequence",
         default=1,
-        options={'HIDDEN'},
+        options={'HIDDEN'},  # noqa F821
     )
 
     #: bpy.props.StringProperty: Name to give to the generated sequence object.
     name: StringProperty(
         name="Name",  # noqa F821
         description="Name to give to the generated sequence object",
-        default="Mesh",
+        default="Mesh",  # noqa F821
     )
 
-    #: bpy.props.EnumProperty: Indicates which module ot use. Enum in ['OpenFOAM', 'TELEMAC'].
+    #: bpy.props.EnumProperty: Indicates which module to use. Enum in ['OpenFOAM', 'TELEMAC'].
     module: EnumProperty(
         name="Mode",  # noqa: F821
         description="Indicates whether the operator should run modal or not. Enum in ['OpenFOAM', 'TELEMAC']",
@@ -55,13 +55,12 @@ class TBB_CreateStreamingSequence(TBB_CreateSequence):
             ('OpenFOAM', "OpenFOAM", "Use OpenFOAM module"),  # noqa: F821
             ('TELEMAC', "TELEMAC", "Use TELEMAC module"),  # noqa: F821
         ],
-        options={'HIDDEN'},
+        options={'HIDDEN'},  # noqa F821
     )
 
     def invoke(self, context: Context, event: Event) -> set:
         """
-        Prepare operators settings.
-        Function triggered before the user can edit settings.
+        Prepare operators settings. Function triggered before the user can edit settings.
 
         Args:
             context (Context): context

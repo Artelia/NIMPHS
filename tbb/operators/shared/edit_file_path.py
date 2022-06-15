@@ -27,7 +27,7 @@ class TBB_OT_EditFilePath(Operator, ImportHelper):
 
     def invoke(self, context: Context, _event: Event) -> set:
         """
-        Initializes the operator.
+        Initialize the operator.
 
         Args:
             context (Context): context

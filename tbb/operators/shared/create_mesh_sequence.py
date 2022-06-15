@@ -46,13 +46,12 @@ class TBB_CreateMeshSequence(TBB_CreateSequence):
     name: StringProperty(
         name="Name",  # noqa F821
         description="Name to give to the generated sequence object",
-        default="Mesh"
+        default="Mesh"  # noqa F821
     )
 
     def invoke(self, context: Context, event: Event) -> set:
         """
-        Prepare operators settings.
-        Function triggered before the user can edit settings.
+        Prepare operators settings. Function triggered before the user can edit settings.
 
         Args:
             context (Context): context

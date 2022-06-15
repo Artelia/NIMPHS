@@ -45,7 +45,7 @@ def available_point_data(self, context: Context) -> list:
     return items
 
 
-def update_preview_time_point(self, context: Context) -> None:
+def update_preview_time_point(self, context: Context) -> None:  # noqa D417
     """
     Update selected value of preview time point (make sure you can only select available time points).
 

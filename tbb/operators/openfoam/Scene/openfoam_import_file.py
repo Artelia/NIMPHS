@@ -124,8 +124,9 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         Copy import settings and setup needed 'tbb' data for the generated object.
 
         Args:
+            context (Context): context
             obj (Object): generated object
-            file_reader (Union[OpenFOAMReader, POpenFOAMReader]): OpenFOAM file reader
+            file_reader (Union[OpenFOAMReader, POpenFOAMReader]): OpenFOAM reader
         """
 
         # Copy import settings

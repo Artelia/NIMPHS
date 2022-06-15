@@ -23,7 +23,7 @@ class TBB_CreateSequence(Operator):
             ('MODAL', "Modal", "TODO"),  # noqa: F821
             ('NORMAL', "Normal", "TODO"),  # noqa: F821
         ],
-        options={'HIDDEN'},
+        options={'HIDDEN'},  # noqa F821
     )
 
     #: TBB_PointDataSettings: Point data settings.

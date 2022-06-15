@@ -35,8 +35,9 @@ class TBB_StreamingSequenceSettingsPanel(Panel):
         Layout of the panel.
 
         Args:
+            context (Context): context
             obj (Object): sequence object
-            sequence (TBB_ModuleStreamingSequenceSettings): 'streaming sequence' settings
+            sequence (TBB_ModuleStreamingSequenceSettings): sequence settings
         """
 
         tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
