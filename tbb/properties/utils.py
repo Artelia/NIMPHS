@@ -21,19 +21,22 @@ class VariablesInformation():
             json_string (str, optional): JSON stringified data. Defaults to "".
         """
 
-        if json_string == "":
-            self.names = []
-            self.units = []
-            self.types = []
-            self.ranges = []
-            self.dimensions = []
-        else:
+        self.names = []
+        self.units = []
+        self.types = []
+        self.ranges = []
+        self.dimensions = []
+
+        if json_string != "":
             data = json.loads(json_string)
-            self.names = data.get("names", [])
-            self.units = data.get("units", [""] * len(self.names))
-            self.types = data.get("types", [])
-            self.ranges = data.get("ranges", [])
-            self.dimensions = data.get("dimensions", [])
+            if data.get("names", None) is not None:
+                self.names = data.get("names", [])
+                self.units = data.get("units", [""] * len(self.names))
+                self.types = data.get("types", [])
+                self.ranges = data.get("ranges", [])
+                self.dimensions = data.get("dimensions", [])
+            elif data.get("name", None) is not None:
+                self.append(data=data)
 
     def get(self, id: Union[str, int], prop: str = "") -> Union[dict, Any, None]:
         """
@@ -54,7 +57,7 @@ class VariablesInformation():
                 log.critical(f"Unkonw id {id}", exc_info=1)
                 return None
 
-        if id < len(self.names):
+        if id < self.length():
 
             if prop == "":
                 output = {
@@ -78,15 +81,15 @@ class VariablesInformation():
                     return self.dimensions[id]
 
             else:
-                log.critical(f"Property '{prop}' is undefined")
+                log.critical(f"Property '{prop}' is undefined", exc_info=1)
 
             return output
 
         else:
-            log.critical(f"Index '{id}' out of bound (length = {len(self.names)})")
+            log.critical(f"Index '{id}' out of bound (length = {len(self.names)})", exc_info=1)
             return None
 
-    def clear(self):
+    def clear(self) -> None:
         """Clear all data"""
 
         self.names.clear()
@@ -94,6 +97,23 @@ class VariablesInformation():
         self.types.clear()
         self.ranges.clear()
         self.dimensions.clear()
+
+    def remove(self, id: int) -> None:
+        """
+        Remove variable at the given index
+
+        Args:
+            id (int): index of the variable to remove
+        """
+
+        if id < self.length():
+            self.names.pop(id)
+            self.units.pop(id)
+            self.types.pop(id)
+            self.ranges.pop(id)
+            self.dimensions.pop(id)
+        else:
+            log.critical(f"Index '{id}' out of bound (length = {len(self.names)})", exc_info=1)
 
     def append(self, name: str = 'NONE', unit: str = "", range: dict = None, type: str = 'SCALAR', dim: int = 1,
                data: dict = None) -> None:

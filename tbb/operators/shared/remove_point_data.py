@@ -6,6 +6,7 @@ from bpy.props import StringProperty, EnumProperty
 import json
 import logging
 from tbb.panels.utils import get_selected_object
+from tbb.properties.utils import VariablesInformation
 log = logging.getLogger(__name__)
 
 from tbb.properties.shared.module_streaming_sequence_settings import TBB_ModuleStreamingSequenceSettings
@@ -21,16 +22,17 @@ class TBB_OT_RemovePointData(Operator):
     bl_label = "Remove point data"
     bl_description = "Remove point data from the list to import as vertex colors"
 
+    #: bpy.props.StringProperty: Name of the variable to remove.
     var_name: StringProperty(
         name="Variable name",
         description="Name of the variable to remove",
         default="",
     )
 
-    #: bpy.props.EnumProperty: Indicates in which mode to execute this operator. Enum in ['OBJECT', 'OPERATOR'].
-    mode: EnumProperty(
-        name="Mode",
-        description="Indicates in which mode to execute this operator. Enum in ['OBJECT', 'OPERATOR']",
+    #: bpy.props.EnumProperty: Indicates the activator of this operator. Enum in ['OBJECT', 'OPERATOR'].
+    source: EnumProperty(
+        name="Source",
+        description="Indicates the activator of this operator. Enum in ['OBJECT', 'OPERATOR']",
         items=[
             ("OBJECT", "Object", "Execute in object mode"),
             ("OPERATOR", "Operator", "Execute in operator mode"),
@@ -50,21 +52,29 @@ class TBB_OT_RemovePointData(Operator):
             set: state of the operator
         """
 
-        obj = get_selected_object(context)
+        # Get point data
+        if self.source == 'OBJECT':
+            obj = get_selected_object(context)
+            if obj is None:
+                log.warning("No selected object.", exc_info=1)
+                return {'CANCELLED'}
 
-        if obj is not None:
-            settings = obj.tbb.settings
-            point_data = json.loads(settings.point_data)
-            index = point_data["names"].index(self.var_name)
-            point_data["names"].pop(index)
-            point_data["units"].pop(index)
-            point_data["ranges"].pop(index)
-            point_data["types"].pop(index)
-            point_data["dimensions"].pop(index)
-            obj.tbb.settings.point_data = json.dumps(point_data)
-        else:
-            log.warning(f"Object with name {self.obj_name} does not exist.")
-            return {'CANCELLED'}
+            point_data = obj.tbb.settings.point_data.list
+
+        if self.source == 'OPERATOR':
+            # TODO: I think we can find a better solution to get access to these data.
+            import bpy
+            point_data = bpy.types.TBB_OT_openfoam_create_mesh_sequence.list
+
+        # Remove selected point data from the list
+        data = VariablesInformation(point_data)
+        data.remove(data.names.index(self.var_name))
+
+        # Save the new list of chosen point data
+        if self.source == 'OBJECT':
+            obj.tbb.settings.point_data.list = data.dumps()
+        if self.source == 'OPERATOR':
+            bpy.types.TBB_OT_openfoam_create_mesh_sequence.list = data.dumps()
 
         context.area.tag_redraw()
         return {'FINISHED'}

@@ -4,6 +4,8 @@ from bpy.props import StringProperty, EnumProperty, IntProperty
 
 import time
 import logging
+
+from tbb.properties.utils import VariablesInformation
 log = logging.getLogger(__name__)
 from typing import Union
 
@@ -69,6 +71,28 @@ class TBB_CreateMeshSequence(TBB_CreateSequence):
         """
 
         return {'RUNNING_MODAL'}
+
+    def draw(self, context: Context) -> None:
+        """
+        UI layout of the operator.
+
+        Args:
+            context (Context): context
+        """
+
+        super().draw(context)
+
+        layout = self.layout
+
+        # Sequence settings
+        box = layout.box()
+        box.label(text="Sequence")
+        row = box.row()
+        row.prop(self, "start", text="Start")
+        row = box.row()
+        row.prop(self, "end", text="End")
+        row = box.row()
+        row.prop(self, "name", text="Name")
 
     def execute(self, context: Context) -> set:
         """

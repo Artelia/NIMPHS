@@ -25,7 +25,7 @@ def available_point_data(self, context: Context) -> list:
 
     try:
         tmp_data = context.scene.tbb.tmp_data[self.id_data.tbb.uid]  # Works for objects
-    except AttributeError:  # Raised when called from an operator (WindowManager objec has not attribute 'tbb')
+    except AttributeError:  # Raised when called from an operator (WindowManager object has not attribute 'tbb')
         tmp_data = context.scene.tbb.tmp_data["ops"]
 
     if tmp_data is None or not tmp_data.is_ok():
@@ -92,7 +92,7 @@ def set_clip_values(self: Union[FloatProperty, FloatVectorProperty], value: floa
             # self["vector_value"] do not exist until they are manipulated (get/set).
             self["vector_value"] = (0.5, 0.5, 0.5)
 
-            for i in range(data["dimensions"]):
+            for i in range(data["dim"]):
                 if value[i] < ranges["min"][i]:
                     self["vector_value"][i] = ranges["min"][i]
                 elif value[i] > ranges["max"][i]:

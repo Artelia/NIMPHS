@@ -75,7 +75,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
             log.critical(f"Unable to open file '{self.obj.tbb.settings.file_path}'")
             return {'CANCELLED'}
 
-        context.scene.tbb.tmp_data[self.uid] = TBB_OpenfoamTemporaryData(file_reader)
+        context.scene.tbb.tmp_data["ops"] = TBB_OpenfoamTemporaryData(file_reader)
 
         return context.window_manager.invoke_props_dialog(self)
 
@@ -88,7 +88,6 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
         """
 
         layout = self.layout
-        tmp_data = context.scene.tbb.tmp_data[self.uid]
 
         # Import settings
         box = layout.box()
@@ -127,70 +126,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
                 row = box.row()
                 row.label(text="No data available.", icon='ERROR')
 
-        # Import point data
-        box = layout.box()
-        row = box.row()
-        row.prop(self.point_data, "import_data", text="Import point data")
-
-        if self.point_data.import_data:
-
-            row = box.row()
-            row.prop(self.point_data, "remap_method", text="Method")
-
-            # Display selected point data
-            data = VariablesInformation(self.list)
-            for name, unit, values, type, dim in zip(data.names, data.units, data.ranges, data.types, data.dimensions):
-                subbox = box.box()
-                row = subbox.row()
-
-                if values is not None:
-                    if self.point_data.remap_method == 'LOCAL':
-                        if values["local"]["min"] is not None and values["local"]["max"] is not None:
-                            if type == 'SCALAR':
-                                info = "[" + "{:.4f}".format(values["local"]["min"]) + " ; "
-                                info += "{:.4f}".format(values["local"]["max"]) + "]"
-                            if type == 'VECTOR':
-                                info = ""
-                                for i in range(dim):
-                                    info += "[" + "{:.4f}".format(values["local"]["min"][i]) + " ; "
-                                    info += "{:.4f}".format(values["local"]["max"][i]) + "]"
-                        else:
-                            info = "None"
-                    elif self.point_data.remap_method == 'GLOBAL':
-                        if values["global"]["min"] is not None and values["global"]["max"] is not None:
-                            if type == 'SCALAR':
-                                info = "[" + "{:.4f}".format(values["global"]["min"]) + " ; "
-                                info += "{:.4f}".format(values["global"]["max"]) + "]"
-                            if type == 'VECTOR':
-                                info = ""
-                                for i in range(dim):
-                                    info += "[" + "{:.4f}".format(values["global"]["min"][i]) + " ; "
-                                    info += "{:.4f}".format(values["global"]["max"][i]) + "]"
-                        else:
-                            info = "None"
-                    else:
-                        info = "None"
-                else:
-                    info = "None"
-
-                op = row.operator("tbb.remove_point_data", text="", icon='REMOVE')
-                row.label(text=(name + ", (" + unit + ")") if unit != "" else name + ",  " + info)
-
-            row = box.row()
-            op = row.operator("tbb.add_point_data", text="Add", icon='ADD')
-            op.available = tmp_data.vars_info.dumps()
-            op.chosen = self.list
-            op.mode = 'OPERATOR'
-
-        # Sequence settings
-        box = layout.box()
-        box.label(text="Sequence")
-        row = box.row()
-        row.prop(self, "start", text="Start")
-        row = box.row()
-        row.prop(self, "end", text="End")
-        row = box.row()
-        row.prop(self, "name", text="Name")
+        super().draw(context)
 
     def execute(self, context: Context) -> set:
         """
@@ -256,7 +192,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
         start = time.time()
 
         try:
-            tmp_data = context.scene.tbb.tmp_data[self.uid]
+            tmp_data = context.scene.tbb.tmp_data["ops"]
             run_one_step_create_mesh_sequence_openfoam(context, tmp_data, self.import_settings, self.clip, self.frame,
                                                        self.time_point, self.start, self.name)
         except Exception:

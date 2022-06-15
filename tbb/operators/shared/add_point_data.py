@@ -65,10 +65,10 @@ class TBB_OT_AddPointData(Operator):
         options={'HIDDEN'},
     )
 
-    #: bpy.props.EnumProperty: Indicates in which mode to execute this operator. Enum in ['OBJECT', 'OPERATOR'].
-    mode: EnumProperty(
-        name="Mode",
-        description="Indicates in which mode to execute this operator. Enum in ['OBJECT', 'OPERATOR']",
+    #: bpy.props.EnumProperty: Indicates the activator of this operator. Enum in ['OBJECT', 'OPERATOR'].
+    source: EnumProperty(
+        name="Source",
+        description="Indicates the activator of this operator. Enum in ['OBJECT', 'OPERATOR']",
         items=[
             ("OBJECT", "Object", "Execute in object mode"),
             ("OPERATOR", "Operator", "Execute in operator mode"),
@@ -126,7 +126,7 @@ class TBB_OT_AddPointData(Operator):
         """
 
         # Get point data
-        if self.mode == 'OBJECT':
+        if self.source == 'OBJECT':
             obj = get_selected_object(context)
             if obj is None:
                 log.warning("No selected object.", exc_info=1)
@@ -134,7 +134,7 @@ class TBB_OT_AddPointData(Operator):
 
             point_data = obj.tbb.settings.point_data.list
 
-        if self.mode == 'OPERATOR':
+        if self.source == 'OPERATOR':
             # TODO: I think we can find a better solution to get access to these data.
             import bpy
             point_data = bpy.types.TBB_OT_openfoam_create_mesh_sequence.list
@@ -145,7 +145,10 @@ class TBB_OT_AddPointData(Operator):
         data.append(data=add.get(0))
 
         # Save the new list of chosen point data
-        point_data = data.dumps()
+        if self.source == 'OBJECT':
+            obj.tbb.settings.point_data.list = data.dumps()
+        if self.source == 'OPERATOR':
+            bpy.types.TBB_OT_openfoam_create_mesh_sequence.list = data.dumps()
 
         context.area.tag_redraw()
         return {'FINISHED'}

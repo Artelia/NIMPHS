@@ -111,7 +111,8 @@ def generate_mesh_data(file_reader: OpenFOAMReader, time_point: int, triangulate
 
     # Apply clip
     if clip is not None and clip.type == 'SCALAR':
-        info = VariablesInformation(clip.scalar.name).get(0)
+        info = VariablesInformation(clip.scalar.name)
+        info = info.get(0)
         mesh.set_active_scalars(name=info["name"], preference="point")
         if info["type"] == 'SCALAR':
             mesh.clip_scalar(inplace=True, scalars=info["name"], invert=clip.scalar.invert, value=clip.scalar.value)

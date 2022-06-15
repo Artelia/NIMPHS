@@ -76,6 +76,7 @@ class TBB_PT_OpenfoamClip(Panel):
                 row.enabled = enable_rows
 
                 var_type = VariablesInformation(clip.scalar.name).get(0, prop='TYPE')
+                print(var_type)
 
                 if var_type == 'VECTOR':
                     row.prop(clip.scalar, "vector_value", text="Value")
