@@ -111,7 +111,6 @@ def generate_mesh_for_sequence(tmp_data: TBB_OpenfoamTemporaryData, op: TBB_OT_O
     # Import point data as vertex colors
     if op.point_data.import_data:
         res = prepare_openfoam_point_data(bmesh, op.point_data, tmp_data)
-        print(*res)
         generate_vertex_colors(bmesh, *res)
 
     return bmesh
@@ -180,12 +179,12 @@ def generate_mesh_data(file_reader: OpenFOAMReader, time_point: int, triangulate
     return vertices, faces, mesh
 
 
-def generate_openfoam_streaming_sequence_obj(context: Context, name: str) -> Object:
+def generate_openfoam_streaming_sequence_obj(obj: Object, name: str) -> Object:
     """
     Generate the base object for an OpenFOAM 'streaming sequence'.
 
     Args:
-        context (Context): context
+        obj (Object): selected object
         name (str): name of the sequence
 
     Returns:
@@ -193,35 +192,17 @@ def generate_openfoam_streaming_sequence_obj(context: Context, name: str) -> Obj
     """
 
     # Create the object
-    blender_mesh = bpy.data.meshes.new(name + "_sequence_mesh")
-    obj = bpy.data.objects.new(name + "_sequence", blender_mesh)
+    bmesh = bpy.data.meshes.new(name + "_sequence_mesh")
+    sequence_obj = bpy.data.objects.new(name + "_sequence", bmesh)
 
-    # Copy settings
-    settings = context.scene.tbb.settings.openfoam
-    sequence = obj.tbb.settings.openfoam.s_sequence
-    sequence.decompose_polyhedra = settings.decompose_polyhedra
-    sequence.triangulate = settings.triangulate
-    sequence.case_type = settings.case_type
+    # Copy import settings from the selected object
+    data = obj.tbb.settings.openfoam.import_settings
+    dest = sequence_obj.tbb.settings.openfoam.import_settings
+    dest.decompose_polyhedra = data.decompose_polyhedra
+    dest.triangulate = data.triangulate
+    dest.case_type = data.case_type
 
-    # Set clip settings
-    sequence.clip.type = settings.clip.type
-    sequence.clip.scalar.list = settings.clip.scalar.list
-    sequence.clip.scalar.value_ranges = settings.clip.scalar.value_ranges
-
-    # Sometimes, the selected scalar may not correspond to ones available in the EnumProperty.
-    # This happens when the selected scalar is not available at time point 0
-    # (the EnumProperty only reads data at time point 0 to create the list of available items)
-    try:
-        sequence.clip.scalar.name = settings.clip.scalar.name
-    except TypeError as error:
-        print("WARNING::setup_openfoam_streaming_sequence_obj: " + str(error))
-
-    sequence.clip.scalar.invert = settings.clip.scalar.invert
-    # 'value' and 'vector_value' may not be defined, so use .get(prop, default_returned_value)
-    sequence.clip.scalar["value"] = settings.clip.scalar.get("value", 0.5)
-    sequence.clip.scalar["vector_value"] = settings.clip.scalar.get("vector_value", (0.5, 0.5, 0.5))
-
-    return obj
+    return sequence_obj
 
 
 # Code taken from the Stop-motion-OBJ addon
@@ -343,8 +324,6 @@ def prepare_openfoam_point_data(bmesh: Mesh, point_data: TBB_PointDataSettings,
     # Prepare data
     prepared_data = dict()
     openfoam_mesh = tmp_data.mesh
-
-    print(info)
 
     for var, dim, id in zip(variables, dimensions, range(len(variables))):
         # Read data

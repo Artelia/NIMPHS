@@ -5,6 +5,8 @@ from bpy.types import Collection, Object, Context, Mesh
 
 import numpy as np
 import logging
+
+from tbb.operators.shared.create_streaming_sequence import TBB_CreateStreamingSequence
 log = logging.getLogger(__name__)
 from typing import Any, Union
 
@@ -154,9 +156,7 @@ def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, name: str
     return obj
 
 
-def setup_streaming_sequence_object(obj: Object, sequence: Union[TBB_OpenfoamStreamingSequenceProperty,
-                                    TBB_TelemacStreamingSequenceProperty], time_points: int,
-                                    settings: TBB_ModuleSceneSettings, module: str) -> None:
+def setup_streaming_sequence_object(obj: Object, op: TBB_CreateStreamingSequence, file_path: str) -> None:
     """
     Generate streaming sequence settings for both OpenFOAM and TELEMAC modules.
 
@@ -168,20 +168,23 @@ def setup_streaming_sequence_object(obj: Object, sequence: Union[TBB_OpenfoamStr
         module (str): name of the module, enum in ['OpenFOAM', 'TELEMAC']
     """
 
+    # Get sequence settings
+    if op.module == 'OpenFOAM':
+        sequence = obj.tbb.settings.openfoam.s_sequence
+    if op.module == 'TELEMAC':
+        sequence = obj.tbb.settings.telemac.s_sequence
+
     # Setup common settings
-    sequence.name = obj.name
-    sequence.file_path = settings.file_path
+    obj.tbb.settings.file_path = file_path
     obj.tbb.is_streaming_sequence = True
+    obj.tbb.settings.name = obj.name
+    obj.tbb.module = op.module
+
+    # Setup sequence settings
+    sequence.frame_start = op.start                 # Order matters!
+    sequence.max_length = op.max_length             # Check TBB_StreamingSequenceProperty class definition.
+    sequence.anim_length = op.length                #
     sequence.update = True
-    obj.tbb.module = module
-
-    # Set the selected time frame
-    sequence.frame_start = settings.frame_start     # Order matters!
-    sequence.max_length = time_points               # Check TBB_StreamingSequenceProperty class definition.
-    sequence.anim_length = settings["anim_length"]  #
-
-    obj.tbb.settings.import_point_data = settings.import_point_data
-    # sequence.point_data = settings.point_data
 
 
 def update_scene_settings_dynamic_props(settings: TBB_ModuleSceneSettings,

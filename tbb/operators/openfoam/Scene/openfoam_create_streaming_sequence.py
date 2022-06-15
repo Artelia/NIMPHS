@@ -1,34 +1,92 @@
 # <pep8 compliant>
-from bpy.props import EnumProperty
-from bpy.types import Context, Event, Operator
+from bpy.types import Context, Event
 
-import time
+import logging
+from tbb.operators.openfoam.utils import generate_openfoam_streaming_sequence_obj
+log = logging.getLogger(__name__)
 
-from tbb.operators.shared.create_sequence import TBB_CreateSequence
-from tbb.operators.openfoam.utils import run_one_step_create_mesh_sequence_openfoam
+from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
+from tbb.operators.shared.create_streaming_sequence import TBB_CreateStreamingSequence
+from tbb.panels.utils import get_selected_object
 
 
-class TBB_OT_OpenfoamCreateStreamingSequence(TBB_CreateSequence):
-    """Create an OpenFOAM sequence using the settings defined in the\
-    main panel of the module and the 'create sequence' panel."""
+class TBB_OT_OpenfoamCreateStreamingSequence(TBB_CreateStreamingSequence):
+    """Create an OpenFOAM 'streaming sequence'."""
 
-    register_cls = False
+    register_cls = True
     is_custom_base_cls = False
 
-    bl_idname = "tbb.openfoam_create_sequence"
-    bl_label = "Create sequence"
-    bl_description = "Create a sequence using the selected parameters. Press 'esc' to cancel"
+    bl_idname = "tbb.openfoam_create_streaming_sequence"
+    bl_label = "Create streaming sequence"
+    bl_description = "Create a 'streaming sequence' using the selected parameters. Press 'esc' to cancel"
 
-    sequence_type: EnumProperty(
-        name="Sequence type",
-        description="Select a sequence type",
-        items=[
-            ("mesh_sequence", "Mesh sequence", "Make a sequence by creating a mesh for each time step\
-             (good option for small meshes)"),  # noqa: F821
-            ("streaming_sequence", "Streaming sequence", "Make a sequence by changing the mesh on each\
-             frame change (it only keeps the last created mesh, good option for large meshes)"),  # noqa: F821
-        ],
-    )
+    @classmethod
+    def poll(self, context: Context) -> bool:
+        """
+        If false, locks the UI button of the operator.
 
-    def invoke(self, context: Context, event: Event) -> set:
-        pass
+        Args:
+            context (Context): context
+
+        Returns:
+            bool: state of the operator
+        """
+
+        if super().poll(context):
+            obj = get_selected_object(context)
+        else:
+            return False
+
+        return obj.tbb.module == 'OpenFOAM'
+
+    def invoke(self, context: Context, _event: Event) -> set:
+        """
+        Prepare operators settings.
+        Function triggered before the user can edit settings.
+
+        Args:
+            context (Context): context
+            _event (Event): event
+
+        Returns:
+            set: state of the operator
+        """
+        from tbb.operators.openfoam.utils import load_openfoam_file
+
+        self.obj = get_selected_object(context)
+        if self.obj is None:
+            return {'CANCELLED'}
+
+        # Load file data
+        succeed, file_reader = load_openfoam_file(self.obj.tbb.settings.file_path)
+        if not succeed:
+            log.critical(f"Unable to open file '{self.obj.tbb.settings.file_path}'")
+            return {'CANCELLED'}
+
+        context.scene.tbb.tmp_data["ops"] = TBB_OpenfoamTemporaryData(file_reader)
+
+        return context.window_manager.invoke_props_dialog(self)
+
+    def execute(self, context: Context) -> set:
+        """
+        Generate the 'streaming sequence' object.
+
+        Args:
+            context (Context): context
+
+        Returns:
+            set: state of the operator
+        """
+
+        sequence_obj = generate_openfoam_streaming_sequence_obj(self.obj, self.name)
+        return super().execute(context, sequence_obj)
+
+    def draw(self, context: Context) -> None:
+        """
+        UI layout of the popup window of the operator.
+
+        Args:
+            context (Context): context
+        """
+
+        super().draw(context)
