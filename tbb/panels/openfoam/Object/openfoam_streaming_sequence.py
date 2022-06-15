@@ -1,5 +1,6 @@
 # <pep8 compliant>
 from bpy.types import Context
+from tbb.panels.openfoam.utils import draw_clip_settings
 
 from tbb.panels.utils import get_selected_object
 from tbb.panels.shared.streaming_sequence_settings import TBB_StreamingSequenceSettingsPanel
@@ -50,6 +51,7 @@ class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
         row.prop(sequence, "update", text="Update")
 
         if sequence.update:
+            # Import settings
             import_settings = obj.tbb.settings.openfoam.import_settings
 
             box = self.layout.box()
@@ -63,4 +65,8 @@ class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
             row = box.row()
             row.prop(import_settings, "case_type", text="Case")
 
-        super().draw(context, obj, sequence)
+            # Clip settings
+            draw_clip_settings(self.layout, obj.tbb.settings.openfoam.clip)
+
+            # Point data and sequence settings
+            super().draw(context, obj, sequence)

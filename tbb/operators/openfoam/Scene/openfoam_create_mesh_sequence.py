@@ -4,6 +4,7 @@ from bpy.props import PointerProperty
 
 import time
 import logging
+from tbb.panels.openfoam.utils import draw_clip_settings
 from tbb.properties.openfoam.openfoam_clip import TBB_OpenfoamClipProperty
 from tbb.properties.utils import VariablesInformation
 log = logging.getLogger(__name__)
@@ -101,31 +102,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
         row.prop(self.import_settings, "case_type", text="Case")
 
         # Clip settings
-        box = layout.box()
-        box.label(text="Clip")
-        row = box.row()
-        row.prop(self.clip, "type", text="Type")
-
-        if self.clip.type == 'SCALAR':
-
-            if self.clip.scalar.name != 'NONE':
-                row = box.row()
-                row.prop(self.clip.scalar, "name")
-
-                row = box.row()
-
-                var_type = VariablesInformation(self.clip.scalar.name).get(0, prop='TYPE')
-
-                if var_type == 'VECTOR':
-                    row.prop(self.clip.scalar, "vector_value", text="Value")
-                else:
-                    row.prop(self.clip.scalar, "value", text="Value")
-
-                row = box.row()
-                row.prop(self.clip.scalar, "invert")
-            else:
-                row = box.row()
-                row.label(text="No data available.", icon='ERROR')
+        draw_clip_settings(self.layout, self.clip)
 
         super().draw(context)
 

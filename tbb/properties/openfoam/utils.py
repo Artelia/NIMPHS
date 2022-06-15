@@ -32,7 +32,12 @@ def available_point_data(self, context: Context) -> list:
         log.error("No file data available")
         return [("NONE", "None", "None")]
 
-    items = []
+    # Add a 'None' field for preview_point_data
+    if self.bl_rna.name == 'TBB_OpenfoamObjectSettings':
+        items = [(json.dumps({"name": "None"}), "None", "Do not import")]
+    else:
+        items = []
+
     for id in range(tmp_data.vars_info.length()):
         identifier = tmp_data.vars_info.get(id)
         items.append((json.dumps(identifier), identifier["name"], "Undocumented"))
@@ -57,8 +62,8 @@ def update_preview_time_point(self, context: Context) -> None:
     if not tmp_data.is_ok():
         return [("NONE", "None", "None")]
 
-    if self.preview_time_point > tmp_data.nb_time_points:
-        self.preview_time_point = tmp_data.nb_time_points
+    if self.preview_time_point >= tmp_data.nb_time_points:
+        self.preview_time_point = tmp_data.nb_time_points - 1
     elif self.preview_time_point < 0:
         self.preview_time_point = 0
 

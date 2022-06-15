@@ -381,4 +381,7 @@ def remap_array(input: np.ndarray, out_min: float = 0.0, out_max: float = 1.0,
     elif out_min == 1.0 and out_max == 1.0:
         return np.ones(shape=input.shape)
 
-    return out_min + (out_max - out_min) * ((input - in_min) / (in_max - in_min))
+    if in_max - in_min > np.finfo(float).eps:
+        return out_min + (out_max - out_min) * ((input - in_min) / (in_max - in_min))
+    else:
+        return np.ones(shape=input.shape)

@@ -41,33 +41,32 @@ class TBB_StreamingSequenceSettingsPanel(Panel):
 
         tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
 
-        if sequence.update:
-            box = self.layout.box()
-            row = box.row()
-            row.label(text="Sequence")
+        # Point data settings
+        point_data = obj.tbb.settings.point_data
+
+        box = self.layout.box()
+        row = box.row()
+        row.label(text="Point data")
+        row = box.row()
+        row.prop(point_data, "import_data", text="Import point data")
+
+        if point_data.import_data:
+
+            draw_point_data(box, point_data, show_range=True, edit=True, source='OBJECT')
 
             row = box.row()
-            row.prop(sequence, "frame_start", text="Start")
-            row = box.row()
-            row.prop(sequence, "anim_length", text="Length")
-            row = box.row()
-            row.prop(sequence, "shade_smooth", text="Shade smooth")
+            op = row.operator("tbb.add_point_data", text="Add", icon='ADD')
+            op.available = tmp_data.vars_info.dumps()
+            op.chosen = point_data.list
+            op.source = 'OBJECT'
 
-            # Point data settings
-            point_data = obj.tbb.settings.point_data
+        box = self.layout.box()
+        row = box.row()
+        row.label(text="Sequence")
 
-            box = self.layout.box()
-            row = box.row()
-            row.label(text="Point data")
-            row = box.row()
-            row.prop(point_data, "import_data", text="Import point data")
-
-            if point_data.import_data:
-
-                draw_point_data(box, point_data, show_range=True, edit=True, source='OBJECT')
-
-                row = box.row()
-                op = row.operator("tbb.add_point_data", text="Add", icon='ADD')
-                op.available = tmp_data.vars_info.dumps()
-                op.chosen = point_data.list
-                op.source = 'OBJECT'
+        row = box.row()
+        row.prop(sequence, "frame_start", text="Start")
+        row = box.row()
+        row.prop(sequence, "anim_length", text="Length")
+        row = box.row()
+        row.prop(sequence, "shade_smooth", text="Shade smooth")

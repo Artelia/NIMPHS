@@ -145,14 +145,20 @@ def generate_mesh_data(file_reader: OpenFOAMReader, time_point: int, triangulate
     # Apply clip
     if clip is not None and clip.type == 'SCALAR':
         info = VariablesInformation(clip.scalar.name)
-        info = info.get(0)
-        mesh.set_active_scalars(name=info["name"], preference="point")
-        if info["type"] == 'SCALAR':
-            mesh.clip_scalar(inplace=True, scalars=info["name"], invert=clip.scalar.invert, value=clip.scalar.value)
-        if info["type"] == 'VECTOR':
-            value = np.linalg.norm(clip.scalar.vector_value)
-            mesh.clip_scalar(inplace=True, scalars=info["name"], invert=clip.scalar.invert, value=value)
-        mesh = mesh.extract_surface(nonlinear_subdivision=0)
+
+        # Make sure there is a scalar selected
+        if info.length() > 0:
+            info = info.get(0)
+            mesh.set_active_scalars(name=info["name"], preference="point")
+            if info["type"] == 'SCALAR':
+                mesh.clip_scalar(inplace=True, scalars=info["name"], invert=clip.scalar.invert, value=clip.scalar.value)
+            if info["type"] == 'VECTOR':
+                value = np.linalg.norm(clip.scalar.vector_value)
+                mesh.clip_scalar(inplace=True, scalars=info["name"], invert=clip.scalar.invert, value=value)
+            mesh = mesh.extract_surface(nonlinear_subdivision=0)
+        else:
+            mesh = mesh.extract_surface(nonlinear_subdivision=0)
+
     else:
         mesh = mesh.extract_surface(nonlinear_subdivision=0)
 
@@ -272,7 +278,7 @@ def generate_preview_material(obj: Object, scalar: str, name: str = "TBB_OpenFOA
     obj.active_material = material
 
 
-def prepare_openfoam_point_data(bmesh: Mesh, point_data: TBB_PointDataSettings,
+def prepare_openfoam_point_data(bmesh: Mesh, point_data: Union[TBB_PointDataSettings, str],
                                 tmp_data: TBB_OpenfoamTemporaryData) -> tuple[list[dict], dict, int]:
     """
     Prepare point data for the 'generate_vertex_colors' function.
@@ -316,14 +322,16 @@ def prepare_openfoam_point_data(bmesh: Mesh, point_data: TBB_PointDataSettings,
 
     # Format variables array
     variables, dimensions = [], []
-    info = VariablesInformation(point_data.list)
+    info = VariablesInformation(point_data if isinstance(point_data, str) else point_data.list)
     for var, type, dim in zip(info.names, info.types, info.dimensions):
-        variables.append({"name": var, "type": type, "id": var})
-        dimensions.append(dim)
+        if var != "None":
+            variables.append({"name": var, "type": type, "id": var})
+            dimensions.append(dim)
 
     # Prepare data
     prepared_data = dict()
     openfoam_mesh = tmp_data.mesh
+    method = 'LOCAL' if isinstance(point_data, str) else point_data.remap_method
 
     for var, dim, id in zip(variables, dimensions, range(len(variables))):
         # Read data
@@ -331,7 +339,7 @@ def prepare_openfoam_point_data(bmesh: Mesh, point_data: TBB_PointDataSettings,
         var_ranges = info.get(id, prop='RANGE')
 
         # Remap data
-        if point_data.remap_method == 'LOCAL':
+        if method == 'LOCAL':
             if var["type"] == 'SCALAR':
                 min, max = var_ranges["local"]["min"], var_ranges["local"]["max"]
                 prepared_data[var["id"]] = remap_array(np.array(data), in_min=min, in_max=max)
@@ -344,7 +352,7 @@ def prepare_openfoam_point_data(bmesh: Mesh, point_data: TBB_PointDataSettings,
 
                 prepared_data[var["id"]] = remapped_data
 
-        elif point_data.remap_method == 'GLOBAL':
+        elif method == 'GLOBAL':
             log.warning("'GLOBAL' remapping method not implemented yet.")
             if var["type"] == 'VECTOR':
                 prepared_data[var["id"]] = [data[:, 0], data[:, 1], data[:, 2]]

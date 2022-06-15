@@ -1,5 +1,6 @@
 # <pep8 compliant>
 from bpy.types import Context
+from tbb.panels.openfoam.utils import draw_clip_settings
 
 from tbb.panels.shared.module_panel import TBB_ModulePanel
 
@@ -26,42 +27,49 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
         """
 
         enable_rows, tmp_data_is_ok, obj = super().draw(context)
-        layout = self.layout
 
         if obj is not None and tmp_data_is_ok:
             import_settings = obj.tbb.settings.openfoam.import_settings
 
-            layout.separator()
-
-            row = layout.row()
+            box = self.layout.box()
+            row = box.row()
             row.label(text="Import settings")
-            row = layout.row()
+            row = box.row()
             row.enabled = enable_rows
             row.prop(import_settings, "decompose_polyhedra", text="Decompose polyhedra")
-            row = layout.row()
+            row = box.row()
             row.enabled = enable_rows
             row.prop(import_settings, "triangulate", text="Triangulate")
-            row = layout.row()
+            row = box.row()
             row.enabled = enable_rows
             row.prop(import_settings, "case_type", text="Case")
 
-            layout.separator()
+            # Clip settings
+            tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
+            enable_clip = tmp_data.time_point == obj.tbb.settings.openfoam.preview_time_point
 
-            row = layout.row()
+            draw_clip_settings(self.layout, obj.tbb.settings.openfoam.clip, enable=enable_clip)
+
+            box = self.layout.box()
+            row = box.row()
             row.label(text="Preview")
 
-            row = layout.row()
+            row = box.row()
             row.enabled = enable_rows
             row.prop(obj.tbb.settings.openfoam, "preview_point_data", text="Point")
 
-            row = layout.row()
+            row = box.row()
             row.enabled = enable_rows
             row.prop(obj.tbb.settings.openfoam, "preview_time_point", text="Time point")
 
-            row = layout.row()
+            row = box.row()
             row.enabled = enable_rows
             row.operator("tbb.openfoam_preview", text="Preview", icon='HIDE_OFF')
 
+            if not enable_clip:
+                row = self.layout.box().row()
+                row.label(text="No data. Hit 'preview'.", icon='ERROR')
+
         elif obj is None:
-            row = layout.row()
+            row = self.layout.row()
             row.label(text="Select an OpenFOAM object", icon='INFO')

@@ -101,9 +101,8 @@ class TBB_OT_OpenfoamPreview(Operator):
             self.report({'ERROR'}, "Something went generating the object")
             return {'FINISHED'}
 
-        settings = obj.tbb.settings
-        point_data = settings.openfoam.preview_point_data
-        res = prepare_openfoam_point_data(obj, settings, tmp_data, point_data)
+        point_data = obj.tbb.settings.openfoam.preview_point_data
+        res = prepare_openfoam_point_data(obj.data, point_data, tmp_data)
         if len(res[0]) > 0:
             generate_vertex_colors(blender_mesh, *res)
             generate_preview_material(obj, res[0][0]["name"] if len(res[0]) > 0 else 'None')
