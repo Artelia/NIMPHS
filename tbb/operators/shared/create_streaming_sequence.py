@@ -4,6 +4,9 @@ from bpy.props import StringProperty, IntProperty, EnumProperty
 
 import logging
 
+from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
+from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
+
 log = logging.getLogger(__name__)
 
 from tbb.operators.shared.create_sequence import TBB_CreateSequence
@@ -105,10 +108,21 @@ class TBB_CreateStreamingSequence(TBB_CreateSequence):
             set: state of the operator
         """
         from tbb.operators.utils import setup_streaming_sequence_object
+        from tbb.operators.openfoam.utils import load_openfoam_file
 
         # Setup streaming sequence object
         setup_streaming_sequence_object(obj, self, self.obj.tbb.settings.file_path)
         context.scene.collection.objects.link(obj)
+
+        # Create temporary data
+        if self.module == 'OpenFOAM':
+            success, file_reader = load_openfoam_file(obj.tbb.settings.file_path)
+            if not success:
+                log.error(f"Unable to open file {obj.tbb.settings.file_path}", exc_info=1)
+                return {'CANCELLED'}
+            context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_OpenfoamTemporaryData(file_reader)
+        if self.module == 'TELEMAC':
+            context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_TelemacTemporaryData()
 
         # As mentioned here, lock the interface because the custom handler will alter data on frame change
         # https://docs.blender.org/api/current/bpy.app.handlers.html?highlight=app%20handlers#module-bpy.app.handlers

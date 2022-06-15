@@ -5,6 +5,7 @@ from bpy.types import Collection, Object, Context, Mesh
 
 import numpy as np
 import logging
+import time
 
 from tbb.operators.shared.create_streaming_sequence import TBB_CreateStreamingSequence
 log = logging.getLogger(__name__)
@@ -178,6 +179,7 @@ def setup_streaming_sequence_object(obj: Object, op: TBB_CreateStreamingSequence
     obj.tbb.settings.file_path = file_path
     obj.tbb.is_streaming_sequence = True
     obj.tbb.settings.name = obj.name
+    obj.tbb.uid = str(time.time())
     obj.tbb.module = op.module
 
     # Setup sequence settings

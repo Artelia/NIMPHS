@@ -1,10 +1,12 @@
 # <pep8 compliant>
 import bpy
-from bpy.types import Context, Object
+from bpy.types import Context, Object, UILayout
 
 from typing import Union
 
 from tbb.properties.shared.module_scene_settings import TBB_ModuleSceneSettings
+from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
+from tbb.properties.utils import VariablesInformation
 
 
 def sequence_name_already_exist(name: str) -> bool:
@@ -65,3 +67,65 @@ def get_selected_object(context: Context) -> Union[Object, None]:
         obj = None
 
     return obj
+
+
+def draw_point_data(layout: UILayout, point_data: TBB_PointDataSettings, show_range: bool = True,
+                    edit: bool = True, source: str = 'OPERATOR') -> None:
+    """
+    Draw point data settings.
+
+    Args:
+        layout (UILayout): layout
+        point_data (TBB_PointDataSettings): point data settings
+        source (str): which source is calling this function. Enum in ['OPERATOR', 'OBJECT'].
+        show_range (bool, optional): show value ranges of selected point data. Defaults to True.
+        edit (bool, optional): show edit buttons. Defaults to True.
+    """
+
+    row = layout.row()
+    row.prop(point_data, "remap_method", text="Method")
+
+    # Display selected point data
+    data = VariablesInformation(point_data.list)
+    for name, unit, values, type, dim in zip(data.names, data.units, data.ranges, data.types, data.dimensions):
+
+        # Build info (value ranges)
+        if values is not None:
+            if point_data.remap_method == 'LOCAL':
+                if values["local"]["min"] is not None and values["local"]["max"] is not None:
+                    if type == 'SCALAR':
+                        info = "[" + "{:.4f}".format(values["local"]["min"]) + " ; "
+                        info += "{:.4f}".format(values["local"]["max"]) + "]"
+                    if type == 'VECTOR':
+                        info = ""
+                        for i in range(dim):
+                            info += "[" + "{:.4f}".format(values["local"]["min"][i]) + " ; "
+                            info += "{:.4f}".format(values["local"]["max"][i]) + "]"
+                else:
+                    info = "None"
+            elif point_data.remap_method == 'GLOBAL':
+                if values["global"]["min"] is not None and values["global"]["max"] is not None:
+                    if type == 'SCALAR':
+                        info = "[" + "{:.4f}".format(values["global"]["min"]) + " ; "
+                        info += "{:.4f}".format(values["global"]["max"]) + "]"
+                    if type == 'VECTOR':
+                        info = ""
+                        for i in range(dim):
+                            info += "[" + "{:.4f}".format(values["global"]["min"][i]) + " ; "
+                            info += "{:.4f}".format(values["global"]["max"][i]) + "]"
+                else:
+                    info = "None"
+            else:
+                info = "None"
+        else:
+            info = "None"
+
+        subbox = layout.box()
+        row = subbox.row()
+
+        if edit:
+            op = row.operator("tbb.remove_point_data", text="", icon='REMOVE')
+            op.var_name = name
+            op.source = source
+
+        row.label(text=(name + ", (" + unit + ")") if unit != "" else name + ((",  " + info) if show_range else ""))

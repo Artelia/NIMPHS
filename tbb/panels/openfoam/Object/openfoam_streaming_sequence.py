@@ -33,7 +33,7 @@ class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
             bool: state
         """
 
-        return super().poll(context, "OpenFOAM")
+        return super().poll(context, 'OpenFOAM')
 
     def draw(self, context: Context) -> None:
         """
@@ -44,16 +44,23 @@ class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
         """
 
         obj = get_selected_object(context)
-        if obj is not None:
-            sequence = obj.tbb.settings.openfoam.s_sequence
-            super().draw(obj, sequence)
+        sequence = obj.tbb.settings.openfoam.s_sequence
 
-            if sequence.update:
-                layout = self.layout
+        row = self.layout.row()
+        row.prop(sequence, "update", text="Update")
 
-                row = layout.row()
-                row.prop(sequence, "decompose_polyhedra", text="Decompose polyhedra")
-                row = layout.row()
-                row.prop(sequence, "triangulate", text="Triangulate")
-                row = layout.row()
-                row.prop(sequence, "case_type", text="Case")
+        if sequence.update:
+            import_settings = obj.tbb.settings.openfoam.import_settings
+
+            box = self.layout.box()
+            row = box.row()
+            row.label(text="Import")
+
+            row = box.row()
+            row.prop(import_settings, "decompose_polyhedra", text="Decompose polyhedra")
+            row = box.row()
+            row.prop(import_settings, "triangulate", text="Triangulate")
+            row = box.row()
+            row.prop(import_settings, "case_type", text="Case")
+
+        super().draw(context, obj, sequence)

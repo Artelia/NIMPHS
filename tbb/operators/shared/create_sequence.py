@@ -4,7 +4,7 @@ from bpy.props import EnumProperty, PointerProperty
 
 import time
 
-from tbb.panels.utils import get_selected_object
+from tbb.panels.utils import draw_point_data, get_selected_object
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 from tbb.properties.utils import VariablesInformation
 
@@ -72,54 +72,13 @@ class TBB_CreateSequence(Operator):
 
         if self.point_data.import_data:
 
-            row = box.row()
-            row.prop(self.point_data, "remap_method", text="Method")
-
-            # Display selected point data
-            data = VariablesInformation(self.list)
-            for name, unit, values, type, dim in zip(data.names, data.units, data.ranges, data.types, data.dimensions):
-                subbox = box.box()
-                row = subbox.row()
-
-                if values is not None:
-                    if self.point_data.remap_method == 'LOCAL':
-                        if values["local"]["min"] is not None and values["local"]["max"] is not None:
-                            if type == 'SCALAR':
-                                info = "[" + "{:.4f}".format(values["local"]["min"]) + " ; "
-                                info += "{:.4f}".format(values["local"]["max"]) + "]"
-                            if type == 'VECTOR':
-                                info = ""
-                                for i in range(dim):
-                                    info += "[" + "{:.4f}".format(values["local"]["min"][i]) + " ; "
-                                    info += "{:.4f}".format(values["local"]["max"][i]) + "]"
-                        else:
-                            info = "None"
-                    elif self.point_data.remap_method == 'GLOBAL':
-                        if values["global"]["min"] is not None and values["global"]["max"] is not None:
-                            if type == 'SCALAR':
-                                info = "[" + "{:.4f}".format(values["global"]["min"]) + " ; "
-                                info += "{:.4f}".format(values["global"]["max"]) + "]"
-                            if type == 'VECTOR':
-                                info = ""
-                                for i in range(dim):
-                                    info += "[" + "{:.4f}".format(values["global"]["min"][i]) + " ; "
-                                    info += "{:.4f}".format(values["global"]["max"][i]) + "]"
-                        else:
-                            info = "None"
-                    else:
-                        info = "None"
-                else:
-                    info = "None"
-
-                op = row.operator("tbb.remove_point_data", text="", icon='REMOVE')
-                op.var_name = name
-                op.source = 'OPERATOR'
-                row.label(text=(name + ", (" + unit + ")") if unit != "" else name + ",  " + info)
+            self.point_data.list = self.list
+            draw_point_data(box, self.point_data, show_range=False, edit=True, source='OPERATOR')
 
             row = box.row()
             op = row.operator("tbb.add_point_data", text="Add", icon='ADD')
             op.available = tmp_data.vars_info.dumps()
-            op.chosen = self.list
+            op.chosen = self.point_data.list
             op.source = 'OPERATOR'
 
     def stop(self, context: Context, cancelled: bool = False) -> None:

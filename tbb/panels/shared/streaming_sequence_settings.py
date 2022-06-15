@@ -1,14 +1,12 @@
 # <pep8 compliant>
 from bpy.types import Panel, Context, Object
 
-import json
-
-from tbb.panels.utils import get_selected_object
+from tbb.panels.utils import draw_point_data, get_selected_object
 from tbb.properties.shared.module_streaming_sequence_settings import TBB_ModuleStreamingSequenceSettings
 
 
 class TBB_StreamingSequenceSettingsPanel(Panel):
-    """Base UI panel for OpenFOAM and TELEMAC 'streaming sequence' settings."""
+    """Base UI panel for both modules 'streaming sequence' settings."""
 
     register_cls = False
     is_custom_base_cls = True
@@ -32,7 +30,7 @@ class TBB_StreamingSequenceSettingsPanel(Panel):
         else:
             return False
 
-    def draw(self, obj: Object, sequence: TBB_ModuleStreamingSequenceSettings) -> None:
+    def draw(self, context: Context, obj: Object, sequence: TBB_ModuleStreamingSequenceSettings) -> None:
         """
         Layout of the panel.
 
@@ -41,56 +39,35 @@ class TBB_StreamingSequenceSettingsPanel(Panel):
             sequence (TBB_ModuleStreamingSequenceSettings): 'streaming sequence' settings
         """
 
-        layout = self.layout
-        settings = obj.tbb.settings
+        tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
 
-        row = layout.row()
-        row.prop(sequence, "update", text="Update")
         if sequence.update:
-            row = layout.row()
-            row.prop(sequence, "frame_start", text="Frame start")
-            row = layout.row()
-            row.prop(sequence, "anim_length", text="Length")
+            box = self.layout.box()
+            row = box.row()
+            row.label(text="Sequence")
 
-            row = layout.row()
+            row = box.row()
+            row.prop(sequence, "frame_start", text="Start")
+            row = box.row()
+            row.prop(sequence, "anim_length", text="Length")
+            row = box.row()
             row.prop(sequence, "shade_smooth", text="Shade smooth")
 
-            row = layout.row()
-            row.prop(settings, "import_point_data", text="Import point data")
+            # Point data settings
+            point_data = obj.tbb.settings.point_data
 
-            if settings.import_point_data:
+            box = self.layout.box()
+            row = box.row()
+            row.label(text="Point data")
+            row = box.row()
+            row.prop(point_data, "import_data", text="Import point data")
 
-                row = layout.row()
-                row.prop(settings, "remap_method", text="Method")
+            if point_data.import_data:
 
-                # Display selected point data
-                data = json.loads(settings.point_data)
-                for name, unit, values in zip(data["names"], data["units"], data["ranges"]):
-                    box = layout.box()
-                    row = box.row()
+                draw_point_data(box, point_data, show_range=True, edit=True, source='OBJECT')
 
-                    if values is not None:
-                        if settings.remap_method == 'LOCAL':
-                            if values["local"]["min"] is not None and values["local"]["max"] is not None:
-                                info = "[" + "{:.4f}".format(values["local"]["min"]) + " ; "
-                                info += "{:.4f}".format(values["local"]["max"]) + "]"
-                            else:
-                                info = "None"
-                        elif settings.remap_method == 'GLOBAL':
-                            if values["global"]["min"] is not None and values["global"]["max"] is not None:
-                                info = "[" + "{:.4f}".format(values["global"]["min"]) + " ; "
-                                info += "{:.4f}".format(values["global"]["max"]) + "]"
-                            else:
-                                info = "None"
-                        else:
-                            info = "None"
-                    else:
-                        info = "None"
-
-                    op = row.operator("tbb.remove_point_data", text="", icon='REMOVE')
-                    op.obj_name = obj.name_full
-                    op.var_name = name
-                    row.label(text=name + ", (" + str(unit) + ")" + ",  " + info)
-
-                row = layout.row()
-                row.operator("tbb.add_point_data", text="Add", icon='ADD')
+                row = box.row()
+                op = row.operator("tbb.add_point_data", text="Add", icon='ADD')
+                op.available = tmp_data.vars_info.dumps()
+                op.chosen = point_data.list
+                op.source = 'OBJECT'

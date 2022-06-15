@@ -18,6 +18,7 @@ class TBB_OT_AddPointData(Operator):
     bl_idname = "tbb.add_point_data"
     bl_label = "Add point data"
     bl_description = "Add point data to import as vertex colors"
+    bl_options = {'REGISTER', 'UNDO'}
 
     def point_data_items(self, _context: Context) -> list:
         """
