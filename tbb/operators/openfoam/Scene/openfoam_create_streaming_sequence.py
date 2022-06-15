@@ -63,6 +63,7 @@ class TBB_OT_OpenfoamCreateStreamingSequence(TBB_CreateStreamingSequence):
             return {'CANCELLED'}
 
         context.scene.tbb.tmp_data["ops"] = TBB_OpenfoamTemporaryData(file_reader)
+        self.max_length = context.scene.tbb.tmp_data["ops"].nb_time_points
 
         return context.window_manager.invoke_props_dialog(self)
 

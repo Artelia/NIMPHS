@@ -1,6 +1,4 @@
 # <pep8 compliant>
-from bpy.props import PointerProperty
-
 from tbb.properties.shared.module_streaming_sequence_settings import TBB_ModuleStreamingSequenceSettings
 
 

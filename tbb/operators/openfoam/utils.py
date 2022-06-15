@@ -12,11 +12,9 @@ import numpy as np
 from typing import Union
 from pathlib import Path
 from pyvista import OpenFOAMReader, POpenFOAMReader, UnstructuredGrid
-import json
 
 from tbb.properties.openfoam.openfoam_clip import TBB_OpenfoamClipProperty
-from tbb.operators.utils import remap_array, generate_vertex_colors_groups, generate_vertex_colors, get_collection
-from tbb.properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
+from tbb.operators.utils import remap_array, generate_vertex_colors_groups, generate_vertex_colors
 from tbb.properties.utils import VariablesInformation
 from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 from tbb.operators.openfoam.Scene.openfoam_create_mesh_sequence import TBB_OT_OpenfoamCreateMeshSequence
@@ -377,23 +375,22 @@ def update_openfoam_streaming_sequences(scene: Scene) -> None:
 
     if not scene.tbb.create_sequence_is_running:
         for obj in scene.objects:
-            settings = obj.tbb.settings.openfoam.s_sequence
+            sequence = obj.tbb.settings.openfoam.s_sequence
 
-            if obj.tbb.is_streaming_sequence and settings.update:
-                time_point = frame - settings.frame_start
+            if obj.tbb.is_streaming_sequence and sequence.update:
+                time_point = frame - sequence.frame_start
 
-                if time_point >= 0 and time_point < settings.anim_length:
+                if time_point >= 0 and time_point < sequence.anim_length:
                     start = time.time()
                     try:
-                        update_openfoam_streaming_sequence_mesh(obj, settings, time_point)
-                    except Exception as error:
-                        print("ERROR::update_openfoam_streaming_sequences: " + settings.name + ", " + str(error))
+                        update_openfoam_streaming_sequence_mesh(scene, obj, time_point)
+                    except Exception:
+                        log.error(f"Error updating {obj.name}", exc_info=1)
 
-                    print("Update::OpenFOAM: " + settings.name + ", " + "{:.4f}".format(time.time() - start) + "s")
+                    log.info(f"Update {obj.name}: " + "{:.4f}".format(time.time() - start) + "s")
 
 
-def update_openfoam_streaming_sequence_mesh(obj: Object, settings: TBB_OpenfoamStreamingSequenceProperty,
-                                            time_point: int) -> None:
+def update_openfoam_streaming_sequence_mesh(scene: Scene, obj: Object, time_point: int) -> None:
     """
     Update the mesh of the given OpenFOAM sequence object.
 
@@ -407,29 +404,43 @@ def update_openfoam_streaming_sequence_mesh(obj: Object, settings: TBB_OpenfoamS
         ValueError: if the given time point does no exists
     """
 
-    success, file_reader = load_openfoam_file(settings.file_path, settings.case_type, settings.decompose_polyhedra)
-    if not success:
-        raise OSError("Unable to read the given file")
+    import_settings = obj.tbb.settings.openfoam.import_settings
 
-    # Check if time point is ok
-    if time_point >= file_reader.number_time_points:
-        raise ValueError("time point '" + str(time_point) + "' does not exist. Available time\
-                         points: " + str(file_reader.number_time_points))
+    try:
+        tmp_data = scene.tbb.tmp_data[obj.tbb.uid]
+    except AttributeError:
+        # If temporary data is not available, add it
+        succeed, file_reader = load_openfoam_file(obj.tbb.settings.file_path, case_type=import_settings.case_type,
+                                                  decompose_polyhedra=import_settings.decompose_polyhedra)
+        if not succeed:
+            raise IOError(f"Unable to open file {obj.tbb.settings.file_path}")
 
-    vertices, faces, mesh = generate_mesh_data(file_reader, time_point, triangulate=settings.triangulate,
-                                               clip=settings.clip)
+        scene.tbb.tmp_data[obj.tbb.uid] = TBB_OpenfoamTemporaryData(file_reader)
+        tmp_data = scene.tbb.tmp_data[obj.tbb.uid]
+    except KeyError:
+        log.error("No file data available")
+        log.debug("TemporaryData unavailable", exc_info=1)
+        tmp_data = None
 
-    blender_mesh = obj.data
-    blender_mesh.clear_geometry()
-    blender_mesh.from_pydata(vertices, [], faces)
+    if tmp_data is not None:
+        tmp_data.set_active_time_point(time_point)
+        vertices, faces, mesh = generate_mesh_data(tmp_data.file_reader, time_point,
+                                                   triangulate=import_settings.triangulate,
+                                                   clip=obj.tbb.settings.openfoam.clip)
+        tmp_data.mesh = mesh
 
-    if settings.shade_smooth:
-        blender_mesh.polygons.foreach_set("use_smooth", [True] * len(blender_mesh.polygons))
+        bmesh = obj.data
+        bmesh.clear_geometry()
+        bmesh.from_pydata(vertices, [], faces)
 
-    # Import point data as vertex colors
-    if settings.import_point_data:
-        res = prepare_openfoam_point_data(mesh, blender_mesh, settings.point_data.split(";"), time_point)
-        generate_vertex_colors(blender_mesh, *res)
+        if obj.tbb.settings.openfoam.s_sequence.shade_smooth:
+            bmesh.polygons.foreach_set("use_smooth", [True] * len(bmesh.polygons))
+
+        # Import point data as vertex colors
+        point_data = obj.tbb.settings.point_data
+        if point_data.import_data:
+            res = prepare_openfoam_point_data(bmesh, point_data.list, tmp_data)
+            generate_vertex_colors(bmesh, *res)
 
 
 def load_openfoam_file(file_path: str, case_type: str = 'reconstructed',

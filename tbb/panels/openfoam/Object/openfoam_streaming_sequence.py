@@ -47,6 +47,18 @@ class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
         obj = get_selected_object(context)
         sequence = obj.tbb.settings.openfoam.s_sequence
 
+        try:
+            tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
+        except KeyError:
+            tmp_data = None
+
+        # Check temporary data
+        if tmp_data is None or not tmp_data.is_ok():
+            row = self.layout.row()
+            row.label(text="Reload data: ", icon='ERROR')
+            row.operator("tbb.reload_openfoam_file", text="Reload", icon='FILE_REFRESH')
+            return
+
         row = self.layout.row()
         row.prop(sequence, "update", text="Update")
 

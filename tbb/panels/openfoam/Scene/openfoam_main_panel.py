@@ -70,6 +70,6 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
                 row = self.layout.box().row()
                 row.label(text="No data. Hit 'preview'.", icon='ERROR')
 
-        elif obj is None:
+        elif obj is None or (not obj.tbb.is_streaming_sequence and tmp_data_is_ok):
             row = self.layout.row()
             row.label(text="Select an OpenFOAM object", icon='INFO')

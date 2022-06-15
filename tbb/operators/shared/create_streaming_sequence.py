@@ -18,6 +18,19 @@ class TBB_CreateStreamingSequence(TBB_CreateSequence):
     register_cls = False
     is_custom_base_cls = True
 
+    def update_length(self, context: Context) -> None:  # noqa D417
+        """
+        Make sure the user can't select a wrong value.
+
+        Args:
+            context (Context): context
+        """
+
+        if self.length > self.max_length:
+            self.length = self.max_length
+        elif self.length < 0:
+            self.length = 0
+
     #: bpy.props.IntProperty: Starting point of the sequence.
     start: IntProperty(
         name="Start",  # noqa F821
@@ -30,6 +43,7 @@ class TBB_CreateStreamingSequence(TBB_CreateSequence):
         name="End",  # noqa F821
         description="Length of the sequence",
         default=1,
+        update=update_length
     )
 
     #: bpy.props.IntProperty: Maximum length of the sequence.

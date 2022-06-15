@@ -6,7 +6,6 @@ import time
 import logging
 from tbb.panels.openfoam.utils import draw_clip_settings
 from tbb.properties.openfoam.openfoam_clip import TBB_OpenfoamClipProperty
-from tbb.properties.utils import VariablesInformation
 log = logging.getLogger(__name__)
 
 from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData

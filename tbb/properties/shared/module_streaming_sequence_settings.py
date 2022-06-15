@@ -2,8 +2,6 @@
 from bpy.types import PropertyGroup
 from bpy.props import BoolProperty, IntProperty
 
-import json
-
 from tbb.properties.utils import set_sequence_anim_length, get_sequence_anim_length
 
 

@@ -79,7 +79,7 @@ class TBB_OT_OpenfoamPreview(Operator):
         except Exception:
             log.error("Error setting active time point", exc_info=1)
             self.report({'ERROR'}, f"Error setting active time point ({prw_time_point})")
-            return {'FINISHED'}
+            return {'CANCELLED'}
 
         try:
             vertices, faces, mesh = generate_mesh_data(tmp_data.file_reader, prw_time_point,
@@ -89,7 +89,7 @@ class TBB_OT_OpenfoamPreview(Operator):
         except Exception:
             log.error("Something went wrong building the mesh", exc_info=1)
             self.report({'ERROR'}, "Something went wrong building the mesh")
-            return {'FINISHED'}
+            return {'CANCELLED'}
 
         try:
             obj = generate_object_from_data(vertices, faces, "TBB_OpenFOAM_preview")
@@ -99,7 +99,7 @@ class TBB_OT_OpenfoamPreview(Operator):
         except Exception:
             log.error("Something went generating the object", exc_info=1)
             self.report({'ERROR'}, "Something went generating the object")
-            return {'FINISHED'}
+            return {'CANCELLED'}
 
         point_data = obj.tbb.settings.openfoam.preview_point_data
         res = prepare_openfoam_point_data(obj.data, point_data, tmp_data)

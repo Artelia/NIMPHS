@@ -38,7 +38,7 @@ class TBB_ModulePanel(Panel):
         if obj.tbb.is_streaming_sequence or obj.tbb.is_mesh_sequence:
             row = layout.row()
             row.label(text="Sequence: see Object Properties.", icon='INFO')
-            return False, False, None
+            return False, False, obj
 
         # Display file_path information
         box = layout.box()
