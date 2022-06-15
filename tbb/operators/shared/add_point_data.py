@@ -2,11 +2,11 @@
 from bpy.types import Operator, Context, Event
 from bpy.props import EnumProperty, StringProperty
 
-import json
 import logging
+from tbb.panels.utils import get_selected_object
+log = logging.getLogger(__name__)
 
 from tbb.properties.utils import VariablesInformation
-log = logging.getLogger(__name__)
 
 
 class TBB_OT_AddPointData(Operator):
@@ -19,49 +19,66 @@ class TBB_OT_AddPointData(Operator):
     bl_label = "Add point data"
     bl_description = "Add point data to import as vertex colors"
 
-    def point_data_items(self, context: Context) -> list:
+    def point_data_items(self, _context: Context) -> list:
         """
         Format point data to present to the user.
 
         Args:
-            context (Context): context
+            _context (Context): context
 
         Returns:
             list: point data
         """
 
         items = []
-        vars_info = VariablesInformation(self.available_point_data)
+        vars_info = VariablesInformation(self.available)
 
+        identifier = VariablesInformation()
         for name, unit, id in zip(vars_info.names, vars_info.units, range(vars_info.length())):
-            identifier = VariablesInformation()
             identifier.append(data=vars_info.get(id))
-            ui_name = name + ", (" + unit + ")" if unit != "" else name
-            items.append((identifier.dumps(), ui_name, "Undocumented"))
+            items.append((identifier.dumps(), (name + ", (" + unit + ")") if unit != "" else name, "Undocumented"))
+            identifier.clear()
 
         return items
 
+    #: bpy.props.EnumProperty: Point data to import as vertex colors.
     point_data: EnumProperty(
         name="Point data",
         description="Point data to import as vertex colors",
-        items=point_data_items
+        items=point_data_items,
+        options={'HIDDEN'},
     )
 
-    available_point_data: StringProperty(
+    #: bpy.props.StringProperty: JSON stringified list of available point data.
+    available: StringProperty(
         name="Available point data",
         description="JSON stringified list of available point data",
-        default=""
+        default="",
+        options={'HIDDEN'},
     )
 
-    chosen_point_data: StringProperty(
+    #: bpy.props.StringProperty: JSON stringified list of chosen point data.
+    chosen: StringProperty(
         name="Available point data",
         description="JSON stringified list of chosen point data",
-        default=""
+        default="",
+        options={'HIDDEN'},
+    )
+
+    #: bpy.props.EnumProperty: Indicates in which mode to execute this operator. Enum in ['OBJECT', 'OPERATOR'].
+    mode: EnumProperty(
+        name="Mode",
+        description="Indicates in which mode to execute this operator. Enum in ['OBJECT', 'OPERATOR']",
+        items=[
+            ("OBJECT", "Object", "Execute in object mode"),
+            ("OPERATOR", "Operator", "Execute in operator mode"),
+        ],
+        options={'HIDDEN'},
     )
 
     def invoke(self, context: Context, _event: Event) -> set:
         """
-        Let the user choose the point data to add.
+        Let the user choose point data to add.
 
         Args:
             context (Context): context
@@ -71,16 +88,16 @@ class TBB_OT_AddPointData(Operator):
             set: state of the operator
         """
 
-        to_present = VariablesInformation()
-        chosen = VariablesInformation(self.chosen_point_data)
-        available = VariablesInformation(self.available_point_data)
+        chosen = VariablesInformation(self.chosen)
+        available = VariablesInformation(self.available)
 
         # Remove already chosen variables from the list of available point data
+        to_present = VariablesInformation()
         for name, id in zip(available.names, range(available.length())):
             if name not in chosen.names:
                 to_present.append(data=available.get(id))
 
-        self.available_point_data = to_present.dumps()
+        self.available = to_present.dumps()
 
         return context.window_manager.invoke_props_dialog(self)
 
@@ -108,19 +125,27 @@ class TBB_OT_AddPointData(Operator):
             set: state of the operator
         """
 
-        try:
+        # Get point data
+        if self.mode == 'OBJECT':
+            obj = get_selected_object(context)
+            if obj is None:
+                log.warning("No selected object.", exc_info=1)
+                return {'CANCELLED'}
+
+            point_data = obj.tbb.settings.point_data.list
+
+        if self.mode == 'OPERATOR':
             # TODO: I think we can find a better solution to get access to these data.
             import bpy
             point_data = bpy.types.TBB_OT_openfoam_create_mesh_sequence.list
-        except Exception:
-            log.error("No file data available")
-            return {'CANCELLED'}
 
+        # Add selected point data to the list
         add = VariablesInformation(self.point_data)
-        point_data = VariablesInformation(point_data)
-        point_data.append(data=add.get(0))
+        data = VariablesInformation(point_data)
+        data.append(data=add.get(0))
 
-        bpy.types.TBB_OT_openfoam_create_mesh_sequence.list = point_data.dumps()
+        # Save the new list of chosen point data
+        point_data = data.dumps()
 
         context.area.tag_redraw()
         return {'FINISHED'}

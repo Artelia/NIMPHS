@@ -127,15 +127,8 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
                 row = box.row()
                 row.label(text="No data available.", icon='ERROR')
 
-        # Sequence settings
+        # Import point data
         box = layout.box()
-        box.label(text="Sequence")
-        row = box.row()
-        row.prop(self, "start", text="Start")
-        row = box.row()
-        row.prop(self, "end", text="End")
-        row = box.row()
-        row.prop(self, "name", text="Name")
         row = box.row()
         row.prop(self.point_data, "import_data", text="Import point data")
 
@@ -146,22 +139,33 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
 
             # Display selected point data
             data = VariablesInformation(self.list)
-            for name, unit, values in zip(data.names, data.units, data.ranges):
+            for name, unit, values, type, dim in zip(data.names, data.units, data.ranges, data.types, data.dimensions):
                 subbox = box.box()
                 row = subbox.row()
 
                 if values is not None:
                     if self.point_data.remap_method == 'LOCAL':
                         if values["local"]["min"] is not None and values["local"]["max"] is not None:
-                            print(values["local"]["min"])
-                            info = "[" + "{:.4f}".format(values["local"]["min"]) + " ; "
-                            info += "{:.4f}".format(values["local"]["max"]) + "]"
+                            if type == 'SCALAR':
+                                info = "[" + "{:.4f}".format(values["local"]["min"]) + " ; "
+                                info += "{:.4f}".format(values["local"]["max"]) + "]"
+                            if type == 'VECTOR':
+                                info = ""
+                                for i in range(dim):
+                                    info += "[" + "{:.4f}".format(values["local"]["min"][i]) + " ; "
+                                    info += "{:.4f}".format(values["local"]["max"][i]) + "]"
                         else:
                             info = "None"
                     elif self.point_data.remap_method == 'GLOBAL':
                         if values["global"]["min"] is not None and values["global"]["max"] is not None:
-                            info = "[" + "{:.4f}".format(values["global"]["min"]) + " ; "
-                            info += "{:.4f}".format(values["global"]["max"]) + "]"
+                            if type == 'SCALAR':
+                                info = "[" + "{:.4f}".format(values["global"]["min"]) + " ; "
+                                info += "{:.4f}".format(values["global"]["max"]) + "]"
+                            if type == 'VECTOR':
+                                info = ""
+                                for i in range(dim):
+                                    info += "[" + "{:.4f}".format(values["global"]["min"][i]) + " ; "
+                                    info += "{:.4f}".format(values["global"]["max"][i]) + "]"
                         else:
                             info = "None"
                     else:
@@ -170,13 +174,23 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
                     info = "None"
 
                 op = row.operator("tbb.remove_point_data", text="", icon='REMOVE')
-                print("UNIT", name)
-                row.label(text=name + ", (" + str(unit) + ")" + ",  " + info)
+                row.label(text=(name + ", (" + unit + ")") if unit != "" else name + ",  " + info)
 
             row = box.row()
             op = row.operator("tbb.add_point_data", text="Add", icon='ADD')
-            op.available_point_data = tmp_data.vars_info.dumps()
-            op.chosen_point_data = self.point_data.list
+            op.available = tmp_data.vars_info.dumps()
+            op.chosen = self.list
+            op.mode = 'OPERATOR'
+
+        # Sequence settings
+        box = layout.box()
+        box.label(text="Sequence")
+        row = box.row()
+        row.prop(self, "start", text="Start")
+        row = box.row()
+        row.prop(self, "end", text="End")
+        row = box.row()
+        row.prop(self, "name", text="Name")
 
     def execute(self, context: Context) -> set:
         """

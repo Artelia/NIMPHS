@@ -14,7 +14,7 @@ class TBB_Scene(PropertyGroup):
 
     #: dict: Dictionary of temporary data used for both modules.
     #        Shape is ```{"uid": tmp_data, "uid": tmp_data, ...}```
-    tmp_data: dict = {}
+    tmp_data: dict = {"ops": None}
 
     #: TBB_Settings: Holds scene settings for both OpenFOAM and TELEMAC modules
     settings: PointerProperty(type=TBB_SceneSettings)

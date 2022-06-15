@@ -11,8 +11,6 @@ import logging
 from tbb.properties.utils import VariablesInformation
 log = logging.getLogger(__name__)
 
-from tbb.panels.utils import get_selected_object
-
 
 def available_point_data(self, context: Context) -> list:
     """
@@ -27,26 +25,17 @@ def available_point_data(self, context: Context) -> list:
 
     try:
         tmp_data = context.scene.tbb.tmp_data[self.id_data.tbb.uid]  # Works for objects
-    except AttributeError:
-        try:
-            # TODO: I think we can find a better solution to get access the the 'uid' property of the operator.
-            import bpy
-            tmp_data = context.scene.tbb.tmp_data[bpy.types.TBB_OT_openfoam_create_mesh_sequence.uid]
-        except Exception:
-            log.error("No file data available")
-            return [("NONE", "None", "None")]
-    except KeyError:
+    except AttributeError:  # Raised when called from an operator (WindowManager objec has not attribute 'tbb')
+        tmp_data = context.scene.tbb.tmp_data["ops"]
+
+    if tmp_data is None or not tmp_data.is_ok():
         log.error("No file data available")
         return [("NONE", "None", "None")]
 
-    if not tmp_data.is_ok():
-        return [("NONE", "None", "None")]
-
     items = []
-    vars = tmp_data.vars_info
-    for name, range, type, dim in zip(vars.names, vars.ranges, vars.types, vars.dimensions):
-        identifier = {"names": [name], "ranges": [range], "types": [type], "dimensions": [dim]}
-        items.append((json.dumps(identifier, ), name, "Undocumented"))
+    for id in range(tmp_data.vars_info.length()):
+        identifier = tmp_data.vars_info.get(id)
+        items.append((json.dumps(identifier), identifier["name"], "Undocumented"))
 
     return items
 

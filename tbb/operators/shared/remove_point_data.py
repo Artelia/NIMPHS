@@ -1,11 +1,10 @@
 # <pep8 compliant>
 import bpy
 from bpy.types import Operator, Context
-from bpy.props import StringProperty
+from bpy.props import StringProperty, EnumProperty
 
 import json
 import logging
-from tbb.operators.utils import get_sequence_settings
 from tbb.panels.utils import get_selected_object
 log = logging.getLogger(__name__)
 
@@ -28,10 +27,15 @@ class TBB_OT_RemovePointData(Operator):
         default="",
     )
 
-    obj_name: StringProperty(
-        name="Object name",
-        description="Name of the sequence object on which to operate",
-        default="",
+    #: bpy.props.EnumProperty: Indicates in which mode to execute this operator. Enum in ['OBJECT', 'OPERATOR'].
+    mode: EnumProperty(
+        name="Mode",
+        description="Indicates in which mode to execute this operator. Enum in ['OBJECT', 'OPERATOR']",
+        items=[
+            ("OBJECT", "Object", "Execute in object mode"),
+            ("OPERATOR", "Operator", "Execute in operator mode"),
+        ],
+        options={'HIDDEN'},
     )
 
     def execute(self, context: Context) -> set:
@@ -40,7 +44,6 @@ class TBB_OT_RemovePointData(Operator):
 
         Args:
             context (Context): context
-            sequence (TBB_ModuleStreamingSequenceSettings): sequence settings
             name (str): name of point data
 
         Returns:
