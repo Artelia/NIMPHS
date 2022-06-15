@@ -16,6 +16,26 @@ Operators
    :members:
    :show-inheritance:
 
+.. autoclass:: tbb.operators.shared.create_mesh_sequence.TBB_CreateMeshSequence
+   :members:
+   :show-inheritance:
+
+.. autoclass:: tbb.operators.shared.create_streaming_sequence.TBB_CreateStreamingSequence
+   :members:
+   :show-inheritance:
+
+.. autoclass:: tbb.operators.shared.edit_file_path.TBB_OT_EditFilePath
+   :members:
+   :show-inheritance:
+
+.. autoclass:: tbb.operators.shared.add_point_data.TBB_OT_AddPointData
+   :members:
+   :show-inheritance:
+
+.. autoclass:: tbb.operators.shared.remove_point_data.TBB_OT_RemovePointData
+   :members:
+   :show-inheritance:
+
 .. automodule:: tbb.operators.utils
     :members:
 

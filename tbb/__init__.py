@@ -70,6 +70,7 @@ from tbb.operators.openfoam.utils import update_openfoam_streaming_sequences
 from tbb.operators.telemac.utils import update_telemac_streaming_sequences, update_telemac_mesh_sequences
 from tbb.properties.utils import register_custom_progress_bar
 from tbb.operators.openfoam.Scene.openfoam_import_file import import_openfoam_menu_draw
+from tbb.operators.telemac.Scene.telemac_import_file import import_telemac_menu_draw
 from tbb.menus.menus import tbb_menus_draw
 
 # Setup logger
@@ -103,6 +104,7 @@ def register():  # noqa: D103
 
     # Add custom import operators in 'File > Import'
     TOPBAR_MT_file_import.append(import_openfoam_menu_draw)
+    TOPBAR_MT_file_import.append(import_telemac_menu_draw)
     # Add custom menus
     VIEW3D_MT_editor_menus.append(tbb_menus_draw)
 
@@ -125,6 +127,7 @@ def unregister():  # noqa: D103
 
     # Remove custom import operators from 'File > Import'
     TOPBAR_MT_file_import.remove(import_openfoam_menu_draw)
+    TOPBAR_MT_file_import.remove(import_telemac_menu_draw)
     # Remove custom menus
     VIEW3D_MT_editor_menus.remove(tbb_menus_draw)
 

@@ -15,14 +15,16 @@ from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
 from tbb.operators.openfoam.utils import load_openfoam_file, generate_mesh_data
 
 
-def import_openfoam_menu_draw(self, _context: Context):  # noqa D417
+def import_openfoam_menu_draw(self, context: Context):  # noqa D417
     """
     Draw function which displays the import button in File > Import.
 
     Args:
         _context (Context): context
     """
-    self.layout.operator(TBB_OT_OpenfoamImportFile.bl_idname, text="OpenFOAM")
+    prefs = context.preferences.addons["tbb"].preferences.settings
+    extensions = prefs.openfoam_extensions.replace("*", "")
+    self.layout.operator(TBB_OT_OpenfoamImportFile.bl_idname, text=f"OpenFOAM ({extensions})")
 
 
 class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):

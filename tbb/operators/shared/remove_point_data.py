@@ -1,9 +1,7 @@
 # <pep8 compliant>
-import bpy
 from bpy.types import Operator, Context
 from bpy.props import StringProperty, EnumProperty
 
-import json
 import logging
 from tbb.panels.utils import get_selected_object
 from tbb.properties.utils import VariablesInformation

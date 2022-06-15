@@ -13,23 +13,11 @@ Scene
    :members:
    :show-inheritance:
 
-.. autoclass:: tbb.panels.openfoam.Scene.openfoam_create_sequence.TBB_PT_OpenfoamCreateSequence
-   :members:
-   :show-inheritance:
-
-.. autoclass:: tbb.panels.openfoam.Scene.openfoam_clip.TBB_PT_OpenfoamClip
-   :members:
-   :show-inheritance:
-
 .. _openfoam_panels_object:
 
 Object
 ######
 
 .. autoclass:: tbb.panels.openfoam.Object.openfoam_streaming_sequence.TBB_PT_OpenfoamStreamingSequence
-   :members:
-   :show-inheritance:
-
-.. autoclass:: tbb.panels.openfoam.Object.openfoam_streaming_sequence_clip.TBB_PT_OpenfoamStreamingSequenceClip
    :members:
    :show-inheritance:

@@ -9,7 +9,11 @@ Operators
 Scene
 #####
 
-.. autoclass:: tbb.operators.openfoam.Scene.openfoam_create_sequence.TBB_OT_OpenfoamCreateSequence
+.. autoclass:: tbb.operators.openfoam.Scene.openfoam_create_mesh_sequence.TBB_OT_OpenfoamCreateMeshSequence
+   :members:
+   :show-inheritance:
+
+.. autoclass:: tbb.operators.openfoam.Scene.openfoam_create_streaming_sequence.TBB_OT_OpenfoamCreateStreamingSequence
    :members:
    :show-inheritance:
 

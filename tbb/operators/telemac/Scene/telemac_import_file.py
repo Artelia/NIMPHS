@@ -4,10 +4,25 @@ from bpy.types import Operator, Context
 from bpy_extras.io_utils import ImportHelper
 
 import time
+import logging
+log = logging.getLogger(__name__)
 
 from tbb.operators.utils import get_object_dimensions_from_mesh
 from tbb.operators.telemac.utils import generate_preview_objects
 from tbb.operators.utils import update_scene_settings_dynamic_props
+
+
+def import_telemac_menu_draw(self, context: Context):  # noqa D417
+    """
+    Draw function which displays the import button in File > Import.
+
+    Args:
+        context (Context): context
+    """
+
+    prefs = context.preferences.addons["tbb"].preferences.settings
+    extensions = prefs.telemac_extensions.replace("*", "")
+    self.layout.operator(TBB_OT_TelemacImportFile.bl_idname, text=f"TELEMAC ({extensions})")
 
 
 class TBB_OT_TelemacImportFile(Operator, ImportHelper):
