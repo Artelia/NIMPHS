@@ -4,7 +4,6 @@ from bpy.types import Context, Object, UILayout
 
 from typing import Union
 
-from tbb.properties.shared.module_scene_settings import TBB_ModuleSceneSettings
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 from tbb.properties.utils import VariablesInformation
 
@@ -25,29 +24,6 @@ def sequence_name_already_exist(name: str) -> bool:
             return True
 
     return False
-
-
-def lock_create_operator(settings: TBB_ModuleSceneSettings) -> tuple[bool, str]:
-    """
-    Check if we need to lock the 'create sequence' button.
-
-    Args:
-        settings (TBB_ModuleSceneSettings): scene settings
-
-    Returns:
-        tuple[bool, str]: ``True`` if it needs to be locked, error message if ``False``
-    """
-
-    snae = sequence_name_already_exist(settings.sequence_name)  # snae = sequence_name_already_exist
-    snie = settings.sequence_name == "" or settings.sequence_name.isspace()  # snie = sequence name is empty
-    if snae:
-        message = "Name already taken"
-    elif snie:
-        message = "Name is empty"
-    else:
-        message = ""
-
-    return snae or snie, message
 
 
 def get_selected_object(context: Context) -> Union[Object, None]:

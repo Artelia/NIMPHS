@@ -10,9 +10,7 @@ import logging
 from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
 log = logging.getLogger(__name__)
 
-from tbb.operators.utils import get_object_dimensions_from_mesh
-from tbb.operators.telemac.utils import generate_base_objects, generate_preview_objects
-from tbb.operators.utils import update_scene_settings_dynamic_props
+from tbb.operators.telemac.utils import generate_base_objects
 
 
 def import_telemac_menu_draw(self, context: Context):  # noqa D417
@@ -79,7 +77,7 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         obj.tbb.settings.telemac.is_3d_simulation = tmp_data.is_3d
 
         # Generate objects
-        children = generate_base_objects(tmp_data, 0, self.name)
+        children = generate_base_objects(tmp_data, 0, self.name, "")
         # Link generated objects to main 'Null' object
         for child in children:
             context.scene.collection.objects.link(child)

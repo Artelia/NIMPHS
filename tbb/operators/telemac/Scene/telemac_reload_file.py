@@ -3,8 +3,6 @@ from bpy.types import Operator, Context
 
 import time
 
-from tbb.operators.utils import update_scene_settings_dynamic_props
-
 
 class TBB_OT_TelemacReloadFile(Operator):
     """Reload the selected file."""
@@ -44,9 +42,6 @@ class TBB_OT_TelemacReloadFile(Operator):
             print("ERROR::TBB_OT_TelemacImportFile: " + str(error))
             self.report({'ERROR'}, "An error occurred during import")
             return {'FINISHED'}
-
-        # Update properties values
-        update_scene_settings_dynamic_props(settings, tmp_data)
 
         print("Reload::TELEMAC: " + "{:.4f}".format(time.time() - start) + "s")
         self.report({'INFO'}, "Reload successful")

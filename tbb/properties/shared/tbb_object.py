@@ -21,6 +21,20 @@ class TBB_Object(PropertyGroup):
         default="None",
     )
 
+    #: bpy.props.StringProperty: Unique identifier for each 'tbb object'.
+    uid: StringProperty(
+        name="UID",  # noqa: F821
+        description="Unique identifier",
+        default="None",
+    )
+
+    #: bpy.props.StringProperty: Name of the object.
+    name: StringProperty(
+        name="Name",  # noqa: F821
+        description="Name of the sequence",
+        default="",
+    )
+
     #: bpy.props.BoolProperty: Describe if this object is a sequence which updates when the frame changes.
     is_streaming_sequence: BoolProperty(
         name="Is on frame change sequence",
@@ -33,11 +47,4 @@ class TBB_Object(PropertyGroup):
         name="Is part of a mesh sequence",
         description="Indicate whether this object is part of a mesh sequence or not",
         default=False
-    )
-
-    #: bpy.props.StringProperty: Unique identifier for each 'tbb object'.
-    uid: StringProperty(
-        name="UID",  # noqa: F821
-        description="Unique identifier",
-        default="None",
     )

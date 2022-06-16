@@ -1,9 +1,8 @@
 # <pep8 compliant>
 from bpy.types import PropertyGroup
-from bpy.props import PointerProperty, BoolProperty, FloatProperty, StringProperty
+from bpy.props import BoolProperty, FloatProperty, StringProperty
 
 from tbb.properties.utils import update_progress_bar
-from tbb.properties.shared.tbb_scene_settings import TBB_SceneSettings
 
 
 class TBB_Scene(PropertyGroup):
@@ -15,9 +14,6 @@ class TBB_Scene(PropertyGroup):
     #: dict: Dictionary of temporary data used for both modules.
     #        Shape is ```{"uid": tmp_data, "uid": tmp_data, ...}```
     tmp_data: dict = {"ops": None}
-
-    #: TBB_Settings: Holds scene settings for both OpenFOAM and TELEMAC modules
-    settings: PointerProperty(type=TBB_SceneSettings)
 
     #: bpy.props.BoolProperty: State of the 'create sequence' operation (used by all 'create sequence' operators)
     create_sequence_is_running: BoolProperty(

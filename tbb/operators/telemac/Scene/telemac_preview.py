@@ -36,9 +36,10 @@ class TBB_OT_TelemacPreview(Operator):
         collection = context.scene.collection
         tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
         prw_time_point = obj.tbb.settings.preview_time_point
+        point_data = obj.tbb.settings.preview_point_data
 
         try:
-            children = generate_base_objects(tmp_data, prw_time_point, obj.name)
+            children = generate_base_objects(tmp_data, prw_time_point, obj.name, point_data)
 
             for child in children:
                 # Check if not already in collection

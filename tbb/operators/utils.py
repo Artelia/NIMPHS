@@ -14,7 +14,6 @@ from typing import Any, Union
 from tbb.properties.telemac.Object.telemac_mesh_sequence import TBB_TelemacMeshSequenceProperty
 from tbb.properties.telemac.Object.telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
 from tbb.properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
-from tbb.properties.shared.module_scene_settings import scene_settings_dynamic_props, TBB_ModuleSceneSettings
 from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
 from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 
@@ -185,60 +184,6 @@ def setup_streaming_sequence_object(obj: Object, op: TBB_CreateStreamingSequence
     sequence.max_length = op.max_length             # Check TBB_StreamingSequenceProperty class definition.
     sequence.anim_length = op.length                #
     sequence.update = True
-
-
-def update_scene_settings_dynamic_props(settings: TBB_ModuleSceneSettings,
-                                        tmp_data: Union[TBB_OpenfoamTemporaryData, TBB_TelemacTemporaryData]) -> None:
-    """
-    Update 'dynamic' settings of the main panel.
-
-    It adapts the max values of properties in function of the imported file.
-
-    Args:
-        settings (TBB_ModuleSceneSettings): scene settings
-        tmp_data (Union[TBB_OpenfoamTemporaryData, TBB_TelemacTemporaryData]): temporary data
-    """
-
-    # This works because TBB_TelemacTemporaryData and TBB_OpenfoamTemporaryData have the same nb_time_points attribute
-    max_time_step = tmp_data.nb_time_points
-
-    new_maxima = {
-        "preview_time_point": max_time_step - 1,
-        "start_time_point": max_time_step - 1,
-        "end_time_point": max_time_step - 1,
-        "anim_length": max_time_step,
-    }
-    update_dynamic_props(settings, new_maxima, scene_settings_dynamic_props)
-
-
-def update_dynamic_props(settings: TBB_ModuleSceneSettings, new_maxima: dict, props: dict) -> None:
-    """
-    Set new max values to the given list of props. If a property does not exist, create it.
-
-    Args:
-        settings (TBB_ModuleSceneSettings): scene settings
-        new_maxima (dict): dict of new maxima: ``{"prop_name": value, ...}``
-        props (dict): dict of properties: ``[(prop_name, description), ...]``
-    """
-
-    for prop_id, prop_desc in props:
-        if settings.get(prop_id) is None:
-            rna_idprop_ui_create(
-                settings,
-                prop_id,
-                default=0,
-                min=0,
-                soft_min=0,
-                max=0,
-                soft_max=0,
-                description=prop_desc
-            )
-
-        prop = settings.id_properties_ui(prop_id)
-        default = settings[prop_id]
-        if new_maxima[prop_id] < default:
-            default = 0
-        prop.update(default=default, max=new_maxima[prop_id], soft_max=new_maxima[prop_id])
 
 
 def get_collection(name: str, context: Context, link_to_scene: bool = True) -> Collection:

@@ -21,13 +21,6 @@ class TBB_ObjectSettings(PropertyGroup):
     #: TBB_TelemacObjectSettings: TELEMAC object properties
     telemac: PointerProperty(type=TBB_TelemacObjectSettings)
 
-    #: bpy.props.StringProperty: Name of the object.
-    name: StringProperty(
-        name="Name",  # noqa: F821
-        description="Name of the sequence",
-        default="",
-    )
-
     #: bpy.props.StringProperty: File to read when updating the sequence.
     file_path: StringProperty(
         name="File path",

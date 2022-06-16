@@ -7,8 +7,11 @@ import time
 import json
 import numpy as np
 from typing import Union
+from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 from tbb.properties.shared.tbb_object_settings import TBB_ObjectSettings
 import logging
+
+from tbb.properties.utils import VariablesInformation
 log = logging.getLogger(__name__)
 
 from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
@@ -218,7 +221,7 @@ def generate_mesh_data_linear_interp(obj: Object, tmp_data: TBB_TelemacStreaming
 
 
 def generate_base_objects(tmp_data: TBB_TelemacTemporaryData, time_point: int, name: str,
-                          import_point_data: bool = False, point_data: str = "") -> list[Object]:
+                          point_data: Union[TBB_PointDataSettings, str]) -> list[Object]:
     """
     Generate objects using settings defined by the user. This function generates objects and vertex colors.
 
@@ -236,6 +239,12 @@ def generate_base_objects(tmp_data: TBB_TelemacTemporaryData, time_point: int, n
         list[Object]: generated object
     """
 
+    # Check if we need to import point data
+    if isinstance(point_data, str):
+        import_point_data = point_data != ""
+    else:
+        import_point_data = point_data.import_data
+
     objects = []
     if not tmp_data.is_3d:
         for type in ['BOTTOM', 'WATER_DEPTH']:
@@ -243,11 +252,9 @@ def generate_base_objects(tmp_data: TBB_TelemacTemporaryData, time_point: int, n
             obj = generate_object_from_data(vertices, tmp_data.faces, name=name + "_" + type.lower())
             # Save the name of the variable used for 'z-values' of the vertices
             obj.tbb.settings.telemac.z_name = type
-            # Reset the scale without applying it
-            obj.scale = [1.0, 1.0, 1.0]
 
             if import_point_data:
-                res = prepare_telemac_point_data(obj.data, point_data, tmp_data, time_point, normalize='GLOBAL')
+                res = prepare_telemac_point_data(obj.data, point_data, tmp_data, time_point)
                 generate_vertex_colors(obj.data, *res)
 
             objects.append(obj)
@@ -257,12 +264,9 @@ def generate_base_objects(tmp_data: TBB_TelemacTemporaryData, time_point: int, n
             obj = generate_object_from_data(vertices, tmp_data.faces, name=name + "_plane_" + str(plane_id))
             # Save the name of the variable used for 'z-values' of the vertices
             obj.tbb.settings.telemac.z_name = str(plane_id)
-            # Reset the scale without applying it
-            obj.scale = [1.0, 1.0, 1.0]
 
             if import_point_data:
-                res = prepare_telemac_point_data(obj.data, point_data, tmp_data, time_point,
-                                                 mesh_is_3d=True, offset=plane_id, normalize='GLOBAL')
+                res = prepare_telemac_point_data(obj.data, point_data, tmp_data, time_point, offset=plane_id)
                 generate_vertex_colors(obj.data, *res)
 
             objects.append(obj)
@@ -424,8 +428,9 @@ def generate_telemac_streaming_sequence_obj(context: Context, name: str) -> Obje
     return obj
 
 
-def prepare_telemac_point_data(obj: Object, settings: TBB_ObjectSettings, tmp_data: TBB_TelemacTemporaryData,
-                               time_point: int, offset: int = 0) -> tuple[list[dict], dict, int]:
+def prepare_telemac_point_data(bmesh: Mesh, point_data: Union[TBB_PointDataSettings, str],
+                               tmp_data: TBB_TelemacTemporaryData, time_point: int,
+                               offset: int = 0) -> tuple[list[dict], dict, int]:
     """
     Prepare point data for the 'generate_vertex_colors' function.
 
@@ -442,25 +447,28 @@ def prepare_telemac_point_data(obj: Object, settings: TBB_ObjectSettings, tmp_da
     """
 
     # Prepare the mesh to loop over all its triangles
-    mesh = obj.data
-    if len(mesh.loop_triangles) == 0:
-        mesh.calc_loop_triangles()
+    if len(bmesh.loop_triangles) == 0:
+        bmesh.calc_loop_triangles()
 
-    vertex_ids = np.array([triangle.vertices for triangle in mesh.loop_triangles]).flatten()
-
-    # Load point data information from JSON string
-    point_data = json.loads(settings.point_data)
+    vertex_ids = np.array([triangle.vertices for triangle in bmesh.loop_triangles]).flatten()
 
     # Format variables array
-    variables = []
-    for var, type in zip(point_data["names"], point_data["types"]):
-        variables.append({"name": var, "type": type, "id": var})
+    variables, dimensions = [], []
+    info = VariablesInformation(point_data if isinstance(point_data, str) else point_data.list)
+    for var, type, dim in zip(info.names, info.types, info.dimensions):
+        if var != "None":
+            variables.append({"name": var, "type": type, "id": var})
+            dimensions.append(dim)
 
-    # Prepare data (remap)
+    # Prepare data
     prepared_data = dict()
+    method = 'LOCAL' if isinstance(point_data, str) else point_data.remap_method
+
+    # Note: dim is always 1 (scalars)
     for var, id in zip(variables, range(len(variables))):
         # Read data
         data = tmp_data.get_data_from_var_name(var["id"], time_point, output_shape='ROW')
+        var_ranges = info.get(id, prop='RANGE')
 
         # Get right range of data in case of 3D simulation
         if tmp_data.is_3d:
@@ -468,11 +476,11 @@ def prepare_telemac_point_data(obj: Object, settings: TBB_ObjectSettings, tmp_da
             data = data[:, start_id:end_id]
 
         # Remap data
-        if settings.remap_method == 'LOCAL':
-            min, max = point_data["ranges"][id]["local"]["min"], point_data["ranges"][id]["local"]["max"]
+        if method == 'LOCAL':
+            min, max = var_ranges["local"]["min"], var_ranges["local"]["max"]
             prepared_data[var["id"]] = remap_array(np.array(data)[vertex_ids], in_min=min, in_max=max)
-        elif settings.remap_method == 'GLOBAL':
-            min, max = point_data["ranges"][id]["global"]["min"], point_data["ranges"][id]["global"]["max"]
+        elif method == 'GLOBAL':
+            min, max = var_ranges["global"]["min"], var_ranges["global"]["max"]
             prepared_data[var["id"]] = remap_array(np.array(data)[vertex_ids], in_min=min, in_max=max)
         else:
             prepared_data[var["id"]] = np.array(data)[vertex_ids]
