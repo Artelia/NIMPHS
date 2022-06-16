@@ -8,6 +8,8 @@ import json
 import numpy as np
 from typing import Union
 from tbb.properties.shared.tbb_object_settings import TBB_ObjectSettings
+import logging
+log = logging.getLogger(__name__)
 
 from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
 from tbb.properties.telemac.telemac_interpolate import TBB_TelemacInterpolateProperty
@@ -100,7 +102,7 @@ def run_one_step_create_mesh_sequence_telemac(context: Context, current_frame: i
             set_new_shape_key(obj, vertices.flatten(), str(time_point), current_frame, time_point == end_time_point)
 
 
-def generate_mesh_data(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, offset: int = 0,
+def generate_mesh_data(tmp_data: TBB_TelemacTemporaryData, offset: int = 0,
                        time_point: int = 0, type: str = 'BOTTOM') -> np.ndarray:
     """
     Generate the mesh of the selected file. If the selected file is a 2D simulation, you can precise\
@@ -119,17 +121,17 @@ def generate_mesh_data(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, off
         np.ndarray: vertices of the mesh, shape is (number_of_vertices, 3)
     """
 
-    if not mesh_is_3d and type not in ['BOTTOM', 'WATER_DEPTH']:
+    if not tmp_data.is_3d and type not in ['BOTTOM', 'WATER_DEPTH']:
         raise NameError("Undefined type, please use one in ['BOTTOM', 'WATER_DEPTH']")
 
     # If file from a 3D simulation
-    if mesh_is_3d:
+    if tmp_data.is_3d:
         possible_var_names = ["ELEVATION Z", "COTE Z"]
         try:
             z_values, var_name = tmp_data.get_data_from_possible_var_names(possible_var_names, time_point)
         except Exception as warning:
             z_values = np.zeros((tmp_data.nb_vertices, 1))
-            print(f"WARNING::generate_mesh_data: {warning}")
+            log.error(f"No data available from var names {possible_var_names}", exc_info=1)
 
         # Ids from where to read data in the z_values array
         start_id, end_id = offset * tmp_data.nb_vertices, offset * tmp_data.nb_vertices + tmp_data.nb_vertices
@@ -141,9 +143,9 @@ def generate_mesh_data(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, off
             possible_var_names = ["BOTTOM", "FOND"]
             try:
                 z_values, var_name = tmp_data.get_data_from_possible_var_names(possible_var_names, time_point)
-            except Exception as warning:
+            except Exception:
                 z_values = np.zeros((tmp_data.nb_vertices, 1))
-                print(f"WARNING::generate_mesh_data: {warning}")
+                log.error(f"No data available from var names {possible_var_names}", exc_info=1)
 
             vertices = np.hstack((tmp_data.vertices, z_values))
 
@@ -159,7 +161,7 @@ def generate_mesh_data(tmp_data: TBB_TelemacTemporaryData, mesh_is_3d: bool, off
 
             except Exception as warning:
                 z_values = np.zeros((tmp_data.nb_vertices, 1))
-                print(f"WARNING::generate_mesh_data: {warning}")
+                log.error(f"No data available from var names {possible_var_names}", exc_info=1)
 
             vertices = np.hstack((tmp_data.vertices, z_values))
 
@@ -215,8 +217,8 @@ def generate_mesh_data_linear_interp(obj: Object, tmp_data: TBB_TelemacStreaming
         return l_vertices  # If it is an existing time point, no need to interpolate
 
 
-def generate_base_objects(context: Context, time_point: int, name: str, import_point_data: bool = False,
-                          point_data: str = "") -> list[Object]:
+def generate_base_objects(tmp_data: TBB_TelemacTemporaryData, time_point: int, name: str,
+                          import_point_data: bool = False, point_data: str = "") -> list[Object]:
     """
     Generate objects using settings defined by the user. This function generates objects and vertex colors.
 
@@ -224,7 +226,6 @@ def generate_base_objects(context: Context, time_point: int, name: str, import_p
     is a 3D simulation, this will generate one object per plane.
 
     Args:
-        context (Context): context
         time_point (int): time point from which to read data
         name (str): name of the objects
         import_point_data (bool, optional): import point data as vertex colors. Defaults to False.
@@ -235,13 +236,10 @@ def generate_base_objects(context: Context, time_point: int, name: str, import_p
         list[Object]: generated object
     """
 
-    settings = context.scene.tbb.settings.telemac
-    tmp_data = settings.tmp_data
-
     objects = []
     if not tmp_data.is_3d:
         for type in ['BOTTOM', 'WATER_DEPTH']:
-            vertices = generate_mesh_data(tmp_data, mesh_is_3d=False, time_point=time_point, type=type)
+            vertices = generate_mesh_data(tmp_data, time_point=time_point, type=type)
             obj = generate_object_from_data(vertices, tmp_data.faces, name=name + "_" + type.lower())
             # Save the name of the variable used for 'z-values' of the vertices
             obj.tbb.settings.telemac.z_name = type
@@ -255,7 +253,7 @@ def generate_base_objects(context: Context, time_point: int, name: str, import_p
             objects.append(obj)
     else:
         for plane_id in range(tmp_data.nb_planes - 1, -1, -1):
-            vertices = generate_mesh_data(tmp_data, mesh_is_3d=True, offset=plane_id, time_point=time_point)
+            vertices = generate_mesh_data(tmp_data, offset=plane_id, time_point=time_point)
             obj = generate_object_from_data(vertices, tmp_data.faces, name=name + "_plane_" + str(plane_id))
             # Save the name of the variable used for 'z-values' of the vertices
             obj.tbb.settings.telemac.z_name = str(plane_id)

@@ -26,7 +26,7 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
             context (Context): context
         """
 
-        enable_rows, tmp_data_is_ok, obj = super().draw(context)
+        enable_rows, tmp_data_is_ok, obj = super().draw(context, 'OpenFOAM')
 
         if obj is not None and tmp_data_is_ok:
             import_settings = obj.tbb.settings.openfoam.import_settings

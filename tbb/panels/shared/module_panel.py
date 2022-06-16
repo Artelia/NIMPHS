@@ -16,12 +16,13 @@ class TBB_ModulePanel(Panel):
     register_cls = False
     is_custom_base_cls = True
 
-    def draw(self, context: Context) -> tuple[bool, bool, Union[Object, None]]:
+    def draw(self, context: Context, module: str) -> tuple[bool, bool, Union[Object, None]]:
         """
         Layout of the panel.
 
         Args:
             context (Context): context
+            module (str): module name. Enum in ['TELEMAC', 'OpenFOAM'].
 
         Returns:
             tuple[bool, bool, Union[Object, None]]: enable rows, temp data is available, selected object
@@ -29,7 +30,7 @@ class TBB_ModulePanel(Panel):
 
         obj = get_selected_object(context)
         # If the object is None or is not a TELEMAC or OpenFOAM file
-        if obj is None or obj.tbb.module not in ['TELEMAC', 'OpenFOAM']:
+        if obj is None or obj.tbb.module not in ['TELEMAC', 'OpenFOAM'] or obj.tbb.module != module:
             return False, False, None
 
         layout = self.layout

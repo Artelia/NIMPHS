@@ -2,6 +2,8 @@
 import time
 import numpy as np
 from typing import Union
+import logging
+log = logging.getLogger(__name__)
 
 from tbb.properties.telemac.serafin import Serafin
 from tbb.properties.shared.temporary_data import TemporaryData
@@ -35,31 +37,19 @@ class TBB_TelemacTemporaryData(TemporaryData):
     #:  bool: True if the file contains more than one plane
     is_3d = False
 
-    def __init__(self) -> None:
-        """Init method of the class."""
-
-        self.module_name = "TELEMAC"
-        self.file = None
-        self.vertices = None
-        self.faces = None
-        self.nb_vars = 0
-        self.nb_time_points = 0
-        self.vars_info = VariablesInformation()
-        self.nb_planes = 0
-        self.nb_vertices = 0
-        self.nb_triangles = 0
-
-    def update(self, file_path: str) -> None:
+    def __init__(self, file_path: str) -> None:
         """
-        Update temporary data by reading the file.
+        Init method of the class.
 
         Args:
             file_path (str): path to the TELEMAC file
         """
 
+        self.module_name = "TELEMAC"
         self.file = Serafin(file_path, read_time=True)
-        self.file.get_2d()
-        self.file.read(self.file.temps[0])
+
+        self.file.get_2d()  # Read mesh
+        self.file.read(self.file.temps[0])  # Read time step
 
         self.nb_planes = self.file.nplan
         self.is_3d = self.file.nplan > 1
@@ -80,8 +70,8 @@ class TBB_TelemacTemporaryData(TemporaryData):
         else:
             self.faces = self.file.ikle2d
 
-        self.vars_info.clear()
         # Construct variables information data
+        self.vars_info.clear()
         for var_info in self.file.nomvar:
             # var_info is always 32 chars long with 16 chars for the name and 16 for the unit name
             name = remove_spaces_telemac_var_name(var_info[:16])
@@ -139,18 +129,14 @@ class TBB_TelemacTemporaryData(TemporaryData):
             raise error
 
         # Get the id of the variable name if Serafin.nomvar
-        var_id = np.inf
-        for name, id in zip(self.vars_info["names"], range(self.nb_vars)):
-            if var_name == name:
-                var_id = id
-
-        if var_id == np.inf:
+        try:
+            var_id = self.vars_info.names.index(var_name)
+        except ValueError:
             raise NameError("The given variable name '" + str(var_name) + "' is not defined")
 
         # By default, always output with 'COL' shape, even the given shape is not defined.
         if output_shape not in ['ROW', 'COL']:
-            print("WARNING::get_data_from_var_name: unknown output_shape '" + str(output_shape) + "', default\
-                  output to 'COL' mode.")
+            log.warning(f"Unknown output shape {output_shape}. Default to 'COL' mode.")
         if output_shape == 'ROW':
             return data[var_id]
         else:

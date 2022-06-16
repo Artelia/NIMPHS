@@ -1,14 +1,17 @@
 # <pep8 compliant>
+import bpy
 from bpy.props import StringProperty
 from bpy.types import Operator, Context
 from bpy_extras.io_utils import ImportHelper
 
 import time
 import logging
+
+from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
 log = logging.getLogger(__name__)
 
 from tbb.operators.utils import get_object_dimensions_from_mesh
-from tbb.operators.telemac.utils import generate_preview_objects
+from tbb.operators.telemac.utils import generate_base_objects, generate_preview_objects
 from tbb.operators.utils import update_scene_settings_dynamic_props
 
 
@@ -41,6 +44,13 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         options={"HIDDEN"}  # noqa: F821
     )
 
+    #: bpy.props.StringProperty: Name to give to the imported object.
+    name: StringProperty(
+        name="Name",  # noqa F821
+        description="Name to give to the imported object",
+        default="TBB_TELEMAC_preview",  # noqa F821
+    )
+
     def execute(self, context: Context) -> set:
         """
         Import the selected file.
@@ -56,34 +66,41 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
 
         start = time.time()
 
-        settings = context.scene.tbb.settings.telemac
-        tmp_data = settings.tmp_data
+        # Generate parent object
+        obj = bpy.data.objects.new(self.name, object_data=None)
+        context.scene.collection.objects.link(obj)
+        # Setup common settings
+        obj.tbb.module = 'TELEMAC'
+        obj.tbb.uid = str(time.time())
+        obj.tbb.settings.file_path = self.filepath
+        # Load temporary data
+        context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_TelemacTemporaryData(self.filepath)
+        tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
+        obj.tbb.settings.telemac.is_3d_simulation = tmp_data.is_3d
 
-        # Read the file and update temporary data
-        try:
-            tmp_data.update(self.filepath)
-        except Exception as error:
-            print("ERROR::TBB_OT_TelemacImportFile: " + str(error))
-            self.report({'ERROR'}, "An error occurred during import")
-            return {'FINISHED'}
+        # Generate objects
+        children = generate_base_objects(tmp_data, 0, self.name)
+        # Link generated objects to main 'Null' object
+        for child in children:
+            context.scene.collection.objects.link(child)
+            child.parent = obj
 
-        settings.file_path = self.filepath
-
-        # Update properties values
-        update_scene_settings_dynamic_props(settings, tmp_data)
-
-        # try:
-        objects = generate_preview_objects(context)
-
-        # Reset preview object dimensions
-        settings.preview_obj_dimensions = get_object_dimensions_from_mesh(objects[0])
-
-        # except Exception as error:
-        #     print("ERROR::TBB_OT_TelemacImportFile: " + str(error))
-        #     self.report({'ERROR'}, "Something went wrong building the mesh")
-        #     return {'FINISHED'}
-
+        log.info("{:.4f}".format(time.time() - start) + "s")
         self.report({'INFO'}, "File successfully imported")
-        print("Import::TELEMAC: " + "{:.4f}".format(time.time() - start) + "s")
 
         return {'FINISHED'}
+
+    def draw(self, context: Context) -> None:
+        """
+        UI layout of the operator.
+
+        Args:
+            context (Context): context
+        """
+
+        box = self.layout.box()
+        row = box.row()
+        row.label(text="Others")
+
+        row = box.row()
+        row.prop(self, "name", text="Name")

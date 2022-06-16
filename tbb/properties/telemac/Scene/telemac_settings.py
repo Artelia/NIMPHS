@@ -2,7 +2,6 @@
 from bpy.props import BoolProperty, EnumProperty, FloatVectorProperty
 
 from tbb.properties.telemac.utils import update_var_names
-from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
 from tbb.properties.shared.module_scene_settings import TBB_ModuleSceneSettings
 
 
@@ -11,9 +10,6 @@ class TBB_TelemacSettings(TBB_ModuleSceneSettings):
 
     register_cls = True
     is_custom_base_cls = False
-
-    #: TBB_TelemacTemporaryData: temporary data
-    tmp_data = TBB_TelemacTemporaryData()
 
     #: bpy.props.EnumProperty: Name of point data to preview
     preview_point_data: EnumProperty(
