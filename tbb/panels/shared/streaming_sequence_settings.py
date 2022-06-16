@@ -56,7 +56,7 @@ class TBB_StreamingSequenceSettingsPanel(Panel):
 
         if point_data.import_data:
 
-            draw_point_data(box, point_data, show_range=True, edit=True, source='OBJECT')
+            draw_point_data(box, point_data, show_range=True, edit=True)
 
             row = box.row()
             op = row.operator("tbb.add_point_data", text="Add", icon='ADD')

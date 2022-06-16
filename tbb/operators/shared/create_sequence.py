@@ -68,18 +68,20 @@ class TBB_CreateSequence(Operator):
         # Import point data
         box = layout.box()
         row = box.row()
+        row.label(text="Point data")
+        row = box.row()
         row.prop(self.point_data, "import_data", text="Import point data")
 
         if self.point_data.import_data:
 
             self.point_data.list = self.list
-            draw_point_data(box, self.point_data, show_range=False, edit=True, source='OPERATOR')
+            draw_point_data(box, self.point_data, show_range=False, edit=True, src='OPERATOR/' + tmp_data.module_name)
 
             row = box.row()
             op = row.operator("tbb.add_point_data", text="Add", icon='ADD')
             op.available = tmp_data.vars_info.dumps()
             op.chosen = self.point_data.list
-            op.source = 'OPERATOR'
+            op.source = 'OPERATOR/' + tmp_data.module_name
 
     def stop(self, context: Context, cancelled: bool = False) -> None:
         """

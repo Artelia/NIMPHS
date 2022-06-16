@@ -1,11 +1,15 @@
 # <pep8 compliant>
 from bpy.types import Context, Event
+from bpy.props import PointerProperty
 
 import time
+import logging
+log = logging.getLogger(__name__)
 
-from tbb.operators.telemac.utils import run_one_step_create_mesh_sequence_telemac
 from tbb.operators.shared.create_mesh_sequence import TBB_CreateMeshSequence
+from tbb.properties.telemac.import_settings import TBB_TelemacImportSettings
 from tbb.panels.utils import get_selected_object
+from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
 
 
 class TBB_OT_TelemacCreateMeshSequence(TBB_CreateMeshSequence):
@@ -17,6 +21,10 @@ class TBB_OT_TelemacCreateMeshSequence(TBB_CreateMeshSequence):
     bl_idname = "tbb.telemac_create_mesh_sequence"
     bl_label = "Create mesh sequence"
     bl_description = "Create a 'mesh sequence' using the selected parameters. Press 'esc' to cancel"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    #: TBB_TelemacImportSettings: import settings
+    import_settings: PointerProperty(type=TBB_TelemacImportSettings)
 
     @classmethod
     def poll(self, context: Context) -> bool:
@@ -37,91 +45,67 @@ class TBB_OT_TelemacCreateMeshSequence(TBB_CreateMeshSequence):
 
         return obj.tbb.module == 'TELEMAC'
 
-    def execute(self, context: Context) -> set:
+    def invoke(self, context: Context, _event: Event) -> set:
         """
-        Call parent execute function.
-
-        If mode is set to 'NORMAL', run the operator without using the modal method (locks blender UI).
+        Prepare operators settings. Function triggered before the user can edit settings.
 
         Args:
             context (Context): context
+            _event (Event): event
 
         Returns:
             set: state of the operator
         """
 
-        running_mode = super().execute(context.scene.tbb.settings.telemac, context, 'TELEMAC')
-        if running_mode == {'RUNNING_MODAL'}:
-            return running_mode
-
-        # When running mode is {'NORMAL'}
-        for time_point in range(self.start_time_point, self.end_time_point, 1):
-            state = self.run_one_step(context, time_point)
-            if state != {'PASS'}:
-                super().stop(context)
-                return state
-
-        super().stop(context)
-        return {'FINISHED'}
-
-    def modal(self, context: Context, event: Event) -> set:
-        """
-        Run one step of the 'Create TELEMAC Mesh sequence' process.
-
-        Args:
-            context (Context): context
-            event (Event): event
-
-        Returns:
-            set: state of the operator
-        """
-
-        if event.type == 'ESC':
-            super().stop(context, cancelled=True)
+        self.obj = get_selected_object(context)
+        if self.obj is None:
             return {'CANCELLED'}
 
-        if event.type == 'TIMER':
-            if self.current_time_point <= self.end_time_point:
-                state = self.run_one_step(context, self.current_time_point)
-                if state != {'PASS'}:
-                    return state
+        # Load temporary data
+        context.scene.tbb.tmp_data["ops"] = TBB_TelemacTemporaryData(self.obj.tbb.settings.file_path, False)
 
-            else:
-                super().stop(context)
-                self.report({'INFO'}, "Create sequence finished")
-                return {'FINISHED'}
+        return context.window_manager.invoke_props_dialog(self)
 
-            # Update the progress bar
-            context.scene.tbb.progress_value = self.current_time_point / (self.end_time_point - self.start_time_point)
-            context.scene.tbb.progress_value *= 100
-            self.current_time_point += 1
-            self.current_frame += 1
-
-        return {'PASS_THROUGH'}
-
-    def run_one_step(self, context: Context, time_point: int) -> set:
+    def draw(self, context: Context) -> None:
         """
-        Run one step of the create mesh sequence process.
+        UI layout of the popup window of the operator.
 
         Args:
             context (Context): context
-            time_point (int): time point to generate
-
-        Returns:
-            set: state of the operation, enum in ['PASS', 'CANCELLED']
         """
 
+        layout = self.layout
+
+        # Import settings
+        box = layout.box()
+        box.label(text="Import")
+        row = box.row()
+        row.prop(self.import_settings, "compute_value_ranges", text="Compute value ranges")
+
+        super().draw(context)
+
+    def run_one_step(self, context: Context) -> set:
+        """
+        Run one step of the 'create_mesh_sequence' process.
+
+        Args:
+            context (Context): context
+
+        Returns:
+            set: state of the operation, enum in ['PASS_THROUGH', 'CANCELLED']
+        """
+
+        from tbb.operators.telemac.utils import run_one_step_create_mesh_sequence_telemac
+
+        start = time.time()
+
         try:
-            start = time.time()
-            run_one_step_create_mesh_sequence_telemac(context, self.current_frame, time_point,
-                                                      self.start_time_point, self.end_time_point,
-                                                      self.user_sequence_name)
-            el_time = "{:.4f}".format(time.time() - start)  # el_time = elapsed time
-            print("CreateSequence::TELEMAC: " + el_time + "s, time_point = " + str(time_point))
-        except Exception as error:
-            print("ERROR::TBB_OT_TelemacCreateSequence: " + str(error))
-            self.report({'ERROR'}, "An error occurred creating the sequence, (time_step = " + str(time_point) + ")")
+            run_one_step_create_mesh_sequence_telemac(context, self)
+        except Exception:
+            log.critical(f"Error generating mesh sequence at time point '{self.time_point}'", exc_info=1)
+            self.report({'ERROR'}, "An error occurred creating the sequence")
             super().stop(context)
             return {'CANCELLED'}
 
-        return {'PASS'}
+        log.info("{:.4f}".format(time.time() - start) + "s")
+        return {'PASS_THROUGH'}

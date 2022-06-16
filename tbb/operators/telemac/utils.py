@@ -132,7 +132,7 @@ def generate_mesh_data(tmp_data: TBB_TelemacTemporaryData, offset: int = 0,
         possible_var_names = ["ELEVATION Z", "COTE Z"]
         try:
             z_values, var_name = tmp_data.get_data_from_possible_var_names(possible_var_names, time_point)
-        except Exception as warning:
+        except Exception:
             z_values = np.zeros((tmp_data.nb_vertices, 1))
             log.error(f"No data available from var names {possible_var_names}", exc_info=1)
 
@@ -162,7 +162,7 @@ def generate_mesh_data(tmp_data: TBB_TelemacTemporaryData, offset: int = 0,
                     bottom, var_name = tmp_data.get_data_from_possible_var_names(["BOTTOM", "FOND"], time_point)
                     z_values += bottom
 
-            except Exception as warning:
+            except Exception:
                 z_values = np.zeros((tmp_data.nb_vertices, 1))
                 log.error(f"No data available from var names {possible_var_names}", exc_info=1)
 

@@ -109,7 +109,7 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         row = box.row()
         row.prop(self.import_settings, "compute_value_ranges", text="Compute value ranges")
 
-        # Others
+        # Others
         box = self.layout.box()
         row = box.row()
         row.label(text="Others")

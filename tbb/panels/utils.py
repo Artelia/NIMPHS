@@ -46,14 +46,14 @@ def get_selected_object(context: Context) -> Union[Object, None]:
 
 
 def draw_point_data(layout: UILayout, point_data: TBB_PointDataSettings, show_range: bool = True,
-                    edit: bool = True, source: str = 'OPERATOR') -> None:
+                    edit: bool = True, src: str = 'OBJECT') -> None:
     """
     Draw point data settings.
 
     Args:
         layout (UILayout): layout
         point_data (TBB_PointDataSettings): point data settings
-        source (str): which source is calling this function. Enum in ['OPERATOR', 'OBJECT'].
+        src (str): which source is calling this function. Enum in ['OBJECT', 'OPERATOR/OpenFOAM', 'OPERATOR/TELEMAC'].
         show_range (bool, optional): show value ranges of selected point data. Defaults to True.
         edit (bool, optional): show edit buttons. Defaults to True.
     """
@@ -102,6 +102,6 @@ def draw_point_data(layout: UILayout, point_data: TBB_PointDataSettings, show_ra
         if edit:
             op = row.operator("tbb.remove_point_data", text="", icon='REMOVE')
             op.var_name = name
-            op.source = source
+            op.source = src
 
         row.label(text=(name + ", (" + unit + ")") if unit != "" else name + ((",  " + info) if show_range else ""))

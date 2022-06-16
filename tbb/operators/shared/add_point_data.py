@@ -69,10 +69,12 @@ class TBB_OT_AddPointData(Operator):
     #: bpy.props.EnumProperty: Indicates the activator of this operator. Enum in ['OBJECT', 'OPERATOR'].
     source: EnumProperty(
         name="Source",  # noqa F821
-        description="Indicates the activator of this operator. Enum in ['OBJECT', 'OPERATOR']",
+        description="Indicates the activator of this operator.\
+Enum in ['OBJECT', 'OPERATOR/OpenFOAM', 'OPERATOR/TELEMAC']",
         items=[
             ("OBJECT", "Object", "Execute in object mode"),  # noqa F821
-            ("OPERATOR", "Operator", "Execute in operator mode"),  # noqa F821
+            ("OPERATOR/OpenFOAM", "Operator (OpenFOAM)", "Execute in operator mode, OpenFOAM module"),  # noqa F821
+            ("OPERATOR/TELEMAC", "Operator (TELEMAC)", "Execute in operator mode, TELEMAC module"),  # noqa F821
         ],
         options={'HIDDEN'},  # noqa F821
     )
@@ -139,6 +141,10 @@ class TBB_OT_AddPointData(Operator):
             # TODO: I think we can find a better solution to get access to these data.
             import bpy
             point_data = bpy.types.TBB_OT_openfoam_create_mesh_sequence.list
+        if self.source == 'OPERATOR/TELEMAC':
+            # TODO: I think we can find a better solution to get access to these data.
+            import bpy
+            point_data = bpy.types.TBB_OT_openfoam_create_mesh_sequence.list
 
         # Add selected point data to the list
         add = VariablesInformation(self.point_data)
@@ -148,8 +154,10 @@ class TBB_OT_AddPointData(Operator):
         # Save the new list of chosen point data
         if self.source == 'OBJECT':
             obj.tbb.settings.point_data.list = data.dumps()
-        if self.source == 'OPERATOR':
+        if self.source == 'OPERATOR/OpenFOAM':
             bpy.types.TBB_OT_openfoam_create_mesh_sequence.list = data.dumps()
+        if self.source == 'OPERATOR/TELEMAC':
+            bpy.types.TBB_OT_telemac_create_mesh_sequence.list = data.dumps()
 
         context.area.tag_redraw()
         return {'FINISHED'}
