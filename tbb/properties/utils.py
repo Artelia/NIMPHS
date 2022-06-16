@@ -3,7 +3,7 @@ from bpy.types import Context, VIEW3D_HT_tool_header
 
 import logging
 log = logging.getLogger(__name__)
-from typing import Union, Any, overload
+from typing import Union, Any
 import json
 
 DEV_MODE = True
@@ -143,7 +143,15 @@ class VariablesInformation():
             if range is None:
                 self.ranges.append(default_range)
             else:
-                self.ranges.append(range)
+                if range.get("local", None) is not None and range.get("global", None) is not None:
+                    self.ranges.append(range)
+                elif range.get("local", None) is None and range.get("global", None) is not None:
+                    self.ranges.append({"local": default_range["local"], "global": range["global"]})
+                elif range.get("local", None) is not None and range.get("global", None) is None:
+                    self.ranges.append({"local": range["local"], "global": default_range["global"]})
+                else:
+                    self.ranges.append(default_range)
+
             self.types.append(type)
             self.dimensions.append(dim)
 
@@ -230,44 +238,6 @@ def update_progress_bar(_self, context: Context):
     for area in areas:
         if area.type == 'INFO':
             area.tag_redraw()
-
-
-def clear_vars_info(data: dict) -> None:
-    """
-    Clear vars_info.
-
-    Args:
-        data (dict): variables information dictionary
-    """
-
-    data["names"].clear()
-    data["units"].clear()
-    data["ranges"].clear()
-    data["types"].clear()
-    data["dimensions"].clear()
-
-
-def append_vars_info(data: dict, name: str, unit: str = "", range: dict = None, type: str = 'SCALAR', dim: int = 1):
-    """
-    Append new data to vars_info.
-
-    Args:
-        data (dict): variables information
-        name (str): name
-        unit (str, optional): unit. Defaults to "".
-        range (dict, optional): value ranges. Defaults to None.
-        type (str, optional): type. Defaults to 'SCALAR'.
-        dim (int, optional): dimension. Defaults to 1.
-    """
-
-    data["names"].append(name)
-    data["units"].append(unit)
-    if range is None:
-        data["ranges"].append({"local": {"min": None, "max": None}, "global": {"min": None, "max": None}})
-    else:
-        data["ranges"].append(range)
-    data["types"].append(type)
-    data["dimensions"].append(dim)
 
 
 def available_point_data(self, context: Context) -> list:

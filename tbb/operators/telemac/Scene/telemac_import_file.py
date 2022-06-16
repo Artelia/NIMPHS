@@ -1,6 +1,6 @@
 # <pep8 compliant>
 import bpy
-from bpy.props import StringProperty
+from bpy.props import StringProperty, PointerProperty
 from bpy.types import Operator, Context
 from bpy_extras.io_utils import ImportHelper
 
@@ -8,6 +8,7 @@ import time
 import logging
 
 from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
+from tbb.properties.telemac.import_settings import TBB_TelemacImportSettings
 log = logging.getLogger(__name__)
 
 from tbb.operators.telemac.utils import generate_base_objects
@@ -49,6 +50,9 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         default="TBB_TELEMAC_preview",  # noqa F821
     )
 
+    #: TBB_TelemacImportSettings: Import settings.
+    import_settings: PointerProperty(type=TBB_TelemacImportSettings)
+
     def execute(self, context: Context) -> set:
         """
         Import the selected file.
@@ -72,7 +76,8 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         obj.tbb.uid = str(time.time())
         obj.tbb.settings.file_path = self.filepath
         # Load temporary data
-        context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_TelemacTemporaryData(self.filepath)
+        context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_TelemacTemporaryData(self.filepath,
+                                                                           self.import_settings.compute_value_ranges)
         tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
         obj.tbb.settings.telemac.is_3d_simulation = tmp_data.is_3d
 
@@ -96,6 +101,15 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
             context (Context): context
         """
 
+        # Import settings
+        box = self.layout.box()
+        row = box.row()
+        row.label(text="Import")
+
+        row = box.row()
+        row.prop(self.import_settings, "compute_value_ranges", text="Compute value ranges")
+
+        # Others
         box = self.layout.box()
         row = box.row()
         row.label(text="Others")

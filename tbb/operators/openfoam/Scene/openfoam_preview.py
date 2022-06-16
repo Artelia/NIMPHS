@@ -77,30 +77,33 @@ class TBB_OT_OpenfoamPreview(Operator):
         try:
             tmp_data.set_active_time_point(prw_time_point)
         except Exception:
-            log.error("Error setting active time point", exc_info=1)
+            log.debug("Error setting active time point", exc_info=1)
             self.report({'ERROR'}, f"Error setting active time point ({prw_time_point})")
             return {'CANCELLED'}
 
+        # Generate mesh data
         try:
             vertices, faces, mesh = generate_mesh_data(tmp_data.file_reader, prw_time_point,
                                                        triangulate=import_settings.triangulate,
                                                        clip=clip, mesh=tmp_data.raw_mesh)
             tmp_data.mesh = mesh  # Update mesh
         except Exception:
-            log.error("Something went wrong building the mesh", exc_info=1)
+            log.debug("Something went wrong building the mesh", exc_info=1)
             self.report({'ERROR'}, "Something went wrong building the mesh")
             return {'CANCELLED'}
 
+        # Generate objects
         try:
             obj = generate_object_from_data(vertices, faces, "TBB_OpenFOAM_preview")
             blender_mesh = obj.data
             if collection.name not in [col.name for col in obj.users_collection]:
                 collection.objects.link(obj)
         except Exception:
-            log.error("Something went generating the object", exc_info=1)
+            log.debug("Something went generating the object", exc_info=1)
             self.report({'ERROR'}, "Something went generating the object")
             return {'CANCELLED'}
 
+        # Import point data as vertex colors
         point_data = obj.tbb.settings.openfoam.preview_point_data
         res = prepare_openfoam_point_data(obj.data, point_data, tmp_data)
         if len(res[0]) > 0:

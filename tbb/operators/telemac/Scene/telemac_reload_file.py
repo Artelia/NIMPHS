@@ -2,6 +2,11 @@
 from bpy.types import Operator, Context
 
 import time
+import logging
+log = logging.getLogger(__name__)
+
+from tbb.panels.utils import get_selected_object
+from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
 
 
 class TBB_OT_TelemacReloadFile(Operator):
@@ -27,23 +32,18 @@ class TBB_OT_TelemacReloadFile(Operator):
             set: state of the operator
         """
 
-        settings = context.scene.tbb.settings.telemac
-        tmp_data = settings.tmp_data
-
-        if settings.file_path == "":
-            self.report({'ERROR'}, "Please select a file first")
-            return {'FINISHED'}
-
         start = time.time()
-        # Read the file and update temporary data
-        try:
-            tmp_data.update(settings.file_path)
-        except Exception as error:
-            print("ERROR::TBB_OT_TelemacImportFile: " + str(error))
-            self.report({'ERROR'}, "An error occurred during import")
-            return {'FINISHED'}
 
-        print("Reload::TELEMAC: " + "{:.4f}".format(time.time() - start) + "s")
+        obj = get_selected_object(context)
+
+        # Make sure the object still have an identifier
+        if obj.tbb.uid == "":
+            obj.tbb.uid = str(time.time())
+
+        # Update temporary data
+        context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_TelemacTemporaryData(obj.tbb.settings.file_path, False)
+
+        log.info("{:.4f}".format(time.time() - start) + "s")
         self.report({'INFO'}, "Reload successful")
 
         return {'FINISHED'}

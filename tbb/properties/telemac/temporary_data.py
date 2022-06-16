@@ -36,20 +36,23 @@ class TBB_TelemacTemporaryData(TemporaryData):
     nb_triangles = 0
     #:  bool: True if the file contains more than one plane
     is_3d = False
+    #: np.ndarray
+    data = None
 
-    def __init__(self, file_path: str) -> None:
+    def __init__(self, file_path: str, compute_value_ranges: bool) -> None:
         """
         Init method of the class.
 
         Args:
             file_path (str): path to the TELEMAC file
+            compute_value_ranges (bool): compute value ranges for all the variables
         """
 
         self.module_name = "TELEMAC"
         self.file = Serafin(file_path, read_time=True)
 
         self.file.get_2d()  # Read mesh
-        self.file.read(self.file.temps[0])  # Read time step
+        self.data = self.file.read(self.file.temps[0])  # Read time step
 
         self.nb_planes = self.file.nplan
         self.is_3d = self.file.nplan > 1
@@ -64,7 +67,7 @@ class TBB_TelemacTemporaryData(TemporaryData):
         self.vertices = np.vstack((self.file.x[:self.nb_vertices], self.file.y[:self.nb_vertices])).T
 
         # Construct faces array
-        # '-1' to remove the '+1' offset in the ikle array
+        # Note: '-1' to remove the '+1' offset in the ikle array
         if not self.is_3d:
             self.faces = (np.array(self.file.ikle) - 1).reshape((self.nb_triangles, 3))
         else:
@@ -72,20 +75,34 @@ class TBB_TelemacTemporaryData(TemporaryData):
 
         # Construct variables information data
         self.vars_info.clear()
-        for var_info in self.file.nomvar:
-            # var_info is always 32 chars long with 16 chars for the name and 16 for the unit name
-            name = remove_spaces_telemac_var_name(var_info[:16])
-            unit = remove_spaces_telemac_var_name(var_info[16:])
-            self.vars_info.append(name, unit=unit)
+        for var_name, id in zip(self.file.nomvar, range(self.nb_vars)):
+            # Note: var_name is always 32 chars long with 16 chars for the name and 16 for the unit name
+            name = remove_spaces_telemac_var_name(var_name[:16])
+            unit = remove_spaces_telemac_var_name(var_name[16:])
 
-    def is_ok(self) -> bool:
-        """
-        Check if temporary data still hold data (data are not None).
+            # Compute value ranges
+            if compute_value_ranges:
+                value_range = self.compute_var_value_range(id)
+                value_range = {"global": {"min": value_range["min"], "max": value_range["max"]}}
+            else:
+                value_range = self.read(0)[id]
+                value_range = {"local": {"min": np.min(value_range), "max": np.max(value_range)}}
 
-        Returns:
-            bool: ``True`` if everything is ok
+            self.vars_info.append(name=name, unit=unit, range=value_range)
+
+    def update(self, time_point: int):
         """
-        return self.file is not None and self.vertices is not None and self.faces is not None
+        Read data at given time point and compute local value ranges.
+
+        Args:
+            time_point (int): time point to read
+        """
+
+        self.data = self.read(time_point)
+
+        # Compute 'local' value ranges
+        for id in range(self.nb_vars):
+            self.vars_info.ranges[id]["local"] = {"min": np.min(self.data[id]), "max": np.max(self.data[id])}
 
     def read(self, time_point: int = 0) -> np.ndarray:
         """
@@ -199,8 +216,10 @@ class TBB_TelemacTemporaryData(TemporaryData):
             if new_max > max:
                 max = new_max
 
-        self.vars_info["ranges"][var_id] = (min, max)
-        print("TBB_TelemacTemporaryData::compute_var_value_range: " + "{:.4f}".format(time.time() - start) + "s")
+        self.vars_info.ranges[var_id]["global"] = {"min": min, "max": max}
+
+        message = f"Compute 'global' var value range for {self.vars_info.get(var_id, prop='NAME')}"
+        log.info(message + "{:.4f}".format(time.time() - start) + "s")
         return (min, max)
 
     def get_var_value_range(self, var: Union[int, str]) -> tuple[float, float]:
@@ -230,3 +249,12 @@ class TBB_TelemacTemporaryData(TemporaryData):
             value_range = self.compute_var_value_range(var_id)
 
         return value_range
+
+    def is_ok(self) -> bool:
+        """
+        Check if temporary data still hold data (data are not None).
+
+        Returns:
+            bool: ``True`` if everything is ok
+        """
+        return self.file is not None and self.vertices is not None and self.faces is not None

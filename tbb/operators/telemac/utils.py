@@ -473,7 +473,7 @@ def prepare_telemac_point_data(bmesh: Mesh, point_data: Union[TBB_PointDataSetti
         # Get right range of data in case of 3D simulation
         if tmp_data.is_3d:
             start_id, end_id = offset * tmp_data.nb_vertices, offset * tmp_data.nb_vertices + tmp_data.nb_vertices
-            data = data[:, start_id:end_id]
+            data = data[start_id:end_id]
 
         # Remap data
         if method == 'LOCAL':
