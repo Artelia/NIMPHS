@@ -5,7 +5,7 @@ import time
 import logging
 log = logging.getLogger(__name__)
 
-from tbb.operators.telemac.utils import generate_base_objects, generate_preview_objects
+from tbb.operators.telemac.utils import generate_base_objects
 from tbb.panels.utils import get_selected_object
 
 

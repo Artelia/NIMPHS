@@ -12,3 +12,4 @@ def tbb_menus_draw(self, context: Context) -> None:  # noqa D417
 
     if context.mode == 'OBJECT':
         self.layout.menu('TBB_MT_OpenfoamMainMenu')
+        self.layout.menu('TBB_MT_TelemacMainMenu')
