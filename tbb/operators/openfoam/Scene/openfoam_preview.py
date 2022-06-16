@@ -71,7 +71,7 @@ class TBB_OT_OpenfoamPreview(Operator):
         tmp_data.file_reader.decompose_polyhedra = import_settings.decompose_polyhedra
         tmp_data.file_reader.case_type = import_settings.case_type
 
-        prw_time_point = obj.tbb.settings.openfoam.preview_time_point
+        prw_time_point = obj.tbb.settings.preview_time_point
 
         # Read data at the chosen time point
         try:

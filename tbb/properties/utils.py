@@ -270,7 +270,64 @@ def append_vars_info(data: dict, name: str, unit: str = "", range: dict = None, 
     data["dimensions"].append(dim)
 
 
+def available_point_data(self, context: Context) -> list:
+    """
+    Generate the list of available point data.
+
+    Args:
+        context (Context): context
+
+    Returns:
+        list: available point data
+    """
+
+    try:
+        tmp_data = context.scene.tbb.tmp_data[self.id_data.tbb.uid]  # Works for objects
+    except AttributeError:  # Raised when called from an operator (WindowManager object has not attribute 'tbb')
+        tmp_data = context.scene.tbb.tmp_data["ops"]
+
+    if tmp_data is None or not tmp_data.is_ok():
+        log.error("No file data available")
+        return [("NONE", "None", "None")]
+
+    # Add a 'None' field for preview_point_data
+    if self.bl_rna.name == 'TBB_ObjectSettings':
+        items = [(json.dumps({"name": "None"}), "None", "Do not import")]
+    else:
+        items = []
+
+    for id in range(tmp_data.vars_info.length()):
+        identifier = tmp_data.vars_info.get(id)
+        items.append((json.dumps(identifier), identifier["name"], "Undocumented"))
+
+    return items
+
+
+def update_preview_time_point(self, context: Context) -> None:  # noqa D417
+    """
+    Update selected value of preview time point (make sure you can only select available time points).
+
+    Args:
+        context (Context): context
+    """
+
+    try:
+        tmp_data = context.scene.tbb.tmp_data[self.id_data.tbb.uid]
+    except KeyError:
+        log.error("No file data available")
+        return [("NONE", "None", "None")]
+
+    if not tmp_data.is_ok():
+        return [("NONE", "None", "None")]
+
+    if self.preview_time_point >= tmp_data.nb_time_points:
+        self.preview_time_point = tmp_data.nb_time_points - 1
+    elif self.preview_time_point < 0:
+        self.preview_time_point = 0
+
 # Inspired by: https://blog.michelanders.nl/2017/04/how-to-add-progress-indicator-to-the-info-header-in-blender.html
+
+
 def register_custom_progress_bar() -> None:
     """Register the custom progress bar."""
 

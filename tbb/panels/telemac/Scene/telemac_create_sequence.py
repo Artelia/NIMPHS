@@ -8,7 +8,7 @@ from tbb.panels.shared.create_sequence import TBB_CreateSequencePanel
 class TBB_PT_TelemacCreateSequence(TBB_CreateSequencePanel):
     """UI panel to manage the creation of new TELEMAC sequences."""
 
-    register_cls = True
+    register_cls = False
     is_custom_base_cls = False
 
     bl_label = "Create sequence"

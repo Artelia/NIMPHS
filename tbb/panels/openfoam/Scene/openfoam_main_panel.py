@@ -46,7 +46,7 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
 
             # Clip settings
             tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
-            enable_clip = tmp_data.time_point == obj.tbb.settings.openfoam.preview_time_point
+            enable_clip = tmp_data.time_point == obj.tbb.settings.preview_time_point
 
             draw_clip_settings(self.layout, obj.tbb.settings.openfoam.clip, enable=enable_clip)
 
@@ -56,11 +56,11 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
 
             row = box.row()
             row.enabled = enable_rows
-            row.prop(obj.tbb.settings.openfoam, "preview_point_data", text="Point")
+            row.prop(obj.tbb.settings, "preview_point_data", text="Point")
 
             row = box.row()
             row.enabled = enable_rows
-            row.prop(obj.tbb.settings.openfoam, "preview_time_point", text="Time point")
+            row.prop(obj.tbb.settings, "preview_time_point", text="Time point")
 
             row = box.row()
             row.enabled = enable_rows
