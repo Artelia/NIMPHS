@@ -56,7 +56,7 @@ class TBB_ModulePanel(Panel):
         module = obj.tbb.module
         # Check temporary data
         if tmp_data is None or not tmp_data.is_ok():
-            row = layout.row()
+            row = self.layout.row()
             row.enabled = enable_rows
             row.label(text="Reload data: ", icon='ERROR')
             row.operator("tbb.reload_" + module.lower() + "_file", text="Reload", icon='FILE_REFRESH')

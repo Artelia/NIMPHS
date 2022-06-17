@@ -44,10 +44,43 @@ class TBB_PT_TelemacStreamingSequence(TBB_StreamingSequenceSettingsPanel):
         """
 
         obj = get_selected_object(context)
-        if obj is not None:
-            obj_settings = obj.tbb.settings.telemac.s_sequence
-            super().draw(obj, obj_settings)
+        sequence = obj.tbb.settings.telemac.s_sequence
 
-            if obj_settings.update:
-                row = self.layout.row()
-                row.prop(obj_settings, "normalize", text="Normalize")
+        # Display file_path information
+        box = self.layout.box()
+        row = box.row()
+        row.label(text=f"File: {obj.tbb.settings.file_path}")
+        row.operator("tbb.edit_file_path", text="", icon="GREASEPENCIL")
+
+        try:
+            tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
+        except KeyError:
+            tmp_data = None
+
+        # Check temporary data
+        if tmp_data is None or not tmp_data.is_ok():
+            row = self.layout.row()
+            row.label(text="Reload data: ", icon='ERROR')
+            row.operator("tbb.reload_telemac_file", text="Reload", icon='FILE_REFRESH')
+            return
+
+        row = self.layout.row()
+        row.prop(sequence, "update", text="Update")
+
+        if sequence.update:
+            # Import settings
+            interpolate = obj.tbb.settings.telemac.interpolate
+
+            box = self.layout.box()
+            row = box.row()
+            row.label(text="Interpolation")
+
+            row = box.row()
+            row.prop(interpolate, "type", text="Type")
+
+            if interpolate.type != 'NONE':
+                row = box.row()
+                row.prop(interpolate, "time_steps", text="Time steps")
+
+            # Point data and sequence settings
+            super().draw(context, obj, sequence)

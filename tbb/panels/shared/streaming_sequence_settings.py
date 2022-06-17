@@ -54,7 +54,7 @@ class TBB_StreamingSequenceSettingsPanel(Panel):
         row = box.row()
         row.prop(point_data, "import_data", text="Import point data")
 
-        if point_data.import_data:
+        if point_data.import_data and tmp_data is not None:
 
             draw_point_data(box, point_data, show_range=True, edit=True)
 

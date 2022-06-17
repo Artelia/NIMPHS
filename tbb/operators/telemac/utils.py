@@ -49,6 +49,7 @@ def run_one_step_create_mesh_sequence_telemac(context: Context, op: TBB_OT_Telem
 
         obj = generate_telemac_sequence_obj(context, op.obj, name, op.start, True)
         obj.tbb.is_mesh_sequence = True
+        obj.tbb.settings.file_path = op.obj.tbb.settings.file_path
         context.scene.collection.objects.link(obj)
 
     # Other time points, update vertices

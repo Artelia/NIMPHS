@@ -47,6 +47,12 @@ class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
         obj = get_selected_object(context)
         sequence = obj.tbb.settings.openfoam.s_sequence
 
+        # Display file_path information
+        box = self.layout.box()
+        row = box.row()
+        row.label(text=f"File: {obj.tbb.settings.file_path}")
+        row.operator("tbb.edit_file_path", text="", icon="GREASEPENCIL")
+
         try:
             tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
         except KeyError:

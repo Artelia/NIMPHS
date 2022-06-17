@@ -26,5 +26,5 @@ class TBB_TelemacInterpolateProperty(PropertyGroup):
         default=1,
         min=1,
         soft_min=1,
-        soft_max=50,
+        soft_max=5,
     )
