@@ -82,7 +82,7 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         obj.tbb.settings.telemac.is_3d_simulation = tmp_data.is_3d
 
         # Generate objects
-        children = generate_base_objects(tmp_data, 0, self.name, "")
+        children = generate_base_objects(tmp_data, 0, self.name)
         # Link generated objects to main 'Null' object
         for child in children:
             context.scene.collection.objects.link(child)
