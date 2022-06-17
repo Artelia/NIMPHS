@@ -183,7 +183,7 @@ def generate_mesh_data(file_reader: OpenFOAMReader, time_point: int, triangulate
     return vertices, faces, mesh
 
 
-def generate_openfoam_streaming_sequence_obj(obj: Object, name: str) -> Object:
+def generate_openfoam_streaming_sequence_obj(context: Context, obj: Object, name: str) -> Object:
     """
     Generate the base object for an OpenFOAM 'streaming sequence'.
 
@@ -197,16 +197,23 @@ def generate_openfoam_streaming_sequence_obj(obj: Object, name: str) -> Object:
 
     # Create the object
     bmesh = bpy.data.meshes.new(name + "_sequence_mesh")
-    sequence_obj = bpy.data.objects.new(name + "_sequence", bmesh)
+    sequence = bpy.data.objects.new(name + "_sequence", bmesh)
 
     # Copy import settings from the selected object
     data = obj.tbb.settings.openfoam.import_settings
-    dest = sequence_obj.tbb.settings.openfoam.import_settings
+    dest = sequence.tbb.settings.openfoam.import_settings
     dest.decompose_polyhedra = data.decompose_polyhedra
     dest.triangulate = data.triangulate
     dest.case_type = data.case_type
 
-    return sequence_obj
+    # Load temporary data
+    success, file_reader = load_openfoam_file(obj.tbb.settings.file_path)
+    if not success:
+        log.error(f"Unable to open file {obj.tbb.settings.file_path}", exc_info=1)
+        raise IOError(f"Unable to open file {obj.tbb.settings.file_path}")
+    context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_OpenfoamTemporaryData(file_reader)
+
+    return sequence
 
 
 # Code taken from the Stop-motion-OBJ addon

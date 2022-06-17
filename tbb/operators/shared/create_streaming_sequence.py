@@ -31,34 +31,12 @@ class TBB_CreateStreamingSequence(TBB_CreateSequence):
         elif self.length < 0:
             self.length = 0
 
-    #: bpy.props.IntProperty: Starting point of the sequence.
-    start: IntProperty(
-        name="Start",  # noqa F821
-        description="Starting point of the sequence",
-        default=0,
-    )
-
     #: bpy.props.IntProperty: Length of the sequence.
     length: IntProperty(
         name="End",  # noqa F821
         description="Length of the sequence",
         default=1,
         update=update_length
-    )
-
-    #: bpy.props.IntProperty: Maximum length of the sequence.
-    max_length: IntProperty(
-        name="Max length",  # noqa F821
-        description="Maximum length of the sequence",
-        default=1,
-        options={'HIDDEN'},  # noqa F821
-    )
-
-    #: bpy.props.StringProperty: Name to give to the generated sequence object.
-    name: StringProperty(
-        name="Name",  # noqa F821
-        description="Name to give to the generated sequence object",
-        default="Mesh",  # noqa F821
     )
 
     #: bpy.props.EnumProperty: Indicates which module to use. Enum in ['OpenFOAM', 'TELEMAC'].
@@ -121,21 +99,10 @@ class TBB_CreateStreamingSequence(TBB_CreateSequence):
             set: state of the operator
         """
         from tbb.operators.utils import setup_streaming_sequence_object
-        from tbb.operators.openfoam.utils import load_openfoam_file
 
         # Setup streaming sequence object
         setup_streaming_sequence_object(obj, self, self.obj.tbb.settings.file_path)
         context.scene.collection.objects.link(obj)
-
-        # Create temporary data
-        if self.module == 'OpenFOAM':
-            success, file_reader = load_openfoam_file(obj.tbb.settings.file_path)
-            if not success:
-                log.error(f"Unable to open file {obj.tbb.settings.file_path}", exc_info=1)
-                return {'CANCELLED'}
-            context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_OpenfoamTemporaryData(file_reader)
-        if self.module == 'TELEMAC':
-            context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_TelemacTemporaryData()
 
         # As mentioned here, lock the interface because the custom handler will alter data on frame change
         # https://docs.blender.org/api/current/bpy.app.handlers.html?highlight=app%20handlers#module-bpy.app.handlers

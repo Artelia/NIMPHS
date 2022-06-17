@@ -4,6 +4,7 @@ from bpy.props import PointerProperty, StringProperty, BoolProperty
 
 from tbb.properties.telemac.Object.telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
 from tbb.properties.telemac.Object.telemac_mesh_sequence import TBB_TelemacMeshSequenceProperty
+from tbb.properties.telemac.telemac_interpolate import TBB_TelemacInterpolateProperty
 
 
 class TBB_TelemacObjectSettings(PropertyGroup):
@@ -25,6 +26,9 @@ class TBB_TelemacObjectSettings(PropertyGroup):
         description="Indicate whether this mesh sequence is from a 3D simulation or not",
         default=False
     )
+
+    #: bpy.props.TBB_TelemacInterpolateProperty: Interpolation settings
+    interpolate: PointerProperty(type=TBB_TelemacInterpolateProperty)
 
     #: TBB_TelemacStreamingSequenceProperty: TELEMAC 'streaming sequence' properties.
     s_sequence: PointerProperty(type=TBB_TelemacStreamingSequenceProperty)

@@ -104,7 +104,7 @@ class TBB_OT_OpenfoamPreview(Operator):
             return {'CANCELLED'}
 
         # Import point data as vertex colors
-        point_data = obj.tbb.settings.openfoam.preview_point_data
+        point_data = obj.tbb.settings.preview_point_data
         res = prepare_openfoam_point_data(obj.data, point_data, tmp_data)
         if len(res[0]) > 0:
             generate_vertex_colors(blender_mesh, *res)

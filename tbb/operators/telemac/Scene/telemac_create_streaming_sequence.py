@@ -1,24 +1,30 @@
 # <pep8 compliant>
 from bpy.types import Context, Event
+from bpy.props import PointerProperty
 
+import time
 import logging
-from tbb.operators.openfoam.utils import generate_openfoam_streaming_sequence_obj
 log = logging.getLogger(__name__)
 
-from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 from tbb.operators.shared.create_streaming_sequence import TBB_CreateStreamingSequence
+from tbb.properties.telemac.import_settings import TBB_TelemacImportSettings
 from tbb.panels.utils import get_selected_object
+from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
+from tbb.operators.telemac.utils import generate_telemac_sequence_obj
 
 
-class TBB_OT_OpenfoamCreateStreamingSequence(TBB_CreateStreamingSequence):
-    """Create an OpenFOAM 'streaming sequence'."""
+class TBB_OT_TelemacCreateStreamingSequence(TBB_CreateStreamingSequence):
+    """Create a TELEMAC 'streaming sequence'."""
 
     register_cls = True
     is_custom_base_cls = False
 
-    bl_idname = "tbb.openfoam_create_streaming_sequence"
+    bl_idname = "tbb.telemac_create_streaming_sequence"
     bl_label = "Create streaming sequence"
     bl_description = "Create a 'streaming sequence' using the selected parameters. Press 'esc' to cancel"
+
+    #: TBB_TelemacImportSettings: import settings
+    import_settings: PointerProperty(type=TBB_TelemacImportSettings)
 
     @classmethod
     def poll(self, context: Context) -> bool:
@@ -37,7 +43,7 @@ class TBB_OT_OpenfoamCreateStreamingSequence(TBB_CreateStreamingSequence):
         else:
             return False
 
-        return obj.tbb.module == 'OpenFOAM'
+        return obj.tbb.module == 'TELEMAC'
 
     def invoke(self, context: Context, _event: Event) -> set:
         """
@@ -50,19 +56,13 @@ class TBB_OT_OpenfoamCreateStreamingSequence(TBB_CreateStreamingSequence):
         Returns:
             set: state of the operator
         """
-        from tbb.operators.openfoam.utils import load_openfoam_file
 
         self.obj = get_selected_object(context)
         if self.obj is None:
             return {'CANCELLED'}
 
-        # Load file data
-        succeed, file_reader = load_openfoam_file(self.obj.tbb.settings.file_path)
-        if not succeed:
-            log.critical(f"Unable to open file '{self.obj.tbb.settings.file_path}'")
-            return {'CANCELLED'}
-
-        context.scene.tbb.tmp_data["ops"] = TBB_OpenfoamTemporaryData(file_reader)
+        # Load temporary data
+        context.scene.tbb.tmp_data["ops"] = TBB_TelemacTemporaryData(self.obj.tbb.settings.file_path, False)
         self.max_length = context.scene.tbb.tmp_data["ops"].nb_time_points
 
         return context.window_manager.invoke_props_dialog(self)
@@ -74,6 +74,14 @@ class TBB_OT_OpenfoamCreateStreamingSequence(TBB_CreateStreamingSequence):
         Args:
             context (Context): context
         """
+
+        layout = self.layout
+
+        # Import settings
+        box = layout.box()
+        box.label(text="Import")
+        row = box.row()
+        row.prop(self.import_settings, "compute_value_ranges", text="Compute value ranges")
 
         super().draw(context)
 
@@ -88,5 +96,6 @@ class TBB_OT_OpenfoamCreateStreamingSequence(TBB_CreateStreamingSequence):
             set: state of the operator
         """
 
-        obj = generate_openfoam_streaming_sequence_obj(self.obj, self.name)
+        obj = generate_telemac_sequence_obj(context, self.obj, self.name, self.start)
+        obj.tbb.id_streaming_sequence = True
         return super().execute(context, obj)

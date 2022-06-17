@@ -28,25 +28,25 @@ class TBB_CreateMeshSequence(TBB_CreateSequence):
     #: bpy.types.Object: Selected object
     obj: Object = None
 
-    #: bpy.props.IntProperty: Starting point of the sequence.
-    start: IntProperty(
-        name="Start",  # noqa F821
-        description="Starting point of the sequence",
-        default=0
-    )
+    def update_end(self, _context: Context) -> None:  # noqa D417
+        """
+        Make sure the user can't select a wrong value.
+
+        Args:
+            _context (Context): context
+        """
+
+        if self.end > self.max_length:
+            self.end = self.max_length
+        elif self.end < 0:
+            self.end = 0
 
     #: bpy.props.IntProperty: Ending point of the sequence.
     end: IntProperty(
         name="End",  # noqa F821
         description="Ending point of the sequence",
-        default=1
-    )
-
-    #: bpy.props.StringProperty: Name to give to the generated sequence object.
-    name: StringProperty(
-        name="Name",  # noqa F821
-        description="Name to give to the generated sequence object",
-        default="Mesh"  # noqa F821
+        default=1,
+        update=update_end
     )
 
     def invoke(self, context: Context, event: Event) -> set:

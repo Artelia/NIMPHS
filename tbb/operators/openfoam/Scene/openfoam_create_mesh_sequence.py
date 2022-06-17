@@ -23,7 +23,6 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
     bl_idname = "tbb.openfoam_create_mesh_sequence"
     bl_label = "Create mesh sequence"
     bl_description = "Create mesh a sequence using the selected parameters. Press 'esc' to cancel"
-    bl_options = {'REGISTER', 'UNDO'}
 
     #: TBB_OpenfoamImportSettings: import settings
     import_settings: PointerProperty(type=TBB_OpenfoamImportSettings)
@@ -76,6 +75,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
             return {'CANCELLED'}
 
         context.scene.tbb.tmp_data["ops"] = TBB_OpenfoamTemporaryData(file_reader)
+        self.max_length = context.scene.tbb.tmp_data["ops"].nb_time_points
 
         return context.window_manager.invoke_props_dialog(self)
 

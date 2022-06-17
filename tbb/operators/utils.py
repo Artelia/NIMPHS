@@ -175,7 +175,7 @@ def setup_streaming_sequence_object(obj: Object, op: TBB_CreateStreamingSequence
     # Setup common settings
     obj.tbb.settings.file_path = file_path
     obj.tbb.is_streaming_sequence = True
-    obj.tbb.settings.name = obj.name
+    obj.tbb.name = obj.name
     obj.tbb.uid = str(time.time())
     obj.tbb.module = op.module
 
@@ -228,75 +228,6 @@ def get_object_dimensions_from_mesh(obj: Object) -> list[float]:
     dimensions.append(np.max(vertices[:, 1]) - np.min(vertices[:, 1]))
     dimensions.append(np.max(vertices[:, 2]) - np.min(vertices[:, 2]))
     return dimensions
-
-
-def get_sequence_settings(obj: Object) -> Union[TBB_OpenfoamStreamingSequenceProperty,
-                                                TBB_TelemacStreamingSequenceProperty,
-                                                TBB_TelemacMeshSequenceProperty, None]:
-    """
-    Get sequence settings of the given sequence object.
-
-    Args:
-        obj (Object): sequence object
-
-    Returns:
-        Union[TBB_OpenfoamStreamingSequenceProperty, TBB_TelemacStreamingSequenceProperty,\
-              TBB_TelemacMeshSequenceProperty, None]: sequence settings
-    """
-
-    if obj.tbb.module == 'TELEMAC':
-        if obj.tbb.is_streaming_sequence:
-            return obj.tbb.settings.telemac.s_sequence
-        elif obj.tbb.is_mesh_sequence:
-            return obj.tbb.settings.telemac.m_sequence
-        else:
-            return None
-    elif obj.tbb.module == 'OpenFOAM':
-        if obj.tbb.is_streaming_sequence:
-            return obj.tbb.settings.openfoam.s_sequence
-        else:
-            return None
-    else:
-        return None
-
-
-def normalize_objects(objects: list[Object], dimensions: list[float]) -> None:
-    """
-    Rescale the given list of objects so coordinates of all the meshes are now in the range [-1;1].
-
-    Args:
-        objects (list[Object]): objects to normalize
-        dimensions (list[float]): original dimensions
-    """
-
-    factor = 1.0 / np.max(dimensions)
-    rescale_objects(objects, [factor, factor, factor])
-
-
-def rescale_objects(objects: list[Object], dimensions: list[float], apply: bool = False) -> None:
-    """
-    Resize a collection using the given dimensions.
-
-    Args:
-        objects (list[Object]): objects to normalize
-        dimensions (list[float]): target dimensions
-        apply (bool, optional): apply the rescale for each object in the given list. Defaults to False.
-    """
-
-    if apply:
-        # Deselect everything so we make sure the transform_apply will only be applied to our meshes
-        bpy.ops.object.select_all(action='DESELECT')
-
-    for obj in objects:
-        if apply:
-            obj.select_set(True)
-        obj.scale = dimensions
-
-    if apply:
-        bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
-
-        for obj in objects:
-            obj.select_set(False)
 
 
 def remap_array(input: np.ndarray, out_min: float = 0.0, out_max: float = 1.0,

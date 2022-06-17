@@ -16,12 +16,11 @@ class TBB_OT_TelemacCreateMeshSequence(TBB_CreateMeshSequence):
     """Create a TELEMAC 'mesh sequence'."""
 
     register_cls = True
-    is_custom_base_cls = True
+    is_custom_base_cls = False
 
     bl_idname = "tbb.telemac_create_mesh_sequence"
     bl_label = "Create mesh sequence"
     bl_description = "Create a 'mesh sequence' using the selected parameters. Press 'esc' to cancel"
-    bl_options = {'REGISTER', 'UNDO'}
 
     #: TBB_TelemacImportSettings: import settings
     import_settings: PointerProperty(type=TBB_TelemacImportSettings)
@@ -63,6 +62,7 @@ class TBB_OT_TelemacCreateMeshSequence(TBB_CreateMeshSequence):
 
         # Load temporary data
         context.scene.tbb.tmp_data["ops"] = TBB_TelemacTemporaryData(self.obj.tbb.settings.file_path, False)
+        self.max_length = context.scene.tbb.tmp_data["ops"].nb_time_points
 
         return context.window_manager.invoke_props_dialog(self)
 
@@ -102,7 +102,7 @@ class TBB_OT_TelemacCreateMeshSequence(TBB_CreateMeshSequence):
         try:
             run_one_step_create_mesh_sequence_telemac(context, self)
         except Exception:
-            log.critical(f"Error generating mesh sequence at time point '{self.time_point}'", exc_info=1)
+            log.error(f"Error generating mesh sequence at time point '{self.time_point}'", exc_info=1)
             self.report({'ERROR'}, "An error occurred creating the sequence")
             super().stop(context)
             return {'CANCELLED'}

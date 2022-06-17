@@ -7,6 +7,7 @@ import time
 import json
 import numpy as np
 from typing import Union
+from tbb.operators.telemac.Scene.telemac_create_mesh_sequence import TBB_OT_TelemacCreateMeshSequence
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 from tbb.properties.shared.tbb_object_settings import TBB_ObjectSettings
 import logging
@@ -15,21 +16,16 @@ from tbb.properties.utils import VariablesInformation
 log = logging.getLogger(__name__)
 
 from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
-from tbb.properties.telemac.telemac_interpolate import TBB_TelemacInterpolateProperty
 from tbb.properties.telemac.Object.telemac_mesh_sequence import TBB_TelemacMeshSequenceProperty
 from tbb.properties.telemac.Object.telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
 from tbb.operators.utils import (
     generate_object_from_data,
     remap_array,
-    get_collection,
     generate_vertex_colors_groups,
-    generate_vertex_colors,
-    get_object_dimensions_from_mesh,
-    normalize_objects)
+    generate_vertex_colors,)
 
 
-def run_one_step_create_mesh_sequence_telemac(context: Context, current_frame: int, current_time_point: int,
-                                              start_time_point: int, end_time_point: int, user_sequence_name: str):
+def run_one_step_create_mesh_sequence_telemac(context: Context, op: TBB_OT_TelemacCreateMeshSequence) -> None:
     """
     Run one step of the 'create mesh sequence' for the TELEMAC module.
 
@@ -45,64 +41,29 @@ def run_one_step_create_mesh_sequence_telemac(context: Context, current_frame: i
         error: if something went wrong generating meshes
     """
 
-    settings = context.scene.tbb.settings.telemac
-    tmp_data = settings.tmp_data
-    seq_obj_name = user_sequence_name + "_sequence"
+    # Object name
+    name = op.name + "_sequence"
 
     # First time point, create the sequence object
-    if current_time_point == start_time_point:
+    if op.time_point == op.start:
 
-        collection = get_collection("TBB_TELEMAC", context)
-
-        try:
-            objects = generate_base_objects(context, start_time_point, name=seq_obj_name)
-
-            for obj in objects:
-                # Add 'Basis' shape key
-                obj.shape_key_add(name="Basis", from_mix=False)
-                # Add the object to the collection
-                collection.objects.link(obj)
-
-            # Normalize if needed (option set by the user)
-            if settings.normalize_sequence_obj:
-                normalize_objects(objects, get_object_dimensions_from_mesh(objects[0]))
-
-        except Exception as error:
-            raise error
-
-        # Create the sequence object
-        seq_obj = bpy.data.objects.new(name=seq_obj_name, object_data=None)
-        seq_obj.tbb.is_mesh_sequence = True
-        seq_obj.tbb.import_point_data = settings.import_point_data
-        seq_obj.tbb.settings.telemac.m_sequence.point_data = settings.point_data
-        seq_obj.tbb.settings.telemac.m_sequence.is_3d_simulation = tmp_data.is_3d
-        seq_obj.tbb.settings.telemac.m_sequence.file_path = settings.file_path
-
-        # Add temporary data to the dictionary of tmp_data in TBB_Object
-        # WARNING: temporary data dictionary is also temporary (class attribute, not saved in the .blend file)
-        seq_obj.tbb.uid = str(time.time())
-        seq_obj.tbb.tmp_data[seq_obj.tbb.uid] = TBB_TelemacTemporaryData()
-        seq_obj.tbb.tmp_data[seq_obj.tbb.uid].update(settings.file_path)
-
-        # Parent objects
-        for child in objects:
-            child.parent = seq_obj
-
-        collection.objects.link(seq_obj)
+        obj = generate_telemac_sequence_obj(context, op.obj, name, op.start, True)
+        obj.tbb.is_mesh_sequence = True
+        context.scene.collection.objects.link(obj)
 
     # Other time points, update vertices
     else:
-        seq_obj = bpy.data.objects[seq_obj_name]
-        time_point = current_time_point
+        obj = bpy.data.objects[name]
+        tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
 
-        for obj, id in zip(seq_obj.children, range(len(seq_obj.children))):
+        for child, id in zip(obj.children, range(len(obj.children))):
             if not tmp_data.is_3d:
-                type = obj.tbb.settings.telemac.z_name
-                vertices = generate_mesh_data(tmp_data, mesh_is_3d=False, time_point=time_point, type=type)
+                type = child.tbb.settings.telemac.z_name
+                vertices = generate_mesh_data(tmp_data, time_point=op.time_point, type=type)
             else:
-                vertices = generate_mesh_data(tmp_data, mesh_is_3d=True, offset=id, time_point=time_point)
+                vertices = generate_mesh_data(tmp_data, offset=id, time_point=op.time_point)
 
-            set_new_shape_key(obj, vertices.flatten(), str(time_point), current_frame, time_point == end_time_point)
+            set_new_shape_key(child, vertices.flatten(), str(op.time_point), op.frame, op.time_point == op.end)
 
 
 def generate_mesh_data(tmp_data: TBB_TelemacTemporaryData, offset: int = 0,
@@ -274,56 +235,6 @@ def generate_base_objects(tmp_data: TBB_TelemacTemporaryData, time_point: int, n
     return objects
 
 
-def generate_preview_objects(context: Context, time_point: int = 0, name: str = "TBB_TELEMAC_preview") -> list[Object]:
-    """
-    Generate preview objects using settings defined by the user. Calls 'generate_base_objects'.
-
-    This function also generate preview materials.
-
-    Args:
-        context (Context): context
-        time_point (int, optional): time point of the preview. Defaults to 0.
-        name (str, optional): name of the preview object. Defaults to "TBB_TELEMAC_preview".
-
-    Returns:
-        list[Object]: generated objects
-    """
-
-    settings = context.scene.tbb.settings.telemac
-    tmp_data = settings.tmp_data
-    collection = get_collection("TBB_TELEMAC", context)
-
-    # Prepare the list of point data to preview
-    prw_var_id = int(settings.preview_point_data)
-    import_point_data = prw_var_id >= 0
-    if import_point_data:
-        vertex_colors_var_name = tmp_data.vars_info["names"][prw_var_id]
-        point_data = [vertex_colors_var_name]
-        # Generate vertex colors for all the variables
-        # point_data = tmp_data.vars_info["names"]
-        objects = generate_base_objects(context, time_point, name, import_point_data=import_point_data,
-                                        point_data=point_data)
-        for obj in objects:
-            generate_preview_material(obj, vertex_colors_var_name)
-    else:
-        objects = generate_base_objects(context, time_point, name)
-
-    # Add created objects to the right collection
-    if tmp_data.is_3d:
-        # Create a custom collection for 3D previews
-        collection_3d = get_collection("TBB_TELEMAC_3D", context, link_to_scene=False)
-        if collection_3d.name not in [col.name for col in collection.children]:
-            collection.children.link(collection_3d)
-        collection = collection_3d
-
-    for obj in objects:
-        # Check if not already in collection
-        if collection.name not in [col.name for col in obj.users_collection]:
-            collection.objects.link(obj)
-
-    return objects
-
-
 def generate_preview_material(obj: Object, var_name: str, name: str = "TBB_TELEMAC_preview_material") -> None:
     """
     Generate the preview material (if not generated yet). Update it otherwise (with the new variable).
@@ -386,9 +297,10 @@ def generate_preview_material(obj: Object, var_name: str, name: str = "TBB_TELEM
     obj.active_material = material
 
 
-def generate_telemac_streaming_sequence_obj(context: Context, name: str) -> Object:
+def generate_telemac_sequence_obj(context: Context, obj: Object, name: str, time_point: int,
+                                  shape_keys: bool = False) -> Object:
     """
-    Generate the base object for a TELEMAC 'streaming sequence'.
+    Generate the base object for a TELEMAC sequence.
 
     Args:
         context (Context): context
@@ -398,32 +310,34 @@ def generate_telemac_streaming_sequence_obj(context: Context, name: str) -> Obje
         Object: generate object
     """
 
-    settings = context.scene.tbb.settings.telemac
-    collection = context.scene.collection
+    # Name of the sequence object
+    name += "_sequence"
 
-    # Create objects
-    obj = bpy.data.objects.new(name=name + "_sequence", object_data=None)
-    # Add temporary data to the dictionary of tmp_data in TBB_Object
-    # WARNING: temporary data dictionary is also temporary (class attribute, not saved in the .blend file)
-    obj.tbb.uid = str(time.time())
-    obj.tbb.tmp_data[obj.tbb.uid] = TBB_TelemacTemporaryData()
-    obj.tbb.tmp_data[obj.tbb.uid].update(settings.file_path)
+    # Create sequence object
+    sequence = bpy.data.objects.new(name=name, object_data=None)
+    # Setup object settings
+    sequence.tbb.uid = str(time.time())
+    sequence.tbb.settings.file_path = obj.tbb.settings.file_path
+    sequence.tbb.module = 'TELEMAC'
+    sequence.tbb.name = name
 
-    children = generate_base_objects(context, 0, name + "_sequence")
+    # Load temporary data
+    context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_TelemacTemporaryData(obj.tbb.settings.file_path, False)
+    sequence.tbb.settings.telemac.is_3d_simulation = obj.tbb.settings.telemac.is_3d_simulation
+
+    try:
+        children = generate_base_objects(context.scene.tbb.tmp_data[obj.tbb.uid], time_point, name, "")
+    except Exception as error:
+        raise error
 
     for child in children:
-        # Add object to the collection
-        collection.objects.link(child)
+        if shape_keys:
+            # Add 'Basis' shape key
+            child.shape_key_add(name="Basis", from_mix=False)
+        # Add the object to the collection
+        context.scene.collection.objects.link(child)
+        # Parent object
         child.parent = obj
-
-    # Normalize if needed (option set by the user)
-    if settings.normalize_sequence_obj:
-        normalize_objects(children, get_object_dimensions_from_mesh(children[0]))
-
-    # Copy settings
-    sequence = obj.tbb.settings.telemac.s_sequence
-
-    sequence.normalize = settings.normalize_sequence_obj
 
     return obj
 
@@ -543,7 +457,7 @@ def prepare_telemac_point_data_linear_interp(obj: Object, settings: TBB_ObjectSe
         return l_color_data  # If it is an existing time point, no need to interpolate
 
 
-def set_new_shape_key(obj: Object, vertices: np.ndarray, name: str, frame: int, end: bool = False) -> None:
+def set_new_shape_key(obj: Object, vertices: np.ndarray, name: str, frame: int, end: bool) -> None:
     """
     Add a shape key to the object using the given vertices. It also set a keyframe with value = 1.0 at the given frame\
     and add keyframes at value = 0.0 around the frame (-1 and +1).

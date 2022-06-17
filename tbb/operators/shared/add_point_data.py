@@ -18,7 +18,6 @@ class TBB_OT_AddPointData(Operator):
     bl_idname = "tbb.add_point_data"
     bl_label = "Add point data"
     bl_description = "Add point data to import as vertex colors"
-    bl_options = {'REGISTER', 'UNDO'}
 
     def point_data_items(self, _context: Context) -> list:
         """
@@ -66,7 +65,8 @@ class TBB_OT_AddPointData(Operator):
         options={'HIDDEN'},  # noqa F821
     )
 
-    #: bpy.props.EnumProperty: Indicates the activator of this operator. Enum in ['OBJECT', 'OPERATOR'].
+    #: bpy.props.EnumProperty: Indicates the activator of this operator.
+    #  Enum in ['OBJECT', 'OPERATOR/OpenFOAM', 'OPERATOR/TELEMAC'].
     source: EnumProperty(
         name="Source",  # noqa F821
         description="Indicates the activator of this operator.\
@@ -137,27 +137,29 @@ Enum in ['OBJECT', 'OPERATOR/OpenFOAM', 'OPERATOR/TELEMAC']",
 
             point_data = obj.tbb.settings.point_data.list
 
-        if self.source == 'OPERATOR':
+        if self.source == 'OPERATOR/OpenFOAM':
             # TODO: I think we can find a better solution to get access to these data.
             import bpy
             point_data = bpy.types.TBB_OT_openfoam_create_mesh_sequence.list
         if self.source == 'OPERATOR/TELEMAC':
             # TODO: I think we can find a better solution to get access to these data.
             import bpy
-            point_data = bpy.types.TBB_OT_openfoam_create_mesh_sequence.list
+            point_data = bpy.types.TBB_OT_telemac_create_mesh_sequence.list
 
         # Add selected point data to the list
         add = VariablesInformation(self.point_data)
-        data = VariablesInformation(point_data)
-        data.append(data=add.get(0))
+        print(add.get(0, prop='NAME'))
+        if add.get(0, prop='NAME') != "NONE":
+            data = VariablesInformation(point_data)
+            data.append(data=add.get(0))
 
-        # Save the new list of chosen point data
-        if self.source == 'OBJECT':
-            obj.tbb.settings.point_data.list = data.dumps()
-        if self.source == 'OPERATOR/OpenFOAM':
-            bpy.types.TBB_OT_openfoam_create_mesh_sequence.list = data.dumps()
-        if self.source == 'OPERATOR/TELEMAC':
-            bpy.types.TBB_OT_telemac_create_mesh_sequence.list = data.dumps()
+            # Save the new list of chosen point data
+            if self.source == 'OBJECT':
+                obj.tbb.settings.point_data.list = data.dumps()
+            if self.source == 'OPERATOR/OpenFOAM':
+                bpy.types.TBB_OT_openfoam_create_mesh_sequence.list = data.dumps()
+            if self.source == 'OPERATOR/TELEMAC':
+                bpy.types.TBB_OT_telemac_create_mesh_sequence.list = data.dumps()
 
-        context.area.tag_redraw()
+            context.area.tag_redraw()
         return {'FINISHED'}
