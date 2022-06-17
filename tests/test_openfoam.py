@@ -1,7 +1,9 @@
 # <pep8 compliant>
 import os
 import bpy
+import json
 import pytest
+import pyvista
 
 # Sample A:
 # Number of time points = 21
@@ -15,13 +17,14 @@ FILE_PATH = os.path.abspath("./data/openfoam_sample_a/foam.foam")
 
 
 @pytest.fixture
-def scene_settings():
-    return bpy.context.scene.tbb.settings.openfoam
-
-
-@pytest.fixture
 def preview_object():
-    return bpy.data.objects.get("TBB_OpenFOAM_preview", None)
+    obj = bpy.data.objects.get("TBB_OpenFOAM_preview", None)
+    # If not None, select the object
+    if obj is not None:
+        obj.select_set(True)
+        bpy.context.view_layer.objects.active = obj
+
+    return obj
 
 
 @pytest.fixture
@@ -34,121 +37,171 @@ def streaming_sequence():
     return bpy.data.objects.get("My_OpenFOAM_Streaming_Sim_sequence", None)
 
 
-def test_import_openfoam(scene_settings):
-    assert bpy.ops.tbb.import_openfoam_file('EXEC_DEFAULT', filepath=FILE_PATH) == {"FINISHED"}
+def test_import_openfoam():
+    # Test with wrong filepath
+    state = bpy.ops.tbb.import_openfoam_file('EXEC_DEFAULT', filepath="here.foam")
+    assert state == {'CANCELLED'}
 
-    tmp_data = scene_settings.tmp_data
-
-    # Test temporary data default parameters
-    assert tmp_data.time_point == 0
-    assert tmp_data.module_name == "OpenFOAM"
-    assert tmp_data.file_reader is not None
-    assert tmp_data.data is not None
-    assert tmp_data.mesh is not None
-    assert tmp_data.nb_time_points == 21
+    state = bpy.ops.tbb.import_openfoam_file('EXEC_DEFAULT', filepath=FILE_PATH)
+    assert state == {"FINISHED"}
 
 
-def test_geometry_imported_preview_object_openfoam(preview_object):
-    assert preview_object is not None
-
+def test_preview_object_openfoam(preview_object):
     # Test geometry
     assert len(preview_object.data.vertices) == 61616
     assert len(preview_object.data.edges) == 182698
     assert len(preview_object.data.polygons) == 121092
 
+    # Test object properties
+    assert preview_object.tbb.module == 'OpenFOAM'
+    assert preview_object.tbb.uid != ""
+    assert preview_object.tbb.is_streaming_sequence is False
+    assert preview_object.tbb.is_mesh_sequence is False
+    # Test object settings
+    assert preview_object.tbb.settings.file_path == FILE_PATH
 
-def test_reload_openfoam(scene_settings):
+
+def test_file_data(preview_object):
+    assert preview_object is not None
+
+    file_data = bpy.context.scene.tbb.tmp_data.get(preview_object.tbb.uid, None)
+    assert file_data is not None
+
+    # Test file data
+    assert file_data.module_name == "OpenFOAM"
+    assert isinstance(file_data.file_reader, pyvista.OpenFOAMReader)
+    assert isinstance(file_data.raw_mesh, pyvista.UnstructuredGrid)
+    assert isinstance(file_data.mesh, pyvista.UnstructuredGrid)
+    assert file_data.time_point == 0
+    assert file_data.nb_time_points == 21
+    assert file_data.vars_info is not None
+
+
+def test_reload_openfoam(preview_object):
     assert bpy.ops.tbb.reload_openfoam_file('EXEC_DEFAULT') == {"FINISHED"}
 
-    # Test temporary data parameters
-    tmp_data = scene_settings.tmp_data
-    assert tmp_data.time_point == 0
-    assert tmp_data.module_name == "OpenFOAM"
-    assert tmp_data.file_reader is not None
-    assert tmp_data.data is not None
-    assert tmp_data.mesh is not None
-    assert tmp_data.nb_time_points == 21
+    file_data = bpy.context.scene.tbb.tmp_data.get(preview_object.tbb.uid, None)
+    assert file_data is not None
+
+    # Test file data
+    assert file_data.module_name == "OpenFOAM"
+    assert isinstance(file_data.file_reader, pyvista.OpenFOAMReader)
+    assert isinstance(file_data.raw_mesh, pyvista.UnstructuredGrid)
+    assert isinstance(file_data.mesh, pyvista.UnstructuredGrid)
+    assert file_data.time_point == 0
+    assert file_data.nb_time_points == 21
+    assert file_data.vars_info is not None
 
 
-def test_normal_preview_object_openfoam(scene_settings):
+def test_normal_preview_object_openfoam(preview_object):
+    # Get import settings
+    import_settings = preview_object.tbb.settings.openfoam.import_settings
+
     # Set preview settings
-    scene_settings.decompose_polyhedra = False
-    scene_settings.triangulate = False
-    scene_settings.case_type = 'reconstructed'
-    scene_settings.preview_point_data = "alpha.water@value"
+    import_settings.decompose_polyhedra = False
+    import_settings.triangulate = False
+    import_settings.case_type = 'reconstructed'
 
+    # TODO: test every sort of output this operator can generate
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
 
 
 def test_geometry_normal_preview_object(preview_object):
-    assert preview_object is not None
-
     # Test geometry
     assert len(preview_object.data.vertices) == 60548
     assert len(preview_object.data.edges) == 120428
     assert len(preview_object.data.polygons) == 59882
 
 
-def test_normal_decompose_polyhedra_preview_object_openfoam(scene_settings):
+def test_normal_decompose_polyhedra_preview_object_openfoam(preview_object):
+    # Get import settings
+    import_settings = preview_object.tbb.settings.openfoam.import_settings
+
     # Set preview settings
-    scene_settings.decompose_polyhedra = True
-    scene_settings.triangulate = False
-    scene_settings.case_type = 'reconstructed'
-    scene_settings.preview_point_data = "alpha.water@value"
+    import_settings.decompose_polyhedra = True
+    import_settings.triangulate = False
+    import_settings.case_type = 'reconstructed'
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
 
 
 def test_geometry_normal_decompose_polyhedra_preview_object_openfoam(preview_object):
-    assert preview_object is not None
-
     # Test geometry
     assert len(preview_object.data.vertices) == 60548
     assert len(preview_object.data.edges) == 121748
     assert len(preview_object.data.polygons) == 61202
 
 
-def test_triangulated_preview_object_openfoam(scene_settings):
+def test_triangulated_preview_object_openfoam(preview_object):
+    # Get import settings
+    import_settings = preview_object.tbb.settings.openfoam.import_settings
+
     # Set preview settings
-    scene_settings.decompose_polyhedra = False
-    scene_settings.triangulate = True
-    scene_settings.case_type = 'reconstructed'
-    scene_settings.preview_point_data = "alpha.water@value"
+    import_settings.decompose_polyhedra = False
+    import_settings.triangulate = True
+    import_settings.case_type = 'reconstructed'
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
 
 
 def test_geometry_triangulated_preview_object_openfoam(preview_object):
-    assert preview_object is not None
-
     # Test geometry
     assert len(preview_object.data.vertices) == 61616
     assert len(preview_object.data.edges) == 182698
     assert len(preview_object.data.polygons) == 121092
 
 
-def test_triangulated_decompose_polyhedra_preview_object_openfoam(scene_settings):
+def test_triangulated_decompose_polyhedra_preview_object_openfoam(preview_object):
+    # Get import settings
+    import_settings = preview_object.tbb.settings.openfoam.import_settings
+
     # Set preview settings
-    scene_settings.decompose_polyhedra = True
-    scene_settings.triangulate = True
-    scene_settings.case_type = 'reconstructed'
-    scene_settings.preview_point_data = "alpha.water@value"
+    import_settings.decompose_polyhedra = True
+    import_settings.triangulate = True
+    import_settings.case_type = 'reconstructed'
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
 
 
 def test_geometry_triangulated_decompose_polyhedra_preview_object_openfoam(preview_object):
-    assert preview_object is not None
-
     # Test geometry
     assert len(preview_object.data.vertices) == 61616
     assert len(preview_object.data.edges) == 182698
     assert len(preview_object.data.polygons) == 121092
 
 
-def test_point_data_preview_object_openfoam(preview_object):
-    assert preview_object is not None
+def test_add_point_data(preview_object):
+    tmp_data = bpy.context.scene.tbb.tmp_data.get(preview_object.tbb.uid, None)
+    assert tmp_data is not None
 
+    # TODO: Fix this. Not working.
+    # state = bpy.ops.tbb.add_point_data('INVOKE_DEFAULT', available=tmp_data.vars_info.dumps(),
+    #                                    chosen=preview_object.tbb.settings.point_data.list, source='OBJECT')
+    # assert state == {'FINISHED'}
+
+    # state = bpy.ops.tbb.add_point_data('EXEC_DEFAULT', available=tmp_data.vars_info.dumps(),
+    #                                    chosen=preview_object.tbb.settings.point_data.list, source='OBJECT',
+    #                                    point_data="None")
+    # assert state == {'FINISHED'}
+
+
+def test_remove_point_data(preview_object):
+    # TODO: First fix precedent test. Then complete this one.
+    tmp_data = bpy.context.scene.tbb.tmp_data.get(preview_object.tbb.uid, None)
+    assert tmp_data is not None
+
+
+def test_preview_point_data(preview_object):
+    tmp_data = bpy.context.scene.tbb.tmp_data.get(preview_object.tbb.uid, None)
+    assert tmp_data is not None
+
+    # Set point data to preview
+    preview_object.tbb.settings.preview_point_data = json.dumps(tmp_data.vars_info.get(1))
+
+    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
+
+
+def test_point_data_preview_object_openfoam(preview_object):
     # Test point data (only test if they exist)
     vertex_colors = preview_object.data.vertex_colors
     assert len(vertex_colors) == 1

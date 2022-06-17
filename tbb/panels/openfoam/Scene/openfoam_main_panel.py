@@ -45,7 +45,7 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
             row.prop(import_settings, "case_type", text="Case")
 
             # Clip settings
-            tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
+            tmp_data = context.scene.tbb.tmp_data.get(obj.tbb.uid, None)
             enable_clip = tmp_data.time_point == obj.tbb.settings.preview_time_point
 
             draw_clip_settings(self.layout, obj.tbb.settings.openfoam.clip, enable=enable_clip)

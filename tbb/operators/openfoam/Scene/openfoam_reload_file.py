@@ -41,7 +41,7 @@ class TBB_OT_OpenfoamReloadFile(Operator):
                                                   import_settings.decompose_polyhedra)
 
         if not success:
-            self.report({'ERROR'}, "The chosen file does not exist")
+            self.report({'WARNING'}, "The chosen file can't be read")
             return {'FINISHED'}
 
         # Make sure the object still have an identifier

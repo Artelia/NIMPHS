@@ -39,7 +39,7 @@ class TBB_OT_OpenfoamPreview(Operator):
         if obj is None:
             return False
 
-        tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
+        tmp_data = context.scene.tbb.tmp_data.get(obj.tbb.uid, None)
         return tmp_data is not None and tmp_data.is_ok()
 
     def execute(self, context: Context) -> set:
@@ -58,13 +58,13 @@ class TBB_OT_OpenfoamPreview(Operator):
         start = time.time()
 
         obj = get_selected_object(context)
-        tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
+        tmp_data = context.scene.tbb.tmp_data.get(obj.tbb.uid, None)
         clip = obj.tbb.settings.openfoam.clip
         import_settings = obj.tbb.settings.openfoam.import_settings
         collection = context.scene.collection
 
         if clip.type != "" and clip.scalar.name == "None":
-            self.report({'ERROR'}, "Select a scalar to clip on. You may need to reload the file if none are shown")
+            self.report({'WARNING'}, "Select a scalar to clip on. You may need to reload the file if none are shown")
             return {'FINISHED'}
 
         # Setup file_reader
@@ -78,7 +78,7 @@ class TBB_OT_OpenfoamPreview(Operator):
             tmp_data.set_active_time_point(prw_time_point)
         except Exception:
             log.debug("Error setting active time point", exc_info=1)
-            self.report({'ERROR'}, f"Error setting active time point ({prw_time_point})")
+            self.report({'WARNING'}, f"Error setting active time point ({prw_time_point})")
             return {'CANCELLED'}
 
         # Generate mesh data
@@ -89,7 +89,7 @@ class TBB_OT_OpenfoamPreview(Operator):
             tmp_data.mesh = mesh  # Update mesh
         except Exception:
             log.debug("Something went wrong building the mesh", exc_info=1)
-            self.report({'ERROR'}, "Something went wrong building the mesh")
+            self.report({'WARNING'}, "Something went wrong building the mesh")
             return {'CANCELLED'}
 
         # Generate objects
@@ -100,7 +100,7 @@ class TBB_OT_OpenfoamPreview(Operator):
                 collection.objects.link(obj)
         except Exception:
             log.debug("Something went generating the object", exc_info=1)
-            self.report({'ERROR'}, "Something went generating the object")
+            self.report({'WARNING'}, "Something went generating the object")
             return {'CANCELLED'}
 
         # Import point data as vertex colors

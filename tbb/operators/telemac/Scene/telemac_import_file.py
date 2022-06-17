@@ -78,7 +78,7 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         # Load temporary data
         context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_TelemacTemporaryData(self.filepath,
                                                                            self.import_settings.compute_value_ranges)
-        tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
+        tmp_data = context.scene.tbb.tmp_data.get(obj.tbb.uid, None)
         obj.tbb.settings.telemac.is_3d_simulation = tmp_data.is_3d
 
         # Generate objects

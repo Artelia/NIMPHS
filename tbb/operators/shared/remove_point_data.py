@@ -83,5 +83,6 @@ Enum in ['OBJECT', 'OPERATOR/OpenFOAM', 'OPERATOR/TELEMAC']",
         if self.source == 'OPERATOR/TELEMAC':
             bpy.types.TBB_OT_telemac_create_mesh_sequence.list = data.dumps()
 
-        context.area.tag_redraw()
+        if context.area is not None:
+            context.area.tag_redraw()
         return {'FINISHED'}

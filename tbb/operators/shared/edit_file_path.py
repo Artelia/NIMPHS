@@ -70,6 +70,7 @@ class TBB_OT_EditFilePath(Operator, ImportHelper):
 
         # Update file_path property
         obj.tbb.settings.file_path = self.filepath
-        context.area.tag_redraw()
 
+        if context.area is not None:
+            context.area.tag_redraw()
         return {'FINISHED'}

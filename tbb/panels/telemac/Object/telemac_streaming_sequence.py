@@ -52,10 +52,7 @@ class TBB_PT_TelemacStreamingSequence(TBB_StreamingSequenceSettingsPanel):
         row.label(text=f"File: {obj.tbb.settings.file_path}")
         row.operator("tbb.edit_file_path", text="", icon="GREASEPENCIL")
 
-        try:
-            tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
-        except KeyError:
-            tmp_data = None
+        tmp_data = context.scene.tbb.tmp_data.get(obj.tbb.uid, None)
 
         # Check temporary data
         if tmp_data is None or not tmp_data.is_ok():

@@ -48,10 +48,7 @@ class TBB_ModulePanel(Panel):
         # Check if we need to lock the ui
         enable_rows = not context.scene.tbb.create_sequence_is_running
 
-        try:
-            tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
-        except KeyError:
-            tmp_data = None
+        tmp_data = context.scene.tbb.tmp_data.get(obj.tbb.uid, None)
 
         module = obj.tbb.module
         # Check temporary data

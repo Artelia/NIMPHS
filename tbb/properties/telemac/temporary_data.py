@@ -36,7 +36,7 @@ class TBB_TelemacTemporaryData(TemporaryData):
     nb_triangles = 0
     #:  bool: True if the file contains more than one plane
     is_3d = False
-    #: np.ndarray
+    #: np.ndarray:
     data = None
 
     def __init__(self, file_path: str, compute_value_ranges: bool) -> None:

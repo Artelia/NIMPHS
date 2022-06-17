@@ -70,8 +70,8 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         success, file_reader = load_openfoam_file(self.filepath, settings.case_type, settings.decompose_polyhedra)
 
         if not success:
-            self.report({'ERROR'}, "The chosen file does not exist")
-            return {'FINISHED'}
+            self.report({'WARNING'}, "The chosen file can't be read")
+            return {'CANCELLED'}
 
         # Generate the preview mesh. This step is not present in the reload operator because
         # the preview mesh may already be loaded. Moreover, this step takes a while for large meshes.
@@ -82,8 +82,8 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
             context.scene.collection.objects.link(obj)
         except Exception:
             log.error("Something went wrong building the mesh", exc_info=1)
-            self.report({'ERROR'}, "Something went wrong building the mesh. See logs.")
-            return {'FINISHED'}
+            self.report({'WARNING'}, "Something went wrong building the mesh. See logs.")
+            return {'CANCELLED'}
 
         log.info("{:.4f}".format(time.time() - start) + "s")
         self.report({'INFO'}, "File successfully imported")

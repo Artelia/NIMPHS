@@ -40,10 +40,7 @@ class TBB_StreamingSequenceSettingsPanel(Panel):
             sequence (TBB_ModuleStreamingSequenceSettings): sequence settings
         """
 
-        try:
-            tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
-        except KeyError:
-            tmp_data = None
+        tmp_data = context.scene.tbb.tmp_data.get(obj.tbb.uid, None)
 
         # Point data settings
         point_data = obj.tbb.settings.point_data

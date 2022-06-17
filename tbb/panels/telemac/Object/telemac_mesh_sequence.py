@@ -52,7 +52,7 @@ class TBB_PT_TelemacMeshSequence(Panel):
             row.operator("tbb.edit_file_path", text="", icon="GREASEPENCIL")
 
             try:
-                tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
+                tmp_data = context.scene.tbb.tmp_data.get(obj.tbb.uid, None)
             except KeyError:
                 tmp_data = None
 
@@ -63,7 +63,7 @@ class TBB_PT_TelemacMeshSequence(Panel):
                 row.operator("tbb.reload_telemac_file", text="Reload", icon='FILE_REFRESH')
                 return
 
-            # Point data settings
+            # Point data settings
             point_data = obj.tbb.settings.point_data
 
             box = self.layout.box()

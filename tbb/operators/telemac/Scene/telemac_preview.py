@@ -34,7 +34,7 @@ class TBB_OT_TelemacPreview(Operator):
 
         obj = get_selected_object(context)
         collection = context.scene.collection
-        tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
+        tmp_data = context.scene.tbb.tmp_data.get(obj.tbb.uid, None)
         time_point = obj.tbb.settings.preview_time_point
         point_data = obj.tbb.settings.preview_point_data
 

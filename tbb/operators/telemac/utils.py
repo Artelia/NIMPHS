@@ -59,7 +59,7 @@ def run_one_step_create_mesh_sequence_telemac(context: Context, op: TBB_OT_Telem
     # Other time points, update vertices
     else:
         obj = bpy.data.objects[name]
-        tmp_data = context.scene.tbb.tmp_data[obj.tbb.uid]
+        tmp_data = context.scene.tbb.tmp_data.get(obj.tbb.uid, None)
 
         for child, id in zip(obj.children, range(len(obj.children))):
             if not tmp_data.is_3d:
