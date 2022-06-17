@@ -46,7 +46,7 @@ class VariablesInformation():
             prop (str, optional): name of a specific property to get. If not set return all. Defaults to "".
 
         Returns:
-            Union[dict, Any, None]: dict containing all information. Defaults to None.
+            Union[dict, Any, None]: information on variables.
         """
 
         if isinstance(id, str):

@@ -41,13 +41,12 @@ class TBB_PT_TelemacStreamingSequenceInterpolate(Panel):
             context (Context): context
         """
 
-        layout = self.layout
         obj = get_selected_object(context)
         interpolation = obj.tbb.settings.telemac.s_sequence.interpolate
 
-        row = layout.row()
+        row = self.layout.row()
         row.prop(interpolation, "type", text="Type")
 
         if interpolation.type != 'NONE':
-            row = layout.row()
+            row = self.layout.row()
             row.prop(interpolation, "time_steps", text="Time steps")

@@ -43,13 +43,11 @@ class TBB_PT_TelemacStreamingSequence(TBB_StreamingSequenceSettingsPanel):
             context (Context): context
         """
 
-        layout = self.layout
-
         obj = get_selected_object(context)
         if obj is not None:
             obj_settings = obj.tbb.settings.telemac.s_sequence
             super().draw(obj, obj_settings)
 
             if obj_settings.update:
-                row = layout.row()
+                row = self.layout.row()
                 row.prop(obj_settings, "normalize", text="Normalize")

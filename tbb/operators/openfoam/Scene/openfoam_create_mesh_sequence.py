@@ -87,10 +87,8 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
             context (Context): context
         """
 
-        layout = self.layout
-
         # Import settings
-        box = layout.box()
+        box = self.layout.box()
         box.label(text="Import")
         row = box.row()
         row.prop(self.import_settings, "decompose_polyhedra", text="Decompose polyhedra")

@@ -19,8 +19,6 @@ class TBB_MT_OpenfoamCreateSequenceMenu(Menu):
             context (Context): context
         """
 
-        layout = self.layout
-
-        layout.operator("tbb.openfoam_create_mesh_sequence", text="Mesh sequence")
-        op = layout.operator("tbb.openfoam_create_streaming_sequence", text="Streaming sequence")
+        self.layout.operator("tbb.openfoam_create_mesh_sequence", text="Mesh sequence")
+        op = self.layout.operator("tbb.openfoam_create_streaming_sequence", text="Streaming sequence")
         op.module = 'OpenFOAM'

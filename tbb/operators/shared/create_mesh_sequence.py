@@ -36,8 +36,8 @@ class TBB_CreateMeshSequence(TBB_CreateSequence):
             _context (Context): context
         """
 
-        if self.end > self.max_length:
-            self.end = self.max_length
+        if self.end > self.max_length - 1:
+            self.end = self.max_length - 1
         elif self.end < 0:
             self.end = 0
 
@@ -73,10 +73,8 @@ class TBB_CreateMeshSequence(TBB_CreateSequence):
 
         super().draw(context)
 
-        layout = self.layout
-
         # Sequence settings
-        box = layout.box()
+        box = self.layout.box()
         box.label(text="Sequence")
         row = box.row()
         row.prop(self, "start", text="Start")

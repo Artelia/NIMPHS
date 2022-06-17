@@ -19,6 +19,4 @@ class TBB_MT_OpenfoamMainMenu(Menu):
             context (Context): context
         """
 
-        layout = self.layout
-
-        layout.menu("TBB_MT_OpenfoamCreateSequenceMenu")
+        self.layout.menu("TBB_MT_OpenfoamCreateSequenceMenu")

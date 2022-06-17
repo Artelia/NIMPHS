@@ -300,7 +300,7 @@ def generate_preview_material(obj: Object, var_name: str, name: str = "TBB_TELEM
 def generate_telemac_sequence_obj(context: Context, obj: Object, name: str, time_point: int,
                                   shape_keys: bool = False) -> Object:
     """
-    Generate the base object for a TELEMAC sequence.
+    Generate base object for a TELEMAC sequence.
 
     Args:
         context (Context): context
@@ -310,23 +310,16 @@ def generate_telemac_sequence_obj(context: Context, obj: Object, name: str, time
         Object: generate object
     """
 
-    # Name of the sequence object
-    name += "_sequence"
-
     # Create sequence object
     sequence = bpy.data.objects.new(name=name, object_data=None)
-    # Setup object settings
-    sequence.tbb.uid = str(time.time())
-    sequence.tbb.settings.file_path = obj.tbb.settings.file_path
-    sequence.tbb.module = 'TELEMAC'
-    sequence.tbb.name = name
 
     # Load temporary data
-    context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_TelemacTemporaryData(obj.tbb.settings.file_path, False)
+    sequence.tbb.uid = str(time.time())
+    context.scene.tbb.tmp_data[sequence.tbb.uid] = TBB_TelemacTemporaryData(obj.tbb.settings.file_path, False)
     sequence.tbb.settings.telemac.is_3d_simulation = obj.tbb.settings.telemac.is_3d_simulation
 
     try:
-        children = generate_base_objects(context.scene.tbb.tmp_data[obj.tbb.uid], time_point, name, "")
+        children = generate_base_objects(context.scene.tbb.tmp_data[sequence.tbb.uid], time_point, name, "")
     except Exception as error:
         raise error
 
@@ -337,9 +330,9 @@ def generate_telemac_sequence_obj(context: Context, obj: Object, name: str, time
         # Add the object to the collection
         context.scene.collection.objects.link(child)
         # Parent object
-        child.parent = obj
+        child.parent = sequence
 
-    return obj
+    return sequence
 
 
 def prepare_telemac_point_data(bmesh: Mesh, point_data: Union[TBB_PointDataSettings, str],

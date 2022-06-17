@@ -2,7 +2,6 @@
 from bpy.types import Context, Event
 from bpy.props import PointerProperty
 
-import time
 import logging
 log = logging.getLogger(__name__)
 
@@ -75,10 +74,8 @@ class TBB_OT_TelemacCreateStreamingSequence(TBB_CreateStreamingSequence):
             context (Context): context
         """
 
-        layout = self.layout
-
         # Import settings
-        box = layout.box()
+        box = self.layout.box()
         box.label(text="Import")
         row = box.row()
         row.prop(self.import_settings, "compute_value_ranges", text="Compute value ranges")
@@ -97,5 +94,4 @@ class TBB_OT_TelemacCreateStreamingSequence(TBB_CreateStreamingSequence):
         """
 
         obj = generate_telemac_sequence_obj(context, self.obj, self.name, self.start)
-        obj.tbb.id_streaming_sequence = True
         return super().execute(context, obj)

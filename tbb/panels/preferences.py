@@ -25,10 +25,8 @@ class TBB_Preferences(AddonPreferences):
             context (Context): context
         """
 
-        layout = self.layout
-
         # Files preferences
-        box = layout.box()
+        box = self.layout.box()
 
         row = box.row()
         row.label(text="Files")
@@ -40,7 +38,7 @@ class TBB_Preferences(AddonPreferences):
         row.prop(self.settings, "telemac_extensions", text="TELEMAC")
 
         # System preferences
-        box = layout.box()
+        box = self.layout.box()
 
         row = box.row()
         row.label(text="System")

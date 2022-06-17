@@ -74,10 +74,8 @@ class TBB_OT_TelemacCreateMeshSequence(TBB_CreateMeshSequence):
             context (Context): context
         """
 
-        layout = self.layout
-
         # Import settings
-        box = layout.box()
+        box = self.layout.box()
         box.label(text="Import")
         row = box.row()
         row.prop(self.import_settings, "compute_value_ranges", text="Compute value ranges")

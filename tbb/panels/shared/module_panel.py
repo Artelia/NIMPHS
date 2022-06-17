@@ -33,16 +33,14 @@ class TBB_ModulePanel(Panel):
         if obj is None or obj.tbb.module not in ['TELEMAC', 'OpenFOAM'] or obj.tbb.module != module:
             return False, False, None
 
-        layout = self.layout
-
         # If the object is a sequence (streaming or mesh)
         if obj.tbb.is_streaming_sequence or obj.tbb.is_mesh_sequence:
-            row = layout.row()
+            row = self.layout.row()
             row.label(text="Sequence: see Object Properties.", icon='INFO')
             return False, False, obj
 
         # Display file_path information
-        box = layout.box()
+        box = self.layout.box()
         row = box.row()
         row.label(text=f"File: {obj.tbb.settings.file_path}")
         row.operator("tbb.edit_file_path", text="", icon="GREASEPENCIL")

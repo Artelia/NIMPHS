@@ -42,15 +42,13 @@ class TBB_PT_TelemacMeshSequence(Panel):
             context (Context): context
         """
 
-        layout = self.layout
-
         obj = get_selected_object(context)
         if obj is not None:
             settings = obj.tbb.settings
 
-            row = layout.row()
+            row = self.layout.row()
             row.prop(settings, "import_point_data", text="Import point data")
 
             if settings.import_point_data:
-                row = layout.row()
+                row = self.layout.row()
                 row.prop(settings, "point_data", text="List")

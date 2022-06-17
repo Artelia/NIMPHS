@@ -98,11 +98,10 @@ class TBB_CreateSequence(Operator):
             context (Context): context
         """
 
-        layout = self.layout
         tmp_data = context.scene.tbb.tmp_data["ops"]
 
         # Import point data
-        box = layout.box()
+        box = self.layout.box()
         row = box.row()
         row.label(text="Point data")
         row = box.row()

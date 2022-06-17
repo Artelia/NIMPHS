@@ -19,8 +19,6 @@ class TBB_MT_TelemacCreateSequenceMenu(Menu):
             context (Context): context
         """
 
-        layout = self.layout
-
-        layout.operator("tbb.telemac_create_mesh_sequence", text="Mesh sequence")
-        # op = layout.operator("tbb.telemaccreate_streaming_sequence", text="Streaming sequence")
-        # op.module = 'TELEMAC'
+        self.layout.operator("tbb.telemac_create_mesh_sequence", text="Mesh sequence")
+        op = self.layout.operator("tbb.telemac_create_streaming_sequence", text="Streaming sequence")
+        op.module = 'TELEMAC'

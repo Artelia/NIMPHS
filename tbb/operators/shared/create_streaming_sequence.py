@@ -75,10 +75,8 @@ class TBB_CreateStreamingSequence(TBB_CreateSequence):
         # Disable point data
         # super().draw(context)
 
-        layout = self.layout
-
         # Sequence settings
-        box = layout.box()
+        box = self.layout.box()
         box.label(text="Sequence")
         row = box.row()
         row.prop(self, "start", text="Start")

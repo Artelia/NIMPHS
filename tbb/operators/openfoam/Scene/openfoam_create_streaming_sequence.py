@@ -88,5 +88,5 @@ class TBB_OT_OpenfoamCreateStreamingSequence(TBB_CreateStreamingSequence):
             set: state of the operator
         """
 
-        obj = generate_openfoam_streaming_sequence_obj(self.obj, self.name)
+        obj = generate_openfoam_streaming_sequence_obj(context, self.obj, self.name)
         return super().execute(context, obj)

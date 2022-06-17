@@ -98,10 +98,8 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
             _context (Context): context
         """
 
-        layout = self.layout
-
         # Import settings
-        box = layout.box()
+        box = self.layout.box()
         row = box.row()
         row.label(text="Settings")
 
@@ -113,7 +111,7 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         row.prop(self.import_settings, "triangulate", text="Triangulate")
 
         # Others
-        box = layout.box()
+        box = self.layout.box()
         row = box.row()
         row.label(text="Others")
 

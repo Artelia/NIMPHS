@@ -19,6 +19,4 @@ class TBB_MT_TelemacMainMenu(Menu):
             context (Context): context
         """
 
-        layout = self.layout
-
-        layout.menu("TBB_MT_TelemacCreateSequenceMenu")
+        self.layout.menu("TBB_MT_TelemacCreateSequenceMenu")

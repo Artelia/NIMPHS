@@ -207,11 +207,12 @@ def generate_openfoam_streaming_sequence_obj(context: Context, obj: Object, name
     dest.case_type = data.case_type
 
     # Load temporary data
+    sequence.tbb.uid = str(time.time())
     success, file_reader = load_openfoam_file(obj.tbb.settings.file_path)
     if not success:
         log.error(f"Unable to open file {obj.tbb.settings.file_path}", exc_info=1)
         raise IOError(f"Unable to open file {obj.tbb.settings.file_path}")
-    context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_OpenfoamTemporaryData(file_reader)
+    context.scene.tbb.tmp_data[sequence.tbb.uid] = TBB_OpenfoamTemporaryData(file_reader)
 
     return sequence
 
