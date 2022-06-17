@@ -89,4 +89,5 @@ class TBB_OT_OpenfoamCreateStreamingSequence(TBB_CreateStreamingSequence):
         """
 
         obj = generate_openfoam_streaming_sequence_obj(context, self.obj, self.name)
+        obj.tbb.settings.openfoam.s_sequence.shade_smooth = self.shade_smooth
         return super().execute(context, obj)

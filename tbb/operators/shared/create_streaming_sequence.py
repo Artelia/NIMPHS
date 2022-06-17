@@ -1,11 +1,8 @@
 # <pep8 compliant>
 from bpy.types import Event, Context, Object, RenderSettings
-from bpy.props import StringProperty, IntProperty, EnumProperty
+from bpy.props import BoolProperty, IntProperty, EnumProperty
 
 import logging
-
-from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
-from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
 
 log = logging.getLogger(__name__)
 
@@ -17,6 +14,17 @@ class TBB_CreateStreamingSequence(TBB_CreateSequence):
 
     register_cls = False
     is_custom_base_cls = True
+
+    #: bpy.props.EnumProperty: Indicates which module to use. Enum in ['OpenFOAM', 'TELEMAC'].
+    module: EnumProperty(
+        name="Mode",  # noqa: F821
+        description="Indicates whether the operator should run modal or not. Enum in ['OpenFOAM', 'TELEMAC']",
+        items=[
+            ('OpenFOAM', "OpenFOAM", "Use OpenFOAM module"),  # noqa: F821
+            ('TELEMAC', "TELEMAC", "Use TELEMAC module"),  # noqa: F821
+        ],
+        options={'HIDDEN'},  # noqa F821
+    )
 
     def update_length(self, context: Context) -> None:  # noqa D417
         """
@@ -39,15 +47,11 @@ class TBB_CreateStreamingSequence(TBB_CreateSequence):
         update=update_length
     )
 
-    #: bpy.props.EnumProperty: Indicates which module to use. Enum in ['OpenFOAM', 'TELEMAC'].
-    module: EnumProperty(
-        name="Mode",  # noqa: F821
-        description="Indicates whether the operator should run modal or not. Enum in ['OpenFOAM', 'TELEMAC']",
-        items=[
-            ('OpenFOAM', "OpenFOAM", "Use OpenFOAM module"),  # noqa: F821
-            ('TELEMAC', "TELEMAC", "Use TELEMAC module"),  # noqa: F821
-        ],
-        options={'HIDDEN'},  # noqa F821
+    #: bpy.props.BoolProperty: Whether to use smooth shading or flat shading
+    shade_smooth: BoolProperty(
+        name="Shade smooth",
+        description="Indicate whether to use smooth shading or flat shading",
+        default=False
     )
 
     def invoke(self, context: Context, event: Event) -> set:
@@ -82,6 +86,8 @@ class TBB_CreateStreamingSequence(TBB_CreateSequence):
         row.prop(self, "start", text="Start")
         row = box.row()
         row.prop(self, "length", text="Length")
+        row = box.row()
+        row.prop(self, "shade_smooth", text="Shade smooth")
         row = box.row()
         row.prop(self, "name", text="Name")
 

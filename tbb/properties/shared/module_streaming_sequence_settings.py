@@ -45,9 +45,9 @@ class TBB_ModuleStreamingSequenceSettings(PropertyGroup):
         default=1,
     )
 
-    #: bpy.props.BoolProperty: Whether to use smooth shading or not (flat shading)
+    #: bpy.props.BoolProperty: Whether to use smooth shading or flat shading
     shade_smooth: BoolProperty(
         name="Shade smooth",
-        description="Whether to use smooth shading or not (flat shading)",
+        description="Indicate whether to use smooth shading or flat shading",
         default=False
     )

@@ -386,6 +386,15 @@ def update_openfoam_streaming_sequences(scene: Scene) -> None:
             sequence = obj.tbb.settings.openfoam.s_sequence
 
             if obj.tbb.is_streaming_sequence and sequence.update:
+                # Get temporary data
+                try:
+                    scene.tbb.tmp_data[obj.tbb.uid]
+                except KeyError:
+                    # Disable update
+                    sequence.update = False
+                    log.error(f"No file data available for {obj.name}. Disabling update.")
+                    return
+
                 time_point = frame - sequence.frame_start
 
                 if time_point >= 0 and time_point < sequence.anim_length:
