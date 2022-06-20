@@ -76,12 +76,12 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         # Generate the preview mesh. This step is not present in the reload operator because
         # the preview mesh may already be loaded. Moreover, this step takes a while for large meshes.
         try:
-            # Generate tmp_data
-            tmp_data = TBB_OpenfoamFileData(file_reader, self.import_settings)
+            # Generate file_data
+            file_data = TBB_OpenfoamFileData(file_reader, self.import_settings)
             # Generate object
-            vertices, faces, tmp_data.mesh = generate_mesh_data(tmp_data)
+            vertices, faces, file_data.mesh = generate_mesh_data(file_data)
             obj = generate_object_from_data(vertices, faces, self.name, new=True)
-            self.setup_generated_obj(context, obj, tmp_data)
+            self.setup_generated_obj(context, obj, file_data)
             context.scene.collection.objects.link(obj)
         except Exception:
             log.error("Something went wrong building the mesh", exc_info=1)
@@ -122,7 +122,7 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         row.prop(self, "name", text="Name")
 
     def setup_generated_obj(self, context: Context, obj: Object,
-                            tmp_data: TBB_OpenfoamFileData) -> None:
+                            file_data: TBB_OpenfoamFileData) -> None:
         """
         Copy import settings and setup needed 'tbb' data for the generated object.
 
@@ -143,6 +143,6 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         # Others
         obj.tbb.module = 'OpenFOAM'
 
-        # Temporary data
+        # File data
         obj.tbb.uid = str(time.time())
-        context.scene.tbb.tmp_data[obj.tbb.uid] = tmp_data
+        context.scene.tbb.file_data[obj.tbb.uid] = file_data

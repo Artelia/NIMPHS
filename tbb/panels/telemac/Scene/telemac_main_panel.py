@@ -25,9 +25,9 @@ class TBB_PT_TelemacMainPanel(TBB_ModulePanel):
             context (Context): context
         """
 
-        enable_rows, tmp_data_is_ok, obj = super().draw(context, 'TELEMAC')
+        enable_rows, file_data_is_ok, obj = super().draw(context, 'TELEMAC')
 
-        if obj is not None and tmp_data_is_ok:
+        if obj is not None and file_data_is_ok:
             box = self.layout.box()
             row = box.row()
             row.label(text="Preview")
@@ -44,6 +44,6 @@ class TBB_PT_TelemacMainPanel(TBB_ModulePanel):
             row.enabled = enable_rows
             row.operator("tbb.telemac_preview", text="Preview", icon='HIDE_OFF')
 
-        elif obj is None or (not obj.tbb.is_streaming_sequence and tmp_data_is_ok):
+        elif obj is None or (not obj.tbb.is_streaming_sequence and file_data_is_ok):
             row = self.layout.row()
             row.label(text="Select a TELEMAC object", icon='INFO')

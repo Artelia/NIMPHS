@@ -52,12 +52,12 @@ class TBB_PT_TelemacMeshSequence(Panel):
             row.operator("tbb.edit_file_path", text="", icon="GREASEPENCIL")
 
             try:
-                tmp_data = context.scene.tbb.tmp_data.get(obj.tbb.uid, None)
+                file_data = context.scene.tbb.file_data.get(obj.tbb.uid, None)
             except KeyError:
-                tmp_data = None
+                file_data = None
 
-            # Check temporary data
-            if tmp_data is None or not tmp_data.is_ok():
+            # Check file data
+            if file_data is None or not file_data.is_ok():
                 row = self.layout.row()
                 row.label(text="Reload data: ", icon='ERROR')
                 row.operator("tbb.reload_telemac_file", text="Reload", icon='FILE_REFRESH')
@@ -72,12 +72,12 @@ class TBB_PT_TelemacMeshSequence(Panel):
             row = box.row()
             row.prop(point_data, "import_data", text="Import point data")
 
-            if point_data.import_data and tmp_data is not None:
+            if point_data.import_data and file_data is not None:
 
                 draw_point_data(box, point_data, show_range=True, edit=True)
 
                 row = box.row()
                 op = row.operator("tbb.add_point_data", text="Add", icon='ADD')
-                op.available = tmp_data.vars.dumps()
+                op.available = file_data.vars.dumps()
                 op.chosen = point_data.list
                 op.source = 'OBJECT'

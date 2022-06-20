@@ -31,13 +31,13 @@ def update_var_names(self, context: Context) -> list:
         list: generated items
     """
 
-    tmp_data = context.scene.tbb.settings.telemac.tmp_data
-    names = tmp_data.vars["names"]
-    units = tmp_data.vars["units"]
+    file_data = context.scene.tbb.settings.telemac.file_data
+    names = file_data.vars["names"]
+    units = file_data.vars["units"]
 
     items = []
     items.append(("-1", "None", "None"))
-    for name, unit, id in zip(names, units, range(tmp_data.nb_vars)):
+    for name, unit, id in zip(names, units, range(file_data.nb_vars)):
         items.append((str(id), name + ", (" + unit + ")", "Undocumented"))
 
     return items

@@ -11,7 +11,7 @@ from tbb.properties.shared.file_data import FileData
 
 
 class TBB_OpenfoamFileData(FileData):
-    """Hold temporary data for the OpenFOAM module."""
+    """Hold file data for the OpenFOAM module."""
 
     #: UnstructuredGrid: 'internalMesh' from data
     raw_mesh = None
@@ -91,7 +91,7 @@ class TBB_OpenfoamFileData(FileData):
 
     def is_ok(self) -> bool:
         """
-        Check if temporary data still hold data (data are not None).
+        Check if file data still hold data (data are not None).
 
         Returns:
             bool: ``True`` if everything is ok

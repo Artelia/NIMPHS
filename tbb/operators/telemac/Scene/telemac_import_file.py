@@ -58,7 +58,7 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         """
         Import the selected file.
 
-        It also generates the preview object, updates temporary data and 'dynamic' scene settings.
+        It also generates the preview object, updates file data and 'dynamic' scene settings.
 
         Args:
             context (Context): context
@@ -80,14 +80,14 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         obj.tbb.module = 'TELEMAC'
         obj.tbb.uid = str(time.time())
         obj.tbb.settings.file_path = self.filepath
-        # Load temporary data
-        context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_TelemacFileData(self.filepath,
-                                                                      self.import_settings.compute_value_ranges)
-        tmp_data = context.scene.tbb.tmp_data.get(obj.tbb.uid, None)
-        obj.tbb.settings.telemac.is_3d_simulation = tmp_data.is_3d()
+        # Load file data
+        context.scene.tbb.file_data[obj.tbb.uid] = TBB_TelemacFileData(self.filepath,
+                                                                       self.import_settings.compute_value_ranges)
+        file_data = context.scene.tbb.file_data.get(obj.tbb.uid, None)
+        obj.tbb.settings.telemac.is_3d_simulation = file_data.is_3d()
 
         # Generate objects
-        children = generate_base_objects(tmp_data, 0, self.name)
+        children = generate_base_objects(file_data, 0, self.name)
         # Link generated objects to main 'Null' object
         for child in children:
             context.scene.collection.objects.link(child)

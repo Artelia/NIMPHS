@@ -52,10 +52,10 @@ class TBB_PT_TelemacStreamingSequence(TBB_StreamingSequenceSettingsPanel):
         row.label(text=f"File: {obj.tbb.settings.file_path}")
         row.operator("tbb.edit_file_path", text="", icon="GREASEPENCIL")
 
-        tmp_data = context.scene.tbb.tmp_data.get(obj.tbb.uid, None)
+        file_data = context.scene.tbb.file_data.get(obj.tbb.uid, None)
 
-        # Check temporary data
-        if tmp_data is None or not tmp_data.is_ok():
+        # Check file data
+        if file_data is None or not file_data.is_ok():
             row = self.layout.row()
             row.label(text="Reload data: ", icon='ERROR')
             row.operator("tbb.reload_telemac_file", text="Reload", icon='FILE_REFRESH')

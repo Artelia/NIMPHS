@@ -26,9 +26,9 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
             context (Context): context
         """
 
-        enable_rows, tmp_data_is_ok, obj = super().draw(context, 'OpenFOAM')
+        enable_rows, file_data_is_ok, obj = super().draw(context, 'OpenFOAM')
 
-        if obj is not None and tmp_data_is_ok:
+        if obj is not None and file_data_is_ok:
             import_settings = obj.tbb.settings.openfoam.import_settings
 
             box = self.layout.box()
@@ -45,8 +45,8 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
             row.prop(import_settings, "case_type", text="Case")
 
             # Clip settings
-            tmp_data = context.scene.tbb.tmp_data.get(obj.tbb.uid, None)
-            enable_clip = tmp_data.time_point == obj.tbb.settings.preview_time_point
+            file_data = context.scene.tbb.file_data.get(obj.tbb.uid, None)
+            enable_clip = file_data.time_point == obj.tbb.settings.preview_time_point
 
             draw_clip_settings(self.layout, obj.tbb.settings.openfoam.clip, enable=enable_clip)
 
@@ -70,6 +70,6 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
                 row = self.layout.box().row()
                 row.label(text="No data. Hit 'preview'.", icon='ERROR')
 
-        elif obj is None or (not obj.tbb.is_streaming_sequence and tmp_data_is_ok):
+        elif obj is None or (not obj.tbb.is_streaming_sequence and file_data_is_ok):
             row = self.layout.row()
             row.label(text="Select an OpenFOAM object", icon='INFO')

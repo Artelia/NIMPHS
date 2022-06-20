@@ -48,11 +48,11 @@ class TBB_ModulePanel(Panel):
         # Check if we need to lock the ui
         enable_rows = not context.scene.tbb.create_sequence_is_running
 
-        tmp_data = context.scene.tbb.tmp_data.get(obj.tbb.uid, None)
+        file_data = context.scene.tbb.file_data.get(obj.tbb.uid, None)
 
         module = obj.tbb.module
-        # Check temporary data
-        if tmp_data is None or not tmp_data.is_ok():
+        # Check file data
+        if file_data is None or not file_data.is_ok():
             row = self.layout.row()
             row.enabled = enable_rows
             row.label(text="Reload data: ", icon='ERROR')

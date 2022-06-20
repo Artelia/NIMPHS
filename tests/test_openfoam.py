@@ -66,7 +66,7 @@ def test_preview_object_openfoam(preview_object):
 def test_file_data(preview_object):
     assert preview_object is not None
 
-    file_data = bpy.context.scene.tbb.tmp_data.get(preview_object.tbb.uid, None)
+    file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
     assert file_data is not None
 
     # Test file data
@@ -82,7 +82,7 @@ def test_file_data(preview_object):
 def test_reload_openfoam(preview_object):
     assert bpy.ops.tbb.reload_openfoam_file('EXEC_DEFAULT') == {"FINISHED"}
 
-    file_data = bpy.context.scene.tbb.tmp_data.get(preview_object.tbb.uid, None)
+    file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
     assert file_data is not None
 
     # Test file data
@@ -174,16 +174,16 @@ def test_geometry_triangulated_decompose_polyhedra_preview_object_openfoam(previ
 
 def test_add_point_data(preview_object):
     pytest.skip("Not implemented yet")
-    tmp_data = bpy.context.scene.tbb.tmp_data.get(preview_object.tbb.uid, None)
-    assert tmp_data is not None
+    file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
+    assert file_data is not None
 
     # TODO: Fix this. Not working.
     op = bpy.ops.tbb.add_point_data
-    state = op('INVOKE_DEFAULT', available=tmp_data.vars.dumps(),
+    state = op('INVOKE_DEFAULT', available=file_data.vars.dumps(),
                chosen=preview_object.tbb.settings.point_data.list, source='OBJECT')
     assert state == {'FINISHED'}
 
-    state = op('EXEC_DEFAULT', available=tmp_data.vars.dumps(),
+    state = op('EXEC_DEFAULT', available=file_data.vars.dumps(),
                chosen=preview_object.tbb.settings.point_data.list, source='OBJECT',
                point_data="None")
     assert state == {'FINISHED'}
@@ -192,16 +192,16 @@ def test_add_point_data(preview_object):
 def test_remove_point_data(preview_object):
     pytest.skip("Not implemented yet")
     # TODO: First fix add_point_data test. Then complete this one.
-    tmp_data = bpy.context.scene.tbb.tmp_data.get(preview_object.tbb.uid, None)
-    assert tmp_data is not None
+    file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
+    assert file_data is not None
 
 
 def test_preview_point_data(preview_object):
-    tmp_data = bpy.context.scene.tbb.tmp_data.get(preview_object.tbb.uid, None)
-    assert tmp_data is not None
+    file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
+    assert file_data is not None
 
     # Set point data to preview (alpha.water)
-    preview_object.tbb.settings.preview_point_data = json.dumps(tmp_data.vars.get(1))
+    preview_object.tbb.settings.preview_point_data = json.dumps(file_data.vars.get(1))
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
 
@@ -235,8 +235,8 @@ def test_preview_material_openfoam():
 
 
 def test_create_streaming_sequence_openfoam(preview_object):
-    tmp_data = bpy.context.scene.tbb.tmp_data.get(preview_object.tbb.uid, None)
-    assert tmp_data is not None
+    file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
+    assert file_data is not None
 
     op = bpy.ops.tbb.openfoam_create_streaming_sequence
     state = op('EXEC_DEFAULT', name="My_OpenFOAM_Streaming_Sim", start=1, length=21, max_length=21, shade_smooth=True)
@@ -252,19 +252,19 @@ def test_create_streaming_sequence_openfoam(preview_object):
     sequence.tbb.settings.openfoam.import_settings.triangulate = True
     # Set clip settings
     sequence.tbb.settings.openfoam.clip.type = 'SCALAR'
-    sequence.tbb.settings.openfoam.clip.scalar.name = json.dumps(tmp_data.vars.get(1))
+    sequence.tbb.settings.openfoam.clip.scalar.name = json.dumps(file_data.vars.get(1))
     sequence.tbb.settings.openfoam.clip.scalar.value = 0.5
     # Set point data
     sequence.tbb.settings.point_data.import_data = True
-    sequence.tbb.settings.point_data.list = json.dumps(tmp_data.vars.get(1))
+    sequence.tbb.settings.point_data.list = json.dumps(file_data.vars.get(1))
 
 
 def test_streaming_sequence_openfoam(streaming_sequence):
     assert streaming_sequence is not None
     assert streaming_sequence.tbb.is_streaming_sequence is True
 
-    tmp_data = bpy.context.scene.tbb.tmp_data.get(streaming_sequence.tbb.uid, None)
-    assert tmp_data is not None
+    file_data = bpy.context.scene.tbb.file_data.get(streaming_sequence.tbb.uid, None)
+    assert file_data is not None
 
     # Test object settings
     streaming_sequence.tbb.settings.file_path == FILE_PATH
@@ -282,11 +282,11 @@ def test_streaming_sequence_openfoam(streaming_sequence):
     assert streaming_sequence.tbb.settings.openfoam.import_settings.triangulate is True
     # Test clip settings
     assert streaming_sequence.tbb.settings.openfoam.clip.type == 'SCALAR'
-    assert streaming_sequence.tbb.settings.openfoam.clip.scalar.name == json.dumps(tmp_data.vars.get(1))
+    assert streaming_sequence.tbb.settings.openfoam.clip.scalar.name == json.dumps(file_data.vars.get(1))
     assert streaming_sequence.tbb.settings.openfoam.clip.scalar.value == 0.5
     # Test point data
     assert streaming_sequence.tbb.settings.point_data.import_data is True
-    assert streaming_sequence.tbb.settings.point_data.list == json.dumps(tmp_data.vars.get(1))
+    assert streaming_sequence.tbb.settings.point_data.list == json.dumps(file_data.vars.get(1))
 
 
 def test_geometry_streaming_sequence_openfoam(streaming_sequence):

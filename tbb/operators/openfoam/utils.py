@@ -26,7 +26,7 @@ def run_one_step_create_mesh_sequence_openfoam(context: Context, op: TBB_OT_Open
 
     Args:
         context (Context): context
-        tmp_data (TBB_OpenfoamTemporaryData): temporary data
+        file_data (TBB_OpenfoamFileData): file data
         frame (int): current frame
         time_point (int): current time point
         start (int): start time point
@@ -37,8 +37,8 @@ def run_one_step_create_mesh_sequence_openfoam(context: Context, op: TBB_OT_Open
     """
 
     try:
-        tmp_data = context.scene.tbb.tmp_data["ops"]
-        bmesh = generate_mesh_for_sequence(tmp_data, op)
+        file_data = context.scene.tbb.file_data["ops"]
+        bmesh = generate_mesh_for_sequence(file_data, op)
     except Exception as error:
         raise error
 
@@ -84,14 +84,14 @@ def run_one_step_create_mesh_sequence_openfoam(context: Context, op: TBB_OT_Open
         newKey.interpolation = 'CONSTANT'
 
 
-def generate_mesh_for_sequence(tmp_data: TBB_OpenfoamFileData,
+def generate_mesh_for_sequence(file_data: TBB_OpenfoamFileData,
                                op: TBB_OT_OpenfoamCreateMeshSequence) -> Union[Mesh, None]:
     """
     Generate a mesh for an OpenFOAM 'mesh sequence' at the given time point.
 
     Args:
         context (Context): context
-        tmp_data (TBB_OpenfoamTemporaryData): temporary data
+        file_data (TBB_OpenfoamFileData): file data
         time_point (int): time point from which to read data
         name (str, optional): name of the output mesh. Defaults to "TBB".
 
@@ -102,9 +102,9 @@ def generate_mesh_for_sequence(tmp_data: TBB_OpenfoamFileData,
         Mesh: generate mesh
     """
 
-    tmp_data.update(op.time_point, op.import_settings)
-    vertices, faces, tmp_data.mesh = generate_mesh_data(tmp_data, clip=op.clip)
-    if tmp_data.mesh is None:
+    file_data.update(op.time_point, op.import_settings)
+    vertices, faces, file_data.mesh = generate_mesh_data(file_data, clip=op.clip)
+    if file_data.mesh is None:
         return None
 
     # Create mesh from python data
@@ -115,13 +115,13 @@ def generate_mesh_for_sequence(tmp_data: TBB_OpenfoamFileData,
 
     # Import point data as vertex colors
     if op.point_data.import_data:
-        res = prepare_openfoam_point_data(bmesh, op.point_data, tmp_data)
+        res = prepare_openfoam_point_data(bmesh, op.point_data, file_data)
         generate_vertex_colors(bmesh, *res)
 
     return bmesh
 
 
-def generate_mesh_data(tmp_data: TBB_OpenfoamFileData,
+def generate_mesh_data(file_data: TBB_OpenfoamFileData,
                        clip: TBB_OpenfoamClipProperty = None) -> tuple[np.array, np.array, UnstructuredGrid]:
     """
     Generate mesh data for Blender using the given file reader. Applies the clip if defined.
@@ -138,7 +138,7 @@ def generate_mesh_data(tmp_data: TBB_OpenfoamFileData,
     """
 
     # Get raw mesh
-    mesh = tmp_data.raw_mesh
+    mesh = file_data.raw_mesh
     if mesh is None:
         return [], [], None
 
@@ -162,7 +162,7 @@ def generate_mesh_data(tmp_data: TBB_OpenfoamFileData,
     else:
         surface = mesh.extract_surface(nonlinear_subdivision=0)
 
-    if tmp_data.triangulate:
+    if file_data.triangulate:
         surface.triangulate(inplace=True)
         surface.compute_normals(inplace=True, consistent_normals=False, split_vertices=True)
 
@@ -208,13 +208,13 @@ def generate_openfoam_streaming_sequence_obj(context: Context, obj: Object, name
     dest.triangulate = data.triangulate
     dest.case_type = data.case_type
 
-    # Load temporary data
+    # Load file data
     sequence.tbb.uid = str(time.time())
     success, file_reader = load_openfoam_file(obj.tbb.settings.file_path)
     if not success:
         log.error(f"Unable to open file {obj.tbb.settings.file_path}", exc_info=1)
         raise IOError(f"Unable to open file {obj.tbb.settings.file_path}")
-    context.scene.tbb.tmp_data[sequence.tbb.uid] = TBB_OpenfoamFileData(file_reader, data)
+    context.scene.tbb.file_data[sequence.tbb.uid] = TBB_OpenfoamFileData(file_reader, data)
 
     return sequence
 
@@ -287,7 +287,7 @@ def generate_preview_material(obj: Object, scalar: str, name: str = "TBB_OpenFOA
 
 
 def prepare_openfoam_point_data(bmesh: Mesh, point_data: Union[TBB_PointDataSettings, str],
-                                tmp_data: TBB_OpenfoamFileData) -> tuple[list[dict], dict, int]:
+                                file_data: TBB_OpenfoamFileData) -> tuple[list[dict], dict, int]:
     """
     Prepare point data for the 'generate_vertex_colors' function.
 
@@ -341,7 +341,7 @@ def prepare_openfoam_point_data(bmesh: Mesh, point_data: Union[TBB_PointDataSett
 
     for var, dim, id in zip(variables, dimensions, range(len(variables))):
         # Read data
-        data = tmp_data.mesh.get_array(var["id"], preference='point')[vertex_ids]
+        data = file_data.mesh.get_array(var["id"], preference='point')[vertex_ids]
         var_ranges = info.get(id, prop='RANGE')
 
         # Remap data
@@ -386,9 +386,9 @@ def update_openfoam_streaming_sequences(scene: Scene) -> None:
             sequence = obj.tbb.settings.openfoam.s_sequence
 
             if obj.tbb.is_streaming_sequence and sequence.update:
-                # Get temporary data
+                # Get file data
                 try:
-                    scene.tbb.tmp_data[obj.tbb.uid]
+                    scene.tbb.file_data[obj.tbb.uid]
                 except KeyError:
                     # Disable update
                     sequence.update = False
@@ -422,11 +422,11 @@ def update_openfoam_streaming_sequence_mesh(scene: Scene, obj: Object, time_poin
     """
 
     io_settings = obj.tbb.settings.openfoam.import_settings
-    tmp_data = scene.tbb.tmp_data[obj.tbb.uid]
+    file_data = scene.tbb.file_data[obj.tbb.uid]
 
-    if tmp_data is not None:
-        tmp_data.update(time_point, io_settings)
-        vertices, faces, tmp_data.mesh = generate_mesh_data(tmp_data, clip=obj.tbb.settings.openfoam.clip)
+    if file_data is not None:
+        file_data.update(time_point, io_settings)
+        vertices, faces, file_data.mesh = generate_mesh_data(file_data, clip=obj.tbb.settings.openfoam.clip)
 
         bmesh = obj.data
         bmesh.clear_geometry()
@@ -438,8 +438,8 @@ def update_openfoam_streaming_sequence_mesh(scene: Scene, obj: Object, time_poin
 
         # Import point data as vertex colors
         point_data = obj.tbb.settings.point_data
-        if point_data.import_data and tmp_data.mesh is not None:
-            res = prepare_openfoam_point_data(bmesh, point_data.list, tmp_data)
+        if point_data.import_data and file_data.mesh is not None:
+            res = prepare_openfoam_point_data(bmesh, point_data.list, file_data)
             generate_vertex_colors(bmesh, *res)
 
 

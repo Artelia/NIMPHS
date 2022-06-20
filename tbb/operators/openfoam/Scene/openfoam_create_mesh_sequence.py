@@ -74,8 +74,8 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
             log.critical(f"Unable to open file '{self.obj.tbb.settings.file_path}'")
             return {'CANCELLED'}
 
-        context.scene.tbb.tmp_data["ops"] = TBB_OpenfoamFileData(file_reader, self.import_settings)
-        self.max_length = context.scene.tbb.tmp_data["ops"].nb_time_points
+        context.scene.tbb.file_data["ops"] = TBB_OpenfoamFileData(file_reader, self.import_settings)
+        self.max_length = context.scene.tbb.file_data["ops"].nb_time_points
 
         # Used in tests
         if self.mode == 'NORMAL':

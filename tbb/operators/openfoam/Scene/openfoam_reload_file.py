@@ -24,7 +24,7 @@ class TBB_OT_OpenfoamReloadFile(Operator):
         """
         Reload the selected file.
 
-        It updates temporary data and 'dynamic' scene settings.
+        It updates file data and 'dynamic' scene settings.
 
         Args:
             context (Context): context
@@ -48,8 +48,8 @@ class TBB_OT_OpenfoamReloadFile(Operator):
         if obj.tbb.uid == "":
             obj.tbb.uid = str(time.time())
 
-        # Update temporary data
-        context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_OpenfoamFileData(file_reader, io_settings)
+        # Update file data
+        context.scene.tbb.file_data[obj.tbb.uid] = TBB_OpenfoamFileData(file_reader, io_settings)
 
         log.info("{:.4f}".format(time.time() - start) + "s")
         self.report({'INFO'}, "Reload successful")

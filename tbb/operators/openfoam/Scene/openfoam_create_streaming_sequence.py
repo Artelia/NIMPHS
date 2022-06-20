@@ -62,8 +62,8 @@ class TBB_OT_OpenfoamCreateStreamingSequence(TBB_CreateStreamingSequence):
             log.critical(f"Unable to open file '{obj.tbb.settings.file_path}'")
             return {'CANCELLED'}
 
-        context.scene.tbb.tmp_data["ops"] = TBB_OpenfoamFileData(file_reader, None)
-        self.max_length = context.scene.tbb.tmp_data["ops"].nb_time_points
+        context.scene.tbb.file_data["ops"] = TBB_OpenfoamFileData(file_reader, None)
+        self.max_length = context.scene.tbb.file_data["ops"].nb_time_points
 
         return context.window_manager.invoke_props_dialog(self)
 

@@ -494,11 +494,11 @@ def available_point_data(self, context: Context) -> list:
     """
 
     try:
-        tmp_data = context.scene.tbb.tmp_data[self.id_data.tbb.uid]  # Works for objects
+        file_data = context.scene.tbb.file_data[self.id_data.tbb.uid]  # Works for objects
     except AttributeError:  # Raised when called from an operator (WindowManager object has not attribute 'tbb')
-        tmp_data = context.scene.tbb.tmp_data["ops"]
+        file_data = context.scene.tbb.file_data["ops"]
 
-    if tmp_data is None or not tmp_data.is_ok() or tmp_data.vars.length() == 0:
+    if file_data is None or not file_data.is_ok() or file_data.vars.length() == 0:
         return [("NONE", "None", "None")]
 
     # Add a 'None' field for preview_point_data
@@ -507,8 +507,8 @@ def available_point_data(self, context: Context) -> list:
     else:
         items = []
 
-    for id in range(tmp_data.vars.length()):
-        identifier = tmp_data.vars.get(id)
+    for id in range(file_data.vars.length()):
+        identifier = file_data.vars.get(id)
         items.append((json.dumps(identifier), identifier["name"], "Undocumented"))
 
     return items
@@ -523,15 +523,15 @@ def update_preview_time_point(self, context: Context) -> None:  # noqa D417
     """
 
     try:
-        tmp_data = context.scene.tbb.tmp_data[self.id_data.tbb.uid]
+        file_data = context.scene.tbb.file_data[self.id_data.tbb.uid]
     except KeyError:
         return [("NONE", "None", "None")]
 
-    if not tmp_data.is_ok():
+    if not file_data.is_ok():
         return [("NONE", "None", "None")]
 
-    if self.preview_time_point >= tmp_data.nb_time_points:
-        self.preview_time_point = tmp_data.nb_time_points - 1
+    if self.preview_time_point >= file_data.nb_time_points:
+        self.preview_time_point = file_data.nb_time_points - 1
     elif self.preview_time_point < 0:
         self.preview_time_point = 0
 

@@ -87,7 +87,7 @@ class TBB_CreateSequence(Operator):
             context (Context): context
         """
 
-        tmp_data = context.scene.tbb.tmp_data["ops"]
+        file_data = context.scene.tbb.file_data["ops"]
 
         # Import point data
         box = self.layout.box()
@@ -99,13 +99,13 @@ class TBB_CreateSequence(Operator):
         if self.point_data.import_data:
 
             self.point_data.list = self.list
-            draw_point_data(box, self.point_data, show_range=False, edit=True, src='OPERATOR/' + tmp_data.module)
+            draw_point_data(box, self.point_data, show_range=False, edit=True, src='OPERATOR/' + file_data.module)
 
             row = box.row()
             op = row.operator("tbb.add_point_data", text="Add", icon='ADD')
-            op.available = tmp_data.vars.dumps()
+            op.available = file_data.vars.dumps()
             op.chosen = self.point_data.list
-            op.source = 'OPERATOR/' + tmp_data.module
+            op.source = 'OPERATOR/' + file_data.module
 
     def stop(self, context: Context, cancelled: bool = False) -> None:
         """

@@ -11,9 +11,9 @@ class TBB_Scene(PropertyGroup):
     register_cls = True
     is_custom_base_cls = False
 
-    #: dict: Dictionary of temporary data used for both modules.
-    #        Shape is ```{"uid": tmp_data, "uid": tmp_data, ...}```
-    tmp_data: dict = {"ops": None}
+    #: dict: Dictionary of file data used for both modules.
+    #        Shape is ```{"uid": file_data, "uid": file_data, ...}```
+    file_data: dict = {"ops": None}
 
     #: bpy.props.BoolProperty: State of the 'create sequence' operation (used by all 'create sequence' operators)
     create_sequence_is_running: BoolProperty(
