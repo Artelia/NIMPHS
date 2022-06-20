@@ -126,7 +126,11 @@ class TBB_CreateMeshSequence(TBB_CreateSequence):
         if self.mode == 'MODAL':
             return {'RUNNING_MODAL'}
         elif self.mode == 'NORMAL':
-            return {'NORMAL'}  # custom value to run the process without modal mode (used in tests)
+            # Run the process without modal mode (used in tests)
+            self.invoke(context, None)
+            for frame in range(self.start, self.end, 1):
+                self.run_one_step(context)
+            return {'FINISHED'}  # custom value to
         else:
             log.warning(f"Undefined operator mode '{self.mode}'. Running modal by default.", exc_info=1)
             return {'RUNNING_MODAL'}

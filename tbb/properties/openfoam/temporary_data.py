@@ -1,6 +1,6 @@
 # <pep8 compliant>
 from typing import Union
-from pyvista import OpenFOAMReader, POpenFOAMReader, UnstructuredGrid
+from pyvista import POpenFOAMReader
 import logging
 
 from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
@@ -19,7 +19,7 @@ class TBB_OpenfoamTemporaryData():
     file_reader = None
     #: UnstructuredGrid: 'internalMesh' from data
     raw_mesh = None
-    #: UnstructuredGrid: lest generated mesh
+    #: PolyData: lest generated mesh
     mesh = None
     #: int: current time point
     time_point = 0

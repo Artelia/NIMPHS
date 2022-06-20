@@ -112,7 +112,6 @@ def generate_mesh_for_sequence(tmp_data: TBB_OpenfoamTemporaryData,
     bmesh.use_fake_user = True
 
     # Import point data as vertex colors
-    print(op.point_data.list)
     if op.point_data.import_data:
         res = prepare_openfoam_point_data(bmesh, op.point_data, tmp_data)
         generate_vertex_colors(bmesh, *res)

@@ -77,6 +77,10 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
         context.scene.tbb.tmp_data["ops"] = TBB_OpenfoamTemporaryData(file_reader, self.import_settings)
         self.max_length = context.scene.tbb.tmp_data["ops"].nb_time_points
 
+        # Used in tests
+        if self.mode == 'NORMAL':
+            return {'FINISHED'}
+
         return context.window_manager.invoke_props_dialog(self)
 
     def draw(self, context: Context) -> None:
