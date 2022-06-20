@@ -2,8 +2,8 @@
 from bpy.types import PropertyGroup
 from bpy.props import BoolProperty, EnumProperty, PointerProperty, FloatProperty, FloatVectorProperty, StringProperty
 
-from tbb.properties.openfoam.utils import set_clip_values, get_clip_values
 from tbb.properties.utils import available_point_data
+from tbb.properties.openfoam.utils import set_clip_values, get_clip_values
 
 
 class TBB_OpenfoamClipScalarProperty(PropertyGroup):
@@ -32,13 +32,6 @@ class TBB_OpenfoamClipScalarProperty(PropertyGroup):
         step=1,
         set=set_clip_values,
         get=get_clip_values,
-    )
-
-    #: bpy.props.StringProperty: Save the value ranges of each scalar
-    value_ranges: StringProperty(
-        name="Value ranges",
-        description="Save the value ranges of each scalar",
-        default="",
     )
 
     #: bpy.props.EnumProperty: Name of scalars to clip on
@@ -71,7 +64,7 @@ class TBB_OpenfoamClipProperty(PropertyGroup):
     register_cls = True
     is_custom_base_cls = False
 
-    #: bpy.props.EnumProperty: Choose the clipping method
+    #: bpy.props.EnumProperty: Clipping method
     type: EnumProperty(
         items=[
             ("NONE", "None", "Do not clip"),  # noqa: F821
@@ -79,7 +72,7 @@ class TBB_OpenfoamClipProperty(PropertyGroup):
             # ("box", "Box", "Clip a dataset by a bounding box defined by the bounds"),
         ],
         name="Type",  # noqa: F821
-        description="Choose the clipping method",
+        description="Clipping method",
         default="NONE",  # noqa: F821
     )
 

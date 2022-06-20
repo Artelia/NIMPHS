@@ -7,7 +7,7 @@ from tbb.properties.utils import VariablesInformation
 
 
 class FileData():
-    """Base class to manage file data for both modules."""
+    """Base class to manage file data for all modules."""
 
     #: str: Name of the module
     module: str = ''

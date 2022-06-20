@@ -27,7 +27,7 @@ class TBB_OT_EditFilePath(Operator, ImportHelper):
 
     def invoke(self, context: Context, _event: Event) -> set:
         """
-        Initialize the operator (update the lsit of allowed extensions).
+        Initialize the operator (update the list of allowed extensions).
 
         Args:
             context (Context): context

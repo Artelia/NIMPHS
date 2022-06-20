@@ -442,7 +442,7 @@ def set_new_shape_key(obj: Object, vertices: np.ndarray, name: str, frame: int, 
 @persistent
 def update_telemac_streaming_sequences(scene: Scene) -> None:
     """
-    Updates all the TELEMAC 'streaming sequences' of the scene.
+    Update all TELEMAC 'streaming sequences' of the scene.
 
     Args:
         scene (Scene): scene

@@ -10,7 +10,7 @@ class TBB_ModulePanel(Panel):
     """
     Base UI panel for OpenFOAM and TELEMAC modules.
 
-    Specific settings are added in the classes which derive from this one.
+    Create derived classes to add specific content.
     """
 
     register_cls = False

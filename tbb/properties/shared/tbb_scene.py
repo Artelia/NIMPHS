@@ -6,12 +6,12 @@ from tbb.properties.utils import update_progress_bar
 
 
 class TBB_Scene(PropertyGroup):
-    """Main property of the Toolsbox blender add-on. This data structure holds all Scene data for the add-on."""
+    """Main property of the add-on. This data structure holds all Scene data for the add-on."""
 
     register_cls = True
     is_custom_base_cls = False
 
-    #: dict: Dictionary of file data used for both modules.
+    #: dict: Dictionary of file data used for all modules and all objects.
     #        Shape is ```{"uid": file_data, "uid": file_data, ...}```
     file_data: dict = {"ops": None}
 

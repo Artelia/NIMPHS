@@ -18,7 +18,7 @@ class TBB_StreamingSequenceSettingsPanel(Panel):
 
         Args:
             context (Context): context
-            module (str): name of the module. Enum in ['OpenFOAM', 'TELEMAC']
+            module (str): name of the module. Enum in ['OpenFOAM', 'TELEMAC'].
 
         Returns:
             bool: state

@@ -1,17 +1,13 @@
 # <pep8 compliant>
 from bpy.types import Context
-from tbb.panels.openfoam.utils import draw_clip_settings
 
 from tbb.panels.utils import get_selected_object
+from tbb.panels.openfoam.utils import draw_clip_settings
 from tbb.panels.shared.streaming_sequence_settings import TBB_StreamingSequenceSettingsPanel
 
 
 class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
-    """
-    Main panel of the OpenFOAM 'streaming sequence' settings.
-
-    This is the 'parent' panel.
-    """
+    """Main panel of the OpenFOAM 'streaming sequence' settings."""
 
     register_cls = True
     is_custom_base_cls = False
@@ -25,7 +21,7 @@ class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
     @classmethod
     def poll(cls, context: Context) -> bool:
         """
-        If false, hides the panel. Calls parent poll function.
+        If false, hides the panel.
 
         Args:
             context (Context): context
@@ -38,7 +34,7 @@ class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
 
     def draw(self, context: Context) -> None:
         """
-        Layout of the panel. Calls parent draw function.
+        Layout of the panel.
 
         Args:
             context (Context): context

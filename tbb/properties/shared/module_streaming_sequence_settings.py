@@ -9,7 +9,7 @@ class TBB_ModuleStreamingSequenceSettings(PropertyGroup):
     """
     Module 'streaming sequence' properties.
 
-    This data structure holds common data used in both OpenFOAM and TELEMAC modules.
+    This data structure holds common data used in all modules.
     """
 
     register_cls = True
@@ -45,7 +45,7 @@ class TBB_ModuleStreamingSequenceSettings(PropertyGroup):
         default=1,
     )
 
-    #: bpy.props.BoolProperty: Whether to use smooth shading or flat shading
+    #: bpy.props.BoolProperty: Indicate whether to use smooth shading or flat shading
     shade_smooth: BoolProperty(
         name="Shade smooth",
         description="Indicate whether to use smooth shading or flat shading",

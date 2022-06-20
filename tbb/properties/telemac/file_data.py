@@ -2,13 +2,13 @@
 import time
 import numpy as np
 from typing import Union
+
 import logging
 log = logging.getLogger(__name__)
 
 from tbb.properties.telemac.serafin import Serafin
 from tbb.properties.shared.file_data import FileData
 from tbb.properties.telemac.utils import remove_spaces_telemac_var_name
-from tbb.properties.utils import VariablesInformation
 
 
 class TBB_TelemacFileData(FileData):
@@ -24,7 +24,7 @@ class TBB_TelemacFileData(FileData):
     nb_vertices = 0
     #: int: Number of triangles
     nb_triangles = 0
-    #: np.ndarray:
+    #: np.ndarray: Data
     data = None
 
     def __init__(self, file_path: str, compute_value_ranges: bool) -> None:
@@ -80,7 +80,7 @@ class TBB_TelemacFileData(FileData):
 
     def update(self, time_point: int):
         """
-        Read data at given time point and compute local value ranges.
+        Update file data.
 
         Args:
             time_point (int): time point to read
@@ -170,8 +170,7 @@ class TBB_TelemacFileData(FileData):
     def get_data_from_possible_var_names(self, possible_var_names: list[str],
                                          time_point: int) -> tuple[np.ndarray, str]:
         """
-        Get data from the file and check for every possible given names.
-
+        Get data from the file and check for every possible given names.\
         When one is found, return the associated data.
 
         Args:
@@ -229,31 +228,3 @@ class TBB_TelemacFileData(FileData):
         message = f"Compute 'global' var value range for {self.vars.get(var_id, prop='NAME')}"
         log.info(message + "{:.4f}".format(time.time() - start) + "s")
         return (min, max)
-
-    def get_var_value_range(self, var: Union[int, str]) -> tuple[float, float]:
-        """
-        Get global min / max values for the given variable.
-
-        Args:
-            var (Union[int, str]): variable name or id
-
-        Raises:
-            ValueError: if the variable id undefined
-
-        Returns:
-            tuple[float, float]: min, max
-        """
-
-        if type(var).__name__ == "str":
-            var_id = self.vars["names"].index(var)
-        else:
-            var_id = var
-
-        if var_id < 0 or var_id > self.nb_vars:
-            raise ValueError("Undefined variable id '" + str(var_id) + "'")
-
-        value_range = self.vars["ranges"][var_id]
-        if value_range is None:
-            value_range = self.compute_var_value_range(var_id)
-
-        return value_range

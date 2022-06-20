@@ -117,9 +117,9 @@ def generate_mesh_for_sequence(file_data: TBB_OpenfoamFileData,
 def generate_mesh_data(file_data: TBB_OpenfoamFileData,
                        clip: TBB_OpenfoamClipProperty = None) -> tuple[np.array, np.array, UnstructuredGrid]:
     """
-    Generate mesh data for Blender using the given OpenFOAM file data. Applies the clip if defined.
-    This function may apply these operations on the OpenFOAM mesh: clip, extract_surface,
-    triangulation and compute_normals
+    Generate mesh data for Blender using the given OpenFOAM file data. Applies the clip if defined.\
+    This function may apply these operations on the OpenFOAM mesh: clip, extract_surface,\
+    triangulation and compute_normals.
 
     Args:
         file_data (TBB_OpenfoamFileData): file data

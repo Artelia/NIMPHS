@@ -6,18 +6,18 @@ from tbb.properties.shared.tbb_object_settings import TBB_ObjectSettings
 
 
 class TBB_Object(PropertyGroup):
-    """Main property of the Toolsbox blender addon for objects. This holds all Object data for the addon."""
+    """Main property of the addon for objects. This holds all Object data for the addon."""
 
     register_cls = True
     is_custom_base_cls = False
 
-    #: TBB_ObjectSettings: Holds object settings for both OpenFOAM and TELEMAC modules.
+    #: TBB_ObjectSettings: Holds object settings for all modules.
     settings: PointerProperty(type=TBB_ObjectSettings)
 
     #: bpy.props.StringProperty: Module name
     module: StringProperty(
         name="Module name",
-        description="Module name. Enum in ['None', 'OpenFOAM', 'TELEMAC']",
+        description="Module name. Enum in ['OpenFOAM', 'TELEMAC']",
         default="None",
     )
 
@@ -35,10 +35,10 @@ class TBB_Object(PropertyGroup):
         default="",
     )
 
-    #: bpy.props.BoolProperty: Describe if this object is a sequence which updates when the frame changes.
+    #: bpy.props.BoolProperty: Indicate if this object is a sequence which updates when the frame changes.
     is_streaming_sequence: BoolProperty(
         name="Is on frame change sequence",
-        description="Describe if this object is a sequence which updates when the frame changes",
+        description="Indicate if this object is a sequence which updates when the frame changes",
         default=False,
     )
 

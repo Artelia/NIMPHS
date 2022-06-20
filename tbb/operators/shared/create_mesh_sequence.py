@@ -63,7 +63,7 @@ class TBB_CreateMeshSequence(TBB_CreateSequence):
 
     def invoke(self, context: Context, event: Event) -> set:
         """
-        Prepare operators settings. Function triggered before the user can edit settings.
+        Prepare operators settings. Function triggered before the user can edit settings.\
         This method has to be overloaded in derived classes.
 
         Args:

@@ -6,7 +6,7 @@ from tbb.properties.utils import VariablesInformation
 
 
 class TBB_PointDataSettings(PropertyGroup):
-    """Holds data for point data management in both modules."""
+    """Holds data for point data management in all modules."""
 
     register_cls = True
     is_custom_base_cls = False
@@ -18,10 +18,10 @@ class TBB_PointDataSettings(PropertyGroup):
         default=False,
     )
 
-    #: bpy.props.StringProperty: List of point data to import as vertex color groups. Separate each with a semicolon.
+    #: bpy.props.StringProperty: List of point data to import as vertex color groups.
     list: StringProperty(
         name="Point data",
-        description="List of point data to import as vertex color groups. Separate each with a semicolon",
+        description="List of point data to import as vertex color groups.",
         default=VariablesInformation().dumps(),  # noqa F821
     )
 

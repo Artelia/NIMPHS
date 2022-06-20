@@ -79,7 +79,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
         context.scene.tbb.file_data["ops"] = TBB_OpenfoamFileData(file_reader, self.import_settings)
         self.max_length = context.scene.tbb.file_data["ops"].nb_time_points
 
-        # Used in tests (will run in iterative mode instread of modal)
+        # Used in tests (will run in iterative mode instead of modal)
         if self.mode == 'NORMAL':
             return {'FINISHED'}
 

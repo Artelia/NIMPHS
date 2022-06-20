@@ -1,12 +1,12 @@
 # <pep8 compliant>
 from bpy.types import Context, VIEW3D_HT_tool_header, Object, Mesh
-import numpy as np
 
 import logging
-
 log = logging.getLogger(__name__)
-from typing import Union, Any
+
 import json
+import numpy as np
+from typing import Union, Any
 
 DEV_MODE = True
 
@@ -16,7 +16,7 @@ class VariablesInformation():
 
     def __init__(self, json_string: str = "") -> None:
         """
-        Init method of the class. Can fill in information given JSON stringified data.
+        Init method of the class.
 
         Args:
             json_string (str, optional): JSON stringified data. Defaults to "".
@@ -207,6 +207,7 @@ class InterpInfo():
 
     def __init__(self) -> None:
         """Init method of the class."""
+
         self.has_data = False
         self.exists = True
         self.left_frame = 0
@@ -245,6 +246,7 @@ class InterpInfoStreamingSequence(InterpInfo):
             start (int): start frame of the sequence
             time_steps (int): number of time steps between each time point
         """
+
         self.compute(frame, start, time_steps)
 
     def compute(self, frame: int, start: int, time_steps: int) -> None:
@@ -303,13 +305,14 @@ class InterpInfoMeshSequence(InterpInfo):
 
     def __init__(self, obj: Object, frame: int, threshold: float = 0.0001) -> None:
         """
-        Init mesthod of the class.
+        Init method of the class.
 
         Args:
             obj (Object): 'Mesh Sequence' object
             frame (int): current frame
             threshold (float, optional): shape_key value threshold. Defaults to 0.0001.
         """
+
         self.compute(obj, frame, threshold=threshold)
 
     def compute(self, obj: Object, frame: int, threshold: float = 0.0001) -> None:
@@ -321,6 +324,7 @@ class InterpInfoMeshSequence(InterpInfo):
             frame (int): current frame
             threshold (float, optional): shape_key value threshold. Defaults to 0.0001.
         """
+
         # Get information from shape keys
         info = self.scan(obj.data, threshold=threshold)
 
@@ -468,20 +472,6 @@ def get_sequence_length(self) -> int:
     return self.get("length", 0)
 
 
-def update_progress_bar(_self, context: Context):
-    """
-    Update function for the custom progress bar. Tag all info areas for redraw.
-
-    Args:
-        context (Context): context
-    """
-
-    areas = context.window.screen.areas
-    for area in areas:
-        if area.type == 'INFO':
-            area.tag_redraw()
-
-
 def available_point_data(self, context: Context) -> list:
     """
     Generate the list of available point data.
@@ -536,7 +526,22 @@ def update_preview_time_point(self, context: Context) -> None:  # noqa D417
         self.preview_time_point = 0
 
 
+def update_progress_bar(_self, context: Context):
+    """
+    Update function for the custom progress bar. Tag all info areas for redraw.
+
+    Args:
+        context (Context): context
+    """
+
+    areas = context.window.screen.areas
+    for area in areas:
+        if area.type == 'INFO':
+            area.tag_redraw()
+
 # Inspired by: https://blog.michelanders.nl/2017/04/how-to-add-progress-indicator-to-the-info-header-in-blender.html
+
+
 def register_custom_progress_bar() -> None:
     """Register the custom progress bar."""
 

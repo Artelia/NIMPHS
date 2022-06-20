@@ -1,13 +1,13 @@
 # <pep8 compliant>
 from bpy.props import FloatProperty, FloatVectorProperty
 
+import logging
+log = logging.getLogger(__name__)
 
 import numpy as np
 from typing import Union
-import logging
 
 from tbb.properties.utils import VariablesInformation
-log = logging.getLogger(__name__)
 
 
 def set_clip_values(self: Union[FloatProperty, FloatVectorProperty], value: float) -> None:

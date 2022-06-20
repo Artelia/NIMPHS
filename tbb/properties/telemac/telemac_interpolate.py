@@ -4,7 +4,7 @@ from bpy.props import EnumProperty, IntProperty
 
 
 class TBB_TelemacInterpolateProperty(PropertyGroup):
-    """TELEMAC interpolation properties."""
+    """Interpolation settings for the TELEMAC module."""
 
     register_cls = True
     is_custom_base_cls = False

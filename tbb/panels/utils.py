@@ -4,26 +4,8 @@ from bpy.types import Context, Object, UILayout
 
 from typing import Union
 
-from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 from tbb.properties.utils import VariablesInformation
-
-
-def sequence_name_already_exist(name: str) -> bool:
-    """
-    Check if the given sequence name is already the name of an object. Will look for 'name' + '_sequence'.
-
-    Args:
-        name (str): possible name
-
-    Returns:
-        bool: ``True`` if the given name already exist
-    """
-
-    for object in bpy.data.objects:
-        if name + "_sequence" == object.name:
-            return True
-
-    return False
+from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 
 
 def get_selected_object(context: Context) -> Union[Object, None]:

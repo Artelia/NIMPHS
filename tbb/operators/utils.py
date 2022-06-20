@@ -151,7 +151,7 @@ def generate_object_from_data(vertices: np.ndarray, faces: np.ndarray, name: str
 
 def setup_streaming_sequence_object(obj: Object, op: TBB_CreateStreamingSequence, file_path: str) -> None:
     """
-    Generate streaming sequence settings for both OpenFOAM and TELEMAC modules.
+    Generate streaming sequence settings for all modules.
 
     Args:
         obj (Object): sequence object

@@ -3,10 +3,9 @@ from bpy.types import PropertyGroup
 from bpy.props import PointerProperty, StringProperty, EnumProperty, IntProperty
 
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
-
+from tbb.properties.utils import update_preview_time_point, available_point_data
 from tbb.properties.telemac.Object.telemac_object_settings import TBB_TelemacObjectSettings
 from tbb.properties.openfoam.Object.openfoam_object_settings import TBB_OpenfoamObjectSettings
-from tbb.properties.utils import update_preview_time_point, available_point_data
 
 
 class TBB_ObjectSettings(PropertyGroup):

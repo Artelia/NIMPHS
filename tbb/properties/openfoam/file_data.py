@@ -1,13 +1,13 @@
 # <pep8 compliant>
+import logging
+log = logging.getLogger(__name__)
+
+import numpy as np
 from typing import Union
 from pyvista import POpenFOAMReader
-import logging
-
-from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
-log = logging.getLogger(__name__)
-import numpy as np
 
 from tbb.properties.shared.file_data import FileData
+from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
 
 
 class TBB_OpenfoamFileData(FileData):
@@ -24,6 +24,7 @@ class TBB_OpenfoamFileData(FileData):
 
     def __init__(self, file: POpenFOAMReader, io_settings: Union[TBB_OpenfoamImportSettings, None]):
         """Init method of the class."""
+
         super().__init__()
 
         self.module = "OpenFOAM"
@@ -41,10 +42,11 @@ class TBB_OpenfoamFileData(FileData):
 
     def update(self, time_point: int, io_settings: Union[TBB_OpenfoamImportSettings, None] = None) -> None:
         """
-        Update file reader, raw mesh and variables information.
+        Update file data.
 
         Args:
-            time_point (int): time point to set as active time point.
+            time_point (int): time point to read
+            io_settings (Union[TBB_OpenfoamImportSettings, None], optional): import settings. Defaults to None.
         """
 
         # Update import settings
@@ -91,9 +93,10 @@ class TBB_OpenfoamFileData(FileData):
 
     def is_ok(self) -> bool:
         """
-        Check if file data still hold data (data are not None).
+        Check if file data is up (data are not None or empty).
 
         Returns:
-            bool: ``True`` if everything is ok
+            bool: ``True`` if ok
         """
+
         return self.file is not None
