@@ -1,27 +1,25 @@
 # <pep8 compliant>
 from bpy.types import Operator, Context
 
-import time
 import logging
 log = logging.getLogger(__name__)
 
-from tbb.operators.utils import generate_object_from_data, generate_vertex_colors
-from tbb.operators.openfoam.utils import (
-    generate_mesh_data,
-    prepare_openfoam_point_data,
-    generate_preview_material)
+import time
+
 from tbb.panels.utils import get_selected_object
+from tbb.operators.utils import generate_object_from_data, generate_vertex_colors
+from tbb.operators.openfoam.utils import generate_mesh_data, prepare_openfoam_point_data, generate_preview_material
 
 
 class TBB_OT_OpenfoamPreview(Operator):
-    """Preview the mesh using the loaded file and selected parameters."""
+    """Operator to generate a preview of an OpenFOAM object."""
 
     register_cls = True
     is_custom_base_cls = False
 
     bl_idname = "tbb.openfoam_preview"
     bl_label = "Preview"
-    bl_description = "Preview the current loaded file"
+    bl_description = "Preview the selected object"
 
     @classmethod
     def poll(cls, context: Context) -> bool:
@@ -39,14 +37,12 @@ class TBB_OT_OpenfoamPreview(Operator):
         if obj is None:
             return False
 
-        file_data = context.scene.tbb.file_data.get(obj.tbb.uid, None)
-        return file_data is not None and file_data.is_ok()
+        tmp_data = context.scene.tbb.tmp_data.get(obj.tbb.uid, None)
+        return tmp_data is not None and tmp_data.is_ok()
 
     def execute(self, context: Context) -> set:
         """
-        Preview the mesh.
-
-        It also updates file data with this new preview.
+        Generate a preview of the selected object.
 
         Args:
             context (Context): context
@@ -57,8 +53,9 @@ class TBB_OT_OpenfoamPreview(Operator):
 
         start = time.time()
 
+        # Get settings
         obj = get_selected_object(context)
-        file_data = context.scene.tbb.file_data.get(obj.tbb.uid, None)
+        tmp_data = context.scene.tbb.tmp_data.get(obj.tbb.uid, None)
         clip = obj.tbb.settings.openfoam.clip
         io_settings = obj.tbb.settings.openfoam.import_settings
         collection = context.scene.collection
@@ -68,21 +65,21 @@ class TBB_OT_OpenfoamPreview(Operator):
             return {'FINISHED'}
 
         # Setup file
-        file_data.file.decompose_polyhedra = io_settings.decompose_polyhedra
-        file_data.file.case_type = io_settings.case_type
+        tmp_data.file.decompose_polyhedra = io_settings.decompose_polyhedra
+        tmp_data.file.case_type = io_settings.case_type
 
         prw_time_point = obj.tbb.settings.preview_time_point
 
         # Generate mesh data
         try:
-            file_data.update(prw_time_point, io_settings)
-            vertices, faces, file_data.mesh = generate_mesh_data(file_data, clip=clip)
+            tmp_data.update(prw_time_point, io_settings)
+            vertices, faces, tmp_data.mesh = generate_mesh_data(tmp_data, clip=clip)
         except Exception:
             log.debug("Something went wrong building the mesh", exc_info=1)
             self.report({'WARNING'}, "Something went wrong building the mesh")
             return {'CANCELLED'}
 
-        # Generate objects
+        # Generate object
         try:
             obj = generate_object_from_data(vertices, faces, "TBB_OpenFOAM_preview")
             blender_mesh = obj.data
@@ -96,7 +93,7 @@ class TBB_OT_OpenfoamPreview(Operator):
         # Import point data as vertex colors
         point_data = obj.tbb.settings.preview_point_data
         if point_data is not None and point_data != 'NONE':
-            res = prepare_openfoam_point_data(obj.data, point_data, file_data)
+            res = prepare_openfoam_point_data(obj.data, point_data, tmp_data)
             if len(res[0]) > 0:
                 generate_vertex_colors(blender_mesh, *res)
                 generate_preview_material(obj, res[0][0]["name"] if len(res[0]) > 0 else 'None')

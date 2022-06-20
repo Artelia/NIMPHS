@@ -1,9 +1,10 @@
 # <pep8 compliant>
 from bpy.types import Operator, Context
 
-import time
 import logging
 log = logging.getLogger(__name__)
+
+import time
 
 from tbb.panels.utils import get_selected_object
 from tbb.operators.openfoam.utils import load_openfoam_file
@@ -11,20 +12,18 @@ from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
 
 
 class TBB_OT_OpenfoamReloadFile(Operator):
-    """Reload the selected file."""
+    """Operator to reload file data of the selected OpenFOAM object."""
 
     register_cls = True
     is_custom_base_cls = False
 
     bl_idname = "tbb.reload_openfoam_file"
     bl_label = "Reload"
-    bl_description = "Reload the selected file"
+    bl_description = "Reload file data of the selected OpenFOAM object"
 
     def execute(self, context: Context) -> set:
         """
-        Reload the selected file.
-
-        It updates file data and 'dynamic' scene settings.
+        Reload file data of the selected OpenFOAM object.
 
         Args:
             context (Context): context

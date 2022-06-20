@@ -1,24 +1,23 @@
 # <pep8 compliant>
-from bpy.types import Event, Context, Object, Timer
 from bpy.props import EnumProperty, IntProperty
+from bpy.types import Event, Context, Object, Timer
 
 import logging
-
 log = logging.getLogger(__name__)
 
 from tbb.operators.shared.create_sequence import TBB_CreateSequence
 
 
 class TBB_CreateMeshSequence(TBB_CreateSequence):
-    """Operator to create mesh sequences."""
+    """Operator to create mesh sequences used in both modules."""
 
     register_cls = False
     is_custom_base_cls = True
 
-    #: bpy.props.EnumProperty: Indicates whether the operator should run modal or not. Enum in ['MODAL', 'NORMAL']
+    #: bpy.props.EnumProperty: Indicate whether the operator should run modal or normal. Enum in ['MODAL', 'NORMAL'].
     mode: EnumProperty(
         name="Mode",  # noqa: F821
-        description="Indicates whether the operator should run modal or not. Enum in ['MODAL', 'NORMAL']",
+        description="Indicate whether the operator should run modal or normal. Enum in ['MODAL', 'NORMAL']",
         items=[
             ('MODAL', "Modal", "TODO"),  # noqa: F821
             ('NORMAL', "Normal", "TODO"),  # noqa: F821
@@ -28,16 +27,18 @@ class TBB_CreateMeshSequence(TBB_CreateSequence):
 
     #: bpy.types.Timer: Timer which triggers the 'modal' method of operators
     timer: Timer = None
+
     #: str: Name of the sequence object
     obj_name: str = ""
+
     #: int: Time point currently processed when creating a sequence
     time_point: int = 0
+
     #: int: Current frame during the 'create sequence' process (different from time point)
     frame: int = 0
+
     #: int: Module name. Enum in ['OpenFOAM', 'TELEMAC']
     module: str = 'NONE'
-    #: bpy.types.Object: Selected object
-    obj: Object = None
 
     def update_end(self, _context: Context) -> None:  # noqa D417
         """
@@ -63,6 +64,7 @@ class TBB_CreateMeshSequence(TBB_CreateSequence):
     def invoke(self, context: Context, event: Event) -> set:
         """
         Prepare operators settings. Function triggered before the user can edit settings.
+        This method has to be overloaded in derived classes.
 
         Args:
             context (Context): context
@@ -96,7 +98,7 @@ class TBB_CreateMeshSequence(TBB_CreateSequence):
 
     def execute(self, context: Context) -> set:
         """
-        Prepare the execution of the 'create_mesh_sequence' process.
+        Prepare the execution of the 'create mesh sequence' process.
 
         Args:
             context (Context): context
@@ -175,12 +177,12 @@ class TBB_CreateMeshSequence(TBB_CreateSequence):
 
         return {'PASS_THROUGH'}
 
-    def run_one_step(self, context: Context) -> set:
+    def run_one_step(self, _context: Context) -> set:
         """
-        Run one step of the 'create_mesh_sequence' process.
+        Run one step of the 'create mesh sequence' process.
 
         Args:
-            context (Context): context
+            _context (Context): context
 
         Returns:
             set: state of the operation, enum in ['PASS_THROUGH', 'CANCELLED']

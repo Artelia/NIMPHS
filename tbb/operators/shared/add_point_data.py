@@ -3,9 +3,9 @@ from bpy.types import Operator, Context, Event
 from bpy.props import EnumProperty, StringProperty
 
 import logging
-from tbb.panels.utils import get_selected_object
 log = logging.getLogger(__name__)
 
+from tbb.panels.utils import get_selected_object
 from tbb.properties.utils import VariablesInformation
 
 
@@ -67,12 +67,11 @@ class TBB_OT_AddPointData(Operator):
         options={'HIDDEN'},  # noqa F821
     )
 
-    #: bpy.props.EnumProperty: Indicates the activator of this operator.
+    #: bpy.props.EnumProperty: Indicate the activator of this operator.
     #  Enum in ['OBJECT', 'OPERATOR/OpenFOAM', 'OPERATOR/TELEMAC'].
     source: EnumProperty(
         name="Source",  # noqa F821
-        description="Indicates the activator of this operator.\
-Enum in ['OBJECT', 'OPERATOR/OpenFOAM', 'OPERATOR/TELEMAC']",
+        description="Indicate the activator of this operator.",
         items=[
             ("OBJECT", "Object", "Execute in object mode"),  # noqa F821
             ("OPERATOR/OpenFOAM", "Operator (OpenFOAM)", "Execute in operator mode, OpenFOAM module"),  # noqa F821

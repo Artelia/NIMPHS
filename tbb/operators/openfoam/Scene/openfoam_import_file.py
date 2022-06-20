@@ -1,13 +1,12 @@
 # <pep8 compliant>
-from bpy.props import StringProperty, PointerProperty
-from bpy.types import Operator, Context, Object
 from bpy_extras.io_utils import ImportHelper
+from bpy.types import Operator, Context, Object
+from bpy.props import StringProperty, PointerProperty
 
-import time
-from typing import Union
-from pyvista import OpenFOAMReader, POpenFOAMReader
 import logging
 log = logging.getLogger(__name__)
+
+import time
 
 from tbb.operators.utils import generate_object_from_data
 from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
@@ -15,20 +14,21 @@ from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
 from tbb.operators.openfoam.utils import load_openfoam_file, generate_mesh_data
 
 
-def import_openfoam_menu_draw(self, context: Context):  # noqa D417
+def import_openfoam_menu_draw(self, context: Context) -> None:  # noqa D417
     """
     Draw function which displays the import button in File > Import.
 
     Args:
-        _context (Context): context
+        context (Context): context
     """
+
     prefs = context.preferences.addons["tbb"].preferences.settings
     extensions = prefs.openfoam_extensions.replace("*", "")
     self.layout.operator(TBB_OT_OpenfoamImportFile.bl_idname, text=f"OpenFOAM ({extensions})")
 
 
 class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
-    """Import an OpenFOAM file. This operator manages the file browser and its filtering options."""
+    """Import an OpenFOAM file."""
 
     register_cls = True
     is_custom_base_cls = False
@@ -55,7 +55,7 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
 
     def execute(self, context: Context) -> set:
         """
-        Import the selected file. Generates the object.
+        Import the selected file. Generates a preview object.
 
         Args:
             context (Context): context
@@ -121,15 +121,14 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         row = box.row()
         row.prop(self, "name", text="Name")
 
-    def setup_generated_obj(self, context: Context, obj: Object,
-                            file_data: TBB_OpenfoamFileData) -> None:
+    def setup_generated_obj(self, context: Context, obj: Object, file_data: TBB_OpenfoamFileData) -> None:
         """
         Copy import settings and setup needed 'tbb' data for the generated object.
 
         Args:
             context (Context): context
             obj (Object): generated object
-            file_reader (Union[OpenFOAMReader, POpenFOAMReader]): OpenFOAM reader
+            file_data (TBB_OpenfoamFileData): OpenFOAM file data
         """
 
         # Copy import settings

@@ -3,7 +3,7 @@ from bpy.types import Menu, Context
 
 
 class TBB_MT_TelemacCreateSequenceMenu(Menu):
-    """Main menu for the TELEMAC module."""
+    """Main menu for the TELEMAC > Create sequence."""
 
     register_cls = True
     is_custom_base_cls = False

@@ -3,11 +3,10 @@ from bpy.types import Operator, Context
 from bpy.props import StringProperty, EnumProperty
 
 import logging
-from tbb.panels.utils import get_selected_object
-from tbb.properties.utils import VariablesInformation
 log = logging.getLogger(__name__)
 
-from tbb.properties.shared.module_streaming_sequence_settings import TBB_ModuleStreamingSequenceSettings
+from tbb.panels.utils import get_selected_object
+from tbb.properties.utils import VariablesInformation
 
 
 class TBB_OT_RemovePointData(Operator):
@@ -27,12 +26,11 @@ class TBB_OT_RemovePointData(Operator):
         default="",
     )
 
-    #: bpy.props.EnumProperty: Indicates the activator of this operator.
+    #: bpy.props.EnumProperty: Indicate the activator of this operator.
     #  Enum in ['OBJECT', 'OPERATOR/OpenFOAM', 'OPERATOR/TELEMAC'].
     source: EnumProperty(
         name="Source",  # noqa F821
-        description="Indicates the activator of this operator.\
-Enum in ['OBJECT', 'OPERATOR/OpenFOAM', 'OPERATOR/TELEMAC']",
+        description="Indicate the activator of this operator.",
         items=[
             ("OBJECT", "Object", "Execute in object mode"),  # noqa F821
             ("OPERATOR/OpenFOAM", "Operator (OpenFOAM)", "Execute in operator mode, OpenFOAM module"),  # noqa F821

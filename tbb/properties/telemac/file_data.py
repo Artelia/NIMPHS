@@ -104,7 +104,7 @@ class TBB_TelemacFileData(FileData):
 
     def is_3d(self) -> bool:
         """
-        Indicate if the file is from a 3D simulation
+        Indicate if the file is from a 3D simulation.
 
         Returns:
             bool: state

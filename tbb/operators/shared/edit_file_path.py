@@ -1,7 +1,7 @@
 # <pep8 compliant>
 from bpy.props import StringProperty
-from bpy.types import Operator, Context, Event
 from bpy_extras.io_utils import ImportHelper
+from bpy.types import Operator, Context, Event
 
 import logging
 log = logging.getLogger(__name__)
@@ -10,14 +10,14 @@ from tbb.panels.utils import get_selected_object
 
 
 class TBB_OT_EditFilePath(Operator, ImportHelper):
-    """Edit file path of the selected object."""
+    """Operator to edit the file path of the selected object."""
 
     register_cls = True
     is_custom_base_cls = False
 
     bl_idname = "tbb.edit_file_path"
     bl_label = "Edit"
-    bl_description = "Edit file path"
+    bl_description = "Edit file path of the selected object"
 
     #: bpy.props.StringProperty: List of allowed file extensions.
     filter_glob: StringProperty(
@@ -27,7 +27,7 @@ class TBB_OT_EditFilePath(Operator, ImportHelper):
 
     def invoke(self, context: Context, _event: Event) -> set:
         """
-        Initialize the operator.
+        Initialize the operator (update the lsit of allowed extensions).
 
         Args:
             context (Context): context

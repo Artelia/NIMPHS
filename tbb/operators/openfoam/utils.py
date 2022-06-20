@@ -3,37 +3,34 @@ import bpy
 from bpy.app.handlers import persistent
 from bpy.types import Mesh, Object, Scene, Context
 
-import time
 import logging
-
-from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 log = logging.getLogger(__name__)
+
+import time
 import numpy as np
 from typing import Union
 from pathlib import Path
-from pyvista import OpenFOAMReader, POpenFOAMReader, UnstructuredGrid
+from pyvista import POpenFOAMReader, UnstructuredGrid
 
-from tbb.properties.openfoam.openfoam_clip import TBB_OpenfoamClipProperty
-from tbb.operators.utils import remap_array, generate_vertex_colors_groups, generate_vertex_colors
 from tbb.properties.utils import VariablesInformation
 from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
+from tbb.properties.openfoam.openfoam_clip import TBB_OpenfoamClipProperty
+from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
+from tbb.operators.utils import remap_array, generate_vertex_colors_groups, generate_vertex_colors
 from tbb.operators.openfoam.Scene.openfoam_create_mesh_sequence import TBB_OT_OpenfoamCreateMeshSequence
 
 
 def run_one_step_create_mesh_sequence_openfoam(context: Context, op: TBB_OT_OpenfoamCreateMeshSequence) -> None:
     """
-    Run one step of the 'create mesh sequence' for the OpenFOAM module.
+    Run one step of the 'create mesh sequence' process for the OpenFOAM module.
 
     Args:
         context (Context): context
-        file_data (TBB_OpenfoamFileData): file data
-        frame (int): current frame
-        time_point (int): current time point
-        start (int): start time point
-        name (str): user defined sequence name
+        op (TBB_OT_OpenfoamCreateMeshSequence): operator
 
     Raises:
-        error: if something went wrong generating the mesh
+        error: error on generating mesh for sequence
+        ValueError: generated mesh is None
     """
 
     try:
@@ -64,7 +61,7 @@ def run_one_step_create_mesh_sequence_openfoam(context: Context, op: TBB_OT_Open
         context.scene.frame_set(frame=op.frame)
 
         # Code taken from the Stop-motion-OBJ addon
-        # Link: https://github.com/neverhood311/Stop-motion-OBJ/blob/rename-module-name/src/panels.py
+        # Link: https://github.com/neverhood311/Stop-motion-OBJ/blob/version-2.2/src/panels.py
         # if the object doesn't have a 'curMeshIdx' fcurve, we can't add a mesh to it
         # TODO: manage the case when there is no 'curMeshIdx'. We may throw an exception or something.
         curve = next(
@@ -87,21 +84,17 @@ def run_one_step_create_mesh_sequence_openfoam(context: Context, op: TBB_OT_Open
 def generate_mesh_for_sequence(file_data: TBB_OpenfoamFileData,
                                op: TBB_OT_OpenfoamCreateMeshSequence) -> Union[Mesh, None]:
     """
-    Generate a mesh for an OpenFOAM 'mesh sequence' at the given time point.
+    Generate mesh data for the 'create mesh sequence' process.
 
     Args:
-        context (Context): context
         file_data (TBB_OpenfoamFileData): file data
-        time_point (int): time point from which to read data
-        name (str, optional): name of the output mesh. Defaults to "TBB".
-
-    Raises:
-        AttributeError: if the given file does not exist
+        op (TBB_OT_OpenfoamCreateMeshSequence): operator
 
     Returns:
-        Mesh: generate mesh
+        Union[Mesh, None]: generated mesh
     """
 
+    # Generate mesh data
     file_data.update(op.time_point, op.import_settings)
     vertices, faces, file_data.mesh = generate_mesh_data(file_data, clip=op.clip)
     if file_data.mesh is None:
@@ -124,17 +117,16 @@ def generate_mesh_for_sequence(file_data: TBB_OpenfoamFileData,
 def generate_mesh_data(file_data: TBB_OpenfoamFileData,
                        clip: TBB_OpenfoamClipProperty = None) -> tuple[np.array, np.array, UnstructuredGrid]:
     """
-    Generate mesh data for Blender using the given file reader. Applies the clip if defined.
-
-    If 'mesh' is not defined, it will be read from the given OpenFOAMReader (file_reader).
-    **Warning**: the given mesh will be modified (clip, extract_surface, triangulation and compute_normals).
+    Generate mesh data for Blender using the given OpenFOAM file data. Applies the clip if defined.
+    This function may apply these operations on the OpenFOAM mesh: clip, extract_surface,
+    triangulation and compute_normals
 
     Args:
-        mesh (UnstructuredGrid): raw mesh.
+        file_data (TBB_OpenfoamFileData): file data
         clip (TBB_OpenfoamClipProperty, optional): clip settings. Defaults to None.
 
     Returns:
-        tuple[np.array, np.array, UnstructuredGrid]: vertices, faces and the output mesh (modified)
+        tuple[np.array, np.array, UnstructuredGrid]: vertices, faces, resulting UnstructuredGrid
     """
 
     # Get raw mesh
@@ -162,6 +154,7 @@ def generate_mesh_data(file_data: TBB_OpenfoamFileData,
     else:
         surface = mesh.extract_surface(nonlinear_subdivision=0)
 
+    # Triangulate
     if file_data.triangulate:
         surface.triangulate(inplace=True)
         surface.compute_normals(inplace=True, consistent_normals=False, split_vertices=True)
@@ -219,45 +212,13 @@ def generate_openfoam_streaming_sequence_obj(context: Context, obj: Object, name
     return sequence
 
 
-# Code taken from the Stop-motion-OBJ addon
-# Link: https://github.com/neverhood311/Stop-motion-OBJ/blob/rename-module-name/src/stop_motion_obj.py
-def add_mesh_to_sequence(obj: Object, bmesh: Mesh) -> int:
-    """
-    Add a mesh to an OpenFOAM 'mesh sequence'.
-
-    Args:
-        obj (Object): sequence object
-        bmesh (Mesh): mesh to add to the sequence
-
-    Returns:
-        int: mesh id in the sequence
-    """
-
-    bmesh.inMeshSequence = True
-    mss = obj.mesh_sequence_settings
-    # add the new mesh to meshNameArray
-    newMeshNameElement = mss.meshNameArray.add()
-    newMeshNameElement.key = bmesh.name_full
-    newMeshNameElement.inMemory = True
-    # increment numMeshes
-    mss.numMeshes = mss.numMeshes + 1
-    # increment numMeshesInMemory
-    mss.numMeshesInMemory = mss.numMeshesInMemory + 1
-    # set initialized to True
-    mss.initialized = True
-    # set loaded to True
-    mss.loaded = True
-
-    return mss.numMeshes - 1
-
-
 def generate_preview_material(obj: Object, scalar: str, name: str = "TBB_OpenFOAM_preview_material") -> None:
     """
-    Generate the preview material (if not generated yet). Update it otherwise (with the new scalar).
+    Generate or update the preview material.
 
     Args:
         obj (Object): object on which to apply the material
-        scalar (str): name of the vertex colors group (same as scalar name) to preview
+        scalar (str): name of the vertex colors group to preview
         name (str, optional): name of the preview material. Defaults to "TBB_OpenFOAM_preview_material".
     """
 
@@ -312,13 +273,12 @@ def prepare_openfoam_point_data(bmesh: Mesh, point_data: Union[TBB_PointDataSett
         137730
 
     Args:
-        mesh (UnstructuredGrid): mesh data read from the OpenFOAMReader
-        blender_mesh (Mesh): mesh on which to add vertex colors
-        point_data (list[str]): list of point data
-        time_point (int): time point from which to read data
+        bmesh (Mesh): blender mesh
+        point_data (Union[TBB_PointDataSettings, str]): point data settings
+        file_data (TBB_OpenfoamFileData): file data
 
     Returns:
-        tuple[list[dict], dict, int]: vertex colors groups, data, number of vertex ids
+        tuple[list[dict], dict, int]: vertex colors groups, color data, number of vertices
     """
 
     # Prepare the mesh to loop over all its triangles
@@ -371,9 +331,7 @@ def prepare_openfoam_point_data(bmesh: Mesh, point_data: Union[TBB_PointDataSett
 @persistent
 def update_openfoam_streaming_sequences(scene: Scene) -> None:
     """
-    App handler appended to the frame_change_pre handlers.
-
-    Updates all the OpenFOAM 'streaming sequences' of the scene.
+    Update all the OpenFOAM 'streaming sequences' of the scene.
 
     Args:
         scene (Scene): scene
@@ -412,15 +370,12 @@ def update_openfoam_streaming_sequence_mesh(scene: Scene, obj: Object, time_poin
     Update the mesh of the given OpenFOAM sequence object.
 
     Args:
+        scene (Scene): scene
         obj (Object): sequence object
-        settings (TBB_OpenfoamStreamingSequenceProperty): 'streaming sequence' settings
-        time_point (int): time point from which to read data
-
-    Raises:
-        OSError: if there was an error reading the file
-        ValueError: if the given time point does no exists
+        time_point (int): time point
     """
 
+    # Get data and settings
     io_settings = obj.tbb.settings.openfoam.import_settings
     file_data = scene.tbb.file_data[obj.tbb.uid]
 
@@ -476,3 +431,36 @@ def load_openfoam_file(file_path: str, case_type: str = 'reconstructed',
 
     file_reader.decompose_polyhedra = decompose_polyhedra
     return True, file_reader
+
+# Code taken from the Stop-motion-OBJ addon
+# Link: https://github.com/neverhood311/Stop-motion-OBJ/blob/rename-module-name/src/stop_motion_obj.py
+
+
+def add_mesh_to_sequence(obj: Object, bmesh: Mesh) -> int:
+    """
+    Add a mesh to an OpenFOAM 'mesh sequence'.
+
+    Args:
+        obj (Object): sequence object
+        bmesh (Mesh): mesh to add to the sequence
+
+    Returns:
+        int: mesh id in the sequence
+    """
+
+    bmesh.inMeshSequence = True
+    mss = obj.mesh_sequence_settings
+    # add the new mesh to meshNameArray
+    newMeshNameElement = mss.meshNameArray.add()
+    newMeshNameElement.key = bmesh.name_full
+    newMeshNameElement.inMemory = True
+    # increment numMeshes
+    mss.numMeshes = mss.numMeshes + 1
+    # increment numMeshesInMemory
+    mss.numMeshesInMemory = mss.numMeshesInMemory + 1
+    # set initialized to True
+    mss.initialized = True
+    # set loaded to True
+    mss.loaded = True
+
+    return mss.numMeshes - 1

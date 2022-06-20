@@ -12,15 +12,15 @@ class TBB_OpenfoamImportSettings(PropertyGroup):
     #: bpy.props.BoolProperty: If `True`, decompose polyhedra into tetrahedra and pyramids
     decompose_polyhedra: BoolProperty(
         name="Decompose polyhedra",
-        description="Indicates whether polyhedra are to be decomposed when read. If True, \
+        description="Indicate whether polyhedra are to be decomposed when read. If True, \
 decompose polyhedra into tetrahedra and pyramids",
         default=True
     )
 
-    #: bpy.props.EnumProperty: Indicates whether decomposed mesh or reconstructed mesh should be read
+    #: bpy.props.EnumProperty: Indicate whether decomposed mesh or reconstructed mesh should be read
     case_type: EnumProperty(
         name="Case type",
-        description="Indicates whether decomposed mesh or reconstructed mesh should be read",
+        description="Indicate whether decomposed mesh or reconstructed mesh should be read",
         items=[
             ("reconstructed", "Reconstructed", "Reconstructed mesh should be read"),  # noqa: F821
             ("decomposed", "Decomposed", "Decomposed mesh should be read"),  # noqa: F821

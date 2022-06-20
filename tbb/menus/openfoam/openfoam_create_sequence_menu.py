@@ -3,7 +3,7 @@ from bpy.types import Menu, Context
 
 
 class TBB_MT_OpenfoamCreateSequenceMenu(Menu):
-    """Main menu for the OpenFOAM module."""
+    """Main menu for OpenFOAM > Create sequence."""
 
     register_cls = True
     is_custom_base_cls = False

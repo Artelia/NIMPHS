@@ -2,16 +2,17 @@
 from bpy.types import Context, Event
 from bpy.props import PointerProperty
 
-import time
 import logging
-from tbb.panels.openfoam.utils import draw_clip_settings
-from tbb.properties.openfoam.openfoam_clip import TBB_OpenfoamClipProperty
 log = logging.getLogger(__name__)
 
-from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
-from tbb.operators.shared.create_mesh_sequence import TBB_CreateMeshSequence
+import time
+
 from tbb.panels.utils import get_selected_object
+from tbb.panels.openfoam.utils import draw_clip_settings
+from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
+from tbb.properties.openfoam.openfoam_clip import TBB_OpenfoamClipProperty
 from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
+from tbb.operators.shared.create_mesh_sequence import TBB_CreateMeshSequence
 
 
 class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
@@ -21,8 +22,8 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
     is_custom_base_cls = False
 
     bl_idname = "tbb.openfoam_create_mesh_sequence"
-    bl_label = "Create mesh sequence"
-    bl_description = "Create mesh a sequence using the selected parameters. Press 'esc' to cancel"
+    bl_label = "Mesh sequence"
+    bl_description = "Create mesh a sequence. Press 'esc' to cancel."
 
     #: TBB_OpenfoamImportSettings: import settings
     import_settings: PointerProperty(type=TBB_OpenfoamImportSettings)
@@ -33,7 +34,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
     @classmethod
     def poll(self, context: Context) -> bool:
         """
-        If false, locks the UI button of the operator.
+        If false, locks the button of the operator.
 
         Args:
             context (Context): context
@@ -51,7 +52,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
 
     def invoke(self, context: Context, _event: Event) -> set:
         """
-        Prepare operators settings. Function triggered before the user can edit settings.
+        Prepare operator settings. Function triggered before the user can edit settings.
 
         Args:
             context (Context): context
@@ -60,6 +61,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
         Returns:
             set: state of the operator
         """
+
         from tbb.operators.openfoam.utils import load_openfoam_file
 
         self.obj = get_selected_object(context)
@@ -77,7 +79,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
         context.scene.tbb.file_data["ops"] = TBB_OpenfoamFileData(file_reader, self.import_settings)
         self.max_length = context.scene.tbb.file_data["ops"].nb_time_points
 
-        # Used in tests
+        # Used in tests (will run in iterative mode instread of modal)
         if self.mode == 'NORMAL':
             return {'FINISHED'}
 
@@ -85,7 +87,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
 
     def draw(self, context: Context) -> None:
         """
-        UI layout of the popup window of the operator.
+        UI layout of the popup window.
 
         Args:
             context (Context): context
@@ -108,13 +110,13 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
 
     def run_one_step(self, context: Context) -> set:
         """
-        Run one step of the 'create_mesh_sequence' process.
+        Run one step of the 'create mesh sequence' process.
 
         Args:
             context (Context): context
 
         Returns:
-            set: state of the operation, enum in ['PASS_THROUGH', 'CANCELLED']
+            set: state of the operator. Enum in ['PASS_THROUGH', 'CANCELLED'].
         """
 
         from tbb.operators.openfoam.utils import run_one_step_create_mesh_sequence_openfoam

@@ -1,12 +1,10 @@
 # <pep8 compliant>
 from bpy.types import Operator, Context, Object
-from bpy.props import EnumProperty, PointerProperty, IntProperty, StringProperty
+from bpy.props import PointerProperty, IntProperty, StringProperty
 
-import time
-
+from tbb.properties.utils import VariablesInformation
 from tbb.panels.utils import draw_point_data, get_selected_object
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
-from tbb.properties.utils import VariablesInformation
 
 
 class TBB_CreateSequence(Operator):
@@ -63,7 +61,7 @@ class TBB_CreateSequence(Operator):
     @classmethod
     def poll(self, context: Context) -> bool:
         """
-        If false, locks the UI button of the operator.
+        If false, locks the button of the operator.
 
         Args:
             context (Context): context
@@ -109,9 +107,7 @@ class TBB_CreateSequence(Operator):
 
     def stop(self, context: Context, cancelled: bool = False) -> None:
         """
-        Stop the 'create sequence' process.
-
-        Common stop function for OpenFOAM and TELEMAC 'create sequence' operators.
+        Stop the 'create sequence' process. Used for both modules.
 
         Args:
             context (Context): context
