@@ -17,7 +17,7 @@ FILE_PATH = os.path.abspath("./data/telemac_sample_2d.slf")
 
 @pytest.fixture
 def preview_object():
-    obj = bpy.data.objects.get("TBB_TELEMAC_preview", None)
+    obj = bpy.data.objects.get("TBB_TELEMAC_preview_2D", None)
     # If not None, select the object
     if obj is not None:
         obj.select_set(True)
@@ -66,9 +66,9 @@ def test_import_telemac_2d():
     op = bpy.ops.tbb.import_telemac_file
 
     # Test with wrong filepath
-    assert op('EXEC_DEFAULT', filepath="here.slf") == {'CANCELLED'}
+    assert op('EXEC_DEFAULT', filepath="here.slf", name="TBB_TELEMAC_preview_2D") == {'CANCELLED'}
 
-    assert op('EXEC_DEFAULT', filepath=FILE_PATH) == {"FINISHED"}
+    assert op('EXEC_DEFAULT', filepath=FILE_PATH, name="TBB_TELEMAC_preview_2D") == {"FINISHED"}
 
 
 def test_geometry_imported_preview_object_telemac_2d(preview_object):
@@ -86,7 +86,7 @@ def test_reload_telemac_2d(preview_object):
     assert bpy.ops.tbb.reload_telemac_file('EXEC_DEFAULT') == {"FINISHED"}
 
     # Test temporary data
-    tmp_data = bpy.context.scene.tbb.tmp_data[preview_object.tbb.uid]
+    tmp_data = bpy.context.scene.tbb.tmp_data.get(preview_object.tbb.uid, None)
     assert tmp_data is not None
     assert tmp_data.module_name == "TELEMAC"
     assert tmp_data.vertices is not None
@@ -102,7 +102,7 @@ def test_reload_telemac_2d(preview_object):
 
 def test_preview_telemac_2d(preview_object):
     # Set preview settings
-    tmp_data = bpy.context.scene.tbb.tmp_data[preview_object.tbb.uid]
+    tmp_data = bpy.context.scene.tbb.tmp_data.get(preview_object.tbb.uid, None)
     preview_object.tbb.settings.preview_point_data = json.dumps(tmp_data.vars_info.get(0))
 
     assert bpy.ops.tbb.telemac_preview('EXEC_DEFAULT') == {"FINISHED"}
@@ -131,7 +131,7 @@ def test_point_data_preview_object_telemac_2d(preview_object):
 
 def test_create_streaming_sequence_telemac_2d(preview_object):
     # Get temporary data
-    tmp_data = bpy.context.scene.tbb.tmp_data[preview_object.tbb.uid]
+    tmp_data = bpy.context.scene.tbb.tmp_data.get(preview_object.tbb.uid, None)
     preview_object.tbb.settings.preview_point_data = json.dumps(tmp_data.vars_info.get(0))
 
     op = bpy.ops.tbb.telemac_create_streaming_sequence
@@ -216,27 +216,30 @@ def test_mesh_sequence_telemac_2d(mesh_sequence, frame_change_post):
     assert mesh_sequence is not None
     assert len(mesh_sequence.children) == 2
 
+    # Get tmp_data
+    tmp_data = bpy.context.scene.tbb.tmp_data[mesh_sequence.tbb.uid]
+    assert tmp_data is not None
+
+    # Add point data settings
+    mesh_sequence.tbb.settings.point_data.import_data = True
+    mesh_sequence.tbb.settings.point_data.list = json.dumps(tmp_data.vars_info.get(0))
+
     # Force update telemac mesh sequences
     handler = frame_change_post("update_telemac_mesh_sequences")
     assert handler is not None
     handler(bpy.context.scene)
 
-    # Test sequence object
-    assert mesh_sequence.tbb.settings.telemac.is_mesh_sequence is True
+    # Test object settings
+    assert mesh_sequence.tbb.is_streaming_sequence is False
+    assert mesh_sequence.tbb.is_mesh_sequence is True
     assert mesh_sequence.tbb.uid != ""
-    sequence = mesh_sequence.tbb.settings.telemac.mesh_sequence
-    assert sequence is not None
-    assert sequence.import_point_data is True
-    assert sequence.point_data == "VITESSE U;SALINITE;VITESSE V;FOND;"
-    assert sequence.file_path == FILE_PATH
-    assert sequence.is_3d_simulation is False
-
-    # Disable updates for this sequence object during the next tests
-    mesh_sequence.tbb.settings.telemac.mesh_sequence.import_point_data = False
+    assert mesh_sequence.tbb.module == 'TELEMAC'
+    assert mesh_sequence.tbb.settings.file_path == FILE_PATH
+    assert mesh_sequence.tbb.settings.telemac.is_3d_simulation is False
 
     # Test sequence data
-    for obj in mesh_sequence.children:
-        assert len(obj.data.shape_keys.key_blocks) == 5
+    for child in mesh_sequence.children:
+        assert len(child.data.shape_keys.key_blocks) == 4
 
 
 def test_geometry_mesh_sequence_telemac_2d(mesh_sequence):
@@ -244,10 +247,10 @@ def test_geometry_mesh_sequence_telemac_2d(mesh_sequence):
     assert len(mesh_sequence.children) == 2
 
     # Test geometry
-    for obj in mesh_sequence.children:
-        assert len(obj.data.vertices) == 12506
-        assert len(obj.data.edges) == 36704
-        assert len(obj.data.polygons) == 24199
+    for child in mesh_sequence.children:
+        assert len(child.data.vertices) == 12506
+        assert len(child.data.edges) == 36704
+        assert len(child.data.polygons) == 24199
 
 
 def test_point_data_mesh_sequence_telemac_2d(mesh_sequence):
@@ -255,13 +258,12 @@ def test_point_data_mesh_sequence_telemac_2d(mesh_sequence):
     assert len(mesh_sequence.children) == 2
 
     # Test point data (only test if they exist)
-    # TODO: add this, not implemented yet
-    for obj in mesh_sequence.children:
-        vertex_colors = obj.data.vertex_colors
-        assert len(vertex_colors) == 2
-        vu_s_vv_colors = vertex_colors.get("VITESSE U, SALINITE, VITESSE V", None)
-        assert vu_s_vv_colors is not None
-        f_colors = vertex_colors.get("FOND, None, None", None)
-        assert f_colors is not None
-
     # TODO: compare values (warning: color data are ramapped into [0; 1])
+    for child in mesh_sequence.children:
+        vertex_colors = child.data.vertex_colors
+        assert len(vertex_colors) == 1
+        data = vertex_colors.get("VITESSE U, None, None", None)
+        assert data is not None
+
+    # Disable updates for this sequence object during the next tests
+    mesh_sequence.tbb.settings.point_data.import_data = False

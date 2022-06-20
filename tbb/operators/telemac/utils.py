@@ -44,7 +44,8 @@ def run_one_step_create_mesh_sequence_telemac(context: Context, op: TBB_OT_Telem
     # First time point, create the sequence object
     if op.time_point == op.start:
 
-        obj = generate_telemac_sequence_obj(context, op.obj, op.name + "_sequence", op.start, shape_keys=True)
+        obj = generate_telemac_sequence_obj(context, op.obj, op.name, op.start, shape_keys=True)
+        obj.tbb.module = 'TELEMAC'
         obj.tbb.is_mesh_sequence = True
         obj.tbb.settings.file_path = op.obj.tbb.settings.file_path
         # Copy point data settings
@@ -298,7 +299,7 @@ def generate_telemac_sequence_obj(context: Context, obj: Object, name: str, time
     """
 
     # Create sequence object
-    sequence = bpy.data.objects.new(name=name, object_data=None)
+    sequence = bpy.data.objects.new(name=name + "_sequence", object_data=None)
 
     # Load temporary data
     sequence.tbb.uid = str(time.time())
@@ -306,7 +307,7 @@ def generate_telemac_sequence_obj(context: Context, obj: Object, name: str, time
     sequence.tbb.settings.telemac.is_3d_simulation = obj.tbb.settings.telemac.is_3d_simulation
 
     try:
-        children = generate_base_objects(context.scene.tbb.tmp_data[sequence.tbb.uid], time_point, name)
+        children = generate_base_objects(context.scene.tbb.tmp_data[sequence.tbb.uid], time_point, name + "_sequence")
     except Exception as error:
         raise error
 
