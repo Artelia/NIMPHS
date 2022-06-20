@@ -10,7 +10,7 @@ import logging
 log = logging.getLogger(__name__)
 
 from tbb.operators.utils import generate_object_from_data
-from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
+from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
 from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
 from tbb.operators.openfoam.utils import load_openfoam_file, generate_mesh_data
 
@@ -77,7 +77,7 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         # the preview mesh may already be loaded. Moreover, this step takes a while for large meshes.
         try:
             # Generate tmp_data
-            tmp_data = TBB_OpenfoamTemporaryData(file_reader, self.import_settings)
+            tmp_data = TBB_OpenfoamFileData(file_reader, self.import_settings)
             # Generate object
             vertices, faces, tmp_data.mesh = generate_mesh_data(tmp_data)
             obj = generate_object_from_data(vertices, faces, self.name, new=True)
@@ -122,7 +122,7 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         row.prop(self, "name", text="Name")
 
     def setup_generated_obj(self, context: Context, obj: Object,
-                            tmp_data: TBB_OpenfoamTemporaryData) -> None:
+                            tmp_data: TBB_OpenfoamFileData) -> None:
         """
         Copy import settings and setup needed 'tbb' data for the generated object.
 

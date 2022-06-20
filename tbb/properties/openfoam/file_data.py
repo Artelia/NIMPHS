@@ -7,31 +7,24 @@ from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
 log = logging.getLogger(__name__)
 import numpy as np
 
-from tbb.properties.utils import VariablesInformation
+from tbb.properties.shared.file_data import FileData
 
 
-class TBB_OpenfoamTemporaryData():
+class TBB_OpenfoamFileData(FileData):
     """Hold temporary data for the OpenFOAM module."""
 
-    # str: name of the module
-    module = "OpenFOAM"
-    #: POpenFOAMReader: file reader
-    file = None
     #: UnstructuredGrid: 'internalMesh' from data
     raw_mesh = None
     #: PolyData: lest generated mesh
     mesh = None
-    #: int: current time point
-    time_point = 0
-    #: int: number of time points
-    nb_time_points = 1
-    #: VariablesInformation: Information on variables
-    vars = VariablesInformation()
     #: bool: Indicate
     tiangulate = False
+    #: int: current time point
+    time_point = 0
 
     def __init__(self, file: POpenFOAMReader, io_settings: Union[TBB_OpenfoamImportSettings, None]):
         """Init method of the class."""
+        super().__init__()
 
         self.module = "OpenFOAM"
         self.file = file

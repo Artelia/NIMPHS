@@ -16,7 +16,7 @@ from pyvista import OpenFOAMReader, POpenFOAMReader, UnstructuredGrid
 from tbb.properties.openfoam.openfoam_clip import TBB_OpenfoamClipProperty
 from tbb.operators.utils import remap_array, generate_vertex_colors_groups, generate_vertex_colors
 from tbb.properties.utils import VariablesInformation
-from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
+from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
 from tbb.operators.openfoam.Scene.openfoam_create_mesh_sequence import TBB_OT_OpenfoamCreateMeshSequence
 
 
@@ -84,7 +84,7 @@ def run_one_step_create_mesh_sequence_openfoam(context: Context, op: TBB_OT_Open
         newKey.interpolation = 'CONSTANT'
 
 
-def generate_mesh_for_sequence(tmp_data: TBB_OpenfoamTemporaryData,
+def generate_mesh_for_sequence(tmp_data: TBB_OpenfoamFileData,
                                op: TBB_OT_OpenfoamCreateMeshSequence) -> Union[Mesh, None]:
     """
     Generate a mesh for an OpenFOAM 'mesh sequence' at the given time point.
@@ -121,7 +121,7 @@ def generate_mesh_for_sequence(tmp_data: TBB_OpenfoamTemporaryData,
     return bmesh
 
 
-def generate_mesh_data(tmp_data: TBB_OpenfoamTemporaryData,
+def generate_mesh_data(tmp_data: TBB_OpenfoamFileData,
                        clip: TBB_OpenfoamClipProperty = None) -> tuple[np.array, np.array, UnstructuredGrid]:
     """
     Generate mesh data for Blender using the given file reader. Applies the clip if defined.
@@ -214,7 +214,7 @@ def generate_openfoam_streaming_sequence_obj(context: Context, obj: Object, name
     if not success:
         log.error(f"Unable to open file {obj.tbb.settings.file_path}", exc_info=1)
         raise IOError(f"Unable to open file {obj.tbb.settings.file_path}")
-    context.scene.tbb.tmp_data[sequence.tbb.uid] = TBB_OpenfoamTemporaryData(file_reader, data)
+    context.scene.tbb.tmp_data[sequence.tbb.uid] = TBB_OpenfoamFileData(file_reader, data)
 
     return sequence
 
@@ -287,7 +287,7 @@ def generate_preview_material(obj: Object, scalar: str, name: str = "TBB_OpenFOA
 
 
 def prepare_openfoam_point_data(bmesh: Mesh, point_data: Union[TBB_PointDataSettings, str],
-                                tmp_data: TBB_OpenfoamTemporaryData) -> tuple[list[dict], dict, int]:
+                                tmp_data: TBB_OpenfoamFileData) -> tuple[list[dict], dict, int]:
     """
     Prepare point data for the 'generate_vertex_colors' function.
 

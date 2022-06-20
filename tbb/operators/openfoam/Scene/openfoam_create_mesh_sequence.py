@@ -8,7 +8,7 @@ from tbb.panels.openfoam.utils import draw_clip_settings
 from tbb.properties.openfoam.openfoam_clip import TBB_OpenfoamClipProperty
 log = logging.getLogger(__name__)
 
-from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
+from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
 from tbb.operators.shared.create_mesh_sequence import TBB_CreateMeshSequence
 from tbb.panels.utils import get_selected_object
 from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
@@ -74,7 +74,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
             log.critical(f"Unable to open file '{self.obj.tbb.settings.file_path}'")
             return {'CANCELLED'}
 
-        context.scene.tbb.tmp_data["ops"] = TBB_OpenfoamTemporaryData(file_reader, self.import_settings)
+        context.scene.tbb.tmp_data["ops"] = TBB_OpenfoamFileData(file_reader, self.import_settings)
         self.max_length = context.scene.tbb.tmp_data["ops"].nb_time_points
 
         # Used in tests

@@ -5,7 +5,7 @@ import logging
 from tbb.operators.openfoam.utils import generate_openfoam_streaming_sequence_obj
 log = logging.getLogger(__name__)
 
-from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
+from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
 from tbb.operators.shared.create_streaming_sequence import TBB_CreateStreamingSequence
 from tbb.panels.utils import get_selected_object
 
@@ -62,7 +62,7 @@ class TBB_OT_OpenfoamCreateStreamingSequence(TBB_CreateStreamingSequence):
             log.critical(f"Unable to open file '{obj.tbb.settings.file_path}'")
             return {'CANCELLED'}
 
-        context.scene.tbb.tmp_data["ops"] = TBB_OpenfoamTemporaryData(file_reader, None)
+        context.scene.tbb.tmp_data["ops"] = TBB_OpenfoamFileData(file_reader, None)
         self.max_length = context.scene.tbb.tmp_data["ops"].nb_time_points
 
         return context.window_manager.invoke_props_dialog(self)

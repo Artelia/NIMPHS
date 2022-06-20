@@ -15,7 +15,7 @@ from tbb.properties.telemac.Object.telemac_mesh_sequence import TBB_TelemacMeshS
 from tbb.properties.telemac.Object.telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
 from tbb.properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
 from tbb.properties.telemac.file_data import TBB_TelemacFileData
-from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
+from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
 
 
 def generate_vertex_colors_groups(variables: list[dict]) -> list[dict]:
