@@ -66,19 +66,22 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
 
         start = time.time()
 
-        settings = self.import_settings
-        success, file_reader = load_openfoam_file(self.filepath, settings.case_type, settings.decompose_polyhedra)
+        io_settings = self.import_settings
 
-        if not success:
+        ok, file_reader = load_openfoam_file(self.filepath, io_settings.case_type, io_settings.decompose_polyhedra)
+        if not ok:
             self.report({'WARNING'}, "The chosen file can't be read")
             return {'CANCELLED'}
 
         # Generate the preview mesh. This step is not present in the reload operator because
         # the preview mesh may already be loaded. Moreover, this step takes a while for large meshes.
         try:
-            vertices, faces, mesh = generate_mesh_data(file_reader, 0, triangulate=settings.triangulate)
+            # Generate tmp_data
+            tmp_data = TBB_OpenfoamTemporaryData(file_reader, self.import_settings)
+            # Generate object
+            vertices, faces, tmp_data.mesh = generate_mesh_data(tmp_data)
             obj = generate_object_from_data(vertices, faces, self.name, new=True)
-            self.setup_generated_obj(context, obj, file_reader)
+            self.setup_generated_obj(context, obj, tmp_data)
             context.scene.collection.objects.link(obj)
         except Exception:
             log.error("Something went wrong building the mesh", exc_info=1)
@@ -119,7 +122,7 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         row.prop(self, "name", text="Name")
 
     def setup_generated_obj(self, context: Context, obj: Object,
-                            file_reader: Union[OpenFOAMReader, POpenFOAMReader]) -> None:
+                            tmp_data: TBB_OpenfoamTemporaryData) -> None:
         """
         Copy import settings and setup needed 'tbb' data for the generated object.
 
@@ -130,16 +133,16 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         """
 
         # Copy import settings
-        import_settings = obj.tbb.settings.openfoam.import_settings
+        io_settings = obj.tbb.settings.openfoam.import_settings
 
         obj.tbb.settings.file_path = self.filepath
-        import_settings.case_type = self.import_settings.case_type
-        import_settings.decompose_polyhedra = self.import_settings.decompose_polyhedra
-        import_settings.case_type = self.import_settings.case_type
+        io_settings.case_type = self.import_settings.case_type
+        io_settings.decompose_polyhedra = self.import_settings.decompose_polyhedra
+        io_settings.case_type = self.import_settings.case_type
 
         # Others
-        obj.tbb.uid = str(time.time())
         obj.tbb.module = 'OpenFOAM'
 
         # Temporary data
-        context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_OpenfoamTemporaryData(file_reader)
+        obj.tbb.uid = str(time.time())
+        context.scene.tbb.tmp_data[obj.tbb.uid] = tmp_data

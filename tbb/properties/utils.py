@@ -498,8 +498,7 @@ def available_point_data(self, context: Context) -> list:
     except AttributeError:  # Raised when called from an operator (WindowManager object has not attribute 'tbb')
         tmp_data = context.scene.tbb.tmp_data["ops"]
 
-    if tmp_data is None or not tmp_data.is_ok():
-        log.error("No file data available")
+    if tmp_data is None or not tmp_data.is_ok() or tmp_data.vars_info.length() == 0:
         return [("NONE", "None", "None")]
 
     # Add a 'None' field for preview_point_data
@@ -526,7 +525,6 @@ def update_preview_time_point(self, context: Context) -> None:  # noqa D417
     try:
         tmp_data = context.scene.tbb.tmp_data[self.id_data.tbb.uid]
     except KeyError:
-        log.error("No file data available")
         return [("NONE", "None", "None")]
 
     if not tmp_data.is_ok():

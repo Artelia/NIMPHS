@@ -60,7 +60,7 @@ class TBB_OT_OpenfoamPreview(Operator):
         obj = get_selected_object(context)
         tmp_data = context.scene.tbb.tmp_data.get(obj.tbb.uid, None)
         clip = obj.tbb.settings.openfoam.clip
-        import_settings = obj.tbb.settings.openfoam.import_settings
+        io_settings = obj.tbb.settings.openfoam.import_settings
         collection = context.scene.collection
 
         if clip.type != "" and clip.scalar.name == "None":
@@ -68,25 +68,15 @@ class TBB_OT_OpenfoamPreview(Operator):
             return {'FINISHED'}
 
         # Setup file_reader
-        tmp_data.file_reader.decompose_polyhedra = import_settings.decompose_polyhedra
-        tmp_data.file_reader.case_type = import_settings.case_type
+        tmp_data.file_reader.decompose_polyhedra = io_settings.decompose_polyhedra
+        tmp_data.file_reader.case_type = io_settings.case_type
 
         prw_time_point = obj.tbb.settings.preview_time_point
 
-        # Read data at the chosen time point
-        try:
-            tmp_data.set_active_time_point(prw_time_point)
-        except Exception:
-            log.debug("Error setting active time point", exc_info=1)
-            self.report({'WARNING'}, f"Error setting active time point ({prw_time_point})")
-            return {'CANCELLED'}
-
         # Generate mesh data
         try:
-            vertices, faces, mesh = generate_mesh_data(tmp_data.file_reader, prw_time_point,
-                                                       triangulate=import_settings.triangulate,
-                                                       clip=clip, mesh=tmp_data.raw_mesh)
-            tmp_data.mesh = mesh  # Update mesh
+            tmp_data.update(prw_time_point, io_settings)
+            vertices, faces, tmp_data.mesh = generate_mesh_data(tmp_data, clip=clip)
         except Exception:
             log.debug("Something went wrong building the mesh", exc_info=1)
             self.report({'WARNING'}, "Something went wrong building the mesh")
@@ -105,10 +95,11 @@ class TBB_OT_OpenfoamPreview(Operator):
 
         # Import point data as vertex colors
         point_data = obj.tbb.settings.preview_point_data
-        res = prepare_openfoam_point_data(obj.data, point_data, tmp_data)
-        if len(res[0]) > 0:
-            generate_vertex_colors(blender_mesh, *res)
-            generate_preview_material(obj, res[0][0]["name"] if len(res[0]) > 0 else 'None')
+        if point_data is not None and point_data != 'NONE':
+            res = prepare_openfoam_point_data(obj.data, point_data, tmp_data)
+            if len(res[0]) > 0:
+                generate_vertex_colors(blender_mesh, *res)
+                generate_preview_material(obj, res[0][0]["name"] if len(res[0]) > 0 else 'None')
 
         log.info("{:.4f}".format(time.time() - start) + "s")
         self.report({'INFO'}, "Mesh successfully built: checkout the viewport.")

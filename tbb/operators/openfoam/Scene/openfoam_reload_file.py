@@ -36,9 +36,9 @@ class TBB_OT_OpenfoamReloadFile(Operator):
         start = time.time()
 
         obj = get_selected_object(context)
-        import_settings = obj.tbb.settings.openfoam.import_settings
-        success, file_reader = load_openfoam_file(obj.tbb.settings.file_path, import_settings.case_type,
-                                                  import_settings.decompose_polyhedra)
+        io_settings = obj.tbb.settings.openfoam.import_settings
+        success, file_reader = load_openfoam_file(obj.tbb.settings.file_path, io_settings.case_type,
+                                                  io_settings.decompose_polyhedra)
 
         if not success:
             self.report({'WARNING'}, "The chosen file can't be read")
@@ -49,7 +49,7 @@ class TBB_OT_OpenfoamReloadFile(Operator):
             obj.tbb.uid = str(time.time())
 
         # Update temporary data
-        context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_OpenfoamTemporaryData(file_reader)
+        context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_OpenfoamTemporaryData(file_reader, io_settings)
 
         log.info("{:.4f}".format(time.time() - start) + "s")
         self.report({'INFO'}, "Reload successful")

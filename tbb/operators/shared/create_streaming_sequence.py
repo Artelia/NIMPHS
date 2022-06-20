@@ -4,6 +4,8 @@ from bpy.props import BoolProperty, IntProperty, EnumProperty
 
 import logging
 
+from tbb.panels.utils import get_selected_object
+
 log = logging.getLogger(__name__)
 
 from tbb.operators.shared.create_sequence import TBB_CreateSequence
@@ -91,13 +93,14 @@ class TBB_CreateStreamingSequence(TBB_CreateSequence):
         row = box.row()
         row.prop(self, "name", text="Name")
 
-    def execute(self, context: Context, obj: Object) -> set:
+    def execute(self, context: Context, obj: Object, selected: Object) -> set:
         """
         Create the 'streaming sequence' object.
 
         Args:
             context (Context): context
             obj (Object): sequence object
+            selected (Object): selected object
 
         Returns:
             set: state of the operator
@@ -105,7 +108,7 @@ class TBB_CreateStreamingSequence(TBB_CreateSequence):
         from tbb.operators.utils import setup_streaming_sequence_object
 
         # Setup streaming sequence object
-        setup_streaming_sequence_object(obj, self, self.obj.tbb.settings.file_path)
+        setup_streaming_sequence_object(obj, self, selected.tbb.settings.file_path)
         context.scene.collection.objects.link(obj)
 
         # As mentioned here, lock the interface because the custom handler will alter data on frame change

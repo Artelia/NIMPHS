@@ -56,12 +56,12 @@ class TBB_OT_TelemacCreateStreamingSequence(TBB_CreateStreamingSequence):
             set: state of the operator
         """
 
-        self.obj = get_selected_object(context)
-        if self.obj is None:
+        obj = get_selected_object(context)
+        if obj is None:
             return {'CANCELLED'}
 
         # Load temporary data
-        context.scene.tbb.tmp_data["ops"] = TBB_TelemacTemporaryData(self.obj.tbb.settings.file_path, False)
+        context.scene.tbb.tmp_data["ops"] = TBB_TelemacTemporaryData(obj.tbb.settings.file_path, False)
         self.max_length = context.scene.tbb.tmp_data["ops"].nb_time_points
 
         return context.window_manager.invoke_props_dialog(self)
@@ -93,6 +93,10 @@ class TBB_OT_TelemacCreateStreamingSequence(TBB_CreateStreamingSequence):
             set: state of the operator
         """
 
-        obj = generate_telemac_sequence_obj(context, self.obj, self.name, self.start)
+        selected = get_selected_object(context)
+        if selected is None:
+            return {'CANCELLED'}
+
+        obj = generate_telemac_sequence_obj(context, selected, self.name, self.start)
         obj.tbb.settings.telemac.s_sequence.shade_smooth = self.shade_smooth
         return super().execute(context, obj)

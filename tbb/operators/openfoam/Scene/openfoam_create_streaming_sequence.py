@@ -52,17 +52,17 @@ class TBB_OT_OpenfoamCreateStreamingSequence(TBB_CreateStreamingSequence):
         """
         from tbb.operators.openfoam.utils import load_openfoam_file
 
-        self.obj = get_selected_object(context)
-        if self.obj is None:
+        obj = get_selected_object(context)
+        if obj is None:
             return {'CANCELLED'}
 
         # Load file data
-        succeed, file_reader = load_openfoam_file(self.obj.tbb.settings.file_path)
+        succeed, file_reader = load_openfoam_file(obj.tbb.settings.file_path)
         if not succeed:
-            log.critical(f"Unable to open file '{self.obj.tbb.settings.file_path}'")
+            log.critical(f"Unable to open file '{obj.tbb.settings.file_path}'")
             return {'CANCELLED'}
 
-        context.scene.tbb.tmp_data["ops"] = TBB_OpenfoamTemporaryData(file_reader)
+        context.scene.tbb.tmp_data["ops"] = TBB_OpenfoamTemporaryData(file_reader, None)
         self.max_length = context.scene.tbb.tmp_data["ops"].nb_time_points
 
         return context.window_manager.invoke_props_dialog(self)
@@ -88,6 +88,10 @@ class TBB_OT_OpenfoamCreateStreamingSequence(TBB_CreateStreamingSequence):
             set: state of the operator
         """
 
-        obj = generate_openfoam_streaming_sequence_obj(context, self.obj, self.name)
+        selected = get_selected_object(context)
+        if selected is None:
+            return {'CANCELLED'}
+
+        obj = generate_openfoam_streaming_sequence_obj(context, selected, self.name)
         obj.tbb.settings.openfoam.s_sequence.shade_smooth = self.shade_smooth
-        return super().execute(context, obj)
+        return super().execute(context, obj, selected)

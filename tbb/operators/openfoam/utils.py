@@ -39,14 +39,18 @@ def run_one_step_create_mesh_sequence_openfoam(context: Context, op: TBB_OT_Open
     seq_obj_name = op.name + "_sequence"
     try:
         tmp_data = context.scene.tbb.tmp_data["ops"]
-        mesh = generate_mesh_for_sequence(tmp_data, op)
+        bmesh = generate_mesh_for_sequence(tmp_data, op)
     except Exception as error:
         raise error
+
+    # If the generated mesh is None, do not continue
+    if bmesh is None:
+        raise ValueError(f"Generated mesh is None at time point {op.time_point}")
 
     # First time point, create the sequence object
     if op.time_point == op.start:
         # Create the blender object (which will contain the sequence)
-        obj = bpy.data.objects.new(op.name, mesh)
+        obj = bpy.data.objects.new(op.name, bmesh)
         # The object created from the convert_to_mesh_sequence() method adds
         # "_sequence" at the end of the name
         context.scene.collection.objects.link(obj)
@@ -67,7 +71,7 @@ def run_one_step_create_mesh_sequence_openfoam(context: Context, op: TBB_OT_Open
         curve = next((curve for curve in obj.animation_data.action.fcurves if 'curMeshIdx' in curve.data_path), None)
 
         # add the mesh to the end of the sequence
-        meshIdx = add_mesh_to_sequence(obj, mesh)
+        meshIdx = add_mesh_to_sequence(obj, bmesh)
 
         # add a new keyframe at this frame number for the new mesh
         obj.mesh_sequence_settings.curMeshIdx = meshIdx
@@ -78,7 +82,8 @@ def run_one_step_create_mesh_sequence_openfoam(context: Context, op: TBB_OT_Open
         newKey.interpolation = 'CONSTANT'
 
 
-def generate_mesh_for_sequence(tmp_data: TBB_OpenfoamTemporaryData, op: TBB_OT_OpenfoamCreateMeshSequence) -> Mesh:
+def generate_mesh_for_sequence(tmp_data: TBB_OpenfoamTemporaryData,
+                               op: TBB_OT_OpenfoamCreateMeshSequence) -> Union[Mesh, None]:
     """
     Generate a mesh for an OpenFOAM 'mesh sequence' at the given time point.
 
@@ -95,10 +100,10 @@ def generate_mesh_for_sequence(tmp_data: TBB_OpenfoamTemporaryData, op: TBB_OT_O
         Mesh: generate mesh
     """
 
-    tmp_data.set_active_time_point(op.time_point)
-    vertices, faces, mesh = generate_mesh_data(tmp_data.file_reader, op.time_point,
-                                               triangulate=op.import_settings.triangulate, clip=op.clip)
-    tmp_data.mesh = mesh
+    tmp_data.update(op.time_point, op.import_settings)
+    vertices, faces, tmp_data.mesh = generate_mesh_data(tmp_data, clip=op.clip)
+    if tmp_data.mesh is None:
+        return None
 
     # Create mesh from python data
     bmesh = bpy.data.meshes.new(op.name + "_sequence_mesh")
@@ -107,6 +112,7 @@ def generate_mesh_for_sequence(tmp_data: TBB_OpenfoamTemporaryData, op: TBB_OT_O
     bmesh.use_fake_user = True
 
     # Import point data as vertex colors
+    print(op.point_data.list)
     if op.point_data.import_data:
         res = prepare_openfoam_point_data(bmesh, op.point_data, tmp_data)
         generate_vertex_colors(bmesh, *res)
@@ -114,9 +120,8 @@ def generate_mesh_for_sequence(tmp_data: TBB_OpenfoamTemporaryData, op: TBB_OT_O
     return bmesh
 
 
-def generate_mesh_data(file_reader: OpenFOAMReader, time_point: int, triangulate: bool = True,
-                       clip: TBB_OpenfoamClipProperty = None,
-                       mesh: UnstructuredGrid = None) -> tuple[np.array, np.array, UnstructuredGrid]:
+def generate_mesh_data(tmp_data: TBB_OpenfoamTemporaryData,
+                       clip: TBB_OpenfoamClipProperty = None) -> tuple[np.array, np.array, UnstructuredGrid]:
     """
     Generate mesh data for Blender using the given file reader. Applies the clip if defined.
 
@@ -124,21 +129,17 @@ def generate_mesh_data(file_reader: OpenFOAMReader, time_point: int, triangulate
     **Warning**: the given mesh will be modified (clip, extract_surface, triangulation and compute_normals).
 
     Args:
-        file_reader (OpenFOAMReader): OpenFOAM file reader
-        time_point (int): time point from which to read data
-        triangulate (bool, optional): If `True`, more complex polygons will be broken down into triangles.\
-            Defaults to True.
+        mesh (UnstructuredGrid): raw mesh.
         clip (TBB_OpenfoamClipProperty, optional): clip settings. Defaults to None.
-        mesh (UnstructuredGrid, optional): raw mesh. Defaults to None.
 
     Returns:
         tuple[np.array, np.array, UnstructuredGrid]: vertices, faces and the output mesh (modified)
     """
 
-    # Read data from the given OpenFOAM file
+    # Get raw mesh
+    mesh = tmp_data.raw_mesh
     if mesh is None:
-        file_reader.set_active_time_point(time_point)
-        mesh = file_reader.read()["internalMesh"]
+        return [], [], None
 
     # Apply clip
     if clip is not None and clip.type == 'SCALAR':
@@ -153,34 +154,34 @@ def generate_mesh_data(file_reader: OpenFOAMReader, time_point: int, triangulate
             if info["type"] == 'VECTOR':
                 value = np.linalg.norm(clip.scalar.vector_value)
                 mesh.clip_scalar(inplace=True, scalars=info["name"], invert=clip.scalar.invert, value=value)
-            mesh = mesh.extract_surface(nonlinear_subdivision=0)
+            surface = mesh.extract_surface(nonlinear_subdivision=0)
         else:
-            mesh = mesh.extract_surface(nonlinear_subdivision=0)
+            surface = mesh.extract_surface(nonlinear_subdivision=0)
 
     else:
-        mesh = mesh.extract_surface(nonlinear_subdivision=0)
+        surface = mesh.extract_surface(nonlinear_subdivision=0)
 
-    if triangulate:
-        mesh.triangulate(inplace=True)
-        mesh.compute_normals(inplace=True, consistent_normals=False, split_vertices=True)
+    if tmp_data.triangulate:
+        surface.triangulate(inplace=True)
+        surface.compute_normals(inplace=True, consistent_normals=False, split_vertices=True)
 
-    vertices = np.array(mesh.points)
+    vertices = np.array(surface.points)
 
     # Reshape the faces array
-    if mesh.is_all_triangles:
-        faces = np.array(mesh.faces).reshape(-1, 4)[:, 1:4]
+    if surface.is_all_triangles:
+        faces = np.array(surface.faces).reshape(-1, 4)[:, 1:4]
     else:
-        faces_indices = np.array(mesh.faces)
+        faces_indices = np.array(surface.faces)
         padding, padding_id = 0, 0
         faces = []
-        for id in range(mesh.n_faces):
+        for id in range(surface.n_faces):
             if padding_id >= faces_indices.size:
                 break
             padding = faces_indices[padding_id]
             faces.append(faces_indices[padding_id + 1: padding_id + 1 + padding])
             padding_id = padding_id + (padding + 1)
 
-    return vertices, faces, mesh
+    return vertices, faces, surface
 
 
 def generate_openfoam_streaming_sequence_obj(context: Context, obj: Object, name: str) -> Object:
@@ -212,7 +213,7 @@ def generate_openfoam_streaming_sequence_obj(context: Context, obj: Object, name
     if not success:
         log.error(f"Unable to open file {obj.tbb.settings.file_path}", exc_info=1)
         raise IOError(f"Unable to open file {obj.tbb.settings.file_path}")
-    context.scene.tbb.tmp_data[sequence.tbb.uid] = TBB_OpenfoamTemporaryData(file_reader)
+    context.scene.tbb.tmp_data[sequence.tbb.uid] = TBB_OpenfoamTemporaryData(file_reader, data)
 
     return sequence
 
@@ -314,7 +315,6 @@ def prepare_openfoam_point_data(bmesh: Mesh, point_data: Union[TBB_PointDataSett
         blender_mesh (Mesh): mesh on which to add vertex colors
         point_data (list[str]): list of point data
         time_point (int): time point from which to read data
-        normalize (str, optional): normalize vertex colors, enum in ['LOCAL', 'GLOBAL']. Defaults to 'LOCAL'.
 
     Returns:
         tuple[list[dict], dict, int]: vertex colors groups, data, number of vertex ids
@@ -336,12 +336,11 @@ def prepare_openfoam_point_data(bmesh: Mesh, point_data: Union[TBB_PointDataSett
 
     # Prepare data
     prepared_data = dict()
-    openfoam_mesh = tmp_data.mesh
     method = 'LOCAL' if isinstance(point_data, str) else point_data.remap_method
 
     for var, dim, id in zip(variables, dimensions, range(len(variables))):
         # Read data
-        data = openfoam_mesh.get_array(var["id"], preference='point')[vertex_ids]
+        data = tmp_data.mesh.get_array(var["id"], preference='point')[vertex_ids]
         var_ranges = info.get(id, prop='RANGE')
 
         # Remap data
@@ -421,47 +420,30 @@ def update_openfoam_streaming_sequence_mesh(scene: Scene, obj: Object, time_poin
         ValueError: if the given time point does no exists
     """
 
-    import_settings = obj.tbb.settings.openfoam.import_settings
-
-    try:
-        tmp_data = scene.tbb.tmp_data[obj.tbb.uid]
-    except AttributeError:
-        # If temporary data is not available, add it
-        succeed, file_reader = load_openfoam_file(obj.tbb.settings.file_path, case_type=import_settings.case_type,
-                                                  decompose_polyhedra=import_settings.decompose_polyhedra)
-        if not succeed:
-            raise IOError(f"Unable to open file {obj.tbb.settings.file_path}")
-
-        scene.tbb.tmp_data[obj.tbb.uid] = TBB_OpenfoamTemporaryData(file_reader)
-        tmp_data = scene.tbb.tmp_data[obj.tbb.uid]
-    except KeyError:
-        log.error("No file data available")
-        log.debug("TemporaryData unavailable", exc_info=1)
-        tmp_data = None
+    io_settings = obj.tbb.settings.openfoam.import_settings
+    tmp_data = scene.tbb.tmp_data[obj.tbb.uid]
 
     if tmp_data is not None:
-        tmp_data.set_active_time_point(time_point)
-        vertices, faces, mesh = generate_mesh_data(tmp_data.file_reader, time_point,
-                                                   triangulate=import_settings.triangulate,
-                                                   clip=obj.tbb.settings.openfoam.clip)
-        tmp_data.mesh = mesh
+        tmp_data.update(time_point, io_settings)
+        vertices, faces, tmp_data.mesh = generate_mesh_data(tmp_data, clip=obj.tbb.settings.openfoam.clip)
 
         bmesh = obj.data
         bmesh.clear_geometry()
         bmesh.from_pydata(vertices, [], faces)
 
+        # Shade smooth
         if obj.tbb.settings.openfoam.s_sequence.shade_smooth:
             bmesh.polygons.foreach_set("use_smooth", [True] * len(bmesh.polygons))
 
         # Import point data as vertex colors
         point_data = obj.tbb.settings.point_data
-        if point_data.import_data:
+        if point_data.import_data and tmp_data.mesh is not None:
             res = prepare_openfoam_point_data(bmesh, point_data.list, tmp_data)
             generate_vertex_colors(bmesh, *res)
 
 
 def load_openfoam_file(file_path: str, case_type: str = 'reconstructed',
-                       decompose_polyhedra: bool = False) -> tuple[bool, Union[OpenFOAMReader, POpenFOAMReader, None]]:
+                       decompose_polyhedra: bool = False) -> tuple[bool, Union[POpenFOAMReader, None]]:
     """
     Load an OpenFOAM file and return the file_reader. Also returns if it succeeded to read.
 
@@ -473,7 +455,7 @@ def load_openfoam_file(file_path: str, case_type: str = 'reconstructed',
             If ``'decomposed'``, decomposed mesh should be read. Defaults to `reconstructed`.
 
     Returns:
-        tuple[bool, Union[OpenFOAMReader, POpenFOAMReader, None]]: success, the file reader
+        tuple[bool, Union[POpenFOAMReader, None]]: success, the file reader
     """
 
     file = Path(file_path)
@@ -484,9 +466,7 @@ def load_openfoam_file(file_path: str, case_type: str = 'reconstructed',
         log.error("Cannot open files from directories")
         return False, None
 
-    if case_type == 'reconstructed':
-        file_reader = OpenFOAMReader(file_path)
-    elif case_type == 'decomposed':
+    if case_type in ['reconstructed', 'decomposed']:
         file_reader = POpenFOAMReader(file_path)
         file_reader.case_type = case_type
     else:

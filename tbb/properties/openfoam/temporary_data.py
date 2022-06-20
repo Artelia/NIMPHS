@@ -2,6 +2,8 @@
 from typing import Union
 from pyvista import OpenFOAMReader, POpenFOAMReader, UnstructuredGrid
 import logging
+
+from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
 log = logging.getLogger(__name__)
 import numpy as np
 
@@ -13,7 +15,7 @@ class TBB_OpenfoamTemporaryData():
 
     # str: name of the module
     module_name = "OpenFOAM"
-    #: Union[OpenFOAMReader, POpenFOAMReader]: file reader
+    #: POpenFOAMReader: file reader
     file_reader = None
     #: UnstructuredGrid: 'internalMesh' from data
     raw_mesh = None
@@ -25,19 +27,26 @@ class TBB_OpenfoamTemporaryData():
     nb_time_points = 1
     #: VariablesInformation: Information on variables
     vars_info = VariablesInformation()
+    #: bool: Indicate
+    tiangulate = False
 
-    def __init__(self, file_reader: Union[OpenFOAMReader, POpenFOAMReader]):
+    def __init__(self, file_reader: POpenFOAMReader, io_settings: Union[TBB_OpenfoamImportSettings, None]):
         """Init method of the class."""
 
         self.module_name = "OpenFOAM"
         self.file_reader = file_reader
 
         # Load data
-        self.set_active_time_point(0)
-        self.mesh = self.file_reader.read()["internalMesh"]
+        self.update(0, io_settings=io_settings)
+        try:
+            self.mesh = self.file_reader.read()["internalMesh"]
+        except KeyError:  # Raised when using wrong case_type
+            self.mesh = None
+            return
+
         self.nb_time_points = self.file_reader.number_time_points
 
-    def set_active_time_point(self, time_point: int) -> None:
+    def update(self, time_point: int, io_settings: Union[TBB_OpenfoamImportSettings, None] = None) -> None:
         """
         Update file reader, raw mesh and variables information.
 
@@ -45,15 +54,29 @@ class TBB_OpenfoamTemporaryData():
             time_point (int): time point to set as active time point.
         """
 
+        # Update import settings
+        if io_settings is not None:
+            self.file_reader.decompose_polyhedra = io_settings.decompose_polyhedra
+            self.file_reader.case_type = io_settings.case_type
+            self.triangulate = io_settings.triangulate
+        else:
+            self.file_reader.decompose_polyhedra = True
+            self.file_reader.case_type = 'reconstructed'
+            self.triangulate = True
+
+        # Update mesh
         try:
+            self.time_point = time_point
             self.file_reader.set_active_time_point(time_point)
             self.raw_mesh = self.file_reader.read()["internalMesh"]
-            self.time_point = time_point
+        except AttributeError:  # Raised when using wrong case_type
+            self.raw_mesh = None
+            return
         except ValueError:
             log.critical("Caught exception during update", exc_info=1)
             return
 
-        # Generate vars_info
+        # Update vars_info
         self.vars_info.clear()
         for name in self.raw_mesh.point_data.keys():
             data = self.raw_mesh.point_data[name]
@@ -80,4 +103,4 @@ class TBB_OpenfoamTemporaryData():
         Returns:
             bool: ``True`` if everything is ok
         """
-        return self.file_reader is not None and self.raw_mesh is not None and self.mesh is not None
+        return self.file_reader is not None

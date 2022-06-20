@@ -15,17 +15,6 @@ class TBB_CreateSequence(Operator):
     register_cls = False
     is_custom_base_cls = True
 
-    #: bpy.props.EnumProperty: Indicates whether the operator should run modal or not. Enum in ['MODAL', 'NORMAL']
-    mode: EnumProperty(
-        name="Mode",  # noqa: F821
-        description="Indicates whether the operator should run modal or not. Enum in ['MODAL', 'NORMAL']",
-        items=[
-            ('MODAL', "Modal", "TODO"),  # noqa: F821
-            ('NORMAL', "Normal", "TODO"),  # noqa: F821
-        ],
-        options={'HIDDEN'},  # noqa F821
-    )
-
     def update_start(self, _context: Context) -> None:  # noqa D417
         """
         Make sure the user can't select a wrong value.
