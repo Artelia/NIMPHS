@@ -1,21 +1,14 @@
 # <pep8 compliant>
 import bpy
-from rna_prop_ui import rna_idprop_ui_create
 from bpy.types import Collection, Object, Context, Mesh
 
-import numpy as np
 import logging
-import time
+log = logging.getLogger(__name__)
+
+import numpy as np
+from typing import Any
 
 from tbb.operators.shared.create_streaming_sequence import TBB_CreateStreamingSequence
-log = logging.getLogger(__name__)
-from typing import Any, Union
-
-from tbb.properties.telemac.Object.telemac_mesh_sequence import TBB_TelemacMeshSequenceProperty
-from tbb.properties.telemac.Object.telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
-from tbb.properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
-from tbb.properties.telemac.file_data import TBB_TelemacFileData
-from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
 
 
 def generate_vertex_colors_groups(variables: list[dict]) -> list[dict]:
@@ -183,50 +176,6 @@ def setup_streaming_sequence_object(obj: Object, op: TBB_CreateStreamingSequence
     sequence.max_length = op.max_length             # Check TBB_StreamingSequenceProperty class definition.
     sequence.length = op.length                #
     sequence.update = True
-
-
-def get_collection(name: str, context: Context, link_to_scene: bool = True) -> Collection:
-    """
-    Get the collection called 'name'. If it does not exist, create it.
-
-    Args:
-        name (str): name of the collection
-        context (Context): context
-        link_to_scene (bool, optional): automatically link the collection to the list of scene collections.\
-            Defaults to True.
-
-    Returns:
-        Collection: collection
-    """
-
-    collection = bpy.data.collections.get(name)
-    if collection is None:
-        collection = bpy.data.collections.new(name=name)
-        if link_to_scene:
-            context.scene.collection.children.link(collection)
-
-    return collection
-
-
-def get_object_dimensions_from_mesh(obj: Object) -> list[float]:
-    """
-    Compute the dimensions of the object from its mesh.
-
-    Args:
-        obj (Object): object
-
-    Returns:
-        list[float]: ``(x, y, z)`` dimensions
-    """
-
-    dimensions = []
-    vertices = np.empty(len(obj.data.vertices) * 3, dtype=np.float64)
-    obj.data.vertices.foreach_get("co", vertices)
-    vertices = vertices.reshape((int(len(vertices) / 3)), 3)
-    dimensions.append(np.max(vertices[:, 0]) - np.min(vertices[:, 0]))
-    dimensions.append(np.max(vertices[:, 1]) - np.min(vertices[:, 1]))
-    dimensions.append(np.max(vertices[:, 2]) - np.min(vertices[:, 2]))
-    return dimensions
 
 
 def remap_array(input: np.ndarray, out_min: float = 0.0, out_max: float = 1.0,

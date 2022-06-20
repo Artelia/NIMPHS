@@ -185,7 +185,7 @@ class TBB_CreateMeshSequence(TBB_CreateSequence):
             _context (Context): context
 
         Returns:
-            set: state of the operation, enum in ['PASS_THROUGH', 'CANCELLED']
+            set: state of the operation. Enum in ['PASS_THROUGH', 'CANCELLED'].
         """
 
         return {'PASS_THROUGH'}

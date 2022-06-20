@@ -3,26 +3,23 @@ import bpy
 from bpy.app.handlers import persistent
 from bpy.types import Mesh, Object, Context, Scene
 
-import time
-import json
-import numpy as np
-from typing import Union
-from tbb.operators.telemac.Scene.telemac_create_mesh_sequence import TBB_OT_TelemacCreateMeshSequence
-from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
-from tbb.properties.utils import InterpInfoMeshSequence, InterpInfoStreamingSequence, InterpInfo
 import logging
-
-from tbb.properties.utils import VariablesInformation
 log = logging.getLogger(__name__)
 
+import time
+import numpy as np
+from typing import Union
+from tbb.properties.utils import VariablesInformation
 from tbb.properties.telemac.file_data import TBB_TelemacFileData
-from tbb.properties.telemac.Object.telemac_mesh_sequence import TBB_TelemacMeshSequenceProperty
-from tbb.properties.telemac.Object.telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
+from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
+from tbb.properties.utils import InterpInfoMeshSequence, InterpInfoStreamingSequence, InterpInfo
+from tbb.operators.telemac.Scene.telemac_create_mesh_sequence import TBB_OT_TelemacCreateMeshSequence
 from tbb.operators.utils import (
     generate_object_from_data,
     remap_array,
     generate_vertex_colors_groups,
-    generate_vertex_colors,)
+    generate_vertex_colors
+)
 
 
 def run_one_step_create_mesh_sequence_telemac(context: Context, op: TBB_OT_TelemacCreateMeshSequence) -> None:
@@ -31,14 +28,7 @@ def run_one_step_create_mesh_sequence_telemac(context: Context, op: TBB_OT_Telem
 
     Args:
         context (Context): context
-        current_frame (int): current frame
-        current_time_point (int): current time point
-        start_time_point (int): start time point
-        end_time_point (int): end time point
-        user_sequence_name (str): user defined sequence name
-
-    Raises:
-        error: if something went wrong generating meshes
+        op (TBB_OT_TelemacCreateMeshSequence): operator
     """
 
     # First time point, create the sequence object
@@ -78,14 +68,15 @@ def generate_mesh_data(file_data: TBB_TelemacFileData, time_point: int, offset: 
 
     Args:
         file_data (TBB_TelemacFileData): file data
-        mesh_is_3d() (bool): if the mesh is from a 3D simulation
-        offset (int, optional): if the mesh is from a 3D simulation, precise the offset in the data to read.\
-            Defaults to 0.
-        time_point (int, optional): time point from which to read data. Defaults to 0.
-        type (str, optional): type of the object, enum in ['BOTTOM', 'WATER_DEPTH']. Defaults to 'BOTTOM'.
+        time_point (int): time point
+        offset (int, optional): offset for data reading (id of the plane for 3D simulations). Defaults to 0.
+        type (str, optional): name of the variable to use as z-values. Defaults to 'BOTTOM'.
+
+    Raises:
+        NameError: variable not supported for z-values
 
     Returns:
-        np.ndarray: vertices of the mesh, shape is (number_of_vertices, 3)
+        np.ndarray: vertices
     """
 
     if not file_data.is_3d() and type not in ['BOTTOM', 'WATER_DEPTH']:
@@ -141,13 +132,10 @@ def generate_mesh_data_linear_interp(obj: Object, file_data: TBB_TelemacFileData
     Linearly interpolates the mesh of the given TELEMAC object.
 
     Args:
-        obj (Object): object to interpolate
+        obj (Object): object
         file_data (TBB_TelemacFileData): file data
-
-        offset (int): corresponds to 'plane id' for meshes from 3D simulations. Defaults to 0.
-
-    Raises:
-        vertices_error: if something went wrong generating mesh data
+        time_info (InterpInfo): time information
+        offset (int, optional): offset for data reading (id of the plane for 3D simulations). Defaults to 0.
 
     Returns:
         np.ndarray: vertices
@@ -178,14 +166,13 @@ def generate_base_objects(file_data: TBB_TelemacFileData, time_point: int, name:
     is a 3D simulation, this will generate one object per plane.
 
     Args:
-        time_point (int): time point from which to read data
-        name (str): name of the objects
-        import_point_data (bool, optional): import point data as vertex colors. Defaults to False.
-        point_data (str, optional): JSON stringified deict of point data to import as vertex colors groups.\
-                                    Defaults to "".
+        file_data (TBB_TelemacFileData): file data
+        time_point (int): time point
+        name (str): name to give to the objects
+        point_data (Union[TBB_PointDataSettings, str], optional): point data settings. Defaults to "".
 
     Returns:
-        list[Object]: generated object
+        list[Object]: generated objects
     """
 
     # Check if we need to import point data
@@ -288,14 +275,20 @@ def generate_preview_material(obj: Object, var_name: str, name: str = "TBB_TELEM
 def generate_telemac_sequence_obj(context: Context, obj: Object, name: str, time_point: int,
                                   shape_keys: bool = False) -> Object:
     """
-    Generate base object for a TELEMAC sequence.
+    Generate the base object for a TELEMAC sequence.
 
     Args:
         context (Context): context
-        name (str): name of the sequence
+        obj (Object): source object to copy data
+        name (str): name to give to the sequence
+        time_point (int): time point
+        shape_keys (bool, optional): indicate whether to generate the 'Basis' shape key. Defaults to False.
+
+    Raises:
+        error: if something went wrong generating the base object
 
     Returns:
-        Object: generate object
+        Object: generated sequence object
     """
 
     # Create sequence object
@@ -327,18 +320,17 @@ def prepare_telemac_point_data(bmesh: Mesh, point_data: Union[TBB_PointDataSetti
                                file_data: TBB_TelemacFileData, time_point: int,
                                offset: int = 0) -> tuple[list[dict], dict, int]:
     """
-    Prepare point data for the 'generate_vertex_colors' function.
+    Prepare point data for the 'generate vertex colors' process.
 
     Args:
-        obj (Object): object
-        settings (TBB_ObjectSettings): sequence object settings
+        bmesh (Mesh): blender mesh
+        point_data (Union[TBB_PointDataSettings, str]): point data settings
         file_data (TBB_TelemacFileData): file data
-        time_point (int): time point from which to read data
-        offset (int, optional): if the mesh is from a 3D simulation, precise the offset in the data to read.\
-            Defaults to 0.
+        time_point (int): time point
+        offset (int, optional): offset for data reading (id of the plane for 3D simulations). Defaults to 0.
 
     Returns:
-        tuple[list[dict], dict, int]: vertex colors groups, data, nb_vertex_ids
+        tuple[list[dict], dict, int]: vertex colors groups, color data, number of vertices
     """
 
     # Prepare the mesh to loop over all its triangles
@@ -390,14 +382,14 @@ def prepare_telemac_point_data_linear_interp(bmesh: Mesh, point_data: TBB_PointD
     Prepare point data for linear interpolation of TELEMAC sequences.
 
     Args:
-        obj (Object): object to interpolate
-        settings (TBB_ObjectSettings): sequence object settings
+        bmesh (Mesh): blender mesh
+        point_data (TBB_PointDataSettings): point data settings
         file_data (TBB_TelemacFileData): file data
-        time_info (InterpInfo): interpolation information
-        offset (int): corresponds to 'plane id' for meshes from 3D simulations. Defaults to 0.
+        time_info (InterpInfo): time information
+        offset (int, optional): offset for data reading (id of the plane for 3D simulations). Defaults to 0.
 
     Returns:
-        tuple[list[dict], dict, int]: vertex colors groups, data, nb_vertex_ids
+        tuple[list[dict], dict, int]: vertex colors groups, color data, number of vertices
     """
 
     # Get data from left time point
@@ -450,8 +442,6 @@ def set_new_shape_key(obj: Object, vertices: np.ndarray, name: str, frame: int, 
 @persistent
 def update_telemac_streaming_sequences(scene: Scene) -> None:
     """
-    App handler appended to the frame_change_pre handlers.
-
     Updates all the TELEMAC 'streaming sequences' of the scene.
 
     Args:
@@ -493,22 +483,14 @@ def update_telemac_streaming_sequences(scene: Scene) -> None:
 def update_telemac_streaming_sequence_mesh(obj: Object, child: Object, file_data: TBB_TelemacFileData,
                                            frame: int, offset: int) -> None:
     """
-    Update the mesh of the given object from a TELEMAC 'streaming sequence' object.
-
-    It also manages interpolation.
+    Update the mesh of the given 'child' object from a TELEMAC 'streaming sequence' object.
 
     Args:
-        obj (Object): object from a TELEMAC sequence object
-        settings (TBB_ObjectSettings): 'streaming sequence' settings
-        frame (int): current frame
-        offset (int): id of the current object (used for meshes from 3D simulations, corresponds to the 'plane id')
+        obj (Object): sequence object
+        child (Object): child object of the sequence
         file_data (TBB_TelemacFileData): file data
-
-    Raises:
-        file_data_error: if something went wrong loading the file
-        mesh_error: if something went wrong generating mesh data
-        point_data_error: if something went wrong generating vertex colors data
-        ValueError: if the given time point does not exist
+        frame (int): frame
+        offset (int, optional): offset for data reading (id of the plane for 3D simulations). Defaults to 0.
     """
 
     # Get settings
@@ -592,14 +574,14 @@ def update_telemac_mesh_sequences(scene: Scene) -> None:
 def update_telemac_mesh_sequence(bmesh: Mesh, file_data: TBB_TelemacFileData, offset: int,
                                  point_data: TBB_PointDataSettings, time_info: InterpInfo) -> None:
     """
-    Update vertex colors of the given TELEMAC 'Mesh Sequence' child object.
+    Update the given TELEMAC 'mesh sequence' child object.
 
     Args:
         bmesh (Mesh): blender mesh
         file_data (TBB_TelemacFileData): file data
-        offset (int): _description_
+        offset (int, optional): offset for data reading (id of the plane for 3D simulations). Defaults to 0.
         point_data (TBB_PointDataSettings): point data
-        time_info (InterpInfo): interpolation time information
+        time_info (InterpInfo): time information
     """
 
     # Remove existing vertex colors

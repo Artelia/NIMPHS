@@ -9,10 +9,10 @@ class TBB_Preferences(PropertyGroup):
     register_cls = True
     is_custom_base_cls = False
 
-    #: bpy.props.EnumProperty: Define the log level, enum in ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'].
+    #: bpy.props.EnumProperty: Define the log level. Enum in ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'].
     log_level: EnumProperty(
         name="Log level",
-        description="Define the log level, enum in ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']",
+        description="Define the log level. Enum in ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']",
         items=[
             ('DEBUG', 'Debug', 'Debug level'),  # noqa: F821
             ('INFO', 'Info', 'Info level'),  # noqa: F821

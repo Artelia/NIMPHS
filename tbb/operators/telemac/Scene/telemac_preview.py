@@ -1,27 +1,28 @@
 # <pep8 compliant>
 from bpy.types import Operator, Context
 
-import time
 import logging
 log = logging.getLogger(__name__)
 
-from tbb.operators.telemac.utils import generate_base_objects
+import time
+
 from tbb.panels.utils import get_selected_object
+from tbb.operators.telemac.utils import generate_base_objects
 
 
 class TBB_OT_TelemacPreview(Operator):
-    """Preview the mesh using the loaded file and selected parameters."""
+    """Operator to generate a preview of a TELEMAC object."""
 
     register_cls = True
     is_custom_base_cls = False
 
     bl_idname = "tbb.telemac_preview"
     bl_label = "Preview"
-    bl_description = "Preview the current loaded file"
+    bl_description = "Preview the selected file"
 
     def execute(self, context: Context) -> set:
         """
-        Preview the mesh.
+        Generate a preview of the selected object.
 
         Args:
             context (Context): context

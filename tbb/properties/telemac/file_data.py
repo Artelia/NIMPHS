@@ -138,7 +138,7 @@ class TBB_TelemacFileData(FileData):
         Args:
             var_name (str): name of the variable
             time_point (int): time point from which to read data
-            output_shape (str, optional): shape of the output, enum in ['COL', 'ROW']. Defaults to 'COL'.
+            output_shape (str, optional): shape of the output. Enum in ['COL', 'ROW']. Defaults to 'COL'.
 
         Raises:
             error: if something went wrong when reading data

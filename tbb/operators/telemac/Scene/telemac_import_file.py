@@ -1,21 +1,21 @@
 # <pep8 compliant>
 import bpy
-from bpy.props import StringProperty, PointerProperty
 from bpy.types import Operator, Context
 from bpy_extras.io_utils import ImportHelper
+from bpy.props import StringProperty, PointerProperty
 
-import time
 import logging
-from pathlib import Path
-
-from tbb.properties.telemac.file_data import TBB_TelemacFileData
-from tbb.properties.telemac.import_settings import TBB_TelemacImportSettings
 log = logging.getLogger(__name__)
 
+import time
+from pathlib import Path
+
 from tbb.operators.telemac.utils import generate_base_objects
+from tbb.properties.telemac.file_data import TBB_TelemacFileData
+from tbb.properties.telemac.import_settings import TBB_TelemacImportSettings
 
 
-def import_telemac_menu_draw(self, context: Context):  # noqa D417
+def import_telemac_menu_draw(self, context: Context) -> None:  # noqa D417
     """
     Draw function which displays the import button in File > Import.
 
@@ -29,7 +29,7 @@ def import_telemac_menu_draw(self, context: Context):  # noqa D417
 
 
 class TBB_OT_TelemacImportFile(Operator, ImportHelper):
-    """Import a TELEMAC file. This operator manages the file browser and its filtering options."""
+    """Operator to import a TELEMAC file."""
 
     register_cls = True
     is_custom_base_cls = False
@@ -57,8 +57,6 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
     def execute(self, context: Context) -> set:
         """
         Import the selected file.
-
-        It also generates the preview object, updates file data and 'dynamic' scene settings.
 
         Args:
             context (Context): context
@@ -98,12 +96,12 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
 
         return {'FINISHED'}
 
-    def draw(self, context: Context) -> None:
+    def draw(self, _context: Context) -> None:
         """
         UI layout of the operator.
 
         Args:
-            context (Context): context
+            _context (Context): context
         """
 
         # Import settings

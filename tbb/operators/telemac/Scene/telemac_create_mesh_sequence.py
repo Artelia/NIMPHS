@@ -2,25 +2,26 @@
 from bpy.types import Context, Event
 from bpy.props import PointerProperty
 
-import time
 import logging
 log = logging.getLogger(__name__)
 
-from tbb.operators.shared.create_mesh_sequence import TBB_CreateMeshSequence
-from tbb.properties.telemac.import_settings import TBB_TelemacImportSettings
+import time
+
 from tbb.panels.utils import get_selected_object
 from tbb.properties.telemac.file_data import TBB_TelemacFileData
+from tbb.operators.shared.create_mesh_sequence import TBB_CreateMeshSequence
+from tbb.properties.telemac.import_settings import TBB_TelemacImportSettings
 
 
 class TBB_OT_TelemacCreateMeshSequence(TBB_CreateMeshSequence):
-    """Create a TELEMAC 'mesh sequence'."""
+    """Operator to create a TELEMAC 'mesh sequence'."""
 
     register_cls = True
     is_custom_base_cls = False
 
     bl_idname = "tbb.telemac_create_mesh_sequence"
-    bl_label = "Create mesh sequence"
-    bl_description = "Create a 'mesh sequence' using the selected parameters. Press 'esc' to cancel"
+    bl_label = "Mesh sequence"
+    bl_description = "Create a 'mesh sequence'. Press 'esc' to cancel"
 
     #: TBB_TelemacImportSettings: import settings
     import_settings: PointerProperty(type=TBB_TelemacImportSettings)
@@ -28,7 +29,7 @@ class TBB_OT_TelemacCreateMeshSequence(TBB_CreateMeshSequence):
     @classmethod
     def poll(self, context: Context) -> bool:
         """
-        If false, locks the UI button of the operator.
+        If false, locks the button of the operator.
 
         Args:
             context (Context): context
@@ -46,7 +47,7 @@ class TBB_OT_TelemacCreateMeshSequence(TBB_CreateMeshSequence):
 
     def invoke(self, context: Context, _event: Event) -> set:
         """
-        Prepare operators settings. Function triggered before the user can edit settings.
+        Prepare operator settings. Function triggered before the user can edit settings.
 
         Args:
             context (Context): context
@@ -72,7 +73,7 @@ class TBB_OT_TelemacCreateMeshSequence(TBB_CreateMeshSequence):
 
     def draw(self, context: Context) -> None:
         """
-        UI layout of the popup window of the operator.
+        UI layout of the popup window.
 
         Args:
             context (Context): context
@@ -88,13 +89,13 @@ class TBB_OT_TelemacCreateMeshSequence(TBB_CreateMeshSequence):
 
     def run_one_step(self, context: Context) -> set:
         """
-        Run one step of the 'create_mesh_sequence' process.
+        Run one step of the 'create mesh sequence' process.
 
         Args:
             context (Context): context
 
         Returns:
-            set: state of the operation, enum in ['PASS_THROUGH', 'CANCELLED']
+            set: state of the operation. Enum in ['PASS_THROUGH', 'CANCELLED'].
         """
 
         from tbb.operators.telemac.utils import run_one_step_create_mesh_sequence_telemac

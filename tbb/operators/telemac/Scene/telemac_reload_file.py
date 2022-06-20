@@ -1,29 +1,28 @@
 # <pep8 compliant>
 from bpy.types import Operator, Context
 
-import time
 import logging
 log = logging.getLogger(__name__)
+
+import time
 
 from tbb.panels.utils import get_selected_object
 from tbb.properties.telemac.file_data import TBB_TelemacFileData
 
 
 class TBB_OT_TelemacReloadFile(Operator):
-    """Reload the selected file."""
+    """Operator to reload file data of the selected TELEMAC object."""
 
     register_cls = True
     is_custom_base_cls = False
 
     bl_idname = "tbb.reload_telemac_file"
     bl_label = "Reload"
-    bl_description = "Reload the selected file"
+    bl_description = "Reload file data of the selected TELEMAC object"
 
     def execute(self, context: Context) -> set:
         """
-        Reload the selected file.
-
-        It updates file data and 'dynamic' scene settings.
+        Reload file data of the selected TELEMAC object.
 
         Args:
             context (Context): context

@@ -5,22 +5,22 @@ from bpy.props import PointerProperty
 import logging
 log = logging.getLogger(__name__)
 
-from tbb.operators.shared.create_streaming_sequence import TBB_CreateStreamingSequence
-from tbb.properties.telemac.import_settings import TBB_TelemacImportSettings
 from tbb.panels.utils import get_selected_object
 from tbb.properties.telemac.file_data import TBB_TelemacFileData
 from tbb.operators.telemac.utils import generate_telemac_sequence_obj
+from tbb.properties.telemac.import_settings import TBB_TelemacImportSettings
+from tbb.operators.shared.create_streaming_sequence import TBB_CreateStreamingSequence
 
 
 class TBB_OT_TelemacCreateStreamingSequence(TBB_CreateStreamingSequence):
-    """Create a TELEMAC 'streaming sequence'."""
+    """Operator to create a TELEMAC 'streaming sequence'."""
 
     register_cls = True
     is_custom_base_cls = False
 
     bl_idname = "tbb.telemac_create_streaming_sequence"
-    bl_label = "Create streaming sequence"
-    bl_description = "Create a 'streaming sequence' using the selected parameters. Press 'esc' to cancel"
+    bl_label = "Streaming sequence"
+    bl_description = "Create a 'streaming sequence'"
 
     #: TBB_TelemacImportSettings: import settings
     import_settings: PointerProperty(type=TBB_TelemacImportSettings)
@@ -28,7 +28,7 @@ class TBB_OT_TelemacCreateStreamingSequence(TBB_CreateStreamingSequence):
     @classmethod
     def poll(self, context: Context) -> bool:
         """
-        If false, locks the UI button of the operator.
+        If false, locks the button of the operator.
 
         Args:
             context (Context): context
@@ -46,7 +46,7 @@ class TBB_OT_TelemacCreateStreamingSequence(TBB_CreateStreamingSequence):
 
     def invoke(self, context: Context, _event: Event) -> set:
         """
-        Prepare operators settings. Function triggered before the user can edit settings.
+        Prepare operator settings. Function triggered before the user can edit settings.
 
         Args:
             context (Context): context
@@ -68,7 +68,7 @@ class TBB_OT_TelemacCreateStreamingSequence(TBB_CreateStreamingSequence):
 
     def draw(self, context: Context) -> None:
         """
-        UI layout of the popup window of the operator.
+        UI layout of the popup window.
 
         Args:
             context (Context): context

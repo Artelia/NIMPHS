@@ -17,7 +17,7 @@ class TBB_Object(PropertyGroup):
     #: bpy.props.StringProperty: Module name
     module: StringProperty(
         name="Module name",
-        description="Module name, enum in ['None', 'OpenFOAM', 'TELEMAC']",
+        description="Module name. Enum in ['None', 'OpenFOAM', 'TELEMAC']",
         default="None",
     )
 
