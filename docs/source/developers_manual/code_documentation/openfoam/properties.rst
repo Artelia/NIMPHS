@@ -2,7 +2,6 @@ Properties
 ==========
 
 * :ref:`openfoam_properties_other`
-* :ref:`openfoam_properties_scene`
 * :ref:`openfoam_properties_object`
 * :ref:`openfoam_properties_utils`
 
@@ -11,10 +10,10 @@ Properties
 Other
 #####
 
-Temporary data
---------------
+File Data
+---------
 
-.. autoclass:: tbb.properties.openfoam.temporary_data.TBB_OpenfoamTemporaryData
+.. autoclass:: tbb.properties.openfoam.file_data.TBB_OpenfoamFileData
    :members:
    :show-inheritance:
 
@@ -29,12 +28,10 @@ Clip
    :members:
    :show-inheritance:
 
-.. _openfoam_properties_scene:
+Import settings
+---------------
 
-Scene
-#####
-
-.. autoclass:: tbb.properties.openfoam.Scene.openfoam_settings.TBB_OpenfoamSettings
+.. autoclass:: tbb.properties.openfoam.import_settings.TBB_OpenfoamImportSettings
    :members:
    :show-inheritance:
 
@@ -42,6 +39,10 @@ Scene
 
 Object
 ######
+
+.. autoclass:: tbb.properties.openfoam.Object.openfoam_object_settings.TBB_OpenfoamObjectSettings
+   :members:
+   :show-inheritance:
 
 .. autoclass:: tbb.properties.openfoam.Object.openfoam_streaming_sequence.TBB_OpenfoamStreamingSequenceProperty
    :members:

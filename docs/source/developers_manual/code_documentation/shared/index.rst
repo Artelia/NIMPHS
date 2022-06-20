@@ -44,10 +44,6 @@ Operators
 Panels
 ######
 
-.. autoclass:: tbb.panels.shared.create_sequence.TBB_CreateSequencePanel
-   :members:
-   :show-inheritance:
-
 .. autoclass:: tbb.panels.shared.module_panel.TBB_ModulePanel
    :members:
    :show-inheritance:
@@ -64,19 +60,7 @@ Panels
 Properties
 ##########
 
-.. autoclass:: tbb.properties.shared.module_scene_settings.TBB_ModuleSceneSettings
-   :members:
-   :show-inheritance:
-
-.. autoclass:: tbb.properties.shared.module_streaming_sequence_settings.TBB_ModuleStreamingSequenceSettings
-   :members:
-   :show-inheritance:
-
 .. autoclass:: tbb.properties.shared.tbb_scene.TBB_Scene
-   :members:
-   :show-inheritance:
-
-.. autoclass:: tbb.properties.shared.tbb_scene_settings.TBB_SceneSettings
    :members:
    :show-inheritance:
 
@@ -85,6 +69,18 @@ Properties
    :show-inheritance:
 
 .. autoclass:: tbb.properties.shared.tbb_object_settings.TBB_ObjectSettings
+   :members:
+   :show-inheritance:
+
+.. autoclass:: tbb.properties.shared.module_streaming_sequence_settings.TBB_ModuleStreamingSequenceSettings
+   :members:
+   :show-inheritance:
+
+.. autoclass:: tbb.properties.shared.file_data.FileData
+   :members:
+   :show-inheritance:
+
+.. autoclass:: tbb.properties.shared.point_data_settings.TBB_PointDataSettings
    :members:
    :show-inheritance:
 
