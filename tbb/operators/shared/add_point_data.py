@@ -31,11 +31,11 @@ class TBB_OT_AddPointData(Operator):
         """
 
         items = []
-        vars_info = VariablesInformation(self.available)
+        vars = VariablesInformation(self.available)
 
         identifier = VariablesInformation()
-        for name, unit, id in zip(vars_info.names, vars_info.units, range(vars_info.length())):
-            identifier.append(data=vars_info.get(id))
+        for name, unit, id in zip(vars.names, vars.units, range(vars.length())):
+            identifier.append(data=vars.get(id))
             items.append((identifier.dumps(), (name + ", (" + unit + ")") if unit != "" else name, "Undocumented"))
             identifier.clear()
 

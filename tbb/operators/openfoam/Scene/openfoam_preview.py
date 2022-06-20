@@ -67,9 +67,9 @@ class TBB_OT_OpenfoamPreview(Operator):
             self.report({'WARNING'}, "Select a scalar to clip on. You may need to reload the file if none are shown")
             return {'FINISHED'}
 
-        # Setup file_reader
-        tmp_data.file_reader.decompose_polyhedra = io_settings.decompose_polyhedra
-        tmp_data.file_reader.case_type = io_settings.case_type
+        # Setup file
+        tmp_data.file.decompose_polyhedra = io_settings.decompose_polyhedra
+        tmp_data.file.case_type = io_settings.case_type
 
         prw_time_point = obj.tbb.settings.preview_time_point
 

@@ -498,7 +498,7 @@ def available_point_data(self, context: Context) -> list:
     except AttributeError:  # Raised when called from an operator (WindowManager object has not attribute 'tbb')
         tmp_data = context.scene.tbb.tmp_data["ops"]
 
-    if tmp_data is None or not tmp_data.is_ok() or tmp_data.vars_info.length() == 0:
+    if tmp_data is None or not tmp_data.is_ok() or tmp_data.vars.length() == 0:
         return [("NONE", "None", "None")]
 
     # Add a 'None' field for preview_point_data
@@ -507,8 +507,8 @@ def available_point_data(self, context: Context) -> list:
     else:
         items = []
 
-    for id in range(tmp_data.vars_info.length()):
-        identifier = tmp_data.vars_info.get(id)
+    for id in range(tmp_data.vars.length()):
+        identifier = tmp_data.vars.get(id)
         items.append((json.dumps(identifier), identifier["name"], "Undocumented"))
 
     return items

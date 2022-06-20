@@ -6,7 +6,7 @@ import logging
 log = logging.getLogger(__name__)
 
 from tbb.panels.utils import get_selected_object
-from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
+from tbb.properties.telemac.file_data import TBB_TelemacFileData
 
 
 class TBB_OT_TelemacReloadFile(Operator):
@@ -41,7 +41,7 @@ class TBB_OT_TelemacReloadFile(Operator):
             obj.tbb.uid = str(time.time())
 
         # Update temporary data
-        context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_TelemacTemporaryData(obj.tbb.settings.file_path, False)
+        context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_TelemacFileData(obj.tbb.settings.file_path, False)
 
         log.info("{:.4f}".format(time.time() - start) + "s")
         self.report({'INFO'}, "Reload successful")

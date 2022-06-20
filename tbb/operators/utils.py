@@ -14,7 +14,7 @@ from typing import Any, Union
 from tbb.properties.telemac.Object.telemac_mesh_sequence import TBB_TelemacMeshSequenceProperty
 from tbb.properties.telemac.Object.telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
 from tbb.properties.openfoam.Object.openfoam_streaming_sequence import TBB_OpenfoamStreamingSequenceProperty
-from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
+from tbb.properties.telemac.file_data import TBB_TelemacFileData
 from tbb.properties.openfoam.temporary_data import TBB_OpenfoamTemporaryData
 
 

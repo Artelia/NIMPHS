@@ -87,22 +87,22 @@ def test_reload_telemac_3d(preview_object):
     # Test temporary data
     tmp_data = bpy.context.scene.tbb.tmp_data.get(preview_object.tbb.uid, None)
     assert tmp_data is not None
-    assert tmp_data.module_name == 'TELEMAC'
+    assert tmp_data.module == 'TELEMAC'
     assert tmp_data.vertices is not None
     assert tmp_data.faces is not None
     assert tmp_data.nb_vars == 4
     assert tmp_data.nb_time_points == 11
-    assert tmp_data.vars_info is not None
+    assert tmp_data.vars is not None
     assert tmp_data.nb_planes == 3
     assert tmp_data.nb_vertices == 4624
     assert tmp_data.nb_triangles == 8978
-    assert tmp_data.is_3d is True
+    assert tmp_data.is_3d() is True
 
 
 def test_preview_telemac_3d(preview_object):
     # Set preview settings
     tmp_data = bpy.context.scene.tbb.tmp_data.get(preview_object.tbb.uid, None)
-    preview_object.tbb.settings.preview_point_data = json.dumps(tmp_data.vars_info.get(0))
+    preview_object.tbb.settings.preview_point_data = json.dumps(tmp_data.vars.get(0))
 
     assert bpy.ops.tbb.telemac_preview('EXEC_DEFAULT') == {"FINISHED"}
 
@@ -134,7 +134,7 @@ def test_point_data_preview_object_telemac_3d(preview_object):
 def test_create_streaming_sequence_telemac_3d(preview_object):
     # Get temporary data
     tmp_data = bpy.context.scene.tbb.tmp_data.get(preview_object.tbb.uid, None)
-    preview_object.tbb.settings.preview_point_data = json.dumps(tmp_data.vars_info.get(0))
+    preview_object.tbb.settings.preview_point_data = json.dumps(tmp_data.vars.get(0))
 
     op = bpy.ops.tbb.telemac_create_streaming_sequence
     state = op('EXEC_DEFAULT', start=0, max_length=10, length=10, name="My_TELEMAC_Streaming_Sim_3D",
@@ -148,7 +148,7 @@ def test_create_streaming_sequence_telemac_3d(preview_object):
 
     # Set point data
     sequence.tbb.settings.point_data.import_data = True
-    sequence.tbb.settings.point_data.list = json.dumps(tmp_data.vars_info.get(0))
+    sequence.tbb.settings.point_data.list = json.dumps(tmp_data.vars.get(0))
 
 
 def test_streaming_sequence_telemac_3d(streaming_sequence, frame_change_pre):
@@ -175,7 +175,7 @@ def test_streaming_sequence_telemac_3d(streaming_sequence, frame_change_pre):
     # Test point data settings
     tmp_data = bpy.context.scene.tbb.tmp_data[streaming_sequence.tbb.uid]
     assert streaming_sequence.tbb.settings.point_data.import_data is True
-    assert streaming_sequence.tbb.settings.point_data.list == json.dumps(tmp_data.vars_info.get(0))
+    assert streaming_sequence.tbb.settings.point_data.list == json.dumps(tmp_data.vars.get(0))
 
     # Disable updates for this sequence object during the next tests
     sequence.update = False
@@ -221,7 +221,7 @@ def test_mesh_sequence_telemac_3d(mesh_sequence, frame_change_post):
 
     # Add point data settings
     mesh_sequence.tbb.settings.point_data.import_data = True
-    mesh_sequence.tbb.settings.point_data.list = json.dumps(tmp_data.vars_info.get(0))
+    mesh_sequence.tbb.settings.point_data.list = json.dumps(tmp_data.vars.get(0))
 
     # Force update telemac mesh sequences
     handler = frame_change_post("update_telemac_mesh_sequences")

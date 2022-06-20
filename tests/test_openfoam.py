@@ -70,13 +70,13 @@ def test_file_data(preview_object):
     assert file_data is not None
 
     # Test file data
-    assert file_data.module_name == "OpenFOAM"
-    assert isinstance(file_data.file_reader, pyvista.OpenFOAMReader)
+    assert file_data.module == "OpenFOAM"
+    assert isinstance(file_data.file, pyvista.OpenFOAMReader)
     assert isinstance(file_data.raw_mesh, pyvista.UnstructuredGrid)
     assert isinstance(file_data.mesh, pyvista.PolyData)
     assert file_data.time_point == 0
     assert file_data.nb_time_points == 21
-    assert file_data.vars_info is not None
+    assert file_data.vars is not None
 
 
 def test_reload_openfoam(preview_object):
@@ -86,13 +86,13 @@ def test_reload_openfoam(preview_object):
     assert file_data is not None
 
     # Test file data
-    assert file_data.module_name == "OpenFOAM"
-    assert isinstance(file_data.file_reader, pyvista.OpenFOAMReader)
+    assert file_data.module == "OpenFOAM"
+    assert isinstance(file_data.file, pyvista.OpenFOAMReader)
     assert isinstance(file_data.raw_mesh, pyvista.UnstructuredGrid)
     assert isinstance(file_data.mesh, pyvista.UnstructuredGrid)
     assert file_data.time_point == 0
     assert file_data.nb_time_points == 21
-    assert file_data.vars_info is not None
+    assert file_data.vars is not None
 
 
 def test_normal_preview_object_openfoam(preview_object):
@@ -179,11 +179,11 @@ def test_add_point_data(preview_object):
 
     # TODO: Fix this. Not working.
     op = bpy.ops.tbb.add_point_data
-    state = op('INVOKE_DEFAULT', available=tmp_data.vars_info.dumps(),
+    state = op('INVOKE_DEFAULT', available=tmp_data.vars.dumps(),
                chosen=preview_object.tbb.settings.point_data.list, source='OBJECT')
     assert state == {'FINISHED'}
 
-    state = op('EXEC_DEFAULT', available=tmp_data.vars_info.dumps(),
+    state = op('EXEC_DEFAULT', available=tmp_data.vars.dumps(),
                chosen=preview_object.tbb.settings.point_data.list, source='OBJECT',
                point_data="None")
     assert state == {'FINISHED'}
@@ -201,7 +201,7 @@ def test_preview_point_data(preview_object):
     assert tmp_data is not None
 
     # Set point data to preview (alpha.water)
-    preview_object.tbb.settings.preview_point_data = json.dumps(tmp_data.vars_info.get(1))
+    preview_object.tbb.settings.preview_point_data = json.dumps(tmp_data.vars.get(1))
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
 
@@ -252,11 +252,11 @@ def test_create_streaming_sequence_openfoam(preview_object):
     sequence.tbb.settings.openfoam.import_settings.triangulate = True
     # Set clip settings
     sequence.tbb.settings.openfoam.clip.type = 'SCALAR'
-    sequence.tbb.settings.openfoam.clip.scalar.name = json.dumps(tmp_data.vars_info.get(1))
+    sequence.tbb.settings.openfoam.clip.scalar.name = json.dumps(tmp_data.vars.get(1))
     sequence.tbb.settings.openfoam.clip.scalar.value = 0.5
     # Set point data
     sequence.tbb.settings.point_data.import_data = True
-    sequence.tbb.settings.point_data.list = json.dumps(tmp_data.vars_info.get(1))
+    sequence.tbb.settings.point_data.list = json.dumps(tmp_data.vars.get(1))
 
 
 def test_streaming_sequence_openfoam(streaming_sequence):
@@ -282,11 +282,11 @@ def test_streaming_sequence_openfoam(streaming_sequence):
     assert streaming_sequence.tbb.settings.openfoam.import_settings.triangulate is True
     # Test clip settings
     assert streaming_sequence.tbb.settings.openfoam.clip.type == 'SCALAR'
-    assert streaming_sequence.tbb.settings.openfoam.clip.scalar.name == json.dumps(tmp_data.vars_info.get(1))
+    assert streaming_sequence.tbb.settings.openfoam.clip.scalar.name == json.dumps(tmp_data.vars.get(1))
     assert streaming_sequence.tbb.settings.openfoam.clip.scalar.value == 0.5
     # Test point data
     assert streaming_sequence.tbb.settings.point_data.import_data is True
-    assert streaming_sequence.tbb.settings.point_data.list == json.dumps(tmp_data.vars_info.get(1))
+    assert streaming_sequence.tbb.settings.point_data.list == json.dumps(tmp_data.vars.get(1))
 
 
 def test_geometry_streaming_sequence_openfoam(streaming_sequence):

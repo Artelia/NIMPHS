@@ -67,7 +67,10 @@ def run_one_step_create_mesh_sequence_openfoam(context: Context, op: TBB_OT_Open
         # Link: https://github.com/neverhood311/Stop-motion-OBJ/blob/rename-module-name/src/panels.py
         # if the object doesn't have a 'curMeshIdx' fcurve, we can't add a mesh to it
         # TODO: manage the case when there is no 'curMeshIdx'. We may throw an exception or something.
-        curve = next((curve for curve in obj.animation_data.action.fcurves if 'curKeyframeMeshIdx' in curve.data_path), None)
+        curve = next(
+            (curve for curve in obj.animation_data.action.fcurves if 'curKeyframeMeshIdx' in curve.data_path),
+            None
+        )
 
         # add the mesh to the end of the sequence
         meshIdx = add_mesh_to_sequence(obj, bmesh)

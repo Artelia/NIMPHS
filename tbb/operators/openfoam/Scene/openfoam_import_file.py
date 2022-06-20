@@ -68,8 +68,8 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
 
         io_settings = self.import_settings
 
-        ok, file_reader = load_openfoam_file(self.filepath, io_settings.case_type, io_settings.decompose_polyhedra)
-        if not ok:
+        state, file_reader = load_openfoam_file(self.filepath, io_settings.case_type, io_settings.decompose_polyhedra)
+        if not state:
             self.report({'WARNING'}, "The chosen file can't be read")
             return {'CANCELLED'}
 

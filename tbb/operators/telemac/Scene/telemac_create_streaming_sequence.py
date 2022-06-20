@@ -8,7 +8,7 @@ log = logging.getLogger(__name__)
 from tbb.operators.shared.create_streaming_sequence import TBB_CreateStreamingSequence
 from tbb.properties.telemac.import_settings import TBB_TelemacImportSettings
 from tbb.panels.utils import get_selected_object
-from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
+from tbb.properties.telemac.file_data import TBB_TelemacFileData
 from tbb.operators.telemac.utils import generate_telemac_sequence_obj
 
 
@@ -61,7 +61,7 @@ class TBB_OT_TelemacCreateStreamingSequence(TBB_CreateStreamingSequence):
             return {'CANCELLED'}
 
         # Load temporary data
-        context.scene.tbb.tmp_data["ops"] = TBB_TelemacTemporaryData(obj.tbb.settings.file_path, False)
+        context.scene.tbb.tmp_data["ops"] = TBB_TelemacFileData(obj.tbb.settings.file_path, False)
         self.max_length = context.scene.tbb.tmp_data["ops"].nb_time_points
 
         return context.window_manager.invoke_props_dialog(self)

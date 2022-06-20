@@ -14,9 +14,9 @@ class TBB_OpenfoamTemporaryData():
     """Hold temporary data for the OpenFOAM module."""
 
     # str: name of the module
-    module_name = "OpenFOAM"
+    module = "OpenFOAM"
     #: POpenFOAMReader: file reader
-    file_reader = None
+    file = None
     #: UnstructuredGrid: 'internalMesh' from data
     raw_mesh = None
     #: PolyData: lest generated mesh
@@ -26,25 +26,25 @@ class TBB_OpenfoamTemporaryData():
     #: int: number of time points
     nb_time_points = 1
     #: VariablesInformation: Information on variables
-    vars_info = VariablesInformation()
+    vars = VariablesInformation()
     #: bool: Indicate
     tiangulate = False
 
-    def __init__(self, file_reader: POpenFOAMReader, io_settings: Union[TBB_OpenfoamImportSettings, None]):
+    def __init__(self, file: POpenFOAMReader, io_settings: Union[TBB_OpenfoamImportSettings, None]):
         """Init method of the class."""
 
-        self.module_name = "OpenFOAM"
-        self.file_reader = file_reader
+        self.module = "OpenFOAM"
+        self.file = file
 
         # Load data
         self.update(0, io_settings=io_settings)
         try:
-            self.mesh = self.file_reader.read()["internalMesh"]
+            self.mesh = self.file.read()["internalMesh"]
         except KeyError:  # Raised when using wrong case_type
             self.mesh = None
             return
 
-        self.nb_time_points = self.file_reader.number_time_points
+        self.nb_time_points = self.file.number_time_points
 
     def update(self, time_point: int, io_settings: Union[TBB_OpenfoamImportSettings, None] = None) -> None:
         """
@@ -56,19 +56,19 @@ class TBB_OpenfoamTemporaryData():
 
         # Update import settings
         if io_settings is not None:
-            self.file_reader.decompose_polyhedra = io_settings.decompose_polyhedra
-            self.file_reader.case_type = io_settings.case_type
+            self.file.decompose_polyhedra = io_settings.decompose_polyhedra
+            self.file.case_type = io_settings.case_type
             self.triangulate = io_settings.triangulate
         else:
-            self.file_reader.decompose_polyhedra = True
-            self.file_reader.case_type = 'reconstructed'
+            self.file.decompose_polyhedra = True
+            self.file.case_type = 'reconstructed'
             self.triangulate = True
 
         # Update mesh
         try:
             self.time_point = time_point
-            self.file_reader.set_active_time_point(time_point)
-            self.raw_mesh = self.file_reader.read()["internalMesh"]
+            self.file.set_active_time_point(time_point)
+            self.raw_mesh = self.file.read()["internalMesh"]
         except AttributeError:  # Raised when using wrong case_type
             self.raw_mesh = None
             return
@@ -76,8 +76,8 @@ class TBB_OpenfoamTemporaryData():
             log.critical("Caught exception during update", exc_info=1)
             return
 
-        # Update vars_info
-        self.vars_info.clear()
+        # Update vars
+        self.vars.clear()
         for name in self.raw_mesh.point_data.keys():
             data = self.raw_mesh.point_data[name]
             type = 'SCALAR' if len(data.shape) == 1 else 'VECTOR'
@@ -94,7 +94,7 @@ class TBB_OpenfoamTemporaryData():
 
             ranges = {"local": {"min": min, "max": max}, "global": {"min": None, "max": None}}
 
-            self.vars_info.append(name, unit="", range=ranges, type=type, dim=dim)
+            self.vars.append(name, unit="", range=ranges, type=type, dim=dim)
 
     def is_ok(self) -> bool:
         """
@@ -103,4 +103,4 @@ class TBB_OpenfoamTemporaryData():
         Returns:
             bool: ``True`` if everything is ok
         """
-        return self.file_reader is not None
+        return self.file is not None

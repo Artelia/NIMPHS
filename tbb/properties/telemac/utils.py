@@ -32,8 +32,8 @@ def update_var_names(self, context: Context) -> list:
     """
 
     tmp_data = context.scene.tbb.settings.telemac.tmp_data
-    names = tmp_data.vars_info["names"]
-    units = tmp_data.vars_info["units"]
+    names = tmp_data.vars["names"]
+    units = tmp_data.vars["units"]
 
     items = []
     items.append(("-1", "None", "None"))

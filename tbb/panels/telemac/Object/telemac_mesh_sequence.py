@@ -78,6 +78,6 @@ class TBB_PT_TelemacMeshSequence(Panel):
 
                 row = box.row()
                 op = row.operator("tbb.add_point_data", text="Add", icon='ADD')
-                op.available = tmp_data.vars_info.dumps()
+                op.available = tmp_data.vars.dumps()
                 op.chosen = point_data.list
                 op.source = 'OBJECT'

@@ -6,36 +6,24 @@ import logging
 log = logging.getLogger(__name__)
 
 from tbb.properties.telemac.serafin import Serafin
-from tbb.properties.shared.temporary_data import TemporaryData
+from tbb.properties.shared.file_data import FileData
 from tbb.properties.telemac.utils import remove_spaces_telemac_var_name
 from tbb.properties.utils import VariablesInformation
 
 
-class TBB_TelemacTemporaryData(TemporaryData):
-    """Hold temporary data for the TELEMAC module."""
+class TBB_TelemacFileData(FileData):
+    """Hold file data for the TELEMAC module."""
 
-    # str: name of the module
-    module_name = "TELEMAC"
-    #: Serafin: TELEMAC file
-    file = None
     #: np.ndarray: Vertices of the mesh
     vertices = None
     #: np.ndarray: Faces of the mesh
     faces = None
-    #: int: Number of variables
-    nb_vars = 0
-    #: int: Number of time points
-    nb_time_points = 0
-    #: VariablesInformation: Information on variables
-    vars_info = VariablesInformation()
     #: int: Number of planes
     nb_planes = 0
     #: int: Number of vertices
     nb_vertices = 0
     #: int: Number of triangles
     nb_triangles = 0
-    #:  bool: True if the file contains more than one plane
-    is_3d = False
     #: np.ndarray:
     data = None
 
@@ -47,18 +35,18 @@ class TBB_TelemacTemporaryData(TemporaryData):
             file_path (str): path to the TELEMAC file
             compute_value_ranges (bool): compute value ranges for all the variables
         """
+        super().__init__()
 
-        self.module_name = "TELEMAC"
+        self.module = 'TELEMAC'
         self.file = Serafin(file_path, read_time=True)
 
         self.file.get_2d()  # Read mesh
         self.data = self.file.read(self.file.temps[0])  # Read time step
 
         self.nb_planes = self.file.nplan
-        self.is_3d = self.file.nplan > 1
 
-        self.nb_vertices = self.file.npoin2d if self.is_3d else self.file.npoin
-        self.nb_triangles = len(self.file.ikle2d) if self.is_3d else int(len(self.file.ikle) / 3)
+        self.nb_vertices = self.file.npoin2d if self.is_3d() else self.file.npoin
+        self.nb_triangles = len(self.file.ikle2d) if self.is_3d() else int(len(self.file.ikle) / 3)
         self.nb_vars = self.file.nbvar
 
         self.nb_time_points = self.file.nb_pdt
@@ -68,13 +56,13 @@ class TBB_TelemacTemporaryData(TemporaryData):
 
         # Construct faces array
         # Note: '-1' to remove the '+1' offset in the ikle array
-        if not self.is_3d:
+        if not self.is_3d():
             self.faces = (np.array(self.file.ikle) - 1).reshape((self.nb_triangles, 3))
         else:
             self.faces = self.file.ikle2d
 
         # Construct variables information data
-        self.vars_info.clear()
+        self.vars.clear()
         for var_name, id in zip(self.file.nomvar, range(self.nb_vars)):
             # Note: var_name is always 32 chars long with 16 chars for the name and 16 for the unit name
             name = remove_spaces_telemac_var_name(var_name[:16])
@@ -88,7 +76,7 @@ class TBB_TelemacTemporaryData(TemporaryData):
                 value_range = self.read(0)[id]
                 value_range = {"local": {"min": np.min(value_range), "max": np.max(value_range)}}
 
-            self.vars_info.append(name=name, unit=unit, range=value_range)
+            self.vars.append(name=name, unit=unit, range=value_range)
 
     def update(self, time_point: int):
         """
@@ -102,7 +90,27 @@ class TBB_TelemacTemporaryData(TemporaryData):
 
         # Compute 'local' value ranges
         for id in range(self.nb_vars):
-            self.vars_info.ranges[id]["local"] = {"min": np.min(self.data[id]), "max": np.max(self.data[id])}
+            self.vars.ranges[id]["local"] = {"min": np.min(self.data[id]), "max": np.max(self.data[id])}
+
+    def is_ok(self) -> bool:
+        """
+        Check if file data is up (data are not None or empty).
+
+        Returns:
+            bool: ``True`` if ok
+        """
+
+        return self.file is not None and self.vertices is not None and self.faces is not None
+
+    def is_3d(self) -> bool:
+        """
+        Indicate if the file is from a 3D simulation
+
+        Returns:
+            bool: state
+        """
+
+        return self.nb_planes > 1
 
     def read(self, time_point: int = 0) -> np.ndarray:
         """
@@ -147,7 +155,7 @@ class TBB_TelemacTemporaryData(TemporaryData):
 
         # Get the id of the variable name if Serafin.nomvar
         try:
-            var_id = self.vars_info.names.index(var_name)
+            var_id = self.vars.names.index(var_name)
         except ValueError:
             raise NameError("The given variable name '" + str(var_name) + "' is not defined")
 
@@ -216,9 +224,9 @@ class TBB_TelemacTemporaryData(TemporaryData):
             if new_max > max:
                 max = new_max
 
-        self.vars_info.ranges[var_id]["global"] = {"min": min, "max": max}
+        self.vars.ranges[var_id]["global"] = {"min": min, "max": max}
 
-        message = f"Compute 'global' var value range for {self.vars_info.get(var_id, prop='NAME')}"
+        message = f"Compute 'global' var value range for {self.vars.get(var_id, prop='NAME')}"
         log.info(message + "{:.4f}".format(time.time() - start) + "s")
         return (min, max)
 
@@ -237,24 +245,15 @@ class TBB_TelemacTemporaryData(TemporaryData):
         """
 
         if type(var).__name__ == "str":
-            var_id = self.vars_info["names"].index(var)
+            var_id = self.vars["names"].index(var)
         else:
             var_id = var
 
         if var_id < 0 or var_id > self.nb_vars:
             raise ValueError("Undefined variable id '" + str(var_id) + "'")
 
-        value_range = self.vars_info["ranges"][var_id]
+        value_range = self.vars["ranges"][var_id]
         if value_range is None:
             value_range = self.compute_var_value_range(var_id)
 
         return value_range
-
-    def is_ok(self) -> bool:
-        """
-        Check if temporary data still hold data (data are not None).
-
-        Returns:
-            bool: ``True`` if everything is ok
-        """
-        return self.file is not None and self.vertices is not None and self.faces is not None

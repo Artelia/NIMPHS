@@ -9,7 +9,7 @@ log = logging.getLogger(__name__)
 from tbb.operators.shared.create_mesh_sequence import TBB_CreateMeshSequence
 from tbb.properties.telemac.import_settings import TBB_TelemacImportSettings
 from tbb.panels.utils import get_selected_object
-from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
+from tbb.properties.telemac.file_data import TBB_TelemacFileData
 
 
 class TBB_OT_TelemacCreateMeshSequence(TBB_CreateMeshSequence):
@@ -61,7 +61,7 @@ class TBB_OT_TelemacCreateMeshSequence(TBB_CreateMeshSequence):
             return {'CANCELLED'}
 
         # Load temporary data
-        context.scene.tbb.tmp_data["ops"] = TBB_TelemacTemporaryData(self.obj.tbb.settings.file_path, False)
+        context.scene.tbb.tmp_data["ops"] = TBB_TelemacFileData(self.obj.tbb.settings.file_path, False)
         self.max_length = context.scene.tbb.tmp_data["ops"].nb_time_points
 
         # Used in tests

@@ -8,7 +8,7 @@ import time
 import logging
 from pathlib import Path
 
-from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
+from tbb.properties.telemac.file_data import TBB_TelemacFileData
 from tbb.properties.telemac.import_settings import TBB_TelemacImportSettings
 log = logging.getLogger(__name__)
 
@@ -81,10 +81,10 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         obj.tbb.uid = str(time.time())
         obj.tbb.settings.file_path = self.filepath
         # Load temporary data
-        context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_TelemacTemporaryData(self.filepath,
-                                                                           self.import_settings.compute_value_ranges)
+        context.scene.tbb.tmp_data[obj.tbb.uid] = TBB_TelemacFileData(self.filepath,
+                                                                      self.import_settings.compute_value_ranges)
         tmp_data = context.scene.tbb.tmp_data.get(obj.tbb.uid, None)
-        obj.tbb.settings.telemac.is_3d_simulation = tmp_data.is_3d
+        obj.tbb.settings.telemac.is_3d_simulation = tmp_data.is_3d()
 
         # Generate objects
         children = generate_base_objects(tmp_data, 0, self.name)
