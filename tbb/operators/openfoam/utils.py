@@ -36,7 +36,6 @@ def run_one_step_create_mesh_sequence_openfoam(context: Context, op: TBB_OT_Open
         error: if something went wrong generating the mesh
     """
 
-    seq_obj_name = op.name + "_sequence"
     try:
         tmp_data = context.scene.tbb.tmp_data["ops"]
         bmesh = generate_mesh_for_sequence(tmp_data, op)
@@ -45,7 +44,7 @@ def run_one_step_create_mesh_sequence_openfoam(context: Context, op: TBB_OT_Open
 
     # If the generated mesh is None, do not continue
     if bmesh is None:
-        raise ValueError(f"Generated mesh is None at time point {op.time_point}")
+        raise ValueError(f"Generated mesh is None at time point {op.time_point}, frame {op.frame}")
 
     # First time point, create the sequence object
     if op.time_point == op.start:
@@ -61,21 +60,21 @@ def run_one_step_create_mesh_sequence_openfoam(context: Context, op: TBB_OT_Open
         bpy.ops.ms.convert_to_mesh_sequence()
     else:
         # Add mesh to the sequence
-        obj = bpy.data.objects[seq_obj_name]
+        obj = bpy.data.objects[op.name + "_sequence"]
         context.scene.frame_set(frame=op.frame)
 
         # Code taken from the Stop-motion-OBJ addon
         # Link: https://github.com/neverhood311/Stop-motion-OBJ/blob/rename-module-name/src/panels.py
         # if the object doesn't have a 'curMeshIdx' fcurve, we can't add a mesh to it
         # TODO: manage the case when there is no 'curMeshIdx'. We may throw an exception or something.
-        curve = next((curve for curve in obj.animation_data.action.fcurves if 'curMeshIdx' in curve.data_path), None)
+        curve = next((curve for curve in obj.animation_data.action.fcurves if 'curKeyframeMeshIdx' in curve.data_path), None)
 
         # add the mesh to the end of the sequence
         meshIdx = add_mesh_to_sequence(obj, bmesh)
 
         # add a new keyframe at this frame number for the new mesh
-        obj.mesh_sequence_settings.curMeshIdx = meshIdx
-        obj.keyframe_insert(data_path='mesh_sequence_settings.curMeshIdx', frame=op.frame)
+        obj.mesh_sequence_settings.curKeyframeMeshIdx = meshIdx
+        obj.keyframe_insert(data_path='mesh_sequence_settings.curKeyframeMeshIdx', frame=op.frame)
 
         # make the interpolation constant for this keyframe
         newKey = next((keyframe for keyframe in curve.keyframe_points if keyframe.co.x == op.frame), None)
@@ -219,23 +218,23 @@ def generate_openfoam_streaming_sequence_obj(context: Context, obj: Object, name
 
 # Code taken from the Stop-motion-OBJ addon
 # Link: https://github.com/neverhood311/Stop-motion-OBJ/blob/rename-module-name/src/stop_motion_obj.py
-def add_mesh_to_sequence(obj: Object, blender_mesh: Mesh) -> int:
+def add_mesh_to_sequence(obj: Object, bmesh: Mesh) -> int:
     """
     Add a mesh to an OpenFOAM 'mesh sequence'.
 
     Args:
         obj (Object): sequence object
-        blender_mesh (Mesh): mesh to add to the sequence
+        bmesh (Mesh): mesh to add to the sequence
 
     Returns:
         int: mesh id in the sequence
     """
 
-    blender_mesh.inMeshSequence = True
+    bmesh.inMeshSequence = True
     mss = obj.mesh_sequence_settings
     # add the new mesh to meshNameArray
     newMeshNameElement = mss.meshNameArray.add()
-    newMeshNameElement.key = blender_mesh.name_full
+    newMeshNameElement.key = bmesh.name_full
     newMeshNameElement.inMemory = True
     # increment numMeshes
     mss.numMeshes = mss.numMeshes + 1
@@ -393,9 +392,9 @@ def update_openfoam_streaming_sequences(scene: Scene) -> None:
                     log.error(f"No file data available for {obj.name}. Disabling update.")
                     return
 
-                time_point = frame - sequence.frame_start
+                time_point = frame - sequence.start
 
-                if time_point >= 0 and time_point < sequence.anim_length:
+                if time_point >= 0 and time_point < sequence.length:
                     start = time.time()
                     try:
                         update_openfoam_streaming_sequence_mesh(scene, obj, time_point)

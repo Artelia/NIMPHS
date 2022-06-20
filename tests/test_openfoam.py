@@ -242,6 +242,7 @@ def test_create_streaming_sequence_openfoam(preview_object):
     state = op('EXEC_DEFAULT', name="My_OpenFOAM_Streaming_Sim", start=1, length=21, max_length=21, shade_smooth=True)
     assert state == {'FINISHED'}
 
+    # Get sequence
     sequence = bpy.data.objects.get("My_OpenFOAM_Streaming_Sim_sequence", None)
     assert sequence is not None
 
@@ -271,9 +272,9 @@ def test_streaming_sequence_openfoam(streaming_sequence):
     # Test sequence settings
     sequence = streaming_sequence.tbb.settings.openfoam.s_sequence
     assert sequence.update is True
-    # assert sequence.frame_start == 1 # TODO: fix this test.
+    # assert sequence.start == 1 # TODO: fix this test.
     assert sequence.max_length == 21
-    assert sequence.anim_length == 21
+    assert sequence.length == 21
 
     # Test import settings
     assert streaming_sequence.tbb.settings.openfoam.import_settings.decompose_polyhedra is True
@@ -327,9 +328,8 @@ def test_mesh_sequence_openfoam(mesh_sequence):
     bpy.context.scene.frame_set(11)
 
     # Test mesh sequence (settings from Stop-Motion-OBJ)
-    # TODO: Fix these tests, it seems it is not creating the right number of meshes
-    # assert mesh_sequence.mesh_sequence_settings.numMeshes == 4
-    # assert mesh_sequence.mesh_sequence_settings.numMeshesInMemory == 4
+    assert mesh_sequence.mesh_sequence_settings.numMeshes == 5
+    assert mesh_sequence.mesh_sequence_settings.numMeshesInMemory == 5
     assert mesh_sequence.mesh_sequence_settings.startFrame == 1
     assert mesh_sequence.mesh_sequence_settings.speed == 1.0
     assert mesh_sequence.mesh_sequence_settings.streamDuringPlayback is True

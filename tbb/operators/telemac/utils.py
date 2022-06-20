@@ -41,13 +41,10 @@ def run_one_step_create_mesh_sequence_telemac(context: Context, op: TBB_OT_Telem
         error: if something went wrong generating meshes
     """
 
-    # Object name
-    name = op.name + "_sequence"
-
     # First time point, create the sequence object
     if op.time_point == op.start:
 
-        obj = generate_telemac_sequence_obj(context, op.obj, name, op.start, True)
+        obj = generate_telemac_sequence_obj(context, op.obj, op.name + "_sequence", op.start, shape_keys=True)
         obj.tbb.is_mesh_sequence = True
         obj.tbb.settings.file_path = op.obj.tbb.settings.file_path
         # Copy point data settings
@@ -58,7 +55,7 @@ def run_one_step_create_mesh_sequence_telemac(context: Context, op: TBB_OT_Telem
 
     # Other time points, update vertices
     else:
-        obj = bpy.data.objects[name]
+        obj = bpy.data.objects[op.name + "_sequence"]
         tmp_data = context.scene.tbb.tmp_data.get(obj.tbb.uid, None)
 
         for child, id in zip(obj.children, range(len(obj.children))):
@@ -478,11 +475,11 @@ def update_telemac_streaming_sequences(scene: Scene) -> None:
                     return
 
                 # Compute limit (takes interpolation into account)
-                limit = sequence.frame_start + sequence.anim_length
+                limit = sequence.start + sequence.length
                 if interpolate.type != 'NONE':
-                    limit += (sequence.anim_length - 1) * interpolate.time_steps
+                    limit += (sequence.length - 1) * interpolate.time_steps
 
-                if frame >= sequence.frame_start and frame < limit:
+                if frame >= sequence.start and frame < limit:
                     start = time.time()
 
                     for child, id in zip(obj.children, range(len(obj.children))):
@@ -520,9 +517,9 @@ def update_telemac_streaming_sequence_mesh(obj: Object, child: Object, tmp_data:
 
     # Get time information
     if interpolate.type == 'LINEAR':
-        time_info = InterpInfoStreamingSequence(frame, sequence.frame_start, interpolate.time_steps)
+        time_info = InterpInfoStreamingSequence(frame, sequence.start, interpolate.time_steps)
     else:
-        time_point = frame - sequence.frame_start
+        time_point = frame - sequence.start
 
     # Update mesh
     if interpolate.type == 'LINEAR':

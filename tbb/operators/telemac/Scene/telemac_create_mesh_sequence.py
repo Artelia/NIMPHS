@@ -64,6 +64,10 @@ class TBB_OT_TelemacCreateMeshSequence(TBB_CreateMeshSequence):
         context.scene.tbb.tmp_data["ops"] = TBB_TelemacTemporaryData(self.obj.tbb.settings.file_path, False)
         self.max_length = context.scene.tbb.tmp_data["ops"].nb_time_points
 
+        # Used in tests
+        if self.mode == 'NORMAL':
+            return {'FINISHED'}
+
         return context.window_manager.invoke_props_dialog(self)
 
     def draw(self, context: Context) -> None:

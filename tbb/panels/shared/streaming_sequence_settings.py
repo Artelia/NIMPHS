@@ -66,8 +66,8 @@ class TBB_StreamingSequenceSettingsPanel(Panel):
         row.label(text="Sequence")
 
         row = box.row()
-        row.prop(sequence, "frame_start", text="Start")
+        row.prop(sequence, "start", text="Start")
         row = box.row()
-        row.prop(sequence, "anim_length", text="Length")
+        row.prop(sequence, "length", text="Length")
         row = box.row()
         row.prop(sequence, "shade_smooth", text="Shade smooth")

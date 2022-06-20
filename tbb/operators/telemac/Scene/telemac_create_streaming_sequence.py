@@ -99,4 +99,4 @@ class TBB_OT_TelemacCreateStreamingSequence(TBB_CreateStreamingSequence):
 
         obj = generate_telemac_sequence_obj(context, selected, self.name, self.start)
         obj.tbb.settings.telemac.s_sequence.shade_smooth = self.shade_smooth
-        return super().execute(context, obj)
+        return super().execute(context, obj, selected)

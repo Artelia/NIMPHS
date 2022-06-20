@@ -179,9 +179,9 @@ def setup_streaming_sequence_object(obj: Object, op: TBB_CreateStreamingSequence
     obj.tbb.module = op.module
 
     # Setup sequence settings
-    sequence.frame_start = op.start                 # Order matters!
+    sequence.start = op.start                 # Order matters!
     sequence.max_length = op.max_length             # Check TBB_StreamingSequenceProperty class definition.
-    sequence.anim_length = op.length                #
+    sequence.length = op.length                #
     sequence.update = True
 
 

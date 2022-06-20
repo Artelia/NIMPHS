@@ -123,7 +123,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
         try:
             run_one_step_create_mesh_sequence_openfoam(context, self)
         except Exception:
-            log.critical(f"Error generating mesh sequence at time point '{self.time_point}'", exc_info=1)
+            log.critical(f"Error at time point {self.time_point}, frame {self.frame}", exc_info=1)
             self.report({'ERROR'}, "An error occurred creating the sequence")
             super().stop(context)
             return {'CANCELLED'}

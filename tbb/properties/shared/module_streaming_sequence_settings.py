@@ -2,7 +2,7 @@
 from bpy.types import PropertyGroup
 from bpy.props import BoolProperty, IntProperty
 
-from tbb.properties.utils import set_sequence_anim_length, get_sequence_anim_length
+from tbb.properties.utils import set_sequence_length, get_sequence_length
 
 
 class TBB_ModuleStreamingSequenceSettings(PropertyGroup):
@@ -23,19 +23,19 @@ class TBB_ModuleStreamingSequenceSettings(PropertyGroup):
     )
 
     #: bpy.props.IntProperty: Starting frame of the sequence.
-    frame_start: IntProperty(
+    start: IntProperty(
         name="Frame start",
         description="Starting frame of the sequence",
         default=-1,
     )
 
     #: bpy.props.IntProperty: Length of the animation.
-    anim_length: IntProperty(
+    length: IntProperty(
         name="Animation length",
         description="Length of the animation",
         default=0,
-        set=set_sequence_anim_length,
-        get=get_sequence_anim_length,
+        set=set_sequence_length,
+        get=get_sequence_length,
     )
 
     #: bpy.props.IntProperty: Maximum length of the sequence (available time steps).

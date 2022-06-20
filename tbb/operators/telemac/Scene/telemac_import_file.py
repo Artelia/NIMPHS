@@ -6,6 +6,7 @@ from bpy_extras.io_utils import ImportHelper
 
 import time
 import logging
+from pathlib import Path
 
 from tbb.properties.telemac.temporary_data import TBB_TelemacTemporaryData
 from tbb.properties.telemac.import_settings import TBB_TelemacImportSettings
@@ -67,6 +68,10 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         """
 
         start = time.time()
+
+        if not Path(self.filepath).exists() or Path(self.filepath).is_dir():
+            self.report({'WARNING'}, "The chosen file can't be read")
+            return {'CANCELLED'}
 
         # Generate parent object
         obj = bpy.data.objects.new(self.name, object_data=None)

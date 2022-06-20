@@ -437,7 +437,7 @@ class InterpInfoMeshSequence(InterpInfo):
         return output
 
 
-def set_sequence_anim_length(self, value: int) -> None:
+def set_sequence_length(self, value: int) -> None:
     """
     Set length of the animation.
 
@@ -450,14 +450,14 @@ def set_sequence_anim_length(self, value: int) -> None:
     """
 
     if value > self.max_length:
-        self["anim_length"] = self.max_length
+        self["length"] = self.max_length
     elif value < 0:
-        self["anim_length"] = 0
+        self["length"] = 0
     else:
-        self["anim_length"] = value
+        self["length"] = value
 
 
-def get_sequence_anim_length(self) -> int:
+def get_sequence_length(self) -> int:
     """
     Return the animation length value.
 
@@ -465,7 +465,7 @@ def get_sequence_anim_length(self) -> int:
         int: value
     """
 
-    return self.get("anim_length", 0)
+    return self.get("length", 0)
 
 
 def update_progress_bar(_self, context: Context):
