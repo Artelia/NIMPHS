@@ -1,9 +1,10 @@
 # <pep8 compliant>
+import bpy
 from bpy.utils import previews
-from bpy.types import Scene, Object
 from bpy.props import PointerProperty
 from bpy.app import version as bl_version
 from bpy.app.handlers import frame_change_pre, frame_change_post
+from bpy.types import Scene, Object, TOPBAR_MT_file_import, VIEW3D_MT_editor_menus
 
 # Remove error on building the docs, since fake-bpy-module defines version as 'None'
 if bl_version is None:
@@ -16,7 +17,7 @@ bl_info = {
     "name": "Toolsbox OpenFOAM/TELEMAC",
     "description": "Load, visualize and manipulate OpenFOAM/TELEMAC files",
     "author": "Thibault Oudart, Félix Olart",
-    "version": (0, 2, 0),
+    "version": (0, 3, 0),
     "blender": (3, 0, 0),
     "location": "View3D > Sidebar",
     "warning": "This version is still in development.",
@@ -63,16 +64,24 @@ if bl_version < (3, 0, 0):
     raise Exception(message)
 
 # Register
+from tbb.menus.menus import tbb_menus_draw
 from tbb.properties.shared.tbb_scene import TBB_Scene
 from tbb.properties.shared.tbb_object import TBB_Object
-from tbb.operators.openfoam.utils import update_openfoam_streaming_sequences
-from tbb.operators.telemac.utils import update_telemac_streaming_sequences, update_telemac_mesh_sequences
 from tbb.properties.utils import register_custom_progress_bar
+from tbb.operators.openfoam.utils import update_openfoam_streaming_sequences
+from tbb.operators.telemac.Scene.telemac_import_file import import_telemac_menu_draw
+from tbb.operators.openfoam.Scene.openfoam_import_file import import_openfoam_menu_draw
+from tbb.operators.telemac.utils import update_telemac_streaming_sequences, update_telemac_mesh_sequences
+
+# Setup logger
+import logging
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 auto_load.init()
 
 
-def register():  # noqa: D103
+def register() -> None:  # noqa: D103
     auto_load.register()
 
     # Register custom properties
@@ -93,12 +102,22 @@ def register():  # noqa: D103
     icons.load("openfoam", os.path.join(icons_dir, "openfoam_32_px.png"), 'IMAGE')
     icons.load("telemac", os.path.join(icons_dir, "telemac_32_px.png"), 'IMAGE')
 
+    # Add custom import operators in 'File > Import'
+    TOPBAR_MT_file_import.append(import_openfoam_menu_draw)
+    TOPBAR_MT_file_import.append(import_telemac_menu_draw)
+    # Add custom menus
+    VIEW3D_MT_editor_menus.append(tbb_menus_draw)
+
+    # Setup logger using user preferences (this will affect all child loggers)
+    prefs = bpy.context.preferences.addons[__package__].preferences.settings
+    logger.setLevel(logging.getLevelName(prefs.log_level))
+
     Scene.tbb_icons = {"main": icons}
 
-    print("Registered Toolsbox OpenFOAM/TELEMAC")
+    logger.debug("Registered Toolsbox OpenFOAM/TELEMAC")
 
 
-def unregister():  # noqa: D103
+def unregister() -> None:  # noqa: D103
     auto_load.unregister()
 
     # Remove icons
@@ -106,4 +125,10 @@ def unregister():  # noqa: D103
         previews.remove(collection)
     Scene.tbb_icons.clear()
 
-    print("Unregistered Toolsbox OpenFOAM/TELEMAC")
+    # Remove custom import operators from 'File > Import'
+    TOPBAR_MT_file_import.remove(import_openfoam_menu_draw)
+    TOPBAR_MT_file_import.remove(import_telemac_menu_draw)
+    # Remove custom menus
+    VIEW3D_MT_editor_menus.remove(tbb_menus_draw)
+
+    logger.debug("Unregistered Toolsbox OpenFOAM/TELEMAC")

@@ -14,13 +14,13 @@ General
 | You will need the following python packages to develop.
   What you can do is to use the python environment which comes with blender and install them there.
 
-| Install using: ``pip install -r requirements.txt``
+| Install using: ``path/to/blender/python -m pip install -r requirements.txt``
 
 .. warning::
 
-    The latest version of `pyvista <https://github.com/pyvista/pyvista>`__ does not contain features that were added since the latest release `(v.0.34.0)`.
+    The latest version of `pyvista <https://github.com/pyvista/pyvista>`__ does not contain features that were added since the latest release `(v0.34.1)`.
     Therefore, you must clone the github repository next to the addon's folder. Make sure to checkout the `main` branch.
-    Then, do: ``pip install -e path/to/pyvista``
+    Then, do: ``path/to/blender/python pip install -e path/to/pyvista``
 
 | Or install everything manually:
 
@@ -72,6 +72,7 @@ General
     ],
 
 | Using VSCode also let you to choose a custom python interpreter, which can be handy.
+| Thus you can tell VSCode to use the python version which comes with blender for linting, etc.
 
 .. _tests_dev_env:
 
@@ -88,21 +89,21 @@ Setup
 
 .. warning::
 
-    The latest version of `pyvista <https://github.com/pyvista/pyvista>`__ does not contain features that were added since the latest release `(v.0.34.0)`.
+    The latest version of `pyvista <https://github.com/pyvista/pyvista>`__ does not contain features that were added since the latest release `(v0.34.1)`.
     Therefore, you must clone the github repository next to the addon's folder. Make sure to checkout the `main` branch.
     The tests scripts will use this version instead of the versions available through PyPi.
 
 Usage
 -----
 
-| Every scripts that concern unit testing are under the ``scripts`` folder.
+| Every script that concern unit testing are under the ``scripts`` folder.
   The ``run_tests.py`` script can run all the tests for a given version of Blender.
 
 * Arguments for ``run_tests.py``
 
-    * -a (str, optional, defaults to ``"[current_directory]/tbb"`` then you have to run this script for the root folder (`toolsbox_blender`))
+    * -a (str, optional, defaults to ``"[current_directory]/tbb"`` so you have to run this script from the root folder (`toolsbox_blender`))
   
-        | Addon path to test, can be a path to a directory or a .zip file.
+        | Addon path to test, can be a path to a directory or a `.zip` file.
 
     * -n (str, optional, default to ``"tbb"``)
 

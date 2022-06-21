@@ -9,7 +9,11 @@ Operators
 Scene
 #####
 
-.. autoclass:: tbb.operators.telemac.Scene.telemac_create_sequence.TBB_OT_TelemacCreateSequence
+.. autoclass:: tbb.operators.telemac.Scene.telemac_create_mesh_sequence.TBB_OT_TelemacCreateMeshSequence
+   :members:
+   :show-inheritance:
+
+.. autoclass:: tbb.operators.telemac.Scene.telemac_create_streaming_sequence.TBB_OT_TelemacCreateStreamingSequence
    :members:
    :show-inheritance:
 

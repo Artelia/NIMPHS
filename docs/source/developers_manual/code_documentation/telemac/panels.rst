@@ -13,10 +13,6 @@ Scene
    :members:
    :show-inheritance:
 
-.. autoclass:: tbb.panels.telemac.Scene.telemac_create_sequence.TBB_PT_TelemacCreateSequence
-   :members:
-   :show-inheritance:
-
 .. _telemac_panels_object:
 
 Object
@@ -26,6 +22,6 @@ Object
    :members:
    :show-inheritance:
 
-.. autoclass:: tbb.panels.telemac.Object.telemac_streaming_sequence_interpolate.TBB_PT_TelemacStreamingSequenceInterpolate
+.. autoclass:: tbb.panels.telemac.Object.telemac_mesh_sequence.TBB_PT_TelemacMeshSequence
    :members:
    :show-inheritance:

@@ -1,19 +1,19 @@
 # <pep8 compliant>
 from bpy.types import PropertyGroup
-from bpy.props import PointerProperty, BoolProperty, FloatProperty, StringProperty
+from bpy.props import BoolProperty, FloatProperty, StringProperty
 
 from tbb.properties.utils import update_progress_bar
-from tbb.properties.shared.tbb_scene_settings import TBB_SceneSettings
 
 
 class TBB_Scene(PropertyGroup):
-    """Main property of the Toolsbox blender add-on. This data structure holds all Scene data for the add-on."""
+    """Main property of the add-on. This data structure holds all Scene data for the add-on."""
 
     register_cls = True
     is_custom_base_cls = False
 
-    #: TBB_Settings: Holds scene settings for both OpenFOAM and TELEMAC modules
-    settings: PointerProperty(type=TBB_SceneSettings)
+    #: dict: Dictionary of file data used for all modules and all objects.
+    #        Shape is ```{"uid": file_data, "uid": file_data, ...}```
+    file_data: dict = {"ops": None}
 
     #: bpy.props.BoolProperty: State of the 'create sequence' operation (used by all 'create sequence' operators)
     create_sequence_is_running: BoolProperty(

@@ -1,5 +1,6 @@
 # <pep8 compliant>
 # Code taken here: https://github.com/JacquesLucke/animation_nodes/blob/master/animation_nodes/auto_load.py
+# Slightly edited
 import bpy
 import typing
 import inspect

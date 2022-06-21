@@ -1,26 +1,28 @@
 # <pep8 compliant>
 from bpy.types import Operator, Context
 
+import logging
+log = logging.getLogger(__name__)
+
 import time
 
-from tbb.operators.utils import update_scene_settings_dynamic_props
+from tbb.panels.utils import get_selected_object
+from tbb.properties.telemac.file_data import TBB_TelemacFileData
 
 
 class TBB_OT_TelemacReloadFile(Operator):
-    """Reload the selected file."""
+    """Operator to reload file data of the selected TELEMAC object."""
 
     register_cls = True
     is_custom_base_cls = False
 
     bl_idname = "tbb.reload_telemac_file"
     bl_label = "Reload"
-    bl_description = "Reload the selected file"
+    bl_description = "Reload file data of the selected TELEMAC object"
 
     def execute(self, context: Context) -> set:
         """
-        Reload the selected file.
-
-        It updates temporary data and 'dynamic' scene settings.
+        Reload file data of the selected TELEMAC object.
 
         Args:
             context (Context): context
@@ -29,26 +31,18 @@ class TBB_OT_TelemacReloadFile(Operator):
             set: state of the operator
         """
 
-        settings = context.scene.tbb.settings.telemac
-        tmp_data = settings.tmp_data
-
-        if settings.file_path == "":
-            self.report({'ERROR'}, "Please select a file first")
-            return {'FINISHED'}
-
         start = time.time()
-        # Read the file and update temporary data
-        try:
-            tmp_data.update(settings.file_path)
-        except Exception as error:
-            print("ERROR::TBB_OT_TelemacImportFile: " + str(error))
-            self.report({'ERROR'}, "An error occurred during import")
-            return {'FINISHED'}
 
-        # Update properties values
-        update_scene_settings_dynamic_props(settings, tmp_data)
+        obj = get_selected_object(context)
 
-        print("Reload::TELEMAC: " + "{:.4f}".format(time.time() - start) + "s")
+        # Make sure the object still have an identifier
+        if obj.tbb.uid == "":
+            obj.tbb.uid = str(time.time())
+
+        # Update file data
+        context.scene.tbb.file_data[obj.tbb.uid] = TBB_TelemacFileData(obj.tbb.settings.file_path, False)
+
+        log.info("{:.4f}".format(time.time() - start) + "s")
         self.report({'INFO'}, "Reload successful")
 
         return {'FINISHED'}

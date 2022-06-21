@@ -2,7 +2,6 @@ Properties
 ==========
 
 * :ref:`telemac_properties_other`
-* :ref:`telemac_properties_scene`
 * :ref:`telemac_properties_object`
 * :ref:`telemac_properties_utils`
 
@@ -11,10 +10,10 @@ Properties
 Other
 #####
 
-Temporary data
---------------
+File data
+---------
 
-.. autoclass:: tbb.properties.telemac.temporary_data.TBB_TelemacTemporaryData
+.. autoclass:: tbb.properties.telemac.file_data.TBB_TelemacFileData
    :members:
    :show-inheritance:
 
@@ -25,12 +24,10 @@ Interpolation
    :members:
    :show-inheritance:
 
-.. _telemac_properties_scene:
+Import settings
+---------------
 
-Scene
-#####
-
-.. autoclass:: tbb.properties.telemac.Scene.telemac_settings.TBB_TelemacSettings
+.. autoclass:: tbb.properties.telemac.import_settings.TBB_TelemacImportSettings
    :members:
    :show-inheritance:
 
@@ -45,6 +42,10 @@ Object
    :show-inheritance:
 
 .. autoclass:: tbb.properties.telemac.Object.telemac_mesh_sequence.TBB_TelemacMeshSequenceProperty
+   :members:
+   :show-inheritance:
+
+.. autoclass:: tbb.properties.telemac.Object.telemac_object_settings.TBB_TelemacObjectSettings
    :members:
    :show-inheritance:
    

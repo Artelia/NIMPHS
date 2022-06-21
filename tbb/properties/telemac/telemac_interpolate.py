@@ -4,12 +4,12 @@ from bpy.props import EnumProperty, IntProperty
 
 
 class TBB_TelemacInterpolateProperty(PropertyGroup):
-    """TELEMAC interpolation properties."""
+    """Interpolation settings for the TELEMAC module."""
 
     register_cls = True
     is_custom_base_cls = False
 
-    #: bpy.types.EnumProperty: Type of the interpolation, enum in ['NONE', 'LINEAR']
+    #: bpy.props.EnumProperty: Type of the interpolation. Enum in ['NONE', 'LINEAR']
     type: EnumProperty(
         name="Type",  # noqa: F821
         description="Type of the interpolation",
@@ -19,12 +19,12 @@ class TBB_TelemacInterpolateProperty(PropertyGroup):
         ]
     )
 
-    #: bpy.types.IntProperty: Number of time steps to add between two time points
+    #: bpy.props.IntProperty: Number of time steps to add between two time points
     time_steps: IntProperty(
         name="Time steps",
         description="Number of time steps to add between two time points",
         default=1,
         min=1,
         soft_min=1,
-        soft_max=50,
+        soft_max=5,
     )

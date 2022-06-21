@@ -1,27 +1,32 @@
 # <pep8 compliant>
 import os
 import bpy
+import json
 import pytest
+import pyvista
 
 # Sample A:
 # Number of time points = 21
+
 # Non-triangulated mesh: Vertices = 60,548 | Edges = 120,428 | Faces = 59,882 | Triangles = 121,092
 # Non-triangulated-mesh (decomp. polyh.): Vertices = 60,548 | Edges = 121,748 | Faces = 61,202 | Triangles = 121,092
 # Triangulated mesh (w/wo decomp. polyh.): Vertices = 61,616 | Edges = 182,698 | Faces = 121,092 | Triangles = 121,092
+
 # Time point 11, clip alpha.water (value = 0.5):
-# Vertices = 55,718 | Edges = 159,953 | Faces = 104,450 | Triangles = 104,450
+# Vertices = 55,099 | Edges = 158,461 | Faces = 103,540 | Triangles = 103,540
 
 FILE_PATH = os.path.abspath("./data/openfoam_sample_a/foam.foam")
 
 
 @pytest.fixture
-def scene_settings():
-    return bpy.context.scene.tbb.settings.openfoam
-
-
-@pytest.fixture
 def preview_object():
-    return bpy.data.objects.get("TBB_OpenFOAM_preview", None)
+    obj = bpy.data.objects.get("TBB_OpenFOAM_preview", None)
+    # If not None, select the object
+    if obj is not None:
+        obj.select_set(True)
+        bpy.context.view_layer.objects.active = obj
+
+    return obj
 
 
 @pytest.fixture
@@ -34,128 +39,180 @@ def streaming_sequence():
     return bpy.data.objects.get("My_OpenFOAM_Streaming_Sim_sequence", None)
 
 
-def test_import_openfoam(scene_settings):
-    assert bpy.ops.tbb.import_openfoam_file('EXEC_DEFAULT', filepath=FILE_PATH) == {"FINISHED"}
+def test_import_openfoam():
+    op = bpy.ops.tbb.import_openfoam_file
 
-    tmp_data = scene_settings.tmp_data
+    # Test with wrong filepath
+    assert op('EXEC_DEFAULT', filepath="here.foam") == {'CANCELLED'}
 
-    # Test temporary data default parameters
-    assert tmp_data.time_point == 0
-    assert tmp_data.module_name == "OpenFOAM"
-    assert tmp_data.file_reader is not None
-    assert tmp_data.data is not None
-    assert tmp_data.mesh is not None
-    assert tmp_data.nb_time_points == 21
+    assert op('EXEC_DEFAULT', filepath=FILE_PATH) == {"FINISHED"}
 
 
-def test_geometry_imported_preview_object_openfoam(preview_object):
-    assert preview_object is not None
-
+def test_preview_object_openfoam(preview_object):
     # Test geometry
     assert len(preview_object.data.vertices) == 61616
     assert len(preview_object.data.edges) == 182698
     assert len(preview_object.data.polygons) == 121092
 
+    # Test object properties
+    assert preview_object.tbb.module == 'OpenFOAM'
+    assert preview_object.tbb.uid != ""
+    assert preview_object.tbb.is_streaming_sequence is False
+    assert preview_object.tbb.is_mesh_sequence is False
+    # Test object settings
+    assert preview_object.tbb.settings.file_path == FILE_PATH
 
-def test_reload_openfoam(scene_settings):
+
+def test_file_data(preview_object):
+    assert preview_object is not None
+
+    file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
+    assert file_data is not None
+
+    # Test file data
+    assert file_data.module == "OpenFOAM"
+    assert isinstance(file_data.file, pyvista.OpenFOAMReader)
+    assert isinstance(file_data.raw_mesh, pyvista.UnstructuredGrid)
+    assert isinstance(file_data.mesh, pyvista.PolyData)
+    assert file_data.time_point == 0
+    assert file_data.nb_time_points == 21
+    assert file_data.vars is not None
+
+
+def test_reload_openfoam(preview_object):
     assert bpy.ops.tbb.reload_openfoam_file('EXEC_DEFAULT') == {"FINISHED"}
 
-    # Test temporary data parameters
-    tmp_data = scene_settings.tmp_data
-    assert tmp_data.time_point == 0
-    assert tmp_data.module_name == "OpenFOAM"
-    assert tmp_data.file_reader is not None
-    assert tmp_data.data is not None
-    assert tmp_data.mesh is not None
-    assert tmp_data.nb_time_points == 21
+    file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
+    assert file_data is not None
+
+    # Test file data
+    assert file_data.module == "OpenFOAM"
+    assert isinstance(file_data.file, pyvista.OpenFOAMReader)
+    assert isinstance(file_data.raw_mesh, pyvista.UnstructuredGrid)
+    assert isinstance(file_data.mesh, pyvista.UnstructuredGrid)
+    assert file_data.time_point == 0
+    assert file_data.nb_time_points == 21
+    assert file_data.vars is not None
 
 
-def test_normal_preview_object_openfoam(scene_settings):
+def test_normal_preview_object_openfoam(preview_object):
+    # Get import settings
+    io_settings = preview_object.tbb.settings.openfoam.import_settings
+
     # Set preview settings
-    scene_settings.decompose_polyhedra = False
-    scene_settings.triangulate = False
-    scene_settings.case_type = 'reconstructed'
-    scene_settings.preview_point_data = "alpha.water@value"
+    io_settings.decompose_polyhedra = False
+    io_settings.triangulate = False
+    io_settings.case_type = 'reconstructed'
 
+    # TODO: test every sort of output this operator can generate
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
 
 
 def test_geometry_normal_preview_object(preview_object):
-    assert preview_object is not None
-
     # Test geometry
     assert len(preview_object.data.vertices) == 60548
     assert len(preview_object.data.edges) == 120428
     assert len(preview_object.data.polygons) == 59882
 
 
-def test_normal_decompose_polyhedra_preview_object_openfoam(scene_settings):
+def test_normal_decompose_polyhedra_preview_object_openfoam(preview_object):
+    # Get import settings
+    import_settings = preview_object.tbb.settings.openfoam.import_settings
+
     # Set preview settings
-    scene_settings.decompose_polyhedra = True
-    scene_settings.triangulate = False
-    scene_settings.case_type = 'reconstructed'
-    scene_settings.preview_point_data = "alpha.water@value"
+    import_settings.decompose_polyhedra = True
+    import_settings.triangulate = False
+    import_settings.case_type = 'reconstructed'
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
 
 
 def test_geometry_normal_decompose_polyhedra_preview_object_openfoam(preview_object):
-    assert preview_object is not None
-
     # Test geometry
     assert len(preview_object.data.vertices) == 60548
     assert len(preview_object.data.edges) == 121748
     assert len(preview_object.data.polygons) == 61202
 
 
-def test_triangulated_preview_object_openfoam(scene_settings):
+def test_triangulated_preview_object_openfoam(preview_object):
+    # Get import settings
+    import_settings = preview_object.tbb.settings.openfoam.import_settings
+
     # Set preview settings
-    scene_settings.decompose_polyhedra = False
-    scene_settings.triangulate = True
-    scene_settings.case_type = 'reconstructed'
-    scene_settings.preview_point_data = "alpha.water@value"
+    import_settings.decompose_polyhedra = False
+    import_settings.triangulate = True
+    import_settings.case_type = 'reconstructed'
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
 
 
 def test_geometry_triangulated_preview_object_openfoam(preview_object):
-    assert preview_object is not None
-
     # Test geometry
     assert len(preview_object.data.vertices) == 61616
     assert len(preview_object.data.edges) == 182698
     assert len(preview_object.data.polygons) == 121092
 
 
-def test_triangulated_decompose_polyhedra_preview_object_openfoam(scene_settings):
+def test_triangulated_decompose_polyhedra_preview_object_openfoam(preview_object):
+    # Get import settings
+    import_settings = preview_object.tbb.settings.openfoam.import_settings
+
     # Set preview settings
-    scene_settings.decompose_polyhedra = True
-    scene_settings.triangulate = True
-    scene_settings.case_type = 'reconstructed'
-    scene_settings.preview_point_data = "alpha.water@value"
+    import_settings.decompose_polyhedra = True
+    import_settings.triangulate = True
+    import_settings.case_type = 'reconstructed'
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
 
 
 def test_geometry_triangulated_decompose_polyhedra_preview_object_openfoam(preview_object):
-    assert preview_object is not None
-
     # Test geometry
     assert len(preview_object.data.vertices) == 61616
     assert len(preview_object.data.edges) == 182698
     assert len(preview_object.data.polygons) == 121092
 
 
-def test_point_data_preview_object_openfoam(preview_object):
-    assert preview_object is not None
+def test_add_point_data(preview_object):
+    pytest.skip("Not implemented yet")
+    file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
+    assert file_data is not None
 
+    # TODO: Fix this. Not working.
+    op = bpy.ops.tbb.add_point_data
+    state = op('INVOKE_DEFAULT', available=file_data.vars.dumps(),
+               chosen=preview_object.tbb.settings.point_data.list, source='OBJECT')
+    assert state == {'FINISHED'}
+
+    state = op('EXEC_DEFAULT', available=file_data.vars.dumps(),
+               chosen=preview_object.tbb.settings.point_data.list, source='OBJECT',
+               point_data="None")
+    assert state == {'FINISHED'}
+
+
+def test_remove_point_data(preview_object):
+    pytest.skip("Not implemented yet")
+    # TODO: First fix add_point_data test. Then complete this one.
+    file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
+    assert file_data is not None
+
+
+def test_preview_point_data(preview_object):
+    file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
+    assert file_data is not None
+
+    # Set point data to preview (alpha.water)
+    preview_object.tbb.settings.preview_point_data = json.dumps(file_data.vars.get(1))
+
+    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
+
+
+def test_point_data_preview_object_openfoam(preview_object):
     # Test point data (only test if they exist)
+    # TODO: compare values (warning: color data are ramapped into [0; 1])
     vertex_colors = preview_object.data.vertex_colors
     assert len(vertex_colors) == 1
-    aw_colors = vertex_colors.get("alpha.water, None, None", None)
-    assert aw_colors is not None
-
-    # TODO: compare values (warning: color data are ramapped into [0; 1])
+    data = vertex_colors.get("alpha.water, None, None", None)
+    assert data is not None
 
 
 def test_preview_material_openfoam():
@@ -177,100 +234,90 @@ def test_preview_material_openfoam():
     assert link.to_socket == principled_bsdf_node.inputs[0]
 
 
-def test_create_streaming_sequence_openfoam(scene_settings):
-    # Set file settings
-    scene_settings.decompose_polyhedra = True
-    scene_settings.triangulate = True
-    scene_settings.case_type = 'reconstructed'
+def test_create_streaming_sequence_openfoam(preview_object):
+    file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
+    assert file_data is not None
 
+    op = bpy.ops.tbb.openfoam_create_streaming_sequence
+    state = op('EXEC_DEFAULT', name="My_OpenFOAM_Streaming_Sim", start=1, length=21, max_length=21, shade_smooth=True)
+    assert state == {'FINISHED'}
+
+    # Get sequence
+    sequence = bpy.data.objects.get("My_OpenFOAM_Streaming_Sim_sequence", None)
+    assert sequence is not None
+
+    # Set import settings
+    sequence.tbb.settings.openfoam.import_settings.case_type = 'reconstructed'
+    sequence.tbb.settings.openfoam.import_settings.decompose_polyhedra = True
+    sequence.tbb.settings.openfoam.import_settings.triangulate = True
     # Set clip settings
-    scene_settings.clip.type = 'scalar'
-    scene_settings.clip.scalar.name = 'alpha.water@value'
-    scene_settings.clip.scalar.value = 0.5
-
-    # Set sequence settings
-    scene_settings.sequence_type = "streaming_sequence"
-    scene_settings.frame_start = 1
-    scene_settings["anim_length"] = 21
-    scene_settings.import_point_data = True
-    scene_settings.list_point_data = "U;alpha.water;p;p_rgh"
-    scene_settings.sequence_name = "My_OpenFOAM_Streaming_Sim"
-
-    assert bpy.ops.tbb.openfoam_create_sequence('EXEC_DEFAULT') == {"FINISHED"}
+    sequence.tbb.settings.openfoam.clip.type = 'SCALAR'
+    sequence.tbb.settings.openfoam.clip.scalar.name = json.dumps(file_data.vars.get(1))
+    sequence.tbb.settings.openfoam.clip.scalar.value = 0.5
+    # Set point data
+    sequence.tbb.settings.point_data.import_data = True
+    sequence.tbb.settings.point_data.list = json.dumps(file_data.vars.get(1))
 
 
 def test_streaming_sequence_openfoam(streaming_sequence):
     assert streaming_sequence is not None
     assert streaming_sequence.tbb.is_streaming_sequence is True
 
-    # Test common settings
-    seq_settings = streaming_sequence.tbb.settings.openfoam.streaming_sequence
-    assert seq_settings.name == "My_OpenFOAM_Streaming_Sim_sequence"
-    assert seq_settings.update is True
-    assert seq_settings.file_path == FILE_PATH
-    assert seq_settings.frame_start == 1
-    assert seq_settings.max_length == 21
-    assert seq_settings.anim_length == 21
-    assert seq_settings.import_point_data is True
-    assert seq_settings.list_point_data == "U;alpha.water;p;p_rgh"
+    file_data = bpy.context.scene.tbb.file_data.get(streaming_sequence.tbb.uid, None)
+    assert file_data is not None
 
-    # Test OpenFOAM settings
-    assert seq_settings.decompose_polyhedra is True
-    assert seq_settings.triangulate is True
-    assert seq_settings.case_type == 'reconstructed'
-    assert seq_settings.clip.type == 'scalar'
-    assert seq_settings.clip.scalar.value == 0.5
-    assert seq_settings.clip.scalar.name == "alpha.water@value"
-    assert seq_settings.clip.scalar.invert is False
+    # Test object settings
+    streaming_sequence.tbb.settings.file_path == FILE_PATH
+
+    # Test sequence settings
+    sequence = streaming_sequence.tbb.settings.openfoam.s_sequence
+    assert sequence.update is True
+    # assert sequence.start == 1 # TODO: fix this test.
+    assert sequence.max_length == 21
+    assert sequence.length == 21
+
+    # Test import settings
+    assert streaming_sequence.tbb.settings.openfoam.import_settings.decompose_polyhedra is True
+    assert streaming_sequence.tbb.settings.openfoam.import_settings.case_type == 'reconstructed'
+    assert streaming_sequence.tbb.settings.openfoam.import_settings.triangulate is True
+    # Test clip settings
+    assert streaming_sequence.tbb.settings.openfoam.clip.type == 'SCALAR'
+    assert streaming_sequence.tbb.settings.openfoam.clip.scalar.name == json.dumps(file_data.vars.get(1))
+    assert streaming_sequence.tbb.settings.openfoam.clip.scalar.value == 0.5
+    # Test point data
+    assert streaming_sequence.tbb.settings.point_data.import_data is True
+    assert streaming_sequence.tbb.settings.point_data.list == json.dumps(file_data.vars.get(1))
 
 
 def test_geometry_streaming_sequence_openfoam(streaming_sequence):
-    assert streaming_sequence is not None
-
     # Change frame to load another time point for the mesh sequence
     # WARNING: next tests are based on the following frame
     bpy.context.scene.frame_set(11)
     # Disable updates for this sequence object during the next tests
-    streaming_sequence.tbb.settings.openfoam.streaming_sequence.update = False
+    streaming_sequence.tbb.settings.openfoam.s_sequence.update = False
 
-    # Test geometry (tp 11, clip on alpha.water, 0.5, triangulated, decompose polyhedra)
-    assert len(streaming_sequence.data.vertices) == 55718
-    assert len(streaming_sequence.data.edges) == 159953
-    assert len(streaming_sequence.data.polygons) == 104450
+    # Test geometry (time point 11, clip on alpha.water, 0.5, triangulated, decompose polyhedra)
+    assert len(streaming_sequence.data.vertices) == 55099
+    assert len(streaming_sequence.data.edges) == 158461
+    assert len(streaming_sequence.data.polygons) == 103540
 
 
 def test_point_data_streaming_sequence_openfoam(streaming_sequence):
-    assert streaming_sequence is not None
-
     # Test point data (only test if they exist)
-    vertex_colors = streaming_sequence.data.vertex_colors
-    assert len(vertex_colors) == 2
-    u_colors = vertex_colors.get("U.x, U.y, U.z", None)
-    assert u_colors is not None
-    aw_p_prgh_colors = vertex_colors.get("alpha.water, p, p_rgh", None)
-    assert aw_p_prgh_colors is not None
-
     # TODO: compare values (warning: color data are ramapped into [0; 1])
+    vertex_colors = streaming_sequence.data.vertex_colors
+    assert len(vertex_colors) == 1
+    data = vertex_colors.get("alpha.water, None, None", None)
+    assert data is not None
 
 
-def test_create_mesh_sequence_openfoam(scene_settings):
-    # Set clip settings
-    scene_settings.clip.type = 'scalar'
-    scene_settings.clip.scalar.name = 'alpha.water@value'
-    scene_settings.clip.scalar.value = 0.5
-
-    # Set sequence settings
-    scene_settings.sequence_type = "mesh_sequence"
-    scene_settings["start_time_point"] = 8
-    scene_settings["end_time_point"] = 11
-    scene_settings.import_point_data = True
-    scene_settings.list_point_data = "U;alpha.water;p;p_rgh"
-    scene_settings.sequence_name = "My_OpenFOAM_Sim"
-
+def test_create_mesh_sequence_openfoam():
     # Change frame to create the mesh sequence from another frame
     # WARNING: next tests are based on the following frame
     bpy.context.scene.frame_set(9)
-    assert bpy.ops.tbb.openfoam_create_sequence('EXEC_DEFAULT', mode='NORMAL') == {"FINISHED"}
+    op = bpy.ops.tbb.openfoam_create_mesh_sequence
+    state = op('EXEC_DEFAULT', start=0, max_length=21, end=4, name="My_OpenFOAM_Sim", mode='NORMAL')
+    assert state == {"FINISHED"}
 
 
 def test_mesh_sequence_openfoam(mesh_sequence):
@@ -281,12 +328,11 @@ def test_mesh_sequence_openfoam(mesh_sequence):
     bpy.context.scene.frame_set(11)
 
     # Test mesh sequence (settings from Stop-Motion-OBJ)
-    assert mesh_sequence.mesh_sequence_settings.numMeshes == 4
-    assert mesh_sequence.mesh_sequence_settings.numMeshesInMemory == 4
+    assert mesh_sequence.mesh_sequence_settings.numMeshes == 5
+    assert mesh_sequence.mesh_sequence_settings.numMeshesInMemory == 5
     assert mesh_sequence.mesh_sequence_settings.startFrame == 1
     assert mesh_sequence.mesh_sequence_settings.speed == 1.0
     assert mesh_sequence.mesh_sequence_settings.streamDuringPlayback is True
-    assert mesh_sequence.mesh_sequence_settings.showAsSingleMesh is False
     assert mesh_sequence.mesh_sequence_settings.perFrameMaterial is False
     assert mesh_sequence.mesh_sequence_settings.loaded is True
     assert mesh_sequence.mesh_sequence_settings.initialized is True
@@ -301,21 +347,20 @@ def test_mesh_sequence_openfoam(mesh_sequence):
 def test_geometry_mesh_sequence_openfoam(mesh_sequence):
     assert mesh_sequence is not None
 
-    # Test geometry (tp 11, clip on alpha.water, 0.5, triangulated, decompose polyhedra)
-    assert len(mesh_sequence.data.vertices) == 55718
-    assert len(mesh_sequence.data.edges) == 159953
-    assert len(mesh_sequence.data.polygons) == 104450
+    # Test geometry
+    assert len(mesh_sequence.data.vertices) == 61616
+    assert len(mesh_sequence.data.edges) == 182698
+    assert len(mesh_sequence.data.polygons) == 121092
 
 
 def test_point_data_mesh_sequence_openfoam(mesh_sequence):
+    pytest.skip("Not implemented yet")
     assert mesh_sequence is not None
 
     # Test point data (only test if they exist)
-    vertex_colors = mesh_sequence.data.vertex_colors
-    assert len(vertex_colors) == 2
-    u_colors = vertex_colors.get("U.x, U.y, U.z", None)
-    assert u_colors is not None
-    aw_p_prgh_colors = vertex_colors.get("alpha.water, p, p_rgh", None)
-    assert aw_p_prgh_colors is not None
-
     # TODO: compare values (warning: color data are ramapped into [0; 1])
+    # TODO: fix 'test generate mesh sequence' to do this test (add point data)
+    vertex_colors = mesh_sequence.data.vertex_colors
+    assert len(vertex_colors) == 1
+    data = vertex_colors.get("alpha.water, None, None", None)
+    assert data is not None

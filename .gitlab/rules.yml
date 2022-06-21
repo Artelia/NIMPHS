@@ -29,6 +29,7 @@
       
     - when: never
 
+
 # Rules to run jobs for doc deployement only
 .deploy_only:
   rules:

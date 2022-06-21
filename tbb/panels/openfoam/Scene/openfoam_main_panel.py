@@ -1,11 +1,12 @@
 # <pep8 compliant>
 from bpy.types import Context
+from tbb.panels.openfoam.utils import draw_clip_settings
 
 from tbb.panels.shared.module_panel import TBB_ModulePanel
 
 
 class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
-    """Main panel of the OpenFOAM module. This is the 'parent' panel."""
+    """Main panel of the OpenFOAM module."""
 
     register_cls = True
     is_custom_base_cls = False
@@ -19,34 +20,56 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
 
     def draw(self, context: Context) -> None:
         """
-        Layout of the panel. Calls parent draw function.
+        Layout of the panel.
 
         Args:
             context (Context): context
         """
 
-        settings = context.scene.tbb.settings.openfoam
-        tmp_data = settings.tmp_data
-        enable_rows, obj = super().draw(settings, tmp_data, context)
+        enable_rows, file_data_is_ok, obj = super().draw(context, 'OpenFOAM')
 
-        layout = self.layout
-        if obj is not None:
-            sequence_settings = obj.tbb.settings.openfoam.streaming_sequence
-        else:
-            sequence_settings = None
+        if obj is not None and file_data_is_ok:
+            import_settings = obj.tbb.settings.openfoam.import_settings
 
-        if sequence_settings is None or not obj.tbb.is_streaming_sequence:
+            box = self.layout.box()
+            row = box.row()
+            row.label(text="Import settings")
+            row = box.row()
+            row.enabled = enable_rows
+            row.prop(import_settings, "decompose_polyhedra", text="Decompose polyhedra")
+            row = box.row()
+            row.enabled = enable_rows
+            row.prop(import_settings, "triangulate", text="Triangulate")
+            row = box.row()
+            row.enabled = enable_rows
+            row.prop(import_settings, "case_type", text="Case")
 
-            if tmp_data.is_ok():
-                row = layout.row()
-                row.enabled = enable_rows
-                row.prop(settings, "decompose_polyhedra", text="Decompose polyhedra")
-                row = layout.row()
-                row.enabled = enable_rows
-                row.prop(settings, "triangulate", text="Triangulate")
-                row = layout.row()
-                row.enabled = enable_rows
-                row.prop(settings, "case_type", text="Case")
-                row = layout.row()
-                row.enabled = enable_rows
-                row.operator("tbb.openfoam_preview", text="Preview", icon='HIDE_OFF')
+            # Clip settings
+            file_data = context.scene.tbb.file_data.get(obj.tbb.uid, None)
+            enable_clip = file_data.time_point == obj.tbb.settings.preview_time_point
+
+            draw_clip_settings(self.layout, obj.tbb.settings.openfoam.clip, enable=enable_clip)
+
+            box = self.layout.box()
+            row = box.row()
+            row.label(text="Preview")
+
+            row = box.row()
+            row.enabled = enable_rows
+            row.prop(obj.tbb.settings, "preview_point_data", text="Point")
+
+            row = box.row()
+            row.enabled = enable_rows
+            row.prop(obj.tbb.settings, "preview_time_point", text="Time point")
+
+            row = box.row()
+            row.enabled = enable_rows
+            row.operator("tbb.openfoam_preview", text="Preview", icon='HIDE_OFF')
+
+            if not enable_clip:
+                row = self.layout.box().row()
+                row.label(text="No data. Hit 'preview'.", icon='ERROR')
+
+        elif obj is None or (not obj.tbb.is_streaming_sequence and file_data_is_ok):
+            row = self.layout.row()
+            row.label(text="Select an OpenFOAM object", icon='INFO')

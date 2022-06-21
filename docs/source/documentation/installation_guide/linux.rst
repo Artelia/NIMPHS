@@ -6,13 +6,14 @@ Linux
 
 #. Install `Blender <https://www.blender.org/download/>`_ (at least version 3.0)
 #. Install dependencies:
-    * Blender add-on: `Stop-motion-OBJ <https://github.com/neverhood311/Stop-motion-OBJ/releases>`_ (at least version 2.2.0.alpha.18)
+    * Blender add-on: `Stop-motion-OBJ <https://github.com/neverhood311/Stop-motion-OBJ/releases>`_ (at least version 2.2.0.alpha.21)
     * Python packages:
 
         .. important::
-            You may have setup a custom python environment for Blender. All you have to do is to install the python packages inside you environment.
+            You may have setup a custom python environment for Blender.
+            All you have to do is to install the python packages inside your environment.
 
-        * `PyVista <https://docs.pyvista.org/#>`_ ``pip install pyvista`` (python 3.10 workaround `here <https://github.com/pyvista/pyvista/discussions/2064>`_)
+        * `PyVista <https://docs.pyvista.org/#>`_ ``pip install pyvista >= 0.35.0`` (python 3.10 workaround `here <https://github.com/pyvista/pyvista/discussions/2064>`_)
         * `Numpy <https://numpy.org/doc/stable/#>`_ ``pip install numpy``
 #. Install the add-on:
     * Download a version from the `releases page <https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/releases>`_ (latest recommended)

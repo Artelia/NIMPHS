@@ -1,5 +1,7 @@
+numpy
 sphinx
+matplotlib
 sphinxemoji
 sphinx_rtd_theme
 fake-bpy-module-latest
-#pyvista
+# pyvista >= 0.35.0

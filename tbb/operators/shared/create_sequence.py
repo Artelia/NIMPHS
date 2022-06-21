@@ -1,11 +1,10 @@
 # <pep8 compliant>
-from bpy.types import Operator, Context, RenderSettings
-from bpy.props import StringProperty
+from bpy.types import Operator, Context, Object
+from bpy.props import PointerProperty, IntProperty, StringProperty, EnumProperty
 
-from tbb.operators.utils import setup_streaming_sequence_object
-from tbb.operators.telemac.utils import generate_telemac_streaming_sequence_obj
-from tbb.properties.shared.module_scene_settings import TBB_ModuleSceneSettings
-from tbb.operators.openfoam.utils import generate_openfoam_streaming_sequence_obj
+from tbb.properties.utils import VariablesInformation
+from tbb.panels.utils import draw_point_data, get_selected_object
+from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 
 
 class TBB_CreateSequence(Operator):
@@ -14,136 +13,112 @@ class TBB_CreateSequence(Operator):
     register_cls = False
     is_custom_base_cls = True
 
-    #: bpy.types.Timer: Timer which triggers the 'modal' method of operators
-    timer = None
-    #: str: Name of the sequence object
-    sequence_name = ""
-    #: str: Sequence name typed by the user
-    user_sequence_name = ""
-    #: int: Starting point of the sequence to generate
-    start_time_point = 0
-    #: int: Ending point of the sequence to generate
-    end_time_point = 0
-    #: int: Time point currently processed when creating a sequence
-    current_time_point = 0
-    #: int: Current frame during the 'create sequence' process (different from time point)
-    current_frame = 0
-
-    #: bpy.props.StringProperty: Whether the operator should run modal or not, enum in ['MODAL', 'NORMAL']
-    mode: StringProperty(
-        name="Create sequence mode",
-        description="Whether the operator should run modal or not, enum in ['MODAL', 'NORMAL']",
-        default="MODAL"  # noqa: F821
+    #: bpy.props.EnumProperty: Indicate which module to use. Enum in ['OpenFOAM', 'TELEMAC'].
+    module: EnumProperty(
+        name="Mode",  # noqa: F821
+        description="Indicate whether the operator should run modal or not. Enum in ['OpenFOAM', 'TELEMAC']",
+        items=[
+            ('OpenFOAM', "OpenFOAM", "Use OpenFOAM module"),  # noqa: F821
+            ('TELEMAC', "TELEMAC", "Use TELEMAC module"),  # noqa: F821
+        ],
+        options={'HIDDEN'},  # noqa F821
     )
 
-    def __init__(self) -> None:
-        """Init method of the class."""
+    def update_start(self, _context: Context) -> None:  # noqa D417
+        """
+        Make sure the user can't select a wrong value.
 
-        super().__init__()
-        self.timer = None
-        self.sequence_name = ""
-        self.user_sequence_name = ""
-        self.start_time_point = 0
-        self.end_time_point = 0
-        self.current_time_point = 0
-        self.current_frame = 0
+        Args:
+            _context (Context): context
+        """
+
+        if self.start > self.max_length - 1:
+            self.start = self.max_length - 1
+        elif self.start < 0:
+            self.start = 0
+
+    #: bpy.props.IntProperty: Starting point of the sequence.
+    start: IntProperty(
+        name="Start",  # noqa F821
+        description="Starting point of the sequence",
+        default=0,
+        update=update_start
+    )
+
+    #: bpy.props.IntProperty: Maximum length of the sequence.
+    max_length: IntProperty(
+        name="Max length",  # noqa F821
+        description="Maximum length of the sequence",
+        default=1,
+        options={'HIDDEN'},  # noqa F821
+    )
+
+    #: bpy.props.StringProperty: Name to give to the generated sequence object.
+    name: StringProperty(
+        name="Name",  # noqa F821
+        description="Name to give to the generated sequence object",
+        default="Mesh",  # noqa F821
+    )
+
+    #: TBB_PointDataSettings: Point data settings.
+    point_data: PointerProperty(type=TBB_PointDataSettings)
+
+    #: str: JSON strigified list of point data to import as vertex colors.
+    list: str = VariablesInformation().dumps()
+
+    #: bpy.types.Object: Selected object
+    obj: Object = None
 
     @classmethod
-    def poll(self, settings: TBB_ModuleSceneSettings, context: Context) -> bool:
+    def poll(self, context: Context) -> bool:
         """
-        If false, locks the UI button of the operator.
+        If false, locks the button of the operator.
 
         Args:
-            settings (TBB_ModuleSceneSettings): scene settings
             context (Context): context
 
         Returns:
-            bool: state
+            bool: state of the operator
         """
 
-        tbb_csir = context.scene.tbb.create_sequence_is_running  # csir = create sequence is running
-        if settings.sequence_type == "mesh_sequence":
-            return not tbb_csir and settings["start_time_point"] < settings["end_time_point"]
-        elif settings.sequence_type == "streaming_sequence":
-            return not tbb_csir
-        else:  # Lock ui by default
+        csir = context.scene.tbb.create_sequence_is_running  # csir = create sequence is running
+        obj = get_selected_object(context)
+        if obj is None:
             return False
 
-    def execute(self, settings: TBB_ModuleSceneSettings, context: Context, module: str) -> set:
+        return obj.tbb.module in ['OpenFOAM', 'TELEMAC'] and not csir
+
+    def draw(self, context: Context) -> None:
         """
-        Create a sequence.
+        UI layout of the operator.
 
         Args:
-            settings (TBB_ModuleSceneSettings): scene settings
             context (Context): context
-            module (str): name of the module, enum in ['OpenFOAM', 'TELEMAC']
-
-        Returns:
-            set: state of the operator
         """
 
-        wm = context.window_manager
+        file_data = context.scene.tbb.file_data["ops"]
 
-        if settings.sequence_type == "mesh_sequence":
-            # Create timer event
-            self.timer = wm.event_timer_add(time_step=1e-6, window=context.window)
-            wm.modal_handler_add(self)
+        # Import point data
+        box = self.layout.box()
+        row = box.row()
+        row.label(text="Point data")
+        row = box.row()
+        row.prop(self.point_data, "import_data", text="Import point data")
 
-            # Setup prograss bar
-            context.scene.tbb.progress_label = "Create sequence"
-            context.scene.tbb.progress_value = -1.0
+        if self.point_data.import_data:
 
-            # Setup for creating the sequence
-            self.start_time_point = settings.get("start_time_point", 0)
-            self.current_time_point = settings.get("start_time_point", 0)
-            self.end_time_point = settings.get("end_time_point", 1)
-            self.current_frame = context.scene.frame_current
-            self.user_sequence_name = settings.sequence_name
+            self.point_data.list = self.list
+            draw_point_data(box, self.point_data, show_range=False, edit=True, src='OPERATOR/' + file_data.module)
 
-            context.scene.tbb.create_sequence_is_running = True
-
-            if self.mode == 'MODAL':
-                return {'RUNNING_MODAL'}
-            elif self.mode == 'NORMAL':
-                return {'NORMAL'}  # custom value to run the process without modal mode (used in tests)
-            else:
-                print("WARNING::TBB_CreateSequence: undefined operator mode '" + str(self.mode) + "', running\
-                       modal by default.")
-                return {'RUNNING_MODAL'}
-
-        elif settings.sequence_type == "streaming_sequence":
-            # Warn the user when the selected start frame may be "weird"
-            if settings.frame_start < context.scene.frame_start or settings.frame_start > context.scene.frame_end:
-                self.report({"WARNING"}, "Frame start is not in the selected time frame.")
-
-            if module == 'OpenFOAM':
-                obj = generate_openfoam_streaming_sequence_obj(context, settings.sequence_name)
-                seq_settings = obj.tbb.settings.openfoam.streaming_sequence
-            if module == 'TELEMAC':
-                obj = generate_telemac_streaming_sequence_obj(context, settings.sequence_name)
-                seq_settings = obj.tbb.settings.telemac.streaming_sequence
-
-            setup_streaming_sequence_object(obj, seq_settings, settings.tmp_data.nb_time_points, settings, module)
-
-            context.scene.collection.objects.link(obj)
-
-            # As mentioned here, lock the interface because the custom handler will alter data on frame change
-            # https://docs.blender.org/api/current/bpy.app.handlers.html?highlight=app%20handlers#module-bpy.app.handlers
-            RenderSettings.use_lock_interface = True
-
-            self.report({'INFO'}, "Sequence successfully created")
-
-            return {'FINISHED'}
-
-        else:
-            self.report({'ERROR'}, "Unknown sequence type (type = " + str(settings.sequence_type) + ")")
-            return {'FINISHED'}
+            row = box.row()
+            op = row.operator("tbb.add_point_data", text="Add", icon='ADD')
+            op.available = file_data.vars.dumps()
+            op.chosen = self.point_data.list
+            op.source = 'OPERATOR/' + file_data.module
 
     def stop(self, context: Context, cancelled: bool = False) -> None:
         """
-        Stop the 'create sequence' process.
-
-        Common stop function for OpenFOAM and TELEMAC 'create sequence' operators.
+        Stop the 'create sequence' process. Used for both modules.
 
         Args:
             context (Context): context

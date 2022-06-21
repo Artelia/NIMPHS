@@ -5,7 +5,7 @@ from tbb.panels.shared.module_panel import TBB_ModulePanel
 
 
 class TBB_PT_TelemacMainPanel(TBB_ModulePanel):
-    """Main panel of the TELEMAC module. This is the 'parent' panel."""
+    """Main panel of the TELEMAC module."""
 
     register_cls = True
     is_custom_base_cls = False
@@ -19,28 +19,31 @@ class TBB_PT_TelemacMainPanel(TBB_ModulePanel):
 
     def draw(self, context: Context) -> None:
         """
-        Layout of the panel. Calls parent draw function.
+        Layout of the panel.
 
         Args:
             context (Context): context
         """
 
-        settings = context.scene.tbb.settings.telemac
-        tmp_data = settings.tmp_data
-        enable_rows, obj = super().draw(settings, tmp_data, context)
+        enable_rows, file_data_is_ok, obj = super().draw(context, 'TELEMAC')
 
-        layout = self.layout
-        if obj is not None:
-            sequence_settings = obj.tbb.settings.telemac.streaming_sequence
-        else:
-            sequence_settings = None
+        if obj is not None and file_data_is_ok:
+            box = self.layout.box()
+            row = box.row()
+            row.label(text="Preview")
 
-        if sequence_settings is None or not obj.tbb.is_streaming_sequence:
+            row = box.row()
+            row.enabled = enable_rows
+            row.prop(obj.tbb.settings, "preview_point_data", text="Point")
 
-            if tmp_data.is_ok():
-                row = layout.row()
-                row.enabled = enable_rows
-                row.prop(settings, "normalize_preview_obj", text="Normalize")
-                row = layout.row()
-                row.enabled = enable_rows
-                row.operator("tbb.telemac_preview", text="Preview", icon='HIDE_OFF')
+            row = box.row()
+            row.enabled = enable_rows
+            row.prop(obj.tbb.settings, "preview_time_point", text="Time point")
+
+            row = box.row()
+            row.enabled = enable_rows
+            row.operator("tbb.telemac_preview", text="Preview", icon='HIDE_OFF')
+
+        elif obj is None or (not obj.tbb.is_streaming_sequence and file_data_is_ok):
+            row = self.layout.row()
+            row.label(text="Select a TELEMAC object", icon='INFO')

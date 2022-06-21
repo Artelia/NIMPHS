@@ -1,17 +1,34 @@
 # <pep8 compliant>
-from bpy.props import StringProperty
-from bpy.types import Operator, Context
 from bpy_extras.io_utils import ImportHelper
+from bpy.types import Operator, Context, Object
+from bpy.props import StringProperty, PointerProperty
+
+import logging
+log = logging.getLogger(__name__)
 
 import time
 
+from tbb.operators.utils import generate_object_from_data
+from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
+from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
 from tbb.operators.openfoam.utils import load_openfoam_file, generate_mesh_data
-from tbb.properties.openfoam.utils import encode_value_ranges, encode_scalar_names
-from tbb.operators.utils import generate_object_from_data, get_collection, update_scene_settings_dynamic_props
+
+
+def import_openfoam_menu_draw(self, context: Context) -> None:  # noqa D417
+    """
+    Draw function which displays the import button in File > Import.
+
+    Args:
+        context (Context): context
+    """
+
+    prefs = context.preferences.addons["tbb"].preferences.settings
+    extensions = prefs.openfoam_extensions.replace("*", "")
+    self.layout.operator(TBB_OT_OpenfoamImportFile.bl_idname, text=f"OpenFOAM ({extensions})")
 
 
 class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
-    """Import an OpenFOAM file. This operator manages the file browser and its filtering options."""
+    """Import an OpenFOAM file."""
 
     register_cls = True
     is_custom_base_cls = False
@@ -26,11 +43,19 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         options={"HIDDEN"}  # noqa: F821
     )
 
+    #: bpy.props.StringProperty: Name to give to the imported object.
+    name: StringProperty(
+        name="Name",  # noqa F821
+        description="Name to give to the imported object",
+        default="TBB_OpenFOAM_preview",  # noqa F821
+    )
+
+    #: TBB_OpenfoamImportSettings: Import settings.
+    import_settings: PointerProperty(type=TBB_OpenfoamImportSettings)
+
     def execute(self, context: Context) -> set:
         """
-        Import the selected file.
-
-        It also generates the preview object, updates temporary data and 'dynamic' scene settings.
+        Import the selected file. Generates a preview object.
 
         Args:
             context (Context): context
@@ -39,40 +64,84 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
             set: state of the operator
         """
 
-        settings = context.scene.tbb.settings.openfoam
-        tmp_data = settings.tmp_data
-        collection = get_collection("TBB_OpenFOAM", context)
-
         start = time.time()
-        success, file_reader = load_openfoam_file(self.filepath, settings.case_type, settings.decompose_polyhedra)
 
-        if not success:
-            self.report({'ERROR'}, "The chosen file does not exist")
-            return {'FINISHED'}
+        io_settings = self.import_settings
 
-        settings.file_path = self.filepath
-
-        # Update temp data
-        tmp_data.update(file_reader, 0)
-
-        # Update properties values
-        update_scene_settings_dynamic_props(settings, tmp_data)
-        settings.clip.scalar.value_ranges = encode_value_ranges(tmp_data.mesh)
-        settings.clip.scalar.list = encode_scalar_names(tmp_data.mesh)
+        state, file_reader = load_openfoam_file(self.filepath, io_settings.case_type, io_settings.decompose_polyhedra)
+        if not state:
+            self.report({'WARNING'}, "The chosen file can't be read")
+            return {'CANCELLED'}
 
         # Generate the preview mesh. This step is not present in the reload operator because
         # the preview mesh may already be loaded. Moreover, this step takes a while for large meshes.
         try:
-            vertices, faces, preview_mesh = generate_mesh_data(file_reader, 0, triangulate=settings.triangulate)
-            obj = generate_object_from_data(vertices, faces, "TBB_OpenFOAM_preview")
-            if collection.name not in [col.name for col in obj.users_collection]:
-                collection.objects.link(obj)
-        except Exception as error:
-            print("ERROR::TBB_OT_OpenfoamImportFile: " + str(error))
-            self.report({'ERROR'}, "Something went wrong building the mesh")
-            return {'FINISHED'}
+            # Generate file_data
+            file_data = TBB_OpenfoamFileData(file_reader, self.import_settings)
+            # Generate object
+            vertices, faces, file_data.mesh = generate_mesh_data(file_data)
+            obj = generate_object_from_data(vertices, faces, self.name, new=True)
+            self.setup_generated_obj(context, obj, file_data)
+            context.scene.collection.objects.link(obj)
+        except Exception:
+            log.error("Something went wrong building the mesh", exc_info=1)
+            self.report({'WARNING'}, "Something went wrong building the mesh. See logs.")
+            return {'CANCELLED'}
 
-        print("Import::OpenFOAM: " + "{:.4f}".format(time.time() - start) + "s")
+        log.info("{:.4f}".format(time.time() - start) + "s")
         self.report({'INFO'}, "File successfully imported")
 
         return {'FINISHED'}
+
+    def draw(self, _context: Context) -> None:
+        """
+        UI layout of the operator.
+
+        Args:
+            _context (Context): context
+        """
+
+        # Import settings
+        box = self.layout.box()
+        row = box.row()
+        row.label(text="Settings")
+
+        row = box.row()
+        row.prop(self.import_settings, "case_type", text="Case")
+        row = box.row()
+        row.prop(self.import_settings, "decompose_polyhedra", text="Decompose polyhedra")
+        row = box.row()
+        row.prop(self.import_settings, "triangulate", text="Triangulate")
+
+        # Others
+        box = self.layout.box()
+        row = box.row()
+        row.label(text="Others")
+
+        row = box.row()
+        row.prop(self, "name", text="Name")
+
+    def setup_generated_obj(self, context: Context, obj: Object, file_data: TBB_OpenfoamFileData) -> None:
+        """
+        Copy import settings and setup needed 'tbb' data for the generated object.
+
+        Args:
+            context (Context): context
+            obj (Object): generated object
+            file_data (TBB_OpenfoamFileData): OpenFOAM file data
+        """
+
+        # Copy import settings
+        io_settings = obj.tbb.settings.openfoam.import_settings
+
+        obj.tbb.settings.file_path = self.filepath
+        io_settings.case_type = self.import_settings.case_type
+        io_settings.decompose_polyhedra = self.import_settings.decompose_polyhedra
+        io_settings.case_type = self.import_settings.case_type
+
+        # Others
+        obj.tbb.module = 'OpenFOAM'
+
+        # File data
+        obj.tbb.uid = str(time.time())
+        context.scene.tbb.file_data[obj.tbb.uid] = file_data

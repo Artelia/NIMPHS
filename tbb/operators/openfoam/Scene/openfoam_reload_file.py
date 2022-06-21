@@ -1,28 +1,29 @@
 # <pep8 compliant>
 from bpy.types import Operator, Context
 
+import logging
+log = logging.getLogger(__name__)
+
 import time
 
+from tbb.panels.utils import get_selected_object
 from tbb.operators.openfoam.utils import load_openfoam_file
-from tbb.operators.utils import update_scene_settings_dynamic_props
-from tbb.properties.openfoam.utils import encode_value_ranges, encode_scalar_names
+from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
 
 
 class TBB_OT_OpenfoamReloadFile(Operator):
-    """Reload the selected file."""
+    """Operator to reload file data of the selected OpenFOAM object."""
 
     register_cls = True
     is_custom_base_cls = False
 
     bl_idname = "tbb.reload_openfoam_file"
     bl_label = "Reload"
-    bl_description = "Reload the selected file"
+    bl_description = "Reload file data of the selected OpenFOAM object"
 
     def execute(self, context: Context) -> set:
         """
-        Reload the selected file.
-
-        It updates temporary data and 'dynamic' scene settings.
+        Reload file data of the selected OpenFOAM object.
 
         Args:
             context (Context): context
@@ -31,29 +32,25 @@ class TBB_OT_OpenfoamReloadFile(Operator):
             set: state of the operator
         """
 
-        settings = context.scene.tbb.settings.openfoam
-        tmp_data = settings.tmp_data
-
-        if settings.file_path == "":
-            self.report({'ERROR'}, "Please select a file first")
-            return {'FINISHED'}
-
         start = time.time()
-        success, file_reader = load_openfoam_file(settings.file_path, settings.case_type, settings.decompose_polyhedra)
+
+        obj = get_selected_object(context)
+        io_settings = obj.tbb.settings.openfoam.import_settings
+        success, file_reader = load_openfoam_file(obj.tbb.settings.file_path, io_settings.case_type,
+                                                  io_settings.decompose_polyhedra)
+
         if not success:
-            self.report({'ERROR'}, "The chosen file does not exist")
+            self.report({'WARNING'}, "The chosen file can't be read")
             return {'FINISHED'}
 
-        # Update temp data
-        tmp_data.update(file_reader, settings.get("preview_time_point", 0))
-        settings.clip.scalar.value_ranges = encode_value_ranges(tmp_data.mesh)
-        settings.clip.scalar.list = encode_scalar_names(tmp_data.mesh)
-        context.scene.tbb.create_sequence_is_running = False
+        # Make sure the object still have an identifier
+        if obj.tbb.uid == "":
+            obj.tbb.uid = str(time.time())
 
-        # Update properties values
-        update_scene_settings_dynamic_props(settings, tmp_data)
+        # Update file data
+        context.scene.tbb.file_data[obj.tbb.uid] = TBB_OpenfoamFileData(file_reader, io_settings)
 
-        print("Reload::OpenFOAM: " + "{:.4f}".format(time.time() - start) + "s")
+        log.info("{:.4f}".format(time.time() - start) + "s")
         self.report({'INFO'}, "Reload successful")
 
         return {'FINISHED'}

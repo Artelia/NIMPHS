@@ -51,14 +51,24 @@ build-doc:
     - .run_automatically
 
   before_script:
+    - apt-get update
+    - apt-get install -y zip unzip libgl1-mesa-glx
     - pip install -r docs/requirements.txt
     - pip install -U https://github.com/pyvista/pyvista-wheels/raw/main/vtk-9.1.0.dev0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+    - |
+      curl -L https://github.com/pyvista/pyvista/archive/refs/heads/main.zip --output pyvista.zip
+    - unzip pyvista.zip
+    - pip install -e pyvista-main
+
 
   script:
+    # Rename ${MODULE_NAME}/__init__.py to avoid problems if a python module is not found
+    - mv ${MODULE_NAME}/__init__.py ${MODULE_NAME}/___init__.py
     # Comment '@persistent' decorators because fake-bpy-module defines it at 'None', which is not callable and causes errors during 'sphinx-build'
     - find ${MODULE_NAME}/ -type f -name "*.py" -exec sed -i 's/@persistent/#@persistent/g' {} +
     - sphinx-build -b html docs/source build_docs
     - find ${MODULE_NAME}/ -type f -name "*.py" -exec sed -i 's/#@persistent/@persistent/g' {} +
+    - mv ${MODULE_NAME}/___init__.py ${MODULE_NAME}/__init__.py
 
   artifacts:
     paths:
@@ -144,7 +154,7 @@ release:
 
   release:
     name: "${ADDON_NAME} v${VERSION}"
-    description: "${ADDON_NAME} v${VERSION}"
+    description: "Minimal Blender version required: 3.0."
     tag_name: "${VERSION}"
     assets:
       links:
