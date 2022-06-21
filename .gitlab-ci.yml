@@ -51,8 +51,15 @@ build-doc:
     - .run_automatically
 
   before_script:
+    - apt-get update
+    - apt-get install -y zip unzip
     - pip install -r docs/requirements.txt
     - pip install -U https://github.com/pyvista/pyvista-wheels/raw/main/vtk-9.1.0.dev0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+    - |
+      curl https://github.com/pyvista/pyvista/archive/refs/heads/main.zip --output pyvista.zip
+    - unzip pyvista.zip
+    - pip install -e pyvista-main
+
 
   script:
     # Comment '@persistent' decorators because fake-bpy-module defines it at 'None', which is not callable and causes errors during 'sphinx-build'
