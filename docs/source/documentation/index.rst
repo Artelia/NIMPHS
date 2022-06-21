@@ -8,3 +8,4 @@ Documentation
     installation_guide/index
     openfoam/index
     telemac/index
+    preferences
