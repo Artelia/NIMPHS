@@ -1,6 +1,6 @@
 # <pep8 compliant>
 from bpy.types import Operator, Context, Object
-from bpy.props import PointerProperty, IntProperty, StringProperty
+from bpy.props import PointerProperty, IntProperty, StringProperty, EnumProperty
 
 from tbb.properties.utils import VariablesInformation
 from tbb.panels.utils import draw_point_data, get_selected_object
@@ -12,6 +12,17 @@ class TBB_CreateSequence(Operator):
 
     register_cls = False
     is_custom_base_cls = True
+
+    #: bpy.props.EnumProperty: Indicate which module to use. Enum in ['OpenFOAM', 'TELEMAC'].
+    module: EnumProperty(
+        name="Mode",  # noqa: F821
+        description="Indicate whether the operator should run modal or not. Enum in ['OpenFOAM', 'TELEMAC']",
+        items=[
+            ('OpenFOAM', "OpenFOAM", "Use OpenFOAM module"),  # noqa: F821
+            ('TELEMAC', "TELEMAC", "Use TELEMAC module"),  # noqa: F821
+        ],
+        options={'HIDDEN'},  # noqa F821
+    )
 
     def update_start(self, _context: Context) -> None:  # noqa D417
         """

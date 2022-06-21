@@ -1,6 +1,6 @@
 # <pep8 compliant>
+from bpy.types import Event, Context, Timer
 from bpy.props import EnumProperty, IntProperty
-from bpy.types import Event, Context, Object, Timer
 
 import logging
 log = logging.getLogger(__name__)
@@ -28,17 +28,11 @@ class TBB_CreateMeshSequence(TBB_CreateSequence):
     #: bpy.types.Timer: Timer which triggers the 'modal' method of operators
     timer: Timer = None
 
-    #: str: Name of the sequence object
-    obj_name: str = ""
-
     #: int: Time point currently processed when creating a sequence
     time_point: int = 0
 
     #: int: Current frame during the 'create sequence' process (different from time point)
     frame: int = 0
-
-    #: int: Module name. Enum in ['OpenFOAM', 'TELEMAC']
-    module: str = 'NONE'
 
     def update_end(self, _context: Context) -> None:  # noqa D417
         """
@@ -61,14 +55,14 @@ class TBB_CreateMeshSequence(TBB_CreateSequence):
         update=update_end
     )
 
-    def invoke(self, context: Context, event: Event) -> set:
+    def invoke(self, _context: Context, _event: Event) -> set:
         """
         Prepare operators settings. Function triggered before the user can edit settings.\
         This method has to be overloaded in derived classes.
 
         Args:
-            context (Context): context
-            event (Event): event
+            _context (Context): context
+            _event (Event): event
 
         Returns:
             set: state of the operator

@@ -1,11 +1,8 @@
 # <pep8 compliant>
+from bpy.props import BoolProperty, IntProperty
 from bpy.types import Event, Context, Object, RenderSettings
-from bpy.props import BoolProperty, IntProperty, EnumProperty
 
 import logging
-
-from tbb.panels.utils import get_selected_object
-
 log = logging.getLogger(__name__)
 
 from tbb.operators.shared.create_sequence import TBB_CreateSequence
@@ -17,23 +14,12 @@ class TBB_CreateStreamingSequence(TBB_CreateSequence):
     register_cls = False
     is_custom_base_cls = True
 
-    #: bpy.props.EnumProperty: Indicate which module to use. Enum in ['OpenFOAM', 'TELEMAC'].
-    module: EnumProperty(
-        name="Mode",  # noqa: F821
-        description="Indicate whether the operator should run modal or not. Enum in ['OpenFOAM', 'TELEMAC']",
-        items=[
-            ('OpenFOAM', "OpenFOAM", "Use OpenFOAM module"),  # noqa: F821
-            ('TELEMAC', "TELEMAC", "Use TELEMAC module"),  # noqa: F821
-        ],
-        options={'HIDDEN'},  # noqa F821
-    )
-
-    def update_length(self, context: Context) -> None:  # noqa D417
+    def update_length(self, _context: Context) -> None:  # noqa D417
         """
         Make sure the user can't select a wrong value.
 
         Args:
-            context (Context): context
+            _context (Context): context
         """
 
         if self.length > self.max_length:
@@ -70,12 +56,12 @@ class TBB_CreateStreamingSequence(TBB_CreateSequence):
 
         return {'RUNNING_MODAL'}
 
-    def draw(self, context: Context) -> None:
+    def draw(self, _context: Context) -> None:
         """
         UI layout of the operator.
 
         Args:
-            context (Context): context
+            _context (Context): context
         """
 
         # Disable point data

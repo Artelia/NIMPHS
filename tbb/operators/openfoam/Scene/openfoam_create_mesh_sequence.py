@@ -11,8 +11,8 @@ from tbb.panels.utils import get_selected_object
 from tbb.panels.openfoam.utils import draw_clip_settings
 from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
 from tbb.properties.openfoam.openfoam_clip import TBB_OpenfoamClipProperty
-from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
 from tbb.operators.shared.create_mesh_sequence import TBB_CreateMeshSequence
+from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
 
 
 class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
