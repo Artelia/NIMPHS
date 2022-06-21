@@ -202,7 +202,7 @@ Interpolation
 Edit streaming sequences settings
 *********************************
 
-| You can edit streaming sequences settings in the `Object properties` panel.
+| You can edit streaming sequence settings in the `Object properties` panel.
 
 .. image:: /images/telemac/edit_streaming_sequence.png
     :width: 45%
