@@ -11,12 +11,12 @@ class TBB_MT_OpenfoamMainMenu(Menu):
     bl_idname = "TBB_MT_OpenfoamMainMenu"
     bl_label = "OpenFOAM"
 
-    def draw(self, context: Context) -> None:
+    def draw(self, _context: Context) -> None:
         """
         UI layout of the menu.
 
         Args:
-            context (Context): context
+            _context (Context): context
         """
 
         self.layout.menu("TBB_MT_OpenfoamCreateSequenceMenu")

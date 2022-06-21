@@ -1,10 +1,10 @@
 # <pep8 compliant>
 import bpy
 from bpy.utils import previews
-from bpy.types import Scene, Object, TOPBAR_MT_file_import, VIEW3D_MT_editor_menus
 from bpy.props import PointerProperty
 from bpy.app import version as bl_version
 from bpy.app.handlers import frame_change_pre, frame_change_post
+from bpy.types import Scene, Object, TOPBAR_MT_file_import, VIEW3D_MT_editor_menus
 
 # Remove error on building the docs, since fake-bpy-module defines version as 'None'
 if bl_version is None:
@@ -64,14 +64,14 @@ if bl_version < (3, 0, 0):
     raise Exception(message)
 
 # Register
+from tbb.menus.menus import tbb_menus_draw
 from tbb.properties.shared.tbb_scene import TBB_Scene
 from tbb.properties.shared.tbb_object import TBB_Object
-from tbb.operators.openfoam.utils import update_openfoam_streaming_sequences
-from tbb.operators.telemac.utils import update_telemac_streaming_sequences, update_telemac_mesh_sequences
 from tbb.properties.utils import register_custom_progress_bar
-from tbb.operators.openfoam.Scene.openfoam_import_file import import_openfoam_menu_draw
+from tbb.operators.openfoam.utils import update_openfoam_streaming_sequences
 from tbb.operators.telemac.Scene.telemac_import_file import import_telemac_menu_draw
-from tbb.menus.menus import tbb_menus_draw
+from tbb.operators.openfoam.Scene.openfoam_import_file import import_openfoam_menu_draw
+from tbb.operators.telemac.utils import update_telemac_streaming_sequences, update_telemac_mesh_sequences
 
 # Setup logger
 import logging
@@ -81,7 +81,7 @@ logger.setLevel(logging.DEBUG)
 auto_load.init()
 
 
-def register():  # noqa: D103
+def register() -> None:  # noqa: D103
     auto_load.register()
 
     # Register custom properties
@@ -117,7 +117,7 @@ def register():  # noqa: D103
     logger.debug("Registered Toolsbox OpenFOAM/TELEMAC")
 
 
-def unregister():  # noqa: D103
+def unregister() -> None:  # noqa: D103
     auto_load.unregister()
 
     # Remove icons
