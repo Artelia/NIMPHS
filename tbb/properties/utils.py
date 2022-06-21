@@ -14,6 +14,17 @@ DEV_MODE = True
 class VariablesInformation():
     """Data structure to manage point data information for both modules."""
 
+    #: list: Variable names
+    names: list = []
+    #: list: Variable units
+    units: list = []
+    #: list: Variable types
+    types: list = []
+    #: list: Value ranges {"local" {"min" xx, "max" xx}, "global" {"min" xx, "max" xx}}
+    ranges: list = []
+    #: list: Variable dimensions
+    dimensions: list = []
+
     def __init__(self, json_string: str = "") -> None:
         """
         Init method of the class.
@@ -205,6 +216,21 @@ class VariablesInformation():
 class InterpInfo():
     """Base class of utility classes to get interpolation information for sequence objects."""
 
+    #: bool: Indicate if data has been successfully computed
+    has_data: bool = False
+    #: bool: Indicate the current time point is an existing time point
+    exists: bool = True
+    #: int: Frame at the "left" of the current time point
+    left_frame: int = 0
+    #: int: Number of time steps between each existing time point
+    time_steps: int = 0
+    #: int: Current frame
+    frame: int = 0
+    #: int: Next existing time point
+    right: int = 0
+    #: int: Previous existing time point
+    left: int = 0
+
     def __init__(self) -> None:
         """Init method of the class."""
 
@@ -363,6 +389,8 @@ class InterpInfoMeshSequence(InterpInfo):
         Scan time information for interpolation of 'Mesh Sequence' objects.
 
         .. code-block:: text
+
+            Example of output:
 
             * Mesh sequence: frame start = 12, anim length = 50.
             * Shape keys are linearly interpolated (2 time steps between each time point)

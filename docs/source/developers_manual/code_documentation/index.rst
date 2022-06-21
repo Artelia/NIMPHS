@@ -8,6 +8,7 @@ Code documentation
     openfoam/index
     telemac/index
     shared/index
+    preferences
 
 | Data structure (click on the image)
 
