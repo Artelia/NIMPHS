@@ -56,7 +56,7 @@ build-doc:
     - pip install -r docs/requirements.txt
     - pip install -U https://github.com/pyvista/pyvista-wheels/raw/main/vtk-9.1.0.dev0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
     - |
-      curl https://github.com/pyvista/pyvista/archive/refs/heads/main.zip --output pyvista.zip
+      curl -L https://github.com/pyvista/pyvista/archive/refs/heads/main.zip --output pyvista.zip
     - unzip pyvista.zip
     - pip install -e pyvista-main
 
