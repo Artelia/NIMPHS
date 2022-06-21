@@ -15,10 +15,10 @@ Import OpenFOAM / TELEMAC files inside Blender and generate astonishing renders!
 
 Main panel - material preview |  Main panel - wireframe preview
 :----------------------------:|:-------------------------------:
-![Material preview](https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.2.0/docs/source/images/readme/screenshot_openfoam_a.png)  |  ![Wireframe preview](https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.2.0/docs/source/images/readme/screenshot_openfoam_b.png)
+![Material preview](https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.3.0/docs/source/images/readme/screenshot_openfoam_a.png)  |  ![Wireframe preview](https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.3.0/docs/source/images/readme/screenshot_openfoam_b.png)
 
 <p align="center">
-  <img alt="Shading preview" width="716" height="460" src="https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.2.0/docs/source/images/readme/screenshot_openfoam_c.png"/>
+  <img alt="Shading preview" width="716" height="460" src="https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.3.0/docs/source/images/readme/screenshot_openfoam_c.png"/>
 </p>
 
 ## TELEMAC
@@ -34,8 +34,8 @@ Main panel - material preview |  Main panel - wireframe preview
 
 Main panel - material preview |  Main panel - wireframe preview
 :----------------------------:|:-------------------------------:
-![Material preview](https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.2.0/docs/source/images/readme/screenshot_telemac_a.png)  |  ![Wireframe preview](https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.2.0/docs/source/images/readme/screenshot_telemac_b.png)
+![Material preview](https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.3.0/docs/source/images/readme/screenshot_telemac_a.png)  |  ![Wireframe preview](https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.3.0/docs/source/images/readme/screenshot_telemac_b.png)
 
 <p align="center">
-  <img alt="Shading preview" width="694" height="430" src="https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.2.0/docs/source/images/readme/screenshot_telemac_c.png"/>
+  <img alt="Shading preview" width="694" height="430" src="https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.3.0/docs/source/images/readme/screenshot_telemac_c.png"/>
 </p>
