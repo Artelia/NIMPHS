@@ -16,7 +16,7 @@ Previewing tools
 
 |
 
-.. important:: 
+.. important::
     If you change a parameter, you have to click on the `preview` button to update the mesh.
 
 Import settings
