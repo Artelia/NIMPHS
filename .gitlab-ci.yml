@@ -62,10 +62,13 @@ build-doc:
 
 
   script:
+    # Rename ${MODULE_NAME}/__init__.py to avoid problems if a python module is not found
+    - mv ${MODULE_NAME}/__init__.py ${MODULE_NAME}/___init__.py
     # Comment '@persistent' decorators because fake-bpy-module defines it at 'None', which is not callable and causes errors during 'sphinx-build'
     - find ${MODULE_NAME}/ -type f -name "*.py" -exec sed -i 's/@persistent/#@persistent/g' {} +
     - sphinx-build -b html docs/source build_docs
     - find ${MODULE_NAME}/ -type f -name "*.py" -exec sed -i 's/#@persistent/@persistent/g' {} +
+    - mv ${MODULE_NAME}/___init__.py ${MODULE_NAME}/__init__.py
 
   artifacts:
     paths:
