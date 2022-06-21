@@ -14,12 +14,12 @@ import os
 from . import auto_load
 
 bl_info = {
-    "name": "Toolsbox OpenFOAM/TELEMAC",
+    "name": "Toolbox OpenFOAM/TELEMAC",
     "description": "Load, visualize and manipulate OpenFOAM/TELEMAC files",
     "author": "Thibault Oudart, Félix Olart",
-    "version": (0, 3, 0),
+    "version": (0, 4, 0),
     "blender": (3, 0, 0),
-    "location": "View3D > Sidebar",
+    "location": "File > Import",
     "warning": "This version is still in development.",
     "category": "Import",
     "doc_url": "https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/wikis/home",

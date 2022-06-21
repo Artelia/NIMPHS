@@ -1,5 +1,19 @@
 # Change log
 
+## [0.4.0] - WIP
+
+WIP
+
+<details><summary>Details</summary>
+
+### Added
+
+### Fixed
+
+### Changed
+
+</details>
+
 ## [0.3.0] - 2022-06-22
 
 This version implements a completely different workflow compared to the two previous releases.
