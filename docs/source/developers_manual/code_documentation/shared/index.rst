@@ -76,7 +76,7 @@ Properties
    :members:
    :show-inheritance:
 
-.. autoclass:: tbb.properties.shared.file_data.FileData
+.. autoclass:: tbb.properties.shared.file_data.TBB_FileData
    :members:
    :show-inheritance:
 

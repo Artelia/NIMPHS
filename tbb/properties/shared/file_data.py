@@ -6,7 +6,7 @@ from tbb.properties.telemac.serafin import Serafin
 from tbb.properties.utils import VariablesInformation
 
 
-class FileData():
+class TBB_FileData():
     """Base class to manage file data for all modules."""
 
     #: str: Name of the module
@@ -29,12 +29,12 @@ class FileData():
         self.nb_time_points = 0
         self.vars = VariablesInformation()
 
-    def update(self, time_point: int):
+    def update(self, _time_point: int) -> None:
         """
         Update file data.
 
         Args:
-            time_point (int): time point to use for the update
+            _time_point (int): time point to use for the update
         """
 
         pass

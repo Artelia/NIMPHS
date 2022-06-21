@@ -28,13 +28,6 @@ class TBB_Object(PropertyGroup):
         default="None",
     )
 
-    #: bpy.props.StringProperty: Name of the object.
-    name: StringProperty(
-        name="Name",  # noqa: F821
-        description="Name of the sequence",
-        default="",
-    )
-
     #: bpy.props.BoolProperty: Indicate if this object is a sequence which updates when the frame changes.
     is_streaming_sequence: BoolProperty(
         name="Is on frame change sequence",

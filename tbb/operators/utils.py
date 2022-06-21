@@ -168,7 +168,6 @@ def setup_streaming_sequence_object(obj: Object, op: TBB_CreateStreamingSequence
     # Setup common settings
     obj.tbb.settings.file_path = file_path
     obj.tbb.is_streaming_sequence = True
-    obj.tbb.name = obj.name
     obj.tbb.module = op.module
 
     # Setup sequence settings

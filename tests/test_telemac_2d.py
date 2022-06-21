@@ -235,7 +235,6 @@ def test_mesh_sequence_telemac_2d(mesh_sequence, frame_change_post):
     assert mesh_sequence.tbb.uid != ""
     assert mesh_sequence.tbb.module == 'TELEMAC'
     assert mesh_sequence.tbb.settings.file_path == FILE_PATH
-    assert mesh_sequence.tbb.settings.telemac.is_3d_simulation is False
 
     # Test sequence data
     for child in mesh_sequence.children:

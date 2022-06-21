@@ -20,13 +20,6 @@ class TBB_TelemacObjectSettings(PropertyGroup):
         default=""
     )
 
-    #: bpy.props.BoolProperty: Indicate whether this mesh sequence is from a 3D simulation or not.
-    is_3d_simulation: BoolProperty(
-        name="Is 3D simulation",
-        description="Indicate whether this mesh sequence is from a 3D simulation or not",
-        default=False
-    )
-
     #: bpy.props.TBB_TelemacInterpolateProperty: Interpolation settings
     interpolate: PointerProperty(type=TBB_TelemacInterpolateProperty)
 

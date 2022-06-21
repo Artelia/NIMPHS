@@ -1,17 +1,16 @@
 # <pep8 compliant>
 import time
 import numpy as np
-from typing import Union
 
 import logging
 log = logging.getLogger(__name__)
 
 from tbb.properties.telemac.serafin import Serafin
-from tbb.properties.shared.file_data import FileData
+from tbb.properties.shared.file_data import TBB_FileData
 from tbb.properties.telemac.utils import remove_spaces_telemac_var_name
 
 
-class TBB_TelemacFileData(FileData):
+class TBB_TelemacFileData(TBB_FileData):
     """Hold file data for the TELEMAC module."""
 
     #: np.ndarray: Vertices of the mesh
@@ -78,7 +77,7 @@ class TBB_TelemacFileData(FileData):
 
             self.vars.append(name=name, unit=unit, range=value_range)
 
-    def update(self, time_point: int):
+    def update(self, time_point: int) -> None:
         """
         Update file data.
 

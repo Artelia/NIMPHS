@@ -6,11 +6,11 @@ import numpy as np
 from typing import Union
 from pyvista import POpenFOAMReader
 
-from tbb.properties.shared.file_data import FileData
+from tbb.properties.shared.file_data import TBB_FileData
 from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
 
 
-class TBB_OpenfoamFileData(FileData):
+class TBB_OpenfoamFileData(TBB_FileData):
     """Hold file data for the OpenFOAM module."""
 
     #: UnstructuredGrid: 'internalMesh' from data
@@ -22,7 +22,7 @@ class TBB_OpenfoamFileData(FileData):
     #: int: current time point
     time_point = 0
 
-    def __init__(self, file: POpenFOAMReader, io_settings: Union[TBB_OpenfoamImportSettings, None]):
+    def __init__(self, file: POpenFOAMReader, io_settings: Union[TBB_OpenfoamImportSettings, None]) -> None:
         """Init method of the class."""
 
         super().__init__()
