@@ -31,7 +31,7 @@ class TBB_OpenfoamFileData(TBB_FileData):
         self.file = file
 
         # Load data
-        self.update_mesh(0, io_settings=io_settings)
+        self.update_data(0, io_settings=io_settings)
         try:
             self.mesh = self.file.read()["internalMesh"]
         except KeyError:  # Raised when using wrong case_type
@@ -40,7 +40,7 @@ class TBB_OpenfoamFileData(TBB_FileData):
 
         self.nb_time_points = self.file.number_time_points
 
-        # Initialize variable information
+        # Initialize variables information
         for name in self.raw_mesh.point_data.keys():
             data = self.raw_mesh.point_data[name]
             type = 'SCALAR' if len(data.shape) == 1 else 'VECTOR'
@@ -57,7 +57,7 @@ class TBB_OpenfoamFileData(TBB_FileData):
 
         return self.mesh.get_array(name=id, preference='point')
 
-    def update_mesh(self, time_point: int, io_settings: Union[TBB_OpenfoamImportSettings, None] = None) -> None:
+    def update_data(self, time_point: int, io_settings: Union[TBB_OpenfoamImportSettings, None] = None) -> None:
         """
         Update file data.
 

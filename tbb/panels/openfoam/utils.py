@@ -2,7 +2,7 @@
 from bpy.types import UILayout
 
 from tbb.properties.utils import VariablesInformation
-from tbb.properties.openfoam.openfoam_clip import TBB_OpenfoamClipProperty
+from tbb.properties.openfoam.clip import TBB_OpenfoamClipProperty
 
 
 def draw_clip_settings(layout: UILayout, clip: TBB_OpenfoamClipProperty, enable: bool = True) -> None:

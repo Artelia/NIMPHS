@@ -72,7 +72,7 @@ class TBB_OT_OpenfoamPreview(Operator):
 
         # Generate mesh data
         try:
-            file_data.update_mesh(prw_time_point, io_settings)
+            file_data.update_data(prw_time_point, io_settings)
             vertices, faces, file_data.mesh = generate_mesh_data(file_data, clip=clip)
         except Exception:
             log.debug("Something went wrong building the mesh", exc_info=1)

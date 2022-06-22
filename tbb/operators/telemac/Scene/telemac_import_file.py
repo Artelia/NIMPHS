@@ -79,8 +79,7 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         obj.tbb.uid = str(time.time())
         obj.tbb.settings.file_path = self.filepath
         # Load file data
-        context.scene.tbb.file_data[obj.tbb.uid] = TBB_TelemacFileData(self.filepath,
-                                                                       self.import_settings.compute_value_ranges)
+        context.scene.tbb.file_data[obj.tbb.uid] = TBB_TelemacFileData(self.filepath)
         file_data = context.scene.tbb.file_data.get(obj.tbb.uid, None)
 
         # Generate objects

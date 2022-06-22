@@ -20,7 +20,7 @@ File data
 Interpolation
 -------------
 
-.. autoclass:: tbb.properties.telemac.telemac_interpolate.TBB_TelemacInterpolateProperty
+.. autoclass:: tbb.properties.telemac.interpolate.TBB_TelemacInterpolateProperty
    :members:
    :show-inheritance:
 

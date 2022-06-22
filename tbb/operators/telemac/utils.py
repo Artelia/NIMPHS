@@ -296,7 +296,7 @@ def generate_telemac_sequence_obj(context: Context, obj: Object, name: str, time
 
     # Load file data
     sequence.tbb.uid = str(time.time())
-    context.scene.tbb.file_data[sequence.tbb.uid] = TBB_TelemacFileData(obj.tbb.settings.file_path, False)
+    context.scene.tbb.file_data[sequence.tbb.uid] = TBB_TelemacFileData(obj.tbb.settings.file_path)
 
     try:
         children = generate_base_objects(context.scene.tbb.file_data[sequence.tbb.uid], time_point, name + "_sequence")

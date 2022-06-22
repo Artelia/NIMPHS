@@ -15,7 +15,7 @@ from pyvista import POpenFOAMReader, UnstructuredGrid
 
 from tbb.properties.utils import VariablesInformation
 from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
-from tbb.properties.openfoam.openfoam_clip import TBB_OpenfoamClipProperty
+from tbb.properties.openfoam.clip import TBB_OpenfoamClipProperty
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 from tbb.operators.utils import remap_array, generate_vertex_colors_groups, generate_vertex_colors
 from tbb.operators.openfoam.Scene.openfoam_create_mesh_sequence import TBB_OT_OpenfoamCreateMeshSequence
@@ -96,7 +96,7 @@ def generate_mesh_for_sequence(file_data: TBB_OpenfoamFileData,
     """
 
     # Generate mesh data
-    file_data.update_mesh(op.time_point, op.import_settings)
+    file_data.update_data(op.time_point, op.import_settings)
     vertices, faces, file_data.mesh = generate_mesh_data(file_data, clip=op.clip)
     if file_data.mesh is None:
         return None
@@ -397,7 +397,7 @@ def update_openfoam_streaming_sequence(scene: Scene, obj: Object, time_point: in
     file_data = scene.tbb.file_data[obj.tbb.uid]
 
     if file_data is not None:
-        file_data.update_mesh(time_point, io_settings)
+        file_data.update_data(time_point, io_settings)
         vertices, faces, file_data.mesh = generate_mesh_data(file_data, clip=obj.tbb.settings.openfoam.clip)
 
         bmesh = obj.data

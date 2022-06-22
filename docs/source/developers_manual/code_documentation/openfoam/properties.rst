@@ -20,11 +20,11 @@ File Data
 Clip
 ----
 
-.. autoclass:: tbb.properties.openfoam.openfoam_clip.TBB_OpenfoamClipProperty
+.. autoclass:: tbb.properties.openfoam.clip.TBB_OpenfoamClipProperty
    :members:
    :show-inheritance:
 
-.. autoclass:: tbb.properties.openfoam.openfoam_clip.TBB_OpenfoamClipScalarProperty
+.. autoclass:: tbb.properties.openfoam.clip.TBB_OpenfoamClipScalarProperty
    :members:
    :show-inheritance:
 

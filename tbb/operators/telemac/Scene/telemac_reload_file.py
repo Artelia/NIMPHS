@@ -42,7 +42,7 @@ class TBB_OT_TelemacReloadFile(Operator):
             obj.tbb.uid = str(time.time())
 
         # Update file data
-        context.scene.tbb.file_data[obj.tbb.uid] = TBB_TelemacFileData(obj.tbb.settings.file_path, False)
+        context.scene.tbb.file_data[obj.tbb.uid] = TBB_TelemacFileData(obj.tbb.settings.file_path)
         if obj.tbb.settings.point_data.save != "":
             context.scene.tbb.file_data[obj.tbb.uid].vars = VariablesInformation(obj.tbb.settings.point_data.save)
 

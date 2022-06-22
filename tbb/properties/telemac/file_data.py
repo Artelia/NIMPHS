@@ -27,13 +27,12 @@ class TBB_TelemacFileData(TBB_FileData):
     #: np.ndarray: Data
     data: np.ndarray = None
 
-    def __init__(self, file_path: str, compute_value_ranges: bool) -> None:
+    def __init__(self, file_path: str) -> None:
         """
         Init method of the class.
 
         Args:
             file_path (str): path to the TELEMAC file
-            compute_value_ranges (bool): compute value ranges for all the variables
         """
 
         super().__init__()
@@ -62,22 +61,12 @@ class TBB_TelemacFileData(TBB_FileData):
         else:
             self.faces = self.file.ikle2d
 
-        # Construct variables information data
-        self.vars.clear()
-        for var_name, id in zip(self.file.nomvar, range(self.nb_vars)):
+        # Initialize variables information
+        for var_name in self.file.nomvar:
             # Note: var_name is always 32 chars long with 16 chars for the name and 16 for the unit name
             name = remove_spaces_telemac_var_name(var_name[:16])
             unit = remove_spaces_telemac_var_name(var_name[16:])
-
-            # Compute value ranges
-            if compute_value_ranges:
-                value_range = self.compute_var_value_range(id)
-                value_range = {"global": {"min": value_range["min"], "max": value_range["max"]}}
-            else:
-                value_range = self.read(0)[id]
-                value_range = {"local": {"min": np.min(value_range), "max": np.max(value_range)}}
-
-            self.vars.append(name=name, unit=unit, range=value_range)
+            self.vars.append(name=name, unit=unit)
 
     def get_point_data(self, id: Union[str, int]) -> np.ndarray:
         """
@@ -92,7 +81,7 @@ class TBB_TelemacFileData(TBB_FileData):
 
         return self.data[id]
 
-    def update(self, time_point: int) -> None:
+    def update_data(self, time_point: int) -> None:
         """
         Update file data.
 
@@ -101,10 +90,6 @@ class TBB_TelemacFileData(TBB_FileData):
         """
 
         self.data = self.read(time_point)
-
-        # Compute 'local' value ranges
-        for id in range(self.nb_vars):
-            self.vars.ranges[id]["local"] = {"min": np.min(self.data[id]), "max": np.max(self.data[id])}
 
     def is_ok(self) -> bool:
         """
