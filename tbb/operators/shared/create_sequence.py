@@ -107,14 +107,15 @@ class TBB_CreateSequence(Operator):
 
         if self.point_data.import_data:
 
-            self.point_data.list = self.list
-            draw_point_data(box, self.point_data, show_range=False, edit=True, src='OPERATOR/' + file_data.module)
+            # Update list of chosen point data fro this operator. Ugly but it works.
+            self.point_data.list = context.scene.tbb.op_vars.dumps()
+            draw_point_data(box, self.point_data, show_range=False, edit=True, src='OPERATOR')
 
             row = box.row()
             op = row.operator("tbb.add_point_data", text="Add", icon='ADD')
             op.available = file_data.vars.dumps()
             op.chosen = self.point_data.list
-            op.source = 'OPERATOR/' + file_data.module
+            op.source = 'OPERATOR'
 
     def stop(self, context: Context, cancelled: bool = False) -> None:
         """
@@ -133,6 +134,9 @@ class TBB_CreateSequence(Operator):
 
         context.scene.tbb.create_sequence_is_running = False
         context.scene.tbb.progress_value = -1.0
+
+        # Reset operator variables information
+        context.scene.tbb.op_vars.clear()
 
         if cancelled:
             self.report({'INFO'}, "Create sequence cancelled")

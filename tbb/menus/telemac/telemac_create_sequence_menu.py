@@ -11,12 +11,12 @@ class TBB_MT_TelemacCreateSequenceMenu(Menu):
     bl_idname = "TBB_MT_TelemacCreateSequenceMenu"
     bl_label = "Create sequence"
 
-    def draw(self, context: Context) -> None:
+    def draw(self, _context: Context) -> None:
         """
         UI layout of the menu.
 
         Args:
-            context (Context): context
+            _context (Context): context
         """
 
         self.layout.operator("tbb.telemac_create_mesh_sequence", text="Mesh sequence")

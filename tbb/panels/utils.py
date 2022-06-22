@@ -34,7 +34,7 @@ def draw_point_data(layout: UILayout, point_data: TBB_PointDataSettings, show_ra
     Args:
         layout (UILayout): layout
         point_data (TBB_PointDataSettings): point data settings
-        src (str): which source is calling this function. Enum in ['OBJECT', 'OPERATOR/OpenFOAM', 'OPERATOR/TELEMAC'].
+        src (str): which source is calling this function. Enum in ['OBJECT', 'OPERATOR'].
         show_range (bool, optional): show value ranges of selected point data. Defaults to True.
         edit (bool, optional): show edit buttons. Defaults to True.
     """

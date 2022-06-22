@@ -11,12 +11,12 @@ class TBB_MT_TelemacMainMenu(Menu):
     bl_idname = "TBB_MT_TelemacMainMenu"
     bl_label = "TELEMAC"
 
-    def draw(self, context: Context) -> None:
+    def draw(self, _context: Context) -> None:
         """
         UI layout of the menu.
 
         Args:
-            context (Context): context
+            _context (Context): context
         """
 
         self.layout.menu("TBB_MT_TelemacCreateSequenceMenu")

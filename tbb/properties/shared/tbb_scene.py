@@ -2,7 +2,7 @@
 from bpy.types import PropertyGroup
 from bpy.props import BoolProperty, FloatProperty, StringProperty
 
-from tbb.properties.utils import update_progress_bar
+from tbb.properties.utils import VariablesInformation, update_progress_bar
 
 
 class TBB_Scene(PropertyGroup):
@@ -14,6 +14,9 @@ class TBB_Scene(PropertyGroup):
     #: dict: Dictionary of file data used for all modules and all objects.
     #        Shape is ```{"uid": file_data, "uid": file_data, ...}```
     file_data: dict = {"ops": None}
+
+    #: VariablesInformation: Place to store temporary variables information for operators.
+    op_vars: VariablesInformation = VariablesInformation()
 
     #: bpy.props.BoolProperty: State of the 'create sequence' operation (used by all 'create sequence' operators)
     create_sequence_is_running: BoolProperty(

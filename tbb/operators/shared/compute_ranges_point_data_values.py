@@ -92,10 +92,10 @@ class TBB_OT_ComputeRangesPointDataValues(Operator):
         if self.point_data.import_data:
 
             self.point_data.list = self.list
-            draw_point_data(box, self.point_data, show_range=False, edit=True, src='OPERATOR/' + file_data.module)
+            draw_point_data(box, self.point_data, show_range=False, edit=True, src='OPERATOR')
 
             row = box.row()
             op = row.operator("tbb.add_point_data", text="Add", icon='ADD')
             op.available = file_data.vars.dumps()
             op.chosen = self.point_data.list
-            op.source = 'OPERATOR/' + file_data.module
+            op.source = 'OPERATOR'

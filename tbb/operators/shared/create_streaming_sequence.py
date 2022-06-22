@@ -101,5 +101,8 @@ class TBB_CreateStreamingSequence(TBB_CreateSequence):
         # https://docs.blender.org/api/current/bpy.app.handlers.html?highlight=app%20handlers#module-bpy.app.handlers
         RenderSettings.use_lock_interface = True
 
+        # Reset operator variables information
+        context.scene.tbb.op_vars.clear()
+
         self.report({'INFO'}, "Sequence successfully created")
         return {'FINISHED'}

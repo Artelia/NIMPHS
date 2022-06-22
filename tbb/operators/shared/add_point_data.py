@@ -67,15 +67,13 @@ class TBB_OT_AddPointData(Operator):
         options={'HIDDEN'},  # noqa F821
     )
 
-    #: bpy.props.EnumProperty: Indicate the activator of this operator.
-    #  Enum in ['OBJECT', 'OPERATOR/OpenFOAM', 'OPERATOR/TELEMAC'].
+    #: bpy.props.EnumProperty: Indicate the activator of this operator. Enum in ['OBJECT', 'OPERATOR'].
     source: EnumProperty(
         name="Source",  # noqa F821
         description="Indicate the activator of this operator.",
         items=[
             ("OBJECT", "Object", "Execute in object mode"),  # noqa F821
-            ("OPERATOR/OpenFOAM", "Operator (OpenFOAM)", "Execute in operator mode, OpenFOAM module"),  # noqa F821
-            ("OPERATOR/TELEMAC", "Operator (TELEMAC)", "Execute in operator mode, TELEMAC module"),  # noqa F821
+            ("OPERATOR", "Operator", "Execute in operator mode"),  # noqa F821
         ],
         options={'HIDDEN'},  # noqa F821
     )
@@ -138,28 +136,20 @@ class TBB_OT_AddPointData(Operator):
                 return {'CANCELLED'}
 
             point_data = obj.tbb.settings.point_data.list
+            data = VariablesInformation(point_data)
 
-        if self.source == 'OPERATOR/OpenFOAM':
-            # TODO: I think we can find a better solution to get access to these data.
-            import bpy
-            point_data = bpy.types.TBB_OT_openfoam_create_mesh_sequence.list
-        if self.source == 'OPERATOR/TELEMAC':
-            # TODO: I think we can find a better solution to get access to these data.
-            import bpy
-            point_data = bpy.types.TBB_OT_telemac_create_mesh_sequence.list
+        if self.source == 'OPERATOR':
+            data = context.scene.tbb.op_vars
 
         # Add selected point data to the list
         add = VariablesInformation(self.point_data)
-        data = VariablesInformation(point_data)
         data.append(data=add.get(0))
 
         # Save the new list of chosen point data
         if self.source == 'OBJECT':
             obj.tbb.settings.point_data.list = data.dumps()
-        if self.source == 'OPERATOR/OpenFOAM':
-            bpy.types.TBB_OT_openfoam_create_mesh_sequence.list = data.dumps()
-        if self.source == 'OPERATOR/TELEMAC':
-            bpy.types.TBB_OT_telemac_create_mesh_sequence.list = data.dumps()
+        if self.source == 'OPERATOR':
+            context.scene.tbb.op_vars = data
 
         if context.area is not None:
             context.area.tag_redraw()
