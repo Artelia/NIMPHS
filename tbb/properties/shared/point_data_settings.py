@@ -34,3 +34,10 @@ class TBB_PointDataSettings(PropertyGroup):
             ("GLOBAL", "Global", "Remap point data using a global value range (can take several seconds to compute)"),  # noqa F821
         ]
     )
+
+    #: bpy.props.StringProperty: Save of variables information.
+    save: StringProperty(
+        name="Save",  # noqa F821
+        description="Save of variables information",
+        default=""
+    )

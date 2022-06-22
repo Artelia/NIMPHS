@@ -7,6 +7,7 @@ log = logging.getLogger(__name__)
 import time
 
 from tbb.panels.utils import get_selected_object
+from tbb.properties.utils import VariablesInformation
 from tbb.operators.openfoam.utils import load_openfoam_file
 from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
 
@@ -47,8 +48,10 @@ class TBB_OT_OpenfoamReloadFile(Operator):
         if obj.tbb.uid == "":
             obj.tbb.uid = str(time.time())
 
-        # Update file data
+        # Generate new file data and load saved variables information
         context.scene.tbb.file_data[obj.tbb.uid] = TBB_OpenfoamFileData(file_reader, io_settings)
+        if obj.tbb.settings.point_data.save != "":
+            context.scene.tbb.file_data[obj.tbb.uid].vars = VariablesInformation(obj.tbb.settings.point_data.save)
 
         log.info("{:.4f}".format(time.time() - start) + "s")
         self.report({'INFO'}, "Reload successful")

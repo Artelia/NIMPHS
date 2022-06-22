@@ -1,5 +1,7 @@
 # <pep8 compliant>
-from bpy.types import Context, VIEW3D_HT_tool_header, Object, Mesh
+import bpy
+from bpy.app.handlers import persistent
+from bpy.types import Context, VIEW3D_HT_tool_header, Object, Mesh, Scene
 
 import logging
 log = logging.getLogger(__name__)
@@ -554,7 +556,22 @@ def update_preview_time_point(self, context: Context) -> None:  # noqa D417
         self.preview_time_point = 0
 
 
-def update_progress_bar(_self, context: Context):
+@persistent
+def tbb_on_save_pre(_dummy) -> None:
+    """
+    Save data before the blender file is saved.
+
+    Args:
+        scene (Scene): scene
+    """
+
+    for obj in bpy.data.objects:
+        file_data = bpy.context.scene.tbb.file_data.get(obj.tbb.uid, None)
+        if file_data is not None:
+            obj.tbb.settings.point_data.save = file_data.vars.dumps()
+
+
+def update_progress_bar(_self, context: Context) -> None:
     """
     Update function for the custom progress bar. Tag all info areas for redraw.
 
@@ -567,9 +584,8 @@ def update_progress_bar(_self, context: Context):
         if area.type == 'INFO':
             area.tag_redraw()
 
+
 # Inspired by: https://blog.michelanders.nl/2017/04/how-to-add-progress-indicator-to-the-info-header-in-blender.html
-
-
 def register_custom_progress_bar() -> None:
     """Register the custom progress bar."""
 
@@ -597,5 +613,5 @@ def register_custom_progress_bar() -> None:
 
 
 # A variable where we can store the original draw function
-def info_header_draw(s, c):  # noqa: D103
+def info_header_draw(s, c) -> None:  # noqa: D103
     return None

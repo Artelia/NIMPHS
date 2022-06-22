@@ -2,11 +2,13 @@
 from bpy.types import Operator, Context
 
 import logging
+
 log = logging.getLogger(__name__)
 
 import time
 
 from tbb.panels.utils import get_selected_object
+from tbb.properties.utils import VariablesInformation
 from tbb.properties.telemac.file_data import TBB_TelemacFileData
 
 
@@ -41,6 +43,8 @@ class TBB_OT_TelemacReloadFile(Operator):
 
         # Update file data
         context.scene.tbb.file_data[obj.tbb.uid] = TBB_TelemacFileData(obj.tbb.settings.file_path, False)
+        if obj.tbb.settings.point_data.save != "":
+            context.scene.tbb.file_data[obj.tbb.uid].vars = VariablesInformation(obj.tbb.settings.point_data.save)
 
         log.info("{:.4f}".format(time.time() - start) + "s")
         self.report({'INFO'}, "Reload successful")

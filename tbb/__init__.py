@@ -3,7 +3,7 @@ import bpy
 from bpy.utils import previews
 from bpy.props import PointerProperty
 from bpy.app import version as bl_version
-from bpy.app.handlers import frame_change_pre, frame_change_post
+from bpy.app.handlers import frame_change_pre, frame_change_post, save_pre
 from bpy.types import Scene, Object, TOPBAR_MT_file_import, VIEW3D_MT_editor_menus
 
 # Remove error on building the docs, since fake-bpy-module defines version as 'None'
@@ -67,8 +67,8 @@ if bl_version < (3, 0, 0):
 from tbb.menus.menus import tbb_menus_draw
 from tbb.properties.shared.tbb_scene import TBB_Scene
 from tbb.properties.shared.tbb_object import TBB_Object
-from tbb.properties.utils import register_custom_progress_bar
 from tbb.operators.openfoam.utils import update_openfoam_streaming_sequences
+from tbb.properties.utils import register_custom_progress_bar, tbb_on_save_pre
 from tbb.operators.telemac.Scene.telemac_import_file import import_telemac_menu_draw
 from tbb.operators.openfoam.Scene.openfoam_import_file import import_openfoam_menu_draw
 from tbb.operators.telemac.utils import update_telemac_streaming_sequences, update_telemac_mesh_sequences
@@ -95,6 +95,7 @@ def register() -> None:  # noqa: D103
     frame_change_pre.append(update_openfoam_streaming_sequences)
     frame_change_pre.append(update_telemac_streaming_sequences)
     frame_change_post.append(update_telemac_mesh_sequences)
+    save_pre.append(tbb_on_save_pre)
 
     # Add custom icons
     icons = previews.new()
