@@ -47,7 +47,8 @@ class TBB_FileData():
         Args:
             name (str): name of the variable to update
             shape (str): type of the variable. Enum in ['SCALAR', 'VECTOR'].
-            scope (str, optional): indicate which information to update. Enum in ['LOCAL', 'GLOBAL']. Defaults to 'LOCAL'.
+            scope (str, optional): indicate which information to update. Enum in ['LOCAL', 'GLOBAL'].\
+                                   Defaults to 'LOCAL'.
             data (np.ndarray, optional): data corresponding to the given variable. Defaults to None.
         """
 
@@ -71,6 +72,10 @@ class TBB_FileData():
                     maxima.append(float(np.max(data[:, i])))
 
                 self.vars.ranges[id][scope.lower()] = {"min": minima, "max": maxima}
+
+        # Update global information
+        if scope == 'GLOBAL':
+            pass
 
     def is_ok(self) -> bool:
         """

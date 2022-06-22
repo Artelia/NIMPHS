@@ -1,5 +1,4 @@
 # <pep8 compliant>
-import bpy
 from bpy.types import Context, Object, UILayout
 
 from typing import Union
@@ -47,36 +46,47 @@ def draw_point_data(layout: UILayout, point_data: TBB_PointDataSettings, show_ra
     data = VariablesInformation(point_data.list)
     for name, unit, values, type, dim in zip(data.names, data.units, data.ranges, data.types, data.dimensions):
 
-        # Build info (value ranges)
-        if values is not None:
+        if values is None:
+            info = "None"
+
+        else:
+            range_data = values[point_data.remap_method.lower()]
+
             if point_data.remap_method == 'LOCAL':
-                if values["local"]["min"] is not None and values["local"]["max"] is not None:
+
+                if range_data["min"] is not None and range_data["max"] is not None:
+
                     if type == 'SCALAR':
-                        info = "[" + "{:.4f}".format(values["local"]["min"]) + " ; "
-                        info += "{:.4f}".format(values["local"]["max"]) + "]"
+                        info = "[" + "{:.4f}".format(range_data["min"]) + " ; "
+                        info += "{:.4f}".format(range_data["max"]) + "]"
+
                     if type == 'VECTOR':
                         info = ""
                         for i in range(dim):
-                            info += "[" + "{:.4f}".format(values["local"]["min"][i]) + " ; "
-                            info += "{:.4f}".format(values["local"]["max"][i]) + "]"
+                            info += "[" + "{:.4f}".format(range_data["min"][i]) + " ; "
+                            info += "{:.4f}".format(range_data["max"][i]) + "]"
+
                 else:
                     info = "None"
+
             elif point_data.remap_method == 'GLOBAL':
-                if values["global"]["min"] is not None and values["global"]["max"] is not None:
+
+                if range_data["min"] is not None and range_data["max"] is not None:
+
                     if type == 'SCALAR':
-                        info = "[" + "{:.4f}".format(values["global"]["min"]) + " ; "
-                        info += "{:.4f}".format(values["global"]["max"]) + "]"
+                        info = "[" + "{:.4f}".format(range_data["min"]) + " ; "
+                        info += "{:.4f}".format(range_data["max"]) + "]"
+
                     if type == 'VECTOR':
                         info = ""
                         for i in range(dim):
-                            info += "[" + "{:.4f}".format(values["global"]["min"][i]) + " ; "
-                            info += "{:.4f}".format(values["global"]["max"][i]) + "]"
+                            info += "[" + "{:.4f}".format(range_data["min"][i]) + " ; "
+                            info += "{:.4f}".format(range_data["max"][i]) + "]"
+
                 else:
                     info = "None"
             else:
                 info = "None"
-        else:
-            info = "None"
 
         subbox = layout.box()
         row = subbox.row()

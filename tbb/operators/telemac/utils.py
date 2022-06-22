@@ -551,7 +551,7 @@ def update_telemac_mesh_sequences(scene: Scene) -> None:
 
         # Check if there are point data to import as vertex colors
         if point_data.import_data and VariablesInformation(point_data.list).length() > 0:
-            sequence = obj.tbb.settings.telemac.m_sequence
+            # sequence = obj.tbb.settings.telemac.m_sequence
 
             # Get file data
             try:

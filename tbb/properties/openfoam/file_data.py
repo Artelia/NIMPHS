@@ -40,7 +40,7 @@ class TBB_OpenfoamFileData(TBB_FileData):
 
         self.nb_time_points = self.file.number_time_points
 
-        # Initialize variable informations
+        # Initialize variable information
         for name in self.raw_mesh.point_data.keys():
             data = self.raw_mesh.point_data[name]
             type = 'SCALAR' if len(data.shape) == 1 else 'VECTOR'

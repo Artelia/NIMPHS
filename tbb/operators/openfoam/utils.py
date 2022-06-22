@@ -10,6 +10,7 @@ import time
 import numpy as np
 from typing import Union
 from pathlib import Path
+from copy import deepcopy
 from pyvista import POpenFOAMReader, UnstructuredGrid
 
 from tbb.properties.utils import VariablesInformation
@@ -215,7 +216,10 @@ def generate_openfoam_streaming_sequence_obj(context: Context, obj: Object, name
     if not success:
         log.error(f"Unable to open file {obj.tbb.settings.file_path}", exc_info=1)
         raise IOError(f"Unable to open file {obj.tbb.settings.file_path}")
+
     context.scene.tbb.file_data[sequence.tbb.uid] = TBB_OpenfoamFileData(file_reader, data)
+    # Copy current variable information
+    context.scene.tbb.file_data[sequence.tbb.uid].vars = deepcopy(context.scene.tbb.file_data[obj.tbb.uid].vars)
 
     return sequence
 
@@ -305,10 +309,10 @@ def prepare_openfoam_point_data(bmesh: Mesh, point_data: Union[TBB_PointDataSett
 
     # Prepare data
     prepared_data = dict()
-    # If point data is string, then the request comes fro the preview panel, so use 'LOCAL' method
+    # If point data is string, then the request comes from the preview panel, so use 'LOCAL' method
     method = 'LOCAL' if isinstance(point_data, str) else point_data.remap_method
 
-    for var, dim, id in zip(variables, dimensions, range(len(variables))):
+    for var, dim in zip(variables, dimensions):
         # Read data
         data = file_data.get_point_data(var["id"])[vertex_ids]
 
@@ -323,12 +327,12 @@ def prepare_openfoam_point_data(bmesh: Mesh, point_data: Union[TBB_PointDataSett
                 prepared_data[var["id"]] = remap_array(np.array(data), in_min=min, in_max=max)
 
             if var["type"] == 'VECTOR':
-                remapped_data = []
+                remapped = []
                 for i in range(dim):
                     min, max = var_range["min"][i], var_range["max"][i]
-                    remapped_data.append(remap_array(np.array(data[:, i]), in_min=min, in_max=max))
+                    remapped.append(remap_array(np.array(data[:, i]), in_min=min, in_max=max))
 
-                prepared_data[var["id"]] = remapped_data
+                prepared_data[var["id"]] = remapped
 
         elif method == 'GLOBAL':
 
@@ -409,6 +413,13 @@ def update_openfoam_streaming_sequence(scene: Scene, obj: Object, time_point: in
         if point_data.import_data and file_data.mesh is not None:
             res = prepare_openfoam_point_data(bmesh, point_data.list, file_data)
             generate_vertex_colors(bmesh, *res)
+
+            # Update information of selected point data
+            new_information = VariablesInformation()
+            selected = VariablesInformation(point_data.list)
+            for var in selected.names:
+                new_information.append(data=file_data.vars.get(var))
+            point_data.list = new_information.dumps()
 
 
 def load_openfoam_file(file_path: str, case_type: str = 'reconstructed',
