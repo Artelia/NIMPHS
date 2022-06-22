@@ -49,18 +49,18 @@ def run_one_step_create_mesh_sequence_telemac(context: Context, op: TBB_OT_Telem
         obj = bpy.data.objects[op.name + "_sequence"]
         file_data = context.scene.tbb.file_data.get(obj.tbb.uid, None)
 
+        file_data.update_data(op.time_point)
         for child, id in zip(obj.children, range(len(obj.children))):
             if not file_data.is_3d():
                 type = child.tbb.settings.telemac.z_name
-                vertices = generate_mesh_data(file_data, op.time_point, type=type)
+                vertices = generate_mesh_data(file_data, type=type)
             else:
-                vertices = generate_mesh_data(file_data, op.time_point, offset=id)
+                vertices = generate_mesh_data(file_data, offset=id)
 
             set_new_shape_key(child, vertices.flatten(), str(op.time_point), op.frame, op.time_point == op.end)
 
 
-def generate_mesh_data(file_data: TBB_TelemacFileData, time_point: int, offset: int = 0,
-                       type: str = 'BOTTOM') -> np.ndarray:
+def generate_mesh_data(file_data: TBB_TelemacFileData, offset: int = 0, type: str = 'BOTTOM') -> np.ndarray:
     """
     Generate the mesh of the selected file. If the selected file is a 2D simulation, you can precise\
     which part of the mesh you want ('BOTTOM' or 'WATER_DEPTH'). If the file is a 3D simulation, you can\
@@ -68,7 +68,6 @@ def generate_mesh_data(file_data: TBB_TelemacFileData, time_point: int, offset: 
 
     Args:
         file_data (TBB_TelemacFileData): file data
-        time_point (int): time point
         offset (int, optional): offset for data reading (id of the plane for 3D simulations). Defaults to 0.
         type (str, optional): name of the variable to use as z-values. Defaults to 'BOTTOM'.
 
@@ -82,46 +81,52 @@ def generate_mesh_data(file_data: TBB_TelemacFileData, time_point: int, offset: 
     if not file_data.is_3d() and type not in ['BOTTOM', 'WATER_DEPTH']:
         raise NameError("Undefined type, please use one in ['BOTTOM', 'WATER_DEPTH']")
 
-    # If file from a 3D simulation
     if file_data.is_3d():
-        possible_var_names = ["ELEVATION Z", "COTE Z"]
-        try:
-            z_values, var_name = file_data.get_data_from_possible_var_names(possible_var_names, time_point)
-        except Exception:
-            z_values = np.zeros((file_data.nb_vertices, 1))
-            log.error(f"No data available from var names {possible_var_names}", exc_info=1)
+        # Get data for z-values
+        names = ["ELEVATION Z", "COTE Z"]
+        data, name = get_possible_point_data(file_data, names)
 
-        # Ids from where to read data in the z_values array
+        if data is None or name is None:
+            data = np.zeros((file_data.nb_vertices, 1))
+            log.warning(f"No data available from var names {names}", exc_info=1)
+
+        # Ids from where to read data in the z-values array
         start_id, end_id = offset * file_data.nb_vertices, offset * file_data.nb_vertices + file_data.nb_vertices
-        vertices = np.hstack((file_data.vertices, z_values[start_id:end_id]))
+        vertices = np.hstack((file_data.vertices, data[start_id:end_id]))
 
-    # If file from a 2D simulation
     else:
         if type == 'BOTTOM':
-            possible_var_names = ["BOTTOM", "FOND"]
-            try:
-                z_values, var_name = file_data.get_data_from_possible_var_names(possible_var_names, time_point)
-            except Exception:
-                z_values = np.zeros((file_data.nb_vertices, 1))
-                log.error(f"No data available from var names {possible_var_names}", exc_info=1)
+            # Get data for z-values
+            names = ["BOTTOM", "FOND"]
+            data, name = get_possible_point_data(file_data, names)
 
-            vertices = np.hstack((file_data.vertices, z_values))
+            if data is None or name is None:
+                data = np.zeros((file_data.nb_vertices, 1))
+                log.warning(f"No data available from var names {names}", exc_info=1)
+
+            vertices = np.hstack((file_data.vertices, data))
 
         if type == 'WATER_DEPTH':
-            possible_var_names = ["WATER DEPTH", "HAUTEUR D'EAU", "FREE SURFACE", "SURFACE LIBRE"]
-            try:
-                z_values, var_name = file_data.get_data_from_possible_var_names(possible_var_names, time_point)
+            # Get data for z-values
+            names = ["WATER DEPTH", "HAUTEUR D'EAU", "FREE SURFACE", "SURFACE LIBRE"]
+            data, name = get_possible_point_data(file_data, names)
 
-                # Compute 'FREE SURFACE' from 'WATER_DEPTH' and 'BOTTOM'
-                if var_name in ["WATER DEPTH", "HAUTEUR D'EAU"]:
-                    bottom, var_name = file_data.get_data_from_possible_var_names(["BOTTOM", "FOND"], time_point)
-                    z_values += bottom
+            if data is None or name is None:
+                data = np.zeros((file_data.nb_vertices, 1))
+                log.warning(f"No data available from var names {names}", exc_info=1)
 
-            except Exception:
-                z_values = np.zeros((file_data.nb_vertices, 1))
-                log.error(f"No data available from var names {possible_var_names}", exc_info=1)
+            # Compute 'FREE SURFACE' from 'WATER_DEPTH' and 'BOTTOM'
+            if name in ["WATER DEPTH", "HAUTEUR D'EAU"]:
+                # Get data for z-values
+                names = ["BOTTOM", "FOND"]
+                bottom, name = get_possible_point_data(file_data, names)
 
-            vertices = np.hstack((file_data.vertices, z_values))
+                if bottom is None or name is None:
+                    log.warning(f"No data available from var names {names}", exc_info=1)
+                else:
+                    data += bottom
+
+            vertices = np.hstack((file_data.vertices, data))
 
     return vertices
 
@@ -142,11 +147,13 @@ def generate_mesh_data_linear_interp(obj: Object, file_data: TBB_TelemacFileData
     """
 
     # Get data from left time point
-    left = generate_mesh_data(file_data, time_info.left, offset=offset, type=obj.tbb.settings.telemac.z_name)
+    file_data.update_data(time_info.left)
+    left = generate_mesh_data(file_data, offset=offset, type=obj.tbb.settings.telemac.z_name)
 
     if not time_info.exists:
         # Get data from right time point
-        right = generate_mesh_data(file_data, time_info.right, offset=offset, type=obj.tbb.settings.telemac.z_name)
+        file_data.update_data(time_info.right)
+        right = generate_mesh_data(file_data, offset=offset, type=obj.tbb.settings.telemac.z_name)
 
         percentage = np.abs(time_info.frame - time_info.left) / (time_info.time_steps + 1)
 
@@ -157,7 +164,7 @@ def generate_mesh_data_linear_interp(obj: Object, file_data: TBB_TelemacFileData
         return left
 
 
-def generate_base_objects(file_data: TBB_TelemacFileData, time_point: int, name: str,
+def generate_base_objects(file_data: TBB_TelemacFileData, name: str,
                           point_data: Union[TBB_PointDataSettings, str] = "") -> list[Object]:
     """
     Generate objects using settings defined by the user. This function generates objects and vertex colors.
@@ -167,7 +174,6 @@ def generate_base_objects(file_data: TBB_TelemacFileData, time_point: int, name:
 
     Args:
         file_data (TBB_TelemacFileData): file data
-        time_point (int): time point
         name (str): name to give to the objects
         point_data (Union[TBB_PointDataSettings, str], optional): point data settings. Defaults to "".
 
@@ -184,25 +190,26 @@ def generate_base_objects(file_data: TBB_TelemacFileData, time_point: int, name:
     objects = []
     if not file_data.is_3d():
         for type in ['BOTTOM', 'WATER_DEPTH']:
-            vertices = generate_mesh_data(file_data, time_point, type=type)
+            vertices = generate_mesh_data(file_data, type=type)
+            print(name, type.lower())
             obj = generate_object_from_data(vertices, file_data.faces, name=name + "_" + type.lower())
             # Save the name of the variable used for 'z-values' of the vertices
             obj.tbb.settings.telemac.z_name = type
 
             if import_point_data:
-                res = prepare_telemac_point_data(obj.data, point_data, file_data, time_point)
+                res = prepare_telemac_point_data(obj.data, point_data, file_data)
                 generate_vertex_colors(obj.data, *res)
 
             objects.append(obj)
     else:
         for plane_id in range(file_data.nb_planes - 1, -1, -1):
-            vertices = generate_mesh_data(file_data, time_point, offset=plane_id)
+            vertices = generate_mesh_data(file_data, offset=plane_id)
             obj = generate_object_from_data(vertices, file_data.faces, name=name + "_plane_" + str(plane_id))
             # Save the name of the variable used for 'z-values' of the vertices
             obj.tbb.settings.telemac.z_name = str(plane_id)
 
             if import_point_data:
-                res = prepare_telemac_point_data(obj.data, point_data, file_data, time_point, offset=plane_id)
+                res = prepare_telemac_point_data(obj.data, point_data, file_data, offset=plane_id)
                 generate_vertex_colors(obj.data, *res)
 
             objects.append(obj)
@@ -299,7 +306,7 @@ def generate_telemac_sequence_obj(context: Context, obj: Object, name: str, time
     context.scene.tbb.file_data[sequence.tbb.uid] = TBB_TelemacFileData(obj.tbb.settings.file_path)
 
     try:
-        children = generate_base_objects(context.scene.tbb.file_data[sequence.tbb.uid], time_point, name + "_sequence")
+        children = generate_base_objects(context.scene.tbb.file_data[sequence.tbb.uid], name + "_sequence")
     except Exception as error:
         raise error
 
@@ -316,8 +323,7 @@ def generate_telemac_sequence_obj(context: Context, obj: Object, name: str, time
 
 
 def prepare_telemac_point_data(bmesh: Mesh, point_data: Union[TBB_PointDataSettings, str],
-                               file_data: TBB_TelemacFileData, time_point: int,
-                               offset: int = 0) -> tuple[list[dict], dict, int]:
+                               file_data: TBB_TelemacFileData, offset: int = 0) -> tuple[list[dict], dict, int]:
     """
     Prepare point data for the 'generate vertex colors' process.
 
@@ -325,7 +331,6 @@ def prepare_telemac_point_data(bmesh: Mesh, point_data: Union[TBB_PointDataSetti
         bmesh (Mesh): blender mesh
         point_data (Union[TBB_PointDataSettings, str]): point data settings
         file_data (TBB_TelemacFileData): file data
-        time_point (int): time point
         offset (int, optional): offset for data reading (id of the plane for 3D simulations). Defaults to 0.
 
     Returns:
@@ -348,28 +353,31 @@ def prepare_telemac_point_data(bmesh: Mesh, point_data: Union[TBB_PointDataSetti
 
     # Prepare data
     prepared_data = dict()
+    # If point data is string, then the request comes from the preview panel, so use 'LOCAL' method
     method = 'LOCAL' if isinstance(point_data, str) else point_data.remap_method
 
     # Note: dim is always 1 (scalars)
-    for var, id in zip(variables, range(len(variables))):
+    for var in variables:
         # Read data
-        data = file_data.get_data_from_var_name(var["id"], time_point, output_shape='ROW')
-        var_ranges = info.get(id, prop='RANGE')
+        data = file_data.get_point_data(var["id"])
 
         # Get right range of data in case of 3D simulation
         if file_data.is_3d():
             start_id, end_id = offset * file_data.nb_vertices, offset * file_data.nb_vertices + file_data.nb_vertices
             data = data[start_id:end_id]
 
-        # Remap data
+        # Get value range
         if method == 'LOCAL':
-            min, max = var_ranges["local"]["min"], var_ranges["local"]["max"]
-            prepared_data[var["id"]] = remap_array(np.array(data)[vertex_ids], in_min=min, in_max=max)
+            # Update variable information
+            file_data.update_var_range(var["name"], var["type"], scope=method)
+            var_range = file_data.vars.get(var["id"], prop='RANGE')[method.lower()]
+
         elif method == 'GLOBAL':
-            min, max = var_ranges["global"]["min"], var_ranges["global"]["max"]
-            prepared_data[var["id"]] = remap_array(np.array(data)[vertex_ids], in_min=min, in_max=max)
-        else:
-            prepared_data[var["id"]] = np.array(data)[vertex_ids]
+            var_range = file_data.vars.get(var["id"], prop='RANGE')[method.lower()]
+
+        # Remap data
+        min, max = var_range["min"], var_range["max"]
+        prepared_data[var["id"]] = remap_array(np.array(data)[vertex_ids], in_min=min, in_max=max)
 
     return generate_vertex_colors_groups(variables), prepared_data, len(vertex_ids)
 
@@ -392,11 +400,13 @@ def prepare_telemac_point_data_linear_interp(bmesh: Mesh, point_data: TBB_PointD
     """
 
     # Get data from left time point
-    left = prepare_telemac_point_data(bmesh, point_data, file_data, time_info.left, offset=offset)
+    file_data.update_data(time_info.left)
+    left = prepare_telemac_point_data(bmesh, point_data, file_data, offset=offset)
 
     if not time_info.exists:
         # Get data from right time point
-        right = prepare_telemac_point_data(bmesh, point_data, file_data, time_info.right, offset=offset)
+        file_data.update_data(time_info.right)
+        right = prepare_telemac_point_data(bmesh, point_data, file_data, offset=offset)
 
         percentage = np.abs(time_info.frame - time_info.left_frame) / (time_info.time_steps + 1)
 
@@ -509,7 +519,7 @@ def update_telemac_streaming_sequence_mesh(obj: Object, child: Object, file_data
 
     else:
         time_point = frame - sequence.start
-        vertices = generate_mesh_data(file_data, time_point, offset=offset, type=child.tbb.settings.telemac.z_name)
+        vertices = generate_mesh_data(file_data, offset=offset, type=child.tbb.settings.telemac.z_name)
 
     # Generate object
     child = generate_object_from_data(vertices, file_data.faces, child.name)
@@ -524,7 +534,8 @@ def update_telemac_streaming_sequence_mesh(obj: Object, child: Object, file_data
         if interpolate.type == 'LINEAR':
             res = prepare_telemac_point_data_linear_interp(child.data, point_data, file_data, time_info, offset=offset)
         elif interpolate.type == 'NONE':
-            res = prepare_telemac_point_data(child.data, point_data, file_data, time_point, offset=offset)
+            file_data.update_data(time_point)
+            res = prepare_telemac_point_data(child.data, point_data, file_data, offset=offset)
 
         generate_vertex_colors(child.data, *res)
 
@@ -600,3 +611,27 @@ def update_telemac_mesh_sequence(bmesh: Mesh, file_data: TBB_TelemacFileData, of
     # Update point data
     res = prepare_telemac_point_data_linear_interp(bmesh, point_data, file_data, time_info, offset=offset)
     generate_vertex_colors(bmesh, *res)
+
+
+def get_possible_point_data(file_data: TBB_TelemacFileData,
+                            names: list[str]) -> tuple[Union[np.ndarray, None], Union[str, None]]:
+    """
+    Check for every variable name and return data associated to the first occurence.
+
+    Args:
+        file_data (TBB_TelemacFileData): file data
+        names (list[str]): list of possible variables
+
+    Returns:
+        tuple[Union[np.ndarray, None], Union[str, None]]: data, name of the variable
+    """
+
+    for name in names:
+        try:
+            data = file_data.get_point_data(name)
+            data = data.reshape(data.shape[0], 1)
+            return data, name
+        except Exception:
+            pass
+
+    return None, None

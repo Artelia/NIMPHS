@@ -83,7 +83,7 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         file_data = context.scene.tbb.file_data.get(obj.tbb.uid, None)
 
         # Generate objects
-        children = generate_base_objects(file_data, 0, self.name)
+        children = generate_base_objects(file_data, self.name)
         # Link generated objects to main 'Null' object
         for child in children:
             context.scene.collection.objects.link(child)

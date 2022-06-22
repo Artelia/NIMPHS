@@ -40,8 +40,8 @@ class TBB_OT_TelemacPreview(Operator):
         point_data = obj.tbb.settings.preview_point_data
 
         try:
-            file_data.update(time_point)
-            children = generate_base_objects(file_data, time_point, obj.name, point_data)
+            file_data.update_data(time_point)
+            children = generate_base_objects(file_data, obj.name, point_data)
 
             for child in children:
                 # Check if not already in collection

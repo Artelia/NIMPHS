@@ -76,7 +76,7 @@ class TBB_TelemacFileData(TBB_FileData):
             id (Union[str, int]): identifier of the variable from which to get data
         """
 
-        if isinstance(id, int):
+        if isinstance(id, str):
             id = self.vars.names.index(id)
 
         return self.data[id]
