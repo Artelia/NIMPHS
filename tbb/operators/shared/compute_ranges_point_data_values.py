@@ -1,9 +1,11 @@
 # <pep8 compliant>
+from bpy.props import PointerProperty
 from bpy.types import Operator, Context, Event
-from bpy.props import EnumProperty, StringProperty, PointerProperty
 
 import logging
 log = logging.getLogger(__name__)
+
+import numpy as np
 
 from tbb.panels.utils import draw_point_data, get_selected_object
 from tbb.operators.shared.modal_operator import TBB_ModalOperator
@@ -22,6 +24,15 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
 
     #: TBB_PointDataSettings: Point data settings.
     point_data: PointerProperty(type=TBB_PointDataSettings)
+
+    #: int: Identifier of the last time point
+    end: int = 0
+    #: int: Current time point
+    time_point: int = 0
+    #: list[float]: List of minima for each selected variable
+    minima: dict[list[float]] = {}
+    #: list[float]: List of maxima for each selected variable
+    maxima: dict[list[float]] = {}
 
     @classmethod
     def poll(cls, context: Context) -> bool:
@@ -104,7 +115,18 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
             set: state of the operator
         """
 
-        print("HELLO")
+        self.minima.clear()
+        self.maxima.clear()
+        self.time_point = 0
+        self.end = context.scene.tbb.file_data["ops"].nb_time_points - 1
+
+        if self.mode == 'MODAL':
+            super().prepare(context, "Computing...")
+            return {'RUNNING_MODAL'}
+
+        if self.mode == 'NORMAL':
+            pass
+
         return {'FINISHED'}
 
     def modal(self, context: Context, event: Event) -> set:
@@ -125,19 +147,18 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
 
         if event.type == 'TIMER':
             if self.time_point <= self.end:
-                state = self.run_one_step(context)
-                if state != {'PASS_THROUGH'}:
-                    return state
+                file_data = context.scene.tbb.file_data["ops"]
+                file_data.update_data(self.time_point)
+                data = file_data.get_point_data()
+                self.minima.append()
 
             else:
                 super().stop(context)
-                self.report({'INFO'}, "Create sequence finished")
+                self.report({'INFO'}, "Compute ranges finished")
                 return {'FINISHED'}
 
             # Update the progress bar
-            context.scene.tbb.m_op_value = self.time_point / (self.end - self.start)
-            context.scene.tbb.m_op_value *= 100
+            context.scene.tbb.m_op_value = (self.time_point / self.end) * 100
             self.time_point += 1
-            self.frame += 1
 
         return {'PASS_THROUGH'}

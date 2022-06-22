@@ -23,18 +23,19 @@ class TBB_ModalOperator():
     #: bpy.types.Timer: Timer which triggers the 'modal' method of operators
     timer: Timer = None
 
-    def prepare(self, context: Context, label: str) -> None:
+    def prepare(self, context: Context, label: str, step: float = 1e-6) -> None:
         """
         Prepare the execution of the modal operator.
 
         Args:
             context (Context): context
             label (str): label to display on the progress bar
+            step (float, optional): time_step value for the timer. Defaults to 1e-6.
         """
 
         # Create timer event
         wm = context.window_manager
-        self.timer = wm.event_timer_add(time_step=1e-6, window=context.window)
+        self.timer = wm.event_timer_add(time_step=step, window=context.window)
         wm.modal_handler_add(self)
 
         # Setup prograss bar

@@ -142,8 +142,7 @@ class TBB_CreateMeshSequence(TBB_CreateSequence, TBB_ModalOperator):
                 return {'FINISHED'}
 
             # Update the progress bar
-            context.scene.tbb.m_op_value = self.time_point / (self.end - self.start)
-            context.scene.tbb.m_op_value *= 100
+            context.scene.tbb.m_op_value = (self.time_point / (self.end - self.start)) * 100
             self.time_point += 1
             self.frame += 1
 
