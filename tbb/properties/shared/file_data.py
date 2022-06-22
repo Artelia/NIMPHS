@@ -40,25 +40,37 @@ class TBB_FileData():
 
         pass
 
-    def update_vars(self, vars: list[dict], scope: str = 'LOCAL') -> None:
+    def update_var_range(self, name: str, shape: str, scope: str = 'LOCAL', data: np.ndarray = None) -> None:
         """
-        Update variables information (value ranges).
+        Update variable information (value ranges).
 
         Args:
-            vars (list[dict]): list of variables to update {"name": name, "data": data or None}
-            scope (str): indicate which information to update. Enum in ['LOCAL', 'GLOBAL'].
+            name (str): name of the variable to update
+            shape (str): type of the variable. Enum in ['SCALAR', 'VECTOR'].
+            scope (str, optional): indicate which information to update. Enum in ['LOCAL', 'GLOBAL']. Defaults to 'LOCAL'.
+            data (np.ndarray, optional): data corresponding to the given variable. Defaults to None.
         """
 
-        for info in vars:
-            # Get data if not provided
-            if info["data"] is None:
-                info["data"] = self.get_point_data(info["name"])
+        # Get data if not provided
+        if data is None:
+            data = self.get_point_data(name)
 
-            id = self.vars.names.index(info["name"])
+        id = self.vars.names.index(name)
 
-            # Update local information
-            if scope == 'LOCAL':
-                self.vars.ranges[id][scope.lower()] = {"min": np.min(info["data"]), "max": np.max(info["data"])}
+        # Update local information
+        if scope == 'LOCAL':
+
+            if shape == 'SCALAR':
+                self.vars.ranges[id][scope.lower()] = {"min": float(np.min(data)), "max": float(np.max(data))}
+
+            if shape == 'VECTOR':
+                minima, maxima = [], []
+
+                for i in range(data.shape[1]):
+                    minima.append(float(np.min(data[:, i])))
+                    maxima.append(float(np.max(data[:, i])))
+
+                self.vars.ranges[id][scope.lower()] = {"min": minima, "max": maxima}
 
     def is_ok(self) -> bool:
         """

@@ -142,12 +142,16 @@ def generate_mesh_data(file_data: TBB_OpenfoamFileData,
         if info.length() > 0:
             info = info.get(0)
             mesh.set_active_scalars(name=info["name"], preference="point")
+
             if info["type"] == 'SCALAR':
                 mesh.clip_scalar(inplace=True, scalars=info["name"], invert=clip.scalar.invert, value=clip.scalar.value)
+
             if info["type"] == 'VECTOR':
                 value = np.linalg.norm(clip.scalar.vector_value)
                 mesh.clip_scalar(inplace=True, scalars=info["name"], invert=clip.scalar.invert, value=value)
+
             surface = mesh.extract_surface(nonlinear_subdivision=0)
+
         else:
             surface = mesh.extract_surface(nonlinear_subdivision=0)
 
@@ -164,13 +168,17 @@ def generate_mesh_data(file_data: TBB_OpenfoamFileData,
     # Reshape the faces array
     if surface.is_all_triangles:
         faces = np.array(surface.faces).reshape(-1, 4)[:, 1:4]
+
     else:
         faces_indices = np.array(surface.faces)
         padding, padding_id = 0, 0
         faces = []
+
         for id in range(surface.n_faces):
+
             if padding_id >= faces_indices.size:
                 break
+
             padding = faces_indices[padding_id]
             faces.append(faces_indices[padding_id + 1: padding_id + 1 + padding])
             padding_id = padding_id + (padding + 1)
@@ -297,28 +305,33 @@ def prepare_openfoam_point_data(bmesh: Mesh, point_data: Union[TBB_PointDataSett
 
     # Prepare data
     prepared_data = dict()
+    # If point data is string, then the request comes fro the preview panel, so use 'LOCAL' method
     method = 'LOCAL' if isinstance(point_data, str) else point_data.remap_method
 
     for var, dim, id in zip(variables, dimensions, range(len(variables))):
         # Read data
-        data = file_data.mesh.get_array(var["id"], preference='point')[vertex_ids]
-        var_ranges = info.get(id, prop='RANGE')
+        data = file_data.get_point_data(var["id"])[vertex_ids]
 
         # Remap data
         if method == 'LOCAL':
+            # Update variable information
+            file_data.update_var_range(var["name"], var["type"], scope=method)
+            var_range = file_data.vars.get(var["id"], prop='RANGE')[method.lower()]
+
             if var["type"] == 'SCALAR':
-                min, max = var_ranges["local"]["min"], var_ranges["local"]["max"]
+                min, max = var_range["min"], var_range["max"]
                 prepared_data[var["id"]] = remap_array(np.array(data), in_min=min, in_max=max)
 
             if var["type"] == 'VECTOR':
                 remapped_data = []
                 for i in range(dim):
-                    min, max = var_ranges["local"]["min"][i], var_ranges["local"]["max"][i]
+                    min, max = var_range["min"][i], var_range["max"][i]
                     remapped_data.append(remap_array(np.array(data[:, i]), in_min=min, in_max=max))
 
                 prepared_data[var["id"]] = remapped_data
 
         elif method == 'GLOBAL':
+
             log.warning("'GLOBAL' remapping method not implemented yet.")
             if var["type"] == 'VECTOR':
                 prepared_data[var["id"]] = [data[:, 0], data[:, 1], data[:, 2]]
@@ -358,16 +371,16 @@ def update_openfoam_streaming_sequences(scene: Scene) -> None:
                 if time_point >= 0 and time_point < sequence.length:
                     start = time.time()
                     try:
-                        update_openfoam_streaming_sequence_mesh(scene, obj, time_point)
+                        update_openfoam_streaming_sequence(scene, obj, time_point)
                     except Exception:
                         log.error(f"Error updating {obj.name}", exc_info=1)
 
                     log.info(f"Update {obj.name}: " + "{:.4f}".format(time.time() - start) + "s")
 
 
-def update_openfoam_streaming_sequence_mesh(scene: Scene, obj: Object, time_point: int) -> None:
+def update_openfoam_streaming_sequence(scene: Scene, obj: Object, time_point: int) -> None:
     """
-    Update the mesh of the given OpenFOAM sequence object.
+    Update the given OpenFOAM sequence object.
 
     Args:
         scene (Scene): scene
@@ -432,10 +445,9 @@ def load_openfoam_file(file_path: str, case_type: str = 'reconstructed',
     file_reader.decompose_polyhedra = decompose_polyhedra
     return True, file_reader
 
+
 # Code taken from the Stop-motion-OBJ addon
 # Link: https://github.com/neverhood311/Stop-motion-OBJ/blob/rename-module-name/src/stop_motion_obj.py
-
-
 def add_mesh_to_sequence(obj: Object, bmesh: Mesh) -> int:
     """
     Add a mesh to an OpenFOAM 'mesh sequence'.

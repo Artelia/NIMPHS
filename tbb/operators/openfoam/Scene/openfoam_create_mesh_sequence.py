@@ -9,7 +9,6 @@ import time
 
 from tbb.panels.utils import get_selected_object
 from tbb.panels.openfoam.utils import draw_clip_settings
-from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
 from tbb.properties.openfoam.openfoam_clip import TBB_OpenfoamClipProperty
 from tbb.operators.shared.create_mesh_sequence import TBB_CreateMeshSequence
 from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
@@ -62,21 +61,12 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
             set: state of the operator
         """
 
-        from tbb.operators.openfoam.utils import load_openfoam_file
-
         self.obj = get_selected_object(context)
         if self.obj is None:
             return {'CANCELLED'}
 
-        # Load file data
-        succeed, file_reader = load_openfoam_file(self.obj.tbb.settings.file_path,
-                                                  case_type=self.import_settings.case_type,
-                                                  decompose_polyhedra=self.import_settings.decompose_polyhedra)
-        if not succeed:
-            log.critical(f"Unable to open file '{self.obj.tbb.settings.file_path}'")
-            return {'CANCELLED'}
-
-        context.scene.tbb.file_data["ops"] = TBB_OpenfoamFileData(file_reader, self.import_settings)
+        # Copy file data information
+        context.scene.tbb.file_data["ops"] = context.scene.tbb.file_data[self.obj.tbb.uid]
         self.max_length = context.scene.tbb.file_data["ops"].nb_time_points
 
         # Used in tests (will run in iterative mode instead of modal)

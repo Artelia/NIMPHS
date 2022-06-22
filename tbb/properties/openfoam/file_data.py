@@ -55,7 +55,7 @@ class TBB_OpenfoamFileData(TBB_FileData):
             id (Union[str, int]): identifier of the variable from which to get data
         """
 
-        return np.array(self.mesh.point_data(id))
+        return self.mesh.get_array(name=id, preference='point')
 
     def update_mesh(self, time_point: int, io_settings: Union[TBB_OpenfoamImportSettings, None] = None) -> None:
         """
