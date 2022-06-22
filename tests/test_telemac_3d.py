@@ -144,9 +144,6 @@ def test_point_data_preview_object_telemac_3d(preview_object):
 
 
 def test_create_streaming_sequence_telemac_3d(preview_object, point_data_test):
-    # Get file data
-    file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
-
     op = bpy.ops.tbb.telemac_create_streaming_sequence
     state = op('EXEC_DEFAULT', start=0, max_length=10, length=10, name="My_TELEMAC_Streaming_Sim_3D",
                module='TELEMAC', shade_smooth=True)
@@ -184,7 +181,6 @@ def test_streaming_sequence_telemac_3d(streaming_sequence, frame_change_pre, poi
     assert sequence.length == 10
 
     # Test point data settings
-    file_data = bpy.context.scene.tbb.file_data[streaming_sequence.tbb.uid]
     assert streaming_sequence.tbb.settings.point_data.import_data is True
     point_data_name = json.loads(streaming_sequence.tbb.settings.point_data.list)["names"][0]
     assert point_data_name == json.loads(point_data_test)["names"][0]

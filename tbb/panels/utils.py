@@ -96,4 +96,4 @@ def draw_point_data(layout: UILayout, point_data: TBB_PointDataSettings, show_ra
             op.var_name = name
             op.source = src
 
-        row.label(text=(name + ", (" + unit + ")") if unit != "" else name + ((",  " + info) if show_range else ""))
+        row.label(text=((name + ", (" + unit + ")") if unit != "" else name) + ((",  " + info) if show_range else ""))

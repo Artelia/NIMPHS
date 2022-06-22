@@ -101,8 +101,8 @@ class TBB_CreateMeshSequence(TBB_CreateSequence):
             set: state of the operator
         """
 
-        # Copy data from list into point_data.list
-        self.point_data.list = self.list
+        # Copy data from temporary variables information
+        self.point_data.list = context.scene.tbb.op_vars.dumps()
 
         # Create timer event
         wm = context.window_manager

@@ -63,9 +63,6 @@ class TBB_CreateSequence(Operator):
     #: TBB_PointDataSettings: Point data settings.
     point_data: PointerProperty(type=TBB_PointDataSettings)
 
-    #: str: JSON strigified list of point data to import as vertex colors.
-    list: str = VariablesInformation().dumps()
-
     #: bpy.types.Object: Selected object
     obj: Object = None
 
@@ -107,7 +104,7 @@ class TBB_CreateSequence(Operator):
 
         if self.point_data.import_data:
 
-            # Update list of chosen point data fro this operator. Ugly but it works.
+            # Update list of chosen point data from this operator. Ugly but it works.
             self.point_data.list = context.scene.tbb.op_vars.dumps()
             draw_point_data(box, self.point_data, show_range=False, edit=True, src='OPERATOR')
 

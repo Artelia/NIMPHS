@@ -629,7 +629,7 @@ def update_telemac_mesh_sequence(bmesh: Mesh, file_data: TBB_TelemacFileData, of
 def get_possible_point_data(file_data: TBB_TelemacFileData,
                             names: list[str]) -> tuple[Union[np.ndarray, None], Union[str, None]]:
     """
-    Check for every variable name and return data associated to the first occurence.
+    Check for every variable name and return data associated to the first occurrence.
 
     Args:
         file_data (TBB_TelemacFileData): file data

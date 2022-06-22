@@ -23,9 +23,6 @@ class TBB_OT_ComputeRangesPointDataValues(Operator):
     #: TBB_PointDataSettings: Point data settings.
     point_data: PointerProperty(type=TBB_PointDataSettings)
 
-    #: str: JSON strigified list of point data to import as vertex colors.
-    list: str = VariablesInformation().dumps()
-
     @classmethod
     def poll(cls, context: Context) -> bool:
         """
@@ -91,7 +88,8 @@ class TBB_OT_ComputeRangesPointDataValues(Operator):
 
         if self.point_data.import_data:
 
-            self.point_data.list = self.list
+            # Update list of chosen point data from this operator. Ugly but it works.
+            self.point_data.list = context.scene.tbb.op_vars.dumps()
             draw_point_data(box, self.point_data, show_range=False, edit=True, src='OPERATOR')
 
             row = box.row()
