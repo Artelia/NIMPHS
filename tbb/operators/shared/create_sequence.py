@@ -77,7 +77,7 @@ class TBB_CreateSequence(Operator):
             bool: state of the operator
         """
 
-        csir = context.scene.tbb.create_sequence_is_running  # csir = create sequence is running
+        csir = context.scene.tbb.m_op_running  # csir = create sequence is running
         obj = get_selected_object(context)
         if obj is None:
             return False

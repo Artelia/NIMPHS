@@ -46,7 +46,7 @@ class TBB_ModulePanel(Panel):
         row.operator("tbb.edit_file_path", text="", icon="GREASEPENCIL")
 
         # Check if we need to lock the ui
-        enable_rows = not context.scene.tbb.create_sequence_is_running
+        enable_rows = not context.scene.tbb.m_op_running
 
         file_data = context.scene.tbb.file_data.get(obj.tbb.uid, None)
 

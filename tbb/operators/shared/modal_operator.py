@@ -38,7 +38,7 @@ class TBB_ModalOperator():
             wm.event_timer_remove(self.timer)
             self.timer = None
 
-        context.scene.tbb.create_sequence_is_running = False
+        context.scene.tbb.m_op_running = False
         context.scene.tbb.progress_value = -1.0
 
         # Reset operator variables information

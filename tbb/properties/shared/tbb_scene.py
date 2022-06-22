@@ -18,10 +18,10 @@ class TBB_Scene(PropertyGroup):
     #: VariablesInformation: Place to store temporary variables information for operators.
     op_vars: VariablesInformation = VariablesInformation()
 
-    #: bpy.props.BoolProperty: State of the 'create sequence' operation (used by all 'create sequence' operators)
-    create_sequence_is_running: BoolProperty(
-        name="Create sequence state",
-        description="State of the 'create sequence' operation (used by all 'create sequence' operators)",
+    #: bpy.props.BoolProperty: Indicate if a modal operator is running.
+    m_op_running: BoolProperty(
+        name="Modal operator running",
+        description="Indicate if a modal operator is running.",
         default=False,
     )
 

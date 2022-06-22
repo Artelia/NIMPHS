@@ -457,7 +457,7 @@ def update_telemac_streaming_sequences(scene: Scene) -> None:
     """
 
     # Check if a create sequence operator is running
-    if scene.tbb.create_sequence_is_running:
+    if scene.tbb.m_op_running:
         return
 
     for obj in scene.objects:
@@ -556,7 +556,7 @@ def update_telemac_mesh_sequences(scene: Scene) -> None:
     """
 
     # Check if a create sequence operator is running
-    if scene.tbb.create_sequence_is_running:
+    if scene.tbb.m_op_running:
         return
 
     for obj in scene.objects:

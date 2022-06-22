@@ -104,7 +104,7 @@ class TBB_CreateMeshSequence(TBB_CreateSequence, TBB_ModalOperator):
         self.frame = context.scene.frame_current
         self.time_point = self.start
 
-        context.scene.tbb.create_sequence_is_running = True
+        context.scene.tbb.m_op_running = True
 
         if self.mode == 'MODAL':
             return {'RUNNING_MODAL'}
