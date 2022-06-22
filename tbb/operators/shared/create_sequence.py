@@ -2,7 +2,6 @@
 from bpy.types import Operator, Context, Object
 from bpy.props import PointerProperty, IntProperty, StringProperty, EnumProperty
 
-from tbb.properties.utils import VariablesInformation
 from tbb.panels.utils import draw_point_data, get_selected_object
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 
@@ -113,27 +112,3 @@ class TBB_CreateSequence(Operator):
             op.available = file_data.vars.dumps()
             op.chosen = self.point_data.list
             op.source = 'OPERATOR'
-
-    def stop(self, context: Context, cancelled: bool = False) -> None:
-        """
-        Stop the 'create sequence' process. Used for both modules.
-
-        Args:
-            context (Context): context
-            cancelled (bool, optional): ask to report 'create sequence cancelled'. Defaults to False.
-        """
-
-        # Reset timer if it was running modal
-        if self.timer is not None:
-            wm = context.window_manager
-            wm.event_timer_remove(self.timer)
-            self.timer = None
-
-        context.scene.tbb.create_sequence_is_running = False
-        context.scene.tbb.progress_value = -1.0
-
-        # Reset operator variables information
-        context.scene.tbb.op_vars.clear()
-
-        if cancelled:
-            self.report({'INFO'}, "Create sequence cancelled")

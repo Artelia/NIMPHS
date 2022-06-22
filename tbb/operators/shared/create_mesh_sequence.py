@@ -1,32 +1,19 @@
 # <pep8 compliant>
-from bpy.types import Event, Context, Timer
-from bpy.props import EnumProperty, IntProperty
+from bpy.props import IntProperty
+from bpy.types import Event, Context
 
 import logging
 log = logging.getLogger(__name__)
 
+from tbb.operators.shared.modal_operator import TBB_ModalOperator
 from tbb.operators.shared.create_sequence import TBB_CreateSequence
 
 
-class TBB_CreateMeshSequence(TBB_CreateSequence):
+class TBB_CreateMeshSequence(TBB_CreateSequence, TBB_ModalOperator):
     """Operator to create mesh sequences used in both modules."""
 
     register_cls = False
     is_custom_base_cls = True
-
-    #: bpy.props.EnumProperty: Indicate whether the operator should run modal or normal. Enum in ['MODAL', 'NORMAL'].
-    mode: EnumProperty(
-        name="Mode",  # noqa: F821
-        description="Indicate whether the operator should run modal or normal. Enum in ['MODAL', 'NORMAL']",
-        items=[
-            ('MODAL', "Modal", "TODO"),  # noqa: F821
-            ('NORMAL', "Normal", "TODO"),  # noqa: F821
-        ],
-        options={'HIDDEN'},  # noqa F821
-    )
-
-    #: bpy.types.Timer: Timer which triggers the 'modal' method of operators
-    timer: Timer = None
 
     #: int: Time point currently processed when creating a sequence
     time_point: int = 0

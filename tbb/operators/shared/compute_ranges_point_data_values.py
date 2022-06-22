@@ -5,19 +5,19 @@ from bpy.props import EnumProperty, StringProperty, PointerProperty
 import logging
 log = logging.getLogger(__name__)
 
-from tbb.properties.utils import VariablesInformation
 from tbb.panels.utils import draw_point_data, get_selected_object
+from tbb.operators.shared.modal_operator import TBB_ModalOperator
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 
 
-class TBB_OT_ComputeRangesPointDataValues(Operator):
+class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
     """Operator to compute ranges of point data values."""
 
     register_cls = True
     is_custom_base_cls = False
 
     bl_idname = "tbb.compute_ranges_point_data_values"
-    bl_label = "Point data value range"
+    bl_label = "Compute ranges of point data values"
     bl_description = "Compute ranges of point data values"
 
     #: TBB_PointDataSettings: Point data settings.
@@ -54,7 +54,6 @@ class TBB_OT_ComputeRangesPointDataValues(Operator):
             set: state of the operator
         """
 
-        print(self.__class__.__name__)
         obj = get_selected_object(context)
         if obj is None:
             return {'CANCELLED'}
@@ -82,18 +81,64 @@ class TBB_OT_ComputeRangesPointDataValues(Operator):
         # Import point data
         box = self.layout.box()
         row = box.row()
-        row.label(text="Point data")
+        row.label(text="Variables")
+
+        # Update list of chosen point data from this operator. Ugly but it works.
+        self.point_data.list = context.scene.tbb.op_vars.dumps()
+
+        draw_point_data(box, self.point_data, show_remap=False, show_range=False, edit=True, src='OPERATOR')
+
         row = box.row()
-        row.prop(self.point_data, "import_data", text="Import point data")
+        op = row.operator("tbb.add_point_data", text="Add", icon='ADD')
+        op.available = file_data.vars.dumps()
+        op.chosen = self.point_data.list
+        op.source = 'OPERATOR'
 
-        if self.point_data.import_data:
+    def execute(self, context: Context) -> set:
+        """
+        Compute ranges of point data values ('GLOBAL' scope).
 
-            # Update list of chosen point data from this operator. Ugly but it works.
-            self.point_data.list = context.scene.tbb.op_vars.dumps()
-            draw_point_data(box, self.point_data, show_range=False, edit=True, src='OPERATOR')
+        Args:
+            context (Context): context
 
-            row = box.row()
-            op = row.operator("tbb.add_point_data", text="Add", icon='ADD')
-            op.available = file_data.vars.dumps()
-            op.chosen = self.point_data.list
-            op.source = 'OPERATOR'
+        Returns:
+            set: state of the operator
+        """
+
+        print("HELLO")
+        return {'FINISHED'}
+
+    def modal(self, context: Context, event: Event) -> set:
+        """
+        Run one step of the 'compute ranges of point data values' process.
+
+        Args:
+            context (Context): context
+            event (Event): event
+
+        Returns:
+            set: state of the operator
+        """
+
+        if event.type == 'ESC':
+            super().stop(context, cancelled=True)
+            return {'CANCELLED'}
+
+        if event.type == 'TIMER':
+            if self.time_point <= self.end:
+                state = self.run_one_step(context)
+                if state != {'PASS_THROUGH'}:
+                    return state
+
+            else:
+                super().stop(context)
+                self.report({'INFO'}, "Create sequence finished")
+                return {'FINISHED'}
+
+            # Update the progress bar
+            context.scene.tbb.progress_value = self.time_point / (self.end - self.start)
+            context.scene.tbb.progress_value *= 100
+            self.time_point += 1
+            self.frame += 1
+
+        return {'PASS_THROUGH'}

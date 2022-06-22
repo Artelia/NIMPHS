@@ -26,8 +26,8 @@ def get_selected_object(context: Context) -> Union[Object, None]:
     return obj
 
 
-def draw_point_data(layout: UILayout, point_data: TBB_PointDataSettings, show_range: bool = True,
-                    edit: bool = True, src: str = 'OBJECT') -> None:
+def draw_point_data(layout: UILayout, point_data: TBB_PointDataSettings, show_remap: bool = True,
+                    show_range: bool = True, edit: bool = True, src: str = 'OBJECT') -> None:
     """
     Draw point data settings.
 
@@ -35,12 +35,14 @@ def draw_point_data(layout: UILayout, point_data: TBB_PointDataSettings, show_ra
         layout (UILayout): layout
         point_data (TBB_PointDataSettings): point data settings
         src (str): which source is calling this function. Enum in ['OBJECT', 'OPERATOR'].
+        show_remap (bool, optional): show remap method option. Defaults to True.
         show_range (bool, optional): show value ranges of selected point data. Defaults to True.
         edit (bool, optional): show edit buttons. Defaults to True.
     """
 
-    row = layout.row()
-    row.prop(point_data, "remap_method", text="Method")
+    if show_remap:
+        row = layout.row()
+        row.prop(point_data, "remap_method", text="Method")
 
     # Display selected point data
     data = VariablesInformation(point_data.list)
