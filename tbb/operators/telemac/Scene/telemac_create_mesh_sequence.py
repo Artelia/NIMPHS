@@ -61,8 +61,12 @@ class TBB_OT_TelemacCreateMeshSequence(TBB_CreateMeshSequence):
         if self.obj is None:
             return {'CANCELLED'}
 
-        # Load file data
-        context.scene.tbb.file_data["ops"] = TBB_TelemacFileData(self.obj.tbb.settings.file_path, False)
+        if context.scene.tbb.file_data.get(self.obj.tbb.uid, None) is None:
+            self.report({'ERROR'}, "Reload file data first")
+            return {'CANCELLED'}
+
+        # "Copy" file data
+        context.scene.tbb.file_data["ops"] = context.scene.tbb.file_data[self.obj.tbb.uid]
         self.max_length = context.scene.tbb.file_data["ops"].nb_time_points
 
         # Used in tests

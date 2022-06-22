@@ -65,7 +65,11 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
         if self.obj is None:
             return {'CANCELLED'}
 
-        # Copy file data information
+        if context.scene.tbb.file_data.get(self.obj.tbb.uid, None) is None:
+            self.report({'ERROR'}, "Reload file data first")
+            return {'CANCELLED'}
+
+        # "Copy" file data information
         context.scene.tbb.file_data["ops"] = context.scene.tbb.file_data[self.obj.tbb.uid]
         self.max_length = context.scene.tbb.file_data["ops"].nb_time_points
 
