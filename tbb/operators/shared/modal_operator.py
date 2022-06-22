@@ -23,6 +23,26 @@ class TBB_ModalOperator():
     #: bpy.types.Timer: Timer which triggers the 'modal' method of operators
     timer: Timer = None
 
+    def prepare(self, context: Context, label: str) -> None:
+        """
+        Prepare the execution of the modal operator.
+
+        Args:
+            context (Context): context
+            label (str): label to display on the progress bar
+        """
+
+        # Create timer event
+        wm = context.window_manager
+        self.timer = wm.event_timer_add(time_step=1e-6, window=context.window)
+        wm.modal_handler_add(self)
+
+        # Setup prograss bar
+        context.scene.tbb.m_op_label = label
+        context.scene.tbb.m_op_value = -1.0
+
+        context.scene.tbb.m_op_running = True
+
     def stop(self, context: Context, cancelled: bool = False) -> None:
         """
         Stop the 'create sequence' process. Used for both modules.
@@ -39,7 +59,7 @@ class TBB_ModalOperator():
             self.timer = None
 
         context.scene.tbb.m_op_running = False
-        context.scene.tbb.progress_value = -1.0
+        context.scene.tbb.m_op_value = -1.0
 
         # Reset operator variables information
         context.scene.tbb.op_vars.clear()

@@ -91,22 +91,12 @@ class TBB_CreateMeshSequence(TBB_CreateSequence, TBB_ModalOperator):
         # Copy data from temporary variables information
         self.point_data.list = context.scene.tbb.op_vars.dumps()
 
-        # Create timer event
-        wm = context.window_manager
-        self.timer = wm.event_timer_add(time_step=1e-6, window=context.window)
-        wm.modal_handler_add(self)
-
-        # Setup prograss bar
-        context.scene.tbb.progress_label = "Create sequence"
-        context.scene.tbb.progress_value = -1.0
-
         # Load data for the create sequence process
         self.frame = context.scene.frame_current
         self.time_point = self.start
 
-        context.scene.tbb.m_op_running = True
-
         if self.mode == 'MODAL':
+            super().prepare(context, "Generating sequence...")
             return {'RUNNING_MODAL'}
 
         elif self.mode == 'NORMAL':
@@ -121,6 +111,7 @@ class TBB_CreateMeshSequence(TBB_CreateSequence, TBB_ModalOperator):
 
         else:
             log.warning(f"Undefined operator mode '{self.mode}'. Running modal by default.", exc_info=1)
+            super().prepare(context, "Generating sequence...")
             return {'RUNNING_MODAL'}
 
     def modal(self, context: Context, event: Event) -> set:
@@ -151,8 +142,8 @@ class TBB_CreateMeshSequence(TBB_CreateSequence, TBB_ModalOperator):
                 return {'FINISHED'}
 
             # Update the progress bar
-            context.scene.tbb.progress_value = self.time_point / (self.end - self.start)
-            context.scene.tbb.progress_value *= 100
+            context.scene.tbb.m_op_value = self.time_point / (self.end - self.start)
+            context.scene.tbb.m_op_value *= 100
             self.time_point += 1
             self.frame += 1
 

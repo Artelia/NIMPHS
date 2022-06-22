@@ -77,12 +77,11 @@ class TBB_CreateSequence(Operator):
             bool: state of the operator
         """
 
-        csir = context.scene.tbb.m_op_running  # csir = create sequence is running
         obj = get_selected_object(context)
         if obj is None:
             return False
 
-        return obj.tbb.module in ['OpenFOAM', 'TELEMAC'] and not csir
+        return obj.tbb.module in ['OpenFOAM', 'TELEMAC'] and not context.scene.tbb.m_op_running
 
     def draw(self, context: Context) -> None:
         """

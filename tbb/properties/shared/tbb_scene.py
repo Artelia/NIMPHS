@@ -25,8 +25,8 @@ class TBB_Scene(PropertyGroup):
         default=False,
     )
 
-    #: bpy.props.FloatProperty: Progress bar value which is used by the progress bar when modal operators are running
-    progress_value: FloatProperty(
+    #: bpy.props.FloatProperty: Value used by the progress bar when modal operators are running
+    m_op_value: FloatProperty(
         name="Progress value",
         default=-1.0,
         min=-1.0,
@@ -39,7 +39,7 @@ class TBB_Scene(PropertyGroup):
     )
 
     #: bpy.props.StringProperty: Label displayed on the progress bar
-    progress_label: StringProperty(
+    m_op_label: StringProperty(
         name="Progress label",
         default="Progress",  # noqa: F821
         update=update_progress_bar,

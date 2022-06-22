@@ -1,7 +1,7 @@
 # <pep8 compliant>
 import bpy
 from bpy.app.handlers import persistent
-from bpy.types import Context, VIEW3D_HT_tool_header, Object, Mesh, Scene
+from bpy.types import Context, VIEW3D_HT_tool_header, Object, Mesh
 
 import logging
 log = logging.getLogger(__name__)
@@ -600,11 +600,11 @@ def register_custom_progress_bar() -> None:
         info_header_draw(self, context)
 
         # Then add the prop that acts as a progress bar
-        progress_value = context.scene.tbb.progress_value
-        if progress_value >= 0.0 and progress_value <= 100.0:
+        m_op_value = context.scene.tbb.m_op_value
+        if m_op_value >= 0.0 and m_op_value <= 100.0:
             self.layout.separator()
-            text = context.scene.tbb.progress_label
-            self.layout.prop(context.scene.tbb, "progress_value", text=text, slider=True)
+            text = context.scene.tbb.m_op_label
+            self.layout.prop(context.scene.tbb, "m_op_value", text=text, slider=True)
 
     # Replace the draw function by our new function
     # Blender crashes sometimes when using the progress bar in dev mode

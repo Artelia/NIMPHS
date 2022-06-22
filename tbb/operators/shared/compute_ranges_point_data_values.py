@@ -35,12 +35,11 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
             bool: state of the operator
         """
 
-        csir = context.scene.tbb.m_op_running  # csir = create sequence is running
         obj = get_selected_object(context)
         if obj is None:
             return False
 
-        return obj.tbb.module in ['OpenFOAM', 'TELEMAC'] and not csir
+        return obj.tbb.module in ['OpenFOAM', 'TELEMAC'] and not context.scene.tbb.m_op_running
 
     def invoke(self, context: Context, _event: Event) -> set:
         """
@@ -136,8 +135,8 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
                 return {'FINISHED'}
 
             # Update the progress bar
-            context.scene.tbb.progress_value = self.time_point / (self.end - self.start)
-            context.scene.tbb.progress_value *= 100
+            context.scene.tbb.m_op_value = self.time_point / (self.end - self.start)
+            context.scene.tbb.m_op_value *= 100
             self.time_point += 1
             self.frame += 1
 
