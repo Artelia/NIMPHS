@@ -191,7 +191,6 @@ def generate_base_objects(file_data: TBB_TelemacFileData, name: str,
     if not file_data.is_3d():
         for type in ['BOTTOM', 'WATER_DEPTH']:
             vertices = generate_mesh_data(file_data, type=type)
-            print(name, type.lower())
             obj = generate_object_from_data(vertices, file_data.faces, name=name + "_" + type.lower())
             # Save the name of the variable used for 'z-values' of the vertices
             obj.tbb.settings.telemac.z_name = type
@@ -489,13 +488,13 @@ def update_telemac_streaming_sequences(scene: Scene) -> None:
 
                 for child, id in zip(obj.children, range(len(obj.children))):
                     offset = id if file_data.is_3d() else 0
-                    update_telemac_streaming_sequence_mesh(obj, child, file_data, scene.frame_current, offset)
+                    update_telemac_streaming_sequence(obj, child, file_data, scene.frame_current, offset)
 
                 log.info(obj.name + ", " + "{:.4f}".format(time.time() - start) + "s")
 
 
-def update_telemac_streaming_sequence_mesh(obj: Object, child: Object, file_data: TBB_TelemacFileData,
-                                           frame: int, offset: int) -> None:
+def update_telemac_streaming_sequence(obj: Object, child: Object, file_data: TBB_TelemacFileData,
+                                      frame: int, offset: int) -> None:
     """
     Update the mesh of the given 'child' object from a TELEMAC 'streaming sequence' object.
 
@@ -538,6 +537,13 @@ def update_telemac_streaming_sequence_mesh(obj: Object, child: Object, file_data
             res = prepare_telemac_point_data(child.data, point_data, file_data, offset=offset)
 
         generate_vertex_colors(child.data, *res)
+
+        # Update information of selected point data
+        new_information = VariablesInformation()
+        selected = VariablesInformation(point_data.list)
+        for var in selected.names:
+            new_information.append(data=file_data.vars.get(var))
+        point_data.list = new_information.dumps()
 
 
 @persistent
@@ -611,6 +617,13 @@ def update_telemac_mesh_sequence(bmesh: Mesh, file_data: TBB_TelemacFileData, of
     # Update point data
     res = prepare_telemac_point_data_linear_interp(bmesh, point_data, file_data, time_info, offset=offset)
     generate_vertex_colors(bmesh, *res)
+
+    # Update information of selected point data
+    new_information = VariablesInformation()
+    selected = VariablesInformation(point_data.list)
+    for var in selected.names:
+        new_information.append(data=file_data.vars.get(var))
+    point_data.list = new_information.dumps()
 
 
 def get_possible_point_data(file_data: TBB_TelemacFileData,

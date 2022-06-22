@@ -62,6 +62,18 @@ def frame_change_pre():
     return get_handler
 
 
+@pytest.fixture
+def point_data_test():
+    data = {
+        "names": ["VITESSE U"],
+        "units": ["M/S"],
+        "types": ["SCALAR"],
+        "ranges": [{"local": {"min": None, "max": None}, "global": {"min": None, "max": None}}],
+        "dimensions": [1]
+    }
+    return json.dumps(data)
+
+
 def test_import_telemac_2d():
     op = bpy.ops.tbb.import_telemac_file
 
@@ -129,10 +141,9 @@ def test_point_data_preview_object_telemac_2d(preview_object):
         assert data is not None
 
 
-def test_create_streaming_sequence_telemac_2d(preview_object):
+def test_create_streaming_sequence_telemac_2d(preview_object, point_data_test):
     # Get file data
     file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
-    preview_object.tbb.settings.preview_point_data = json.dumps(file_data.vars.get(0))
 
     op = bpy.ops.tbb.telemac_create_streaming_sequence
     state = op('EXEC_DEFAULT', start=0, max_length=31, length=31, name="My_TELEMAC_Streaming_Sim_2D",
@@ -146,14 +157,14 @@ def test_create_streaming_sequence_telemac_2d(preview_object):
 
     # Set point data
     sequence.tbb.settings.point_data.import_data = True
-    sequence.tbb.settings.point_data.list = json.dumps(file_data.vars.get(0))
+    sequence.tbb.settings.point_data.list = point_data_test
 
 
-def test_streaming_sequence_telemac_2d(streaming_sequence, frame_change_pre):
+def test_streaming_sequence_telemac_2d(streaming_sequence, frame_change_pre, point_data_test):
     assert streaming_sequence is not None
     assert len(streaming_sequence.children) == 2
 
-    # Force update telemac streaming sequences
+    # Force update streaming sequences
     handler = frame_change_pre("update_telemac_streaming_sequences")
     assert handler is not None
     handler(bpy.context.scene)
@@ -176,7 +187,8 @@ def test_streaming_sequence_telemac_2d(streaming_sequence, frame_change_pre):
     # Test point data settings
     file_data = bpy.context.scene.tbb.file_data[streaming_sequence.tbb.uid]
     assert streaming_sequence.tbb.settings.point_data.import_data is True
-    assert streaming_sequence.tbb.settings.point_data.list == json.dumps(file_data.vars.get(0))
+    point_data_name = json.loads(streaming_sequence.tbb.settings.point_data.list)["names"][0]
+    assert point_data_name == json.loads(point_data_test)["names"][0]
 
     # Disable updates for this sequence object during the next tests
     sequence.update = False

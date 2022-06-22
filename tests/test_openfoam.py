@@ -39,6 +39,31 @@ def streaming_sequence():
     return bpy.data.objects.get("My_OpenFOAM_Streaming_Sim_sequence", None)
 
 
+@pytest.fixture
+def frame_change_pre():
+
+    def get_handler(name: str):
+        for handler in bpy.app.handlers.frame_change_pre:
+            if handler.__name__ == name:
+                return handler
+
+        return None
+
+    return get_handler
+
+
+@pytest.fixture
+def point_data_test():
+    data = {
+        "names": ["alpha.water"],
+        "units": [""],
+        "types": ["SCALAR"],
+        "ranges": [{"local": {"min": None, "max": None}, "global": {"min": None, "max": None}}],
+        "dimensions": [1]
+    }
+    return json.dumps(data)
+
+
 def test_import_openfoam():
     op = bpy.ops.tbb.import_openfoam_file
 
@@ -234,7 +259,7 @@ def test_preview_material_openfoam():
     assert link.to_socket == principled_bsdf_node.inputs[0]
 
 
-def test_create_streaming_sequence_openfoam(preview_object):
+def test_create_streaming_sequence_openfoam(preview_object, point_data_test):
     file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
     assert file_data is not None
 
@@ -256,12 +281,17 @@ def test_create_streaming_sequence_openfoam(preview_object):
     sequence.tbb.settings.openfoam.clip.scalar.value = 0.5
     # Set point data
     sequence.tbb.settings.point_data.import_data = True
-    sequence.tbb.settings.point_data.list = json.dumps(file_data.vars.get(1))
+    sequence.tbb.settings.point_data.list = point_data_test
 
 
-def test_streaming_sequence_openfoam(streaming_sequence):
+def test_streaming_sequence_openfoam(streaming_sequence, frame_change_pre, point_data_test):
     assert streaming_sequence is not None
     assert streaming_sequence.tbb.is_streaming_sequence is True
+
+    # Force update streaming sequences
+    handler = frame_change_pre("update_openfoam_streaming_sequences")
+    assert handler is not None
+    handler(bpy.context.scene)
 
     file_data = bpy.context.scene.tbb.file_data.get(streaming_sequence.tbb.uid, None)
     assert file_data is not None
@@ -286,7 +316,8 @@ def test_streaming_sequence_openfoam(streaming_sequence):
     assert streaming_sequence.tbb.settings.openfoam.clip.scalar.value == 0.5
     # Test point data
     assert streaming_sequence.tbb.settings.point_data.import_data is True
-    assert streaming_sequence.tbb.settings.point_data.list == json.dumps(file_data.vars.get(1))
+    point_data_name = json.loads(streaming_sequence.tbb.settings.point_data.list)["names"][0]
+    assert point_data_name == json.loads(point_data_test)["names"][0]
 
 
 def test_geometry_streaming_sequence_openfoam(streaming_sequence):

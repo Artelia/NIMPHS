@@ -14,8 +14,8 @@ from copy import deepcopy
 from pyvista import POpenFOAMReader, UnstructuredGrid
 
 from tbb.properties.utils import VariablesInformation
-from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
 from tbb.properties.openfoam.clip import TBB_OpenfoamClipProperty
+from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 from tbb.operators.utils import remap_array, generate_vertex_colors_groups, generate_vertex_colors
 from tbb.operators.openfoam.Scene.openfoam_create_mesh_sequence import TBB_OT_OpenfoamCreateMeshSequence
