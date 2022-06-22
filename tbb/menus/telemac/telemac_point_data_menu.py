@@ -2,14 +2,14 @@
 from bpy.types import Menu, Context
 
 
-class TBB_MT_OpenfoamMainMenu(Menu):
-    """Main menu for the OpenFOAM module."""
+class TBB_MT_TelemacPointDataMenu(Menu):
+    """Main menu for TELEMAC > Point data."""
 
     register_cls = True
     is_custom_base_cls = False
 
-    bl_idname = "TBB_MT_OpenfoamMainMenu"
-    bl_label = "OpenFOAM"
+    bl_idname = "TBB_MT_TelemacPointDataMenu"
+    bl_label = "Point data"
 
     def draw(self, _context: Context) -> None:
         """
@@ -19,5 +19,4 @@ class TBB_MT_OpenfoamMainMenu(Menu):
             _context (Context): context
         """
 
-        self.layout.menu("TBB_MT_OpenfoamCreateSequenceMenu")
-        self.layout.menu("TBB_MT_OpenfoamPointDataMenu")
+        self.layout.operator("tbb.compute_ranges_point_data_values", text="Compute ranges")
