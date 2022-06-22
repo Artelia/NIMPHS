@@ -1,6 +1,6 @@
 # <pep8 compliant>
 import bpy
-from bpy.types import Collection, Object, Context, Mesh
+from bpy.types import Object, Mesh
 
 import logging
 log = logging.getLogger(__name__)

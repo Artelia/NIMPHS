@@ -4,7 +4,7 @@ log = logging.getLogger(__name__)
 
 import numpy as np
 from typing import Union
-from pyvista import POpenFOAMReader
+from pyvista import POpenFOAMReader, UnstructuredGrid, PolyData
 
 from tbb.properties.shared.file_data import TBB_FileData
 from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
@@ -14,13 +14,13 @@ class TBB_OpenfoamFileData(TBB_FileData):
     """Hold file data for the OpenFOAM module."""
 
     #: UnstructuredGrid: 'internalMesh' from data
-    raw_mesh = None
+    raw_mesh: UnstructuredGrid = None
     #: PolyData: lest generated mesh
-    mesh = None
+    mesh: PolyData = None
     #: bool: Indicate
-    tiangulate = False
+    tiangulate: bool = False
     #: int: current time point
-    time_point = 0
+    time_point: int = 0
 
     def __init__(self, file: POpenFOAMReader, io_settings: Union[TBB_OpenfoamImportSettings, None]) -> None:
         """Init method of the class."""

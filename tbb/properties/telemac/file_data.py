@@ -14,17 +14,17 @@ class TBB_TelemacFileData(TBB_FileData):
     """Hold file data for the TELEMAC module."""
 
     #: np.ndarray: Vertices of the mesh
-    vertices = None
+    vertices: np.ndarray = None
     #: np.ndarray: Faces of the mesh
-    faces = None
+    faces: np.ndarray = None
     #: int: Number of planes
-    nb_planes = 0
+    nb_planes: int = 0
     #: int: Number of vertices
-    nb_vertices = 0
+    nb_vertices: int = 0
     #: int: Number of triangles
-    nb_triangles = 0
+    nb_triangles: int = 0
     #: np.ndarray: Data
-    data = None
+    data: np.ndarray = None
 
     def __init__(self, file_path: str, compute_value_ranges: bool) -> None:
         """
@@ -34,6 +34,7 @@ class TBB_TelemacFileData(TBB_FileData):
             file_path (str): path to the TELEMAC file
             compute_value_ranges (bool): compute value ranges for all the variables
         """
+
         super().__init__()
 
         self.module = 'TELEMAC'

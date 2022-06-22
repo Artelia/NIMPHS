@@ -447,36 +447,41 @@ def update_telemac_streaming_sequences(scene: Scene) -> None:
         scene (Scene): scene
     """
 
-    frame = scene.frame_current
+    # Check if a create sequence operator is running
+    if scene.tbb.create_sequence_is_running:
+        return
 
-    if not scene.tbb.create_sequence_is_running:
-        for obj in scene.objects:
-            sequence = obj.tbb.settings.telemac.s_sequence
-            interpolate = obj.tbb.settings.telemac.interpolate
+    for obj in scene.objects:
+        # Check if current object is a streaming sequence
+        if not obj.tbb.is_streaming_sequence:
+            continue
 
-            if obj.tbb.is_streaming_sequence and sequence.update:
-                # Get file data
-                try:
-                    file_data = scene.tbb.file_data[obj.tbb.uid]
-                except KeyError:
-                    # Disable update
-                    sequence.update = False
-                    log.error(f"No file data available for {obj.name}. Disabling update.")
-                    return
+        sequence = obj.tbb.settings.telemac.s_sequence
+        interpolate = obj.tbb.settings.telemac.interpolate
 
-                # Compute limit (takes interpolation into account)
-                limit = sequence.start + sequence.length
-                if interpolate.type != 'NONE':
-                    limit += (sequence.length - 1) * interpolate.time_steps
+        if sequence.update:
+            # Get file data
+            try:
+                file_data = scene.tbb.file_data[obj.tbb.uid]
+            except KeyError:
+                # Disable update
+                sequence.update = False
+                log.error(f"No file data available for {obj.name}. Disabling update.")
+                return
 
-                if frame >= sequence.start and frame < limit:
-                    start = time.time()
+            # Compute limit (last time point to compute, takes interpolation into account)
+            limit = sequence.start + sequence.length
+            if interpolate.type != 'NONE':
+                limit += (sequence.length - 1) * interpolate.time_steps
 
-                    for child, id in zip(obj.children, range(len(obj.children))):
-                        offset = id if file_data.is_3d() else 0
-                        update_telemac_streaming_sequence_mesh(obj, child, file_data, frame, offset)
+            if scene.frame_current >= sequence.start and scene.frame_current < limit:
+                start = time.time()
 
-                    log.info(obj.name + ", " + "{:.4f}".format(time.time() - start) + "s")
+                for child, id in zip(obj.children, range(len(obj.children))):
+                    offset = id if file_data.is_3d() else 0
+                    update_telemac_streaming_sequence_mesh(obj, child, file_data, scene.frame_current, offset)
+
+                log.info(obj.name + ", " + "{:.4f}".format(time.time() - start) + "s")
 
 
 def update_telemac_streaming_sequence_mesh(obj: Object, child: Object, file_data: TBB_TelemacFileData,
@@ -497,16 +502,13 @@ def update_telemac_streaming_sequence_mesh(obj: Object, child: Object, file_data
     sequence = obj.tbb.settings.telemac.s_sequence
     point_data = obj.tbb.settings.point_data
 
-    # Get time information
-    if interpolate.type == 'LINEAR':
-        time_info = InterpInfoStreamingSequence(frame, sequence.start, interpolate.time_steps)
-    else:
-        time_point = frame - sequence.start
-
     # Update mesh
     if interpolate.type == 'LINEAR':
+        time_info = InterpInfoStreamingSequence(frame, sequence.start, interpolate.time_steps)
         vertices = generate_mesh_data_linear_interp(child, file_data, time_info, offset)
-    elif interpolate.type == 'NONE':
+
+    else:
+        time_point = frame - sequence.start
         vertices = generate_mesh_data(file_data, time_point, offset=offset, type=child.tbb.settings.telemac.z_name)
 
     # Generate object
@@ -536,38 +538,46 @@ def update_telemac_mesh_sequences(scene: Scene) -> None:
         scene (Scene): scene
     """
 
-    if not scene.tbb.create_sequence_is_running:
-        for obj in scene.objects:
-            point_data = obj.tbb.settings.point_data
+    # Check if a create sequence operator is running
+    if scene.tbb.create_sequence_is_running:
+        return
 
-            if obj.tbb.is_mesh_sequence and point_data.import_data:
-                sequence = obj.tbb.settings.telemac.m_sequence
+    for obj in scene.objects:
+        # Check if current object is a mesh sequence
+        if not obj.tbb.is_mesh_sequence:
+            continue
 
-                # Get file data
-                try:
-                    file_data = scene.tbb.file_data[obj.tbb.uid]
-                except KeyError:
-                    # Disable update
-                    sequence.update = False
-                    log.error(f"No file data available for {obj.name}. Disabling update.")
-                    return
+        point_data = obj.tbb.settings.point_data
 
-                # Update children of the sequence object
-                cumulated_time = 0.0
+        # Check if there are point data to import as vertex colors
+        if point_data.import_data and VariablesInformation(point_data.list).length() > 0:
+            sequence = obj.tbb.settings.telemac.m_sequence
 
-                for child, id in zip(obj.children, range(len(obj.children))):
-                    start = time.time()
+            # Get file data
+            try:
+                file_data = scene.tbb.file_data[obj.tbb.uid]
+            except KeyError:
+                # Disable update
+                point_data.import_data = False
+                log.error(f"No file data available for {obj.name}. Disabling update.")
+                return
 
-                    # Get interpolation time information
-                    time_info = InterpInfoMeshSequence(child, scene.frame_current)
-                    if time_info.has_data:
-                        offset = id if file_data.is_3d() else 0
-                        update_telemac_mesh_sequence(child.data, file_data, offset, point_data, time_info)
+            # Update children of the sequence object
+            cumulated_time = 0.0
 
-                    cumulated_time += time.time() - start
+            for child, id in zip(obj.children, range(len(obj.children))):
+                start = time.time()
 
-                if cumulated_time > 0.0:
-                    log.info(obj.name + ", " + "{:.4f}".format(cumulated_time) + "s")
+                # Get interpolation time information
+                time_info = InterpInfoMeshSequence(child, scene.frame_current)
+                if time_info.has_data:
+                    offset = id if file_data.is_3d() else 0
+                    update_telemac_mesh_sequence(child.data, file_data, offset, point_data, time_info)
+
+                cumulated_time += time.time() - start
+
+            if cumulated_time > 0.0:
+                log.info(obj.name + ", " + "{:.4f}".format(cumulated_time) + "s")
 
 
 def update_telemac_mesh_sequence(bmesh: Mesh, file_data: TBB_TelemacFileData, offset: int,
