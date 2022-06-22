@@ -31,7 +31,7 @@ class TBB_OpenfoamFileData(TBB_FileData):
         self.file = file
 
         # Load data
-        self.update(0, io_settings=io_settings)
+        self.update_mesh(0, io_settings=io_settings)
         try:
             self.mesh = self.file.read()["internalMesh"]
         except KeyError:  # Raised when using wrong case_type
@@ -40,7 +40,24 @@ class TBB_OpenfoamFileData(TBB_FileData):
 
         self.nb_time_points = self.file.number_time_points
 
-    def update(self, time_point: int, io_settings: Union[TBB_OpenfoamImportSettings, None] = None) -> None:
+        # Initialize variable informations
+        for name in self.raw_mesh.point_data.keys():
+            data = self.raw_mesh.point_data[name]
+            type = 'SCALAR' if len(data.shape) == 1 else 'VECTOR'
+            dim = 1 if len(data.shape) == 1 else data.shape[1]
+            self.vars.append(name, unit="", range=None, type=type, dim=dim)
+
+    def get_point_data(self, id: Union[str, int]) -> np.ndarray:
+        """
+        Get point data from the given id.
+
+        Args:
+            id (Union[str, int]): identifier of the variable from which to get data
+        """
+
+        return np.array(self.mesh.point_data(id))
+
+    def update_mesh(self, time_point: int, io_settings: Union[TBB_OpenfoamImportSettings, None] = None) -> None:
         """
         Update file data.
 
@@ -70,26 +87,6 @@ class TBB_OpenfoamFileData(TBB_FileData):
         except ValueError:
             log.critical("Caught exception during update", exc_info=1)
             return
-
-        # Update vars
-        self.vars.clear()
-        for name in self.raw_mesh.point_data.keys():
-            data = self.raw_mesh.point_data[name]
-            type = 'SCALAR' if len(data.shape) == 1 else 'VECTOR'
-            dim = 1 if len(data.shape) == 1 else data.shape[1]
-            if type == 'VECTOR':
-                min = []
-                max = []
-                for i in range(dim):
-                    min.append(float(np.min(np.array(data[:, i]))))
-                    max.append(float(np.max(np.array(data[:, i]))))
-            elif type == 'SCALAR':
-                min = float(np.min(np.array(data)))
-                max = float(np.max(np.array(data)))
-
-            ranges = {"local": {"min": min, "max": max}, "global": {"min": None, "max": None}}
-
-            self.vars.append(name, unit="", range=ranges, type=type, dim=dim)
 
     def is_ok(self) -> bool:
         """

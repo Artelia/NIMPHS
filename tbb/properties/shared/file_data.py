@@ -1,4 +1,5 @@
 # <pep8 compliant>
+import numpy as np
 from typing import Union
 from pyvista import POpenFOAMReader
 
@@ -29,15 +30,35 @@ class TBB_FileData():
         self.nb_time_points = 0
         self.vars = VariablesInformation()
 
-    def update(self, _time_point: int) -> None:
+    def get_point_data(self, _id: Union[str, int]) -> np.ndarray:
         """
-        Update file data.
+        Get point data from the given id.
 
         Args:
-            _time_point (int): time point to use for the update
+            _id (Union[str, int]): identifier of the variable from which to get data
         """
 
         pass
+
+    def update_vars(self, vars: list[dict], scope: str = 'LOCAL') -> None:
+        """
+        Update variables information (value ranges).
+
+        Args:
+            vars (list[dict]): list of variables to update {"name": name, "data": data or None}
+            scope (str): indicate which information to update. Enum in ['LOCAL', 'GLOBAL'].
+        """
+
+        for info in vars:
+            # Get data if not provided
+            if info["data"] is None:
+                info["data"] = self.get_point_data(info["name"])
+
+            id = self.vars.names.index(info["name"])
+
+            # Update local information
+            if scope == 'LOCAL':
+                self.vars.ranges[id][scope.lower()] = {"min": np.min(info["data"]), "max": np.max(info["data"])}
 
     def is_ok(self) -> bool:
         """
@@ -46,4 +67,5 @@ class TBB_FileData():
         Returns:
             bool: ``True`` if ok
         """
+
         pass

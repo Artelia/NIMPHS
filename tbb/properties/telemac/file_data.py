@@ -1,6 +1,7 @@
 # <pep8 compliant>
 import time
 import numpy as np
+from typing import Union
 
 import logging
 log = logging.getLogger(__name__)
@@ -77,6 +78,19 @@ class TBB_TelemacFileData(TBB_FileData):
                 value_range = {"local": {"min": np.min(value_range), "max": np.max(value_range)}}
 
             self.vars.append(name=name, unit=unit, range=value_range)
+
+    def get_point_data(self, id: Union[str, int]) -> np.ndarray:
+        """
+        Get point data from the given id.
+
+        Args:
+            id (Union[str, int]): identifier of the variable from which to get data
+        """
+
+        if isinstance(id, int):
+            id = self.vars.names.index(id)
+
+        return self.data[id]
 
     def update(self, time_point: int) -> None:
         """

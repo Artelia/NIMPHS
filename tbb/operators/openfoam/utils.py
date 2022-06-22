@@ -95,7 +95,7 @@ def generate_mesh_for_sequence(file_data: TBB_OpenfoamFileData,
     """
 
     # Generate mesh data
-    file_data.update(op.time_point, op.import_settings)
+    file_data.update_mesh(op.time_point, op.import_settings)
     vertices, faces, file_data.mesh = generate_mesh_data(file_data, clip=op.clip)
     if file_data.mesh is None:
         return None
@@ -380,7 +380,7 @@ def update_openfoam_streaming_sequence_mesh(scene: Scene, obj: Object, time_poin
     file_data = scene.tbb.file_data[obj.tbb.uid]
 
     if file_data is not None:
-        file_data.update(time_point, io_settings)
+        file_data.update_mesh(time_point, io_settings)
         vertices, faces, file_data.mesh = generate_mesh_data(file_data, clip=obj.tbb.settings.openfoam.clip)
 
         bmesh = obj.data
