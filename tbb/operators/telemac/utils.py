@@ -9,6 +9,8 @@ log = logging.getLogger(__name__)
 import time
 import numpy as np
 from typing import Union
+from copy import deepcopy
+
 from tbb.properties.utils import VariablesInformation
 from tbb.properties.telemac.file_data import TBB_TelemacFileData
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
@@ -303,6 +305,8 @@ def generate_telemac_sequence_obj(context: Context, obj: Object, name: str, time
     # Load file data
     sequence.tbb.uid = str(time.time())
     context.scene.tbb.file_data[sequence.tbb.uid] = TBB_TelemacFileData(obj.tbb.settings.file_path)
+    # Copy current variable information
+    context.scene.tbb.file_data[sequence.tbb.uid].vars = deepcopy(context.scene.tbb.file_data[obj.tbb.uid].vars)
 
     try:
         children = generate_base_objects(context.scene.tbb.file_data[sequence.tbb.uid], name + "_sequence")

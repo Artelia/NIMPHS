@@ -30,10 +30,10 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
     end: int = 0
     #: int: Current time point
     time_point: int = 0
-    #: list[float]: List of minima for each selected variable
-    minima: dict[list[float]] = {}
-    #: list[float]: List of maxima for each selected variable
-    maxima: dict[list[float]] = {}
+    #: dict: List of minima for each selected variable
+    minima: dict = {}
+    #: dict: List of maxima for each selected variable
+    maxima: dict = {}
     #: Object: Selected object
     obj: Object = None
 
@@ -213,7 +213,6 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
                         file_data.update_var_range(var_name, 'VECTOR', scope='GLOBAL',
                                                    data={"min": minima, "max": maxima})
 
-                print(file_data.vars)
                 self.report({'INFO'}, "Compute ranges finished")
                 super().stop(context)
                 return {'FINISHED'}
