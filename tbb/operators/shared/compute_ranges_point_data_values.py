@@ -79,6 +79,10 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
         context.scene.tbb.file_data["ops"] = context.scene.tbb.file_data[self.obj.tbb.uid]
         self.max_length = context.scene.tbb.file_data["ops"].nb_time_points
 
+        # Used in tests (will run in iterative mode instead of modal)
+        if self.mode == 'NORMAL':
+            return {'FINISHED'}
+
         return context.window_manager.invoke_props_dialog(self)
 
     def draw(self, context: Context) -> None:

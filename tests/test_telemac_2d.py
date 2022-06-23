@@ -5,12 +5,22 @@ import json
 import pytest
 
 # Sample 2D:
-# Number of variables = 8
-# (FOND, VITESSE U, VITESSE V, SALINITE, HAUTEUR D'EAU, SURFACE LIBRE, DEBIT SOL EN X, DEBIT SOL EN Y)
-# Number of planes = 0
-# Is not from a 3D simulation
-# Number of time points = 31
-# Triangulated mesh: Vertices = 12,506 | Edges = 36,704 | Faces = 24,199 | Triangles = 24,199
+#   Number of variables = 8
+
+#   Variables:
+#   FOND:             min = -5.0                      max = 2.5
+#   VITESSE U:        min = -2.861448049545288        max = 0.801839292049408
+#   VITESSE V:        min = -0.44414040446281433      max = 0.6261451244354248
+#   SALINITE:         min = -4.410864619220242E-19    max = 35.0
+#   HAUTEUR D'EAU:    min = 0.0                       max = 7.579009532928467
+#   SURFACE LIBRE:    min = 1.9149115085601807        max = 7.1949639320373535
+#   DEBIT SOL EN X:   min = -137.33761596679688       max = 94.22285461425781
+#   DEBIT SOL EN Y:   min = -53.73036575317383        max = 56.772369384765625
+
+#   Number of planes = 0
+#   Is not from a 3D simulation
+#   Number of time points = 31
+#   Triangulated mesh: Vertices = 12,506 | Edges = 36,704 | Faces = 24,199 | Triangles = 24,199
 
 FILE_PATH = os.path.abspath("./data/telemac_sample_2d.slf")
 
@@ -60,6 +70,23 @@ def frame_change_pre():
         return None
 
     return get_handler
+
+
+@pytest.fixture
+def point_data():
+    from tbb.properties.utils import VariablesInformation
+
+    data = VariablesInformation()
+    data.append(name="FOND", type="SCALAR")
+    data.append(name="VITESSE U", type="SCALAR")
+    data.append(name="VITESSE V", type="SCALAR")
+    data.append(name="SALINITE", type="SCALAR")
+    data.append(name="HAUTEUR D'EAU", type="SCALAR")
+    data.append(name="SURFACE LIBRE", type="SCALAR")
+    data.append(name="DEBIT SOL EN X", type="SCALAR")
+    data.append(name="DEBIT SOL EN Y", type="SCALAR")
+
+    return data
 
 
 @pytest.fixture
@@ -139,6 +166,29 @@ def test_point_data_preview_object_telemac_2d(preview_object):
         assert len(vertex_colors) == 1
         data = vertex_colors.get("VITESSE U, None, None", None)
         assert data is not None
+
+
+def test_compute_ranges_point_data_values(preview_object, point_data):
+    # Set point data on which to compute value ranges
+    bpy.context.scene.tbb.op_vars = point_data
+
+    op = bpy.ops.tbb.compute_ranges_point_data_values
+    assert op('EXEC_DEFAULT', mode='NORMAL') == {'FINISHED'}
+
+    file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
+    assert file_data is not None
+
+    # Test computed values
+    variables = file_data.vars
+    assert variables.length() == 8
+
+    fond = variables.get("FOND", prop='RANGE')["global"]
+    assert fond is not None
+    assert fond["min"] == -5.0 and fond["max"] == 2.5
+
+    vitesse_u = variables.get("VITESSE U", prop='RANGE')["global"]
+    assert vitesse_u is not None
+    assert vitesse_u["min"] == -2.861448049545288 and vitesse_u["max"] == 0.801839292049408
 
 
 def test_create_streaming_sequence_telemac_2d(preview_object, point_data_test):
