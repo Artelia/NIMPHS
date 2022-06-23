@@ -140,8 +140,8 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
             return {'CANCELLED'}
 
         for var_name, var_type, var_dim in zip(vars.names, vars.types, vars.dimensions):
-            self.minima[var_name] = {"type": var_type, "values": [[]] * var_dim if var_dim > 1 else [], "dim": var_dim}
-            self.maxima[var_name] = {"type": var_type, "values": [[]] * var_dim if var_dim > 1 else [], "dim": var_dim}
+            self.minima[var_name] = {"type": var_type, "values": [], "dim": var_dim}
+            self.maxima[var_name] = {"type": var_type, "values": [], "dim": var_dim}
 
         if self.mode == 'MODAL':
             self.time_point = 0
@@ -189,15 +189,21 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
                     data = file_data.get_point_data(var_name)
                     min_data = self.minima[var_name]
                     max_data = self.maxima[var_name]
+                    # print(self.minima[var_name])
 
                     if min_data["type"] == 'SCALAR':
                         min_data["values"].append(float(np.min(data)))
                         max_data["values"].append(float(np.max(data)))
 
                     if min_data["type"] == 'VECTOR':
+                        min_values, max_values = [], []
+
                         for i in range(min_data["dim"]):
-                            min_data["values"][i].append(float(np.min(data[:, i])))
-                            max_data["values"][i].append(float(np.max(data[:, i])))
+                            min_values.append(float(np.min(data[:, i])))
+                            max_values.append(float(np.max(data[:, i])))
+
+                        min_data["values"].append(min_values)
+                        max_data["values"].append(max_values)
 
             else:
                 file_data = context.scene.tbb.file_data.get(self.obj.tbb.uid, None)
@@ -218,16 +224,15 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
                         file_data.update_var_range(var_name, 'SCALAR', scope='GLOBAL', data={"min": min, "max": max})
 
                     if min_data["type"] == 'VECTOR':
-                        minima = []
-                        maxima = []
+                        min_values, max_values = [], []
 
                         for i in range(min_data["dim"]):
-                            minima.append(float(np.min(min_data["values"][i])))
-                            maxima.append(float(np.min(max_data["values"][i])))
+                            min_values.append(float(np.min(np.array(min_data["values"])[:, i])))
+                            max_values.append(float(np.max(np.array(max_data["values"])[:, i])))
 
                         # Update variable information
                         file_data.update_var_range(var_name, 'VECTOR', scope='GLOBAL',
-                                                   data={"min": minima, "max": maxima})
+                                                   data={"min": min_values, "max": max_values})
 
                 self.report({'INFO'}, "Compute ranges finished")
                 super().stop(context)

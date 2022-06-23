@@ -7,11 +7,11 @@ import pyvista
 
 # Sample A:
 #   If not skip_zero_time:
-#       U[0]:           min = -1.3468325138092          max = 1.34502243995667
-#       U[1]:           min = -4.20854010845914e-17     max = 9.689870304643e-17
-#       U[2]:           min = -4.32041263580322         max = 1.19531750679016
+#       U[0]:           min = -1.346832513809204          max = 1.345022439956665
+#       U[1]:           min = -4.208540108459135e-17     max = 9.689870304643004e-17
+#       U[2]:           min = -4.320412635803223         max = 1.1953175067901611
 #       alpha.water:    min = 0.0 max = 1.0
-#       nut:            min = 0.0 max = 0.00659740529954433
+#       nut:            min = 0.0 max = 0.006597405299544334
 #       Number of time points = 21
 #       Number of variables = 3
 
@@ -285,19 +285,19 @@ def test_compute_ranges_point_data_values_openfoam(preview_object, point_data_te
     file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
     assert file_data is not None
 
-    u = file_data.vars.get("U", prop='RANGE')["global"]
-    assert u["min"][0] == -1.3468325138092
-    assert u["min"][1] == -4.20854010845914e-17
-    assert u["min"][2] == -4.32041263580322
-    assert u["max"][0] == 1.34502243995667
-    assert u["max"][1] == 9.689870304643e-17
-    assert u["max"][2] == 1.19531750679016
-
     alpha_water = file_data.vars.get("alpha.water", prop='RANGE')["global"]
     assert alpha_water["min"] == 0.0 and alpha_water["max"] == 1.0
 
     nut = file_data.vars.get("nut", prop='RANGE')["global"]
-    assert nut["min"] == 0.0 and nut["max"] == 0.00659740529954433
+    assert nut["min"] == 0.0 and nut["max"] == 0.006597405299544334
+
+    u = file_data.vars.get("U", prop='RANGE')["global"]
+    assert u["min"][0] == -1.346832513809204
+    assert u["min"][1] == -4.208540108459135e-17
+    assert u["min"][2] == -4.320412635803223
+    assert u["max"][0] == 1.345022439956665
+    assert u["max"][1] == 9.689870304643004e-17
+    assert u["max"][2] == 1.1953175067901611
 
 
 def test_create_streaming_sequence_openfoam(preview_object, point_data_test_a):

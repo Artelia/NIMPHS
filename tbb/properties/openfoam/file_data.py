@@ -55,7 +55,12 @@ class TBB_OpenfoamFileData(TBB_FileData):
             id (Union[str, int]): identifier of the variable from which to get data
         """
 
-        return self.mesh.get_array(name=id, preference='point')
+        # If these are different, then a clip or something like that has probably been applied
+        # So return point data from self.mesh
+        if self.mesh.points.size != self.raw_mesh.points.size:
+            return self.mesh.get_array(name=id, preference='point')
+
+        return self.raw_mesh.get_array(name=id, preference='point')
 
     def update_data(self, time_point: int, io_settings: Union[TBB_OpenfoamImportSettings, None] = None) -> None:
         """
@@ -80,6 +85,7 @@ class TBB_OpenfoamFileData(TBB_FileData):
         try:
             self.time_point = time_point
             self.file.set_active_time_point(time_point)
+            self.mesh = self.file.read()["internalMesh"]
             self.raw_mesh = self.file.read()["internalMesh"]
         except AttributeError:  # Raised when using wrong case_type
             self.raw_mesh = None
