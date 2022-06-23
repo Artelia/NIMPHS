@@ -6,16 +6,45 @@ import pytest
 import pyvista
 
 # Sample A:
-# Number of time points = 21
+#   If not skip_zero_time:
+#       U[0]:           min = -1.3468325138092          max = 1.34502243995667
+#       U[1]:           min = -4.20854010845914e-17     max = 9.689870304643e-17
+#       U[2]:           min = -4.32041263580322         max = 1.19531750679016
+#       alpha.water:    min = 0.0 max = 1.0
+#       nut:            min = 0.0 max = 0.00659740529954433
+#       Number of time points = 21
+#       Number of variables = 3
 
-# Non-triangulated mesh: Vertices = 60,548 | Edges = 120,428 | Faces = 59,882 | Triangles = 121,092
-# Non-triangulated-mesh (decomp. polyh.): Vertices = 60,548 | Edges = 121,748 | Faces = 61,202 | Triangles = 121,092
-# Triangulated mesh (w/wo decomp. polyh.): Vertices = 61,616 | Edges = 182,698 | Faces = 121,092 | Triangles = 121,092
+#   If skip_zero_time:
+#       U:              min =
+#       alpha.water:    min =
+#       nut:            min =
+#       Number of time points = ?
+#       Number of variables = ?
 
-# Time point 11, clip alpha.water (value = 0.5):
-# Vertices = 55,099 | Edges = 158,461 | Faces = 103,540 | Triangles = 103,540
+#   Non-triangulated mesh:
+#       Vertices = 60,548 | Edges = 120,428 | Faces = 59,882 | Triangles = 121,092
+
+#   Non-triangulated-mesh (decomp. polyh.):
+#       Vertices = 60,548 | Edges = 121,748 | Faces = 61,202 | Triangles = 121,092
+
+#   Triangulated mesh (w/wo decomp. polyh.):
+#       Vertices = 61,616 | Edges = 182,698 | Faces = 121,092 | Triangles = 121,092
+
+#   Time point 11, clip alpha.water (value = 0.5):
+#       Vertices = 55,099 | Edges = 158,461 | Faces = 103,540 | Triangles = 103,540
 
 FILE_PATH = os.path.abspath("./data/openfoam_sample_a/foam.foam")
+
+
+@pytest.fixture
+def mesh_sequence():
+    return bpy.data.objects.get("My_OpenFOAM_Sim_sequence", None)
+
+
+@pytest.fixture
+def streaming_sequence():
+    return bpy.data.objects.get("My_OpenFOAM_Streaming_Sim_sequence", None)
 
 
 @pytest.fixture
@@ -30,13 +59,15 @@ def preview_object():
 
 
 @pytest.fixture
-def mesh_sequence():
-    return bpy.data.objects.get("My_OpenFOAM_Sim_sequence", None)
+def point_data_test_a():
+    from tbb.properties.utils import VariablesInformation
 
+    data = VariablesInformation()
+    data.append(name="U", type="VECTOR", dim=3)
+    data.append(name="alpha.water", type="SCALAR")
+    data.append(name="nut", type="SCALAR")
 
-@pytest.fixture
-def streaming_sequence():
-    return bpy.data.objects.get("My_OpenFOAM_Streaming_Sim_sequence", None)
+    return data
 
 
 @pytest.fixture
@@ -50,18 +81,6 @@ def frame_change_pre():
         return None
 
     return get_handler
-
-
-@pytest.fixture
-def point_data_test():
-    data = {
-        "names": ["alpha.water"],
-        "units": [""],
-        "types": ["SCALAR"],
-        "ranges": [{"local": {"min": None, "max": None}, "global": {"min": None, "max": None}}],
-        "dimensions": [1]
-    }
-    return json.dumps(data)
 
 
 def test_import_openfoam():
@@ -259,7 +278,29 @@ def test_preview_material_openfoam():
     assert link.to_socket == principled_bsdf_node.inputs[0]
 
 
-def test_create_streaming_sequence_openfoam(preview_object, point_data_test):
+def test_compute_ranges_point_data_values_openfoam(preview_object, point_data_test_a):
+    op = bpy.ops.tbb.compute_ranges_point_data_values
+    assert op('EXEC_DEFAULT', mode='TEST', test_data=point_data_test_a.dumps()) == {'FINISHED'}
+
+    file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
+    assert file_data is not None
+
+    u = file_data.vars.get("U", prop='RANGE')["global"]
+    assert u["min"][0] == -1.3468325138092
+    assert u["min"][1] == -4.20854010845914e-17
+    assert u["min"][2] == -4.32041263580322
+    assert u["max"][0] == 1.34502243995667
+    assert u["max"][1] == 9.689870304643e-17
+    assert u["max"][2] == 1.19531750679016
+
+    alpha_water = file_data.vars.get("alpha.water", prop='RANGE')["global"]
+    assert alpha_water["min"] == 0.0 and alpha_water["max"] == 1.0
+
+    nut = file_data.vars.get("nut", prop='RANGE')["global"]
+    assert nut["min"] == 0.0 and nut["max"] == 0.00659740529954433
+
+
+def test_create_streaming_sequence_openfoam(preview_object, point_data_test_a):
     file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
     assert file_data is not None
 
@@ -281,10 +322,10 @@ def test_create_streaming_sequence_openfoam(preview_object, point_data_test):
     sequence.tbb.settings.openfoam.clip.scalar.value = 0.5
     # Set point data
     sequence.tbb.settings.point_data.import_data = True
-    sequence.tbb.settings.point_data.list = point_data_test
+    sequence.tbb.settings.point_data.list = point_data_test_a.dumps()
 
 
-def test_streaming_sequence_openfoam(streaming_sequence, frame_change_pre, point_data_test):
+def test_streaming_sequence_openfoam(streaming_sequence, frame_change_pre, point_data_test_a):
     assert streaming_sequence is not None
     assert streaming_sequence.tbb.is_streaming_sequence is True
 
@@ -314,10 +355,6 @@ def test_streaming_sequence_openfoam(streaming_sequence, frame_change_pre, point
     assert streaming_sequence.tbb.settings.openfoam.clip.type == 'SCALAR'
     assert streaming_sequence.tbb.settings.openfoam.clip.scalar.name == json.dumps(file_data.vars.get(1))
     assert streaming_sequence.tbb.settings.openfoam.clip.scalar.value == 0.5
-    # Test point data
-    assert streaming_sequence.tbb.settings.point_data.import_data is True
-    point_data_name = json.loads(streaming_sequence.tbb.settings.point_data.list)["names"][0]
-    assert point_data_name == json.loads(point_data_test)["names"][0]
 
 
 def test_geometry_streaming_sequence_openfoam(streaming_sequence):
@@ -337,8 +374,10 @@ def test_point_data_streaming_sequence_openfoam(streaming_sequence):
     # Test point data (only test if they exist)
     # TODO: compare values (warning: color data are ramapped into [0; 1])
     vertex_colors = streaming_sequence.data.vertex_colors
-    assert len(vertex_colors) == 1
-    data = vertex_colors.get("alpha.water, None, None", None)
+    assert len(vertex_colors) == 2
+    data = vertex_colors.get("U.x, U.y, U.z", None)
+    assert data is not None
+    data = vertex_colors.get("alpha.water, nut, None", None)
     assert data is not None
 
 
