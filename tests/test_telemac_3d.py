@@ -6,12 +6,28 @@ import pytest
 
 # Sample 3D:
 # Number of variables = 4 (ELEVATION Z, VELOCITY U, VELOCITY V, VELOCITY W)
-# Number of planes = 3
-# Is from a 3D simulation
-# Number of time points = 11
-# Triangulated mesh: Vertices = 4,624 | Edges = 13,601 | Faces = 8,978 | Triangles = 8,978
+
+#   ELEVATION Z:    min = 0.0                   max = 4.773152828216553
+#   VELOCITY U:     min = -1.342079997062683    max = 1.3420789241790771
+#   VELOCITY V:     min = -1.342079997062683    max = 1.3420789241790771
+#   VELOCITY W:     min = -2.5540032386779785   max = 1.2829135656356812
+
+#   Number of planes = 3
+#   Is from a 3D simulation
+#   Number of time points = 11
+#   Triangulated mesh: Vertices = 4,624 | Edges = 13,601 | Faces = 8,978 | Triangles = 8,978
 
 FILE_PATH = os.path.abspath("./data/telemac_sample_3d.slf")
+
+
+@pytest.fixture
+def mesh_sequence():
+    return bpy.data.objects.get("My_TELEMAC_Sim_3D_sequence", None)
+
+
+@pytest.fixture
+def streaming_sequence():
+    return bpy.data.objects.get("My_TELEMAC_Streaming_Sim_3D_sequence", None)
 
 
 @pytest.fixture
@@ -26,13 +42,16 @@ def preview_object():
 
 
 @pytest.fixture
-def mesh_sequence():
-    return bpy.data.objects.get("My_TELEMAC_Sim_3D_sequence", None)
+def point_data_test():
+    from tbb.properties.utils import VariablesInformation
 
+    data = VariablesInformation()
+    data.append(name="ELEVATION Z", type="SCALAR")
+    data.append(name="VELOCITY U", type="SCALAR")
+    data.append(name="VELOCITY V", type="SCALAR")
+    data.append(name="VELOCITY W", type="SCALAR")
 
-@pytest.fixture
-def streaming_sequence():
-    return bpy.data.objects.get("My_TELEMAC_Streaming_Sim_3D_sequence", None)
+    return data
 
 
 @pytest.fixture
@@ -59,18 +78,6 @@ def frame_change_pre():
         return None
 
     return get_handler
-
-
-@pytest.fixture
-def point_data_test():
-    data = {
-        "names": ["ELEVATION Z"],
-        "units": ["M"],
-        "types": ["SCALAR"],
-        "ranges": [{"local": {"min": None, "max": None}, "global": {"min": None, "max": None}}],
-        "dimensions": [1]
-    }
-    return json.dumps(data)
 
 
 def test_import_telemac_3d():
@@ -143,6 +150,26 @@ def test_point_data_preview_object_telemac_3d(preview_object):
         assert data is not None
 
 
+def test_compute_ranges_point_data_values_telemac_3d(preview_object, point_data_test):
+    op = bpy.ops.tbb.compute_ranges_point_data_values
+    assert op('EXEC_DEFAULT', mode='TEST', test_data=point_data_test.dumps()) == {'FINISHED'}
+
+    file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
+    assert file_data is not None
+
+    elevation_z = file_data.vars.get("ELEVATION Z", prop='RANGE')["global"]
+    assert elevation_z["min"] == 0.0 and elevation_z["max"] == 4.773152828216553
+
+    velocity_u = file_data.vars.get("VELOCITY U", prop='RANGE')["global"]
+    assert velocity_u["min"] == -1.342079997062683 and velocity_u["max"] == 1.3420789241790771
+
+    velocity_v = file_data.vars.get("VELOCITY V", prop='RANGE')["global"]
+    assert velocity_v["min"] == -1.342079997062683 and velocity_v["max"] == 1.3420789241790771
+
+    velocity_w = file_data.vars.get("VELOCITY W", prop='RANGE')["global"]
+    assert velocity_w["min"] == -2.5540032386779785 and velocity_w["max"] == 1.2829135656356812
+
+
 def test_create_streaming_sequence_telemac_3d(preview_object, point_data_test):
     op = bpy.ops.tbb.telemac_create_streaming_sequence
     state = op('EXEC_DEFAULT', start=0, max_length=10, length=10, name="My_TELEMAC_Streaming_Sim_3D",
@@ -156,7 +183,7 @@ def test_create_streaming_sequence_telemac_3d(preview_object, point_data_test):
 
     # Set point data
     sequence.tbb.settings.point_data.import_data = True
-    sequence.tbb.settings.point_data.list = point_data_test
+    sequence.tbb.settings.point_data.list = point_data_test.dumps()
 
 
 def test_streaming_sequence_telemac_3d(streaming_sequence, frame_change_pre, point_data_test):
@@ -180,11 +207,6 @@ def test_streaming_sequence_telemac_3d(streaming_sequence, frame_change_pre, poi
     assert sequence.max_length == 10
     assert sequence.length == 10
 
-    # Test point data settings
-    assert streaming_sequence.tbb.settings.point_data.import_data is True
-    point_data_name = json.loads(streaming_sequence.tbb.settings.point_data.list)["names"][0]
-    assert point_data_name == json.loads(point_data_test)["names"][0]
-
     # Disable updates for this sequence object during the next tests
     sequence.update = False
 
@@ -205,8 +227,10 @@ def test_point_data_streaming_sequence_telemac_3d(streaming_sequence):
     # TODO: compare values (warning: color data are ramapped into [0; 1])
     for child in streaming_sequence.children:
         vertex_colors = child.data.vertex_colors
-        assert len(vertex_colors) == 1
-        data = vertex_colors.get("ELEVATION Z, None, None", None)
+        assert len(vertex_colors) == 2
+        data = vertex_colors.get("ELEVATION Z, VELOCITY U, VELOCITY V", None)
+        assert data is not None
+        data = vertex_colors.get("VELOCITY W, None, None", None)
         assert data is not None
 
 

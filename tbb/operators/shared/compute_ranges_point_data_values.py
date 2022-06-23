@@ -77,10 +77,11 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
 
         # "Copy" file data information
         context.scene.tbb.file_data["ops"] = context.scene.tbb.file_data[self.obj.tbb.uid]
-        self.max_length = context.scene.tbb.file_data["ops"].nb_time_points
 
         # Used for unit tests
         if self.mode == 'TEST':
+            self.time_point = 0
+            self.end = context.scene.tbb.file_data["ops"].nb_time_points - 1
             return {'FINISHED'}
 
         return context.window_manager.invoke_props_dialog(self)
@@ -142,16 +143,17 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
             self.minima[var_name] = {"type": var_type, "values": [[]] * var_dim if var_dim > 1 else [], "dim": var_dim}
             self.maxima[var_name] = {"type": var_type, "values": [[]] * var_dim if var_dim > 1 else [], "dim": var_dim}
 
-        self.time_point = 0
-        self.end = context.scene.tbb.file_data["ops"].nb_time_points - 1
-
         if self.mode == 'MODAL':
+            self.time_point = 0
+            self.end = context.scene.tbb.file_data["ops"].nb_time_points - 1
             super().prepare(context, "Computing...")
             return {'RUNNING_MODAL'}
 
         # Run operator for unit tests
         if self.mode == 'TEST':
-            self.invoke(context, None)
+            state = self.invoke(context, None)
+            if state != {'FINISHED'}:
+                return state
 
             for i in range(self.end + 2):
                 state = self.modal(context, None)

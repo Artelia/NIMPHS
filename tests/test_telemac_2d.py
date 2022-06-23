@@ -26,6 +26,16 @@ FILE_PATH = os.path.abspath("./data/telemac_sample_2d.slf")
 
 
 @pytest.fixture
+def mesh_sequence():
+    return bpy.data.objects.get("My_TELEMAC_Sim_2D_sequence", None)
+
+
+@pytest.fixture
+def streaming_sequence():
+    return bpy.data.objects.get("My_TELEMAC_Streaming_Sim_2D_sequence", None)
+
+
+@pytest.fixture
 def preview_object():
     obj = bpy.data.objects.get("TBB_TELEMAC_preview_2D", None)
     # If not None, select the object
@@ -37,13 +47,20 @@ def preview_object():
 
 
 @pytest.fixture
-def mesh_sequence():
-    return bpy.data.objects.get("My_TELEMAC_Sim_2D_sequence", None)
+def point_data_test():
+    from tbb.properties.utils import VariablesInformation
 
+    data = VariablesInformation()
+    data.append(name="FOND", type="SCALAR")
+    data.append(name="VITESSE U", type="SCALAR")
+    data.append(name="VITESSE V", type="SCALAR")
+    data.append(name="SALINITE", type="SCALAR")
+    data.append(name="HAUTEUR D'EAU", type="SCALAR")
+    data.append(name="SURFACE LIBRE", type="SCALAR")
+    data.append(name="DEBIT SOL EN X", type="SCALAR")
+    data.append(name="DEBIT SOL EN Y", type="SCALAR")
 
-@pytest.fixture
-def streaming_sequence():
-    return bpy.data.objects.get("My_TELEMAC_Streaming_Sim_2D_sequence", None)
+    return data
 
 
 @pytest.fixture
@@ -70,35 +87,6 @@ def frame_change_pre():
         return None
 
     return get_handler
-
-
-@pytest.fixture
-def point_data():
-    from tbb.properties.utils import VariablesInformation
-
-    data = VariablesInformation()
-    data.append(name="FOND", type="SCALAR")
-    data.append(name="VITESSE U", type="SCALAR")
-    data.append(name="VITESSE V", type="SCALAR")
-    data.append(name="SALINITE", type="SCALAR")
-    data.append(name="HAUTEUR D'EAU", type="SCALAR")
-    data.append(name="SURFACE LIBRE", type="SCALAR")
-    data.append(name="DEBIT SOL EN X", type="SCALAR")
-    data.append(name="DEBIT SOL EN Y", type="SCALAR")
-
-    return data
-
-
-@pytest.fixture
-def point_data_test():
-    data = {
-        "names": ["VITESSE U"],
-        "units": ["M/S"],
-        "types": ["SCALAR"],
-        "ranges": [{"local": {"min": None, "max": None}, "global": {"min": None, "max": None}}],
-        "dimensions": [1]
-    }
-    return json.dumps(data)
 
 
 def test_import_telemac_2d():
@@ -168,9 +156,9 @@ def test_point_data_preview_object_telemac_2d(preview_object):
         assert data is not None
 
 
-def test_compute_ranges_point_data_values(preview_object, point_data):
+def test_compute_ranges_point_data_values_telemac_2d(preview_object, point_data_test):
     op = bpy.ops.tbb.compute_ranges_point_data_values
-    assert op('EXEC_DEFAULT', mode='TEST', test_data=point_data.dumps()) == {'FINISHED'}
+    assert op('EXEC_DEFAULT', mode='TEST', test_data=point_data_test.dumps()) == {'FINISHED'}
 
     file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
     assert file_data is not None
@@ -213,7 +201,7 @@ def test_create_streaming_sequence_telemac_2d(preview_object, point_data_test):
 
     # Set point data
     sequence.tbb.settings.point_data.import_data = True
-    sequence.tbb.settings.point_data.list = point_data_test
+    sequence.tbb.settings.point_data.list = point_data_test.dumps()
 
 
 def test_streaming_sequence_telemac_2d(streaming_sequence, frame_change_pre, point_data_test):
@@ -240,11 +228,6 @@ def test_streaming_sequence_telemac_2d(streaming_sequence, frame_change_pre, poi
     assert sequence.max_length == 31
     assert sequence.length == 31
 
-    # Test point data settings
-    assert streaming_sequence.tbb.settings.point_data.import_data is True
-    point_data_name = json.loads(streaming_sequence.tbb.settings.point_data.list)["names"][0]
-    assert point_data_name == json.loads(point_data_test)["names"][0]
-
     # Disable updates for this sequence object during the next tests
     sequence.update = False
 
@@ -265,8 +248,12 @@ def test_point_data_streaming_sequence_telemac_2d(streaming_sequence):
     # TODO: compare values (warning: color data are ramapped into [0; 1])
     for child in streaming_sequence.children:
         vertex_colors = child.data.vertex_colors
-        assert len(vertex_colors) == 1
-        data = vertex_colors.get("VITESSE U, None, None", None)
+        assert len(vertex_colors) == 3
+        data = vertex_colors.get("FOND, VITESSE U, VITESSE V", None)
+        assert data is not None
+        data = vertex_colors.get("SALINITE, HAUTEUR D'EAU, SURFACE LIBRE", None)
+        assert data is not None
+        data = vertex_colors.get("DEBIT SOL EN X, DEBIT SOL EN Y, None", None)
         assert data is not None
 
 
