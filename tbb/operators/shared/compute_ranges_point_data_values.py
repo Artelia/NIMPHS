@@ -1,12 +1,13 @@
 # <pep8 compliant>
 from bpy.props import PointerProperty
-from bpy.types import Operator, Context, Event
+from bpy.types import Operator, Context, Event, Object
 
 import logging
 log = logging.getLogger(__name__)
 
 import numpy as np
 
+from tbb.properties.utils import VariablesInformation
 from tbb.panels.utils import draw_point_data, get_selected_object
 from tbb.operators.shared.modal_operator import TBB_ModalOperator
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
@@ -33,6 +34,8 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
     minima: dict[list[float]] = {}
     #: list[float]: List of maxima for each selected variable
     maxima: dict[list[float]] = {}
+    #: Object: Selected object
+    obj: Object = None
 
     @classmethod
     def poll(cls, context: Context) -> bool:
@@ -64,16 +67,16 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
             set: state of the operator
         """
 
-        obj = get_selected_object(context)
-        if obj is None:
+        self.obj = get_selected_object(context)
+        if self.obj is None:
             return {'CANCELLED'}
 
-        if context.scene.tbb.file_data.get(obj.tbb.uid, None) is None:
+        if context.scene.tbb.file_data.get(self.obj.tbb.uid, None) is None:
             self.report({'ERROR'}, "Reload file data first")
             return {'CANCELLED'}
 
         # "Copy" file data information
-        context.scene.tbb.file_data["ops"] = context.scene.tbb.file_data[obj.tbb.uid]
+        context.scene.tbb.file_data["ops"] = context.scene.tbb.file_data[self.obj.tbb.uid]
         self.max_length = context.scene.tbb.file_data["ops"].nb_time_points
 
         return context.window_manager.invoke_props_dialog(self)
@@ -115,8 +118,22 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
             set: state of the operator
         """
 
+        # Clear data
         self.minima.clear()
         self.maxima.clear()
+
+        # Add chosen point data in minima and maxima dictionaries
+        self.point_data.list = context.scene.tbb.op_vars.dumps()
+        vars = VariablesInformation(self.point_data.list)
+
+        # If no data selected, do nothing
+        if vars.length() <= 0:
+            return {'FINISHED'}
+
+        for var_name, var_type, var_dim in zip(vars.names, vars.types, vars.dimensions):
+            self.minima[var_name] = {"type": var_type, "values": [[]] * var_dim if var_dim > 1 else [], "dim": var_dim}
+            self.maxima[var_name] = {"type": var_type, "values": [[]] * var_dim if var_dim > 1 else [], "dim": var_dim}
+
         self.time_point = 0
         self.end = context.scene.tbb.file_data["ops"].nb_time_points - 1
 
@@ -131,7 +148,7 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
 
     def modal(self, context: Context, event: Event) -> set:
         """
-        Run one step of the 'compute ranges of point data values' process.
+        Run one step of the 'compute ranges point data values' process.
 
         Args:
             context (Context): context
@@ -147,18 +164,61 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
 
         if event.type == 'TIMER':
             if self.time_point <= self.end:
+
                 file_data = context.scene.tbb.file_data["ops"]
                 file_data.update_data(self.time_point)
-                data = file_data.get_point_data()
-                self.minima.append()
+
+                # Compute local minima and maxima
+                for var_name in self.minima.keys():
+                    data = file_data.get_point_data(var_name)
+                    min_data = self.minima[var_name]
+                    max_data = self.maxima[var_name]
+
+                    if min_data["type"] == 'SCALAR':
+                        min_data["values"].append(float(np.min(data)))
+                        max_data["values"].append(float(np.max(data)))
+
+                    if min_data["type"] == 'VECTOR':
+                        for i in range(min_data["dim"]):
+                            min_data["values"][i].append(float(np.min(data[:, i])))
+                            max_data["values"][i].append(float(np.max(data[:, i])))
 
             else:
-                super().stop(context)
+                file_data = context.scene.tbb.file_data.get(self.obj.tbb.uid, None)
+                if file_data is None:
+                    self.report({'ERROR'}, "File data not found. Can't update.")
+                    super().stop(context)
+                    return {'FINISHED'}
+
+                # Compute global minima and maxima from list of local values
+                for var_name in self.minima.keys():
+                    min_data = self.minima[var_name]
+                    max_data = self.maxima[var_name]
+
+                    if min_data["type"] == 'SCALAR':
+                        min = float(np.min(min_data["values"]))
+                        max = float(np.max(max_data["values"]))
+                        # Update variable information
+                        file_data.update_var_range(var_name, 'SCALAR', scope='GLOBAL', data={"min": min, "max": max})
+
+                    if min_data["type"] == 'VECTOR':
+                        minima = []
+                        maxima = []
+
+                        for i in range(min_data["dim"]):
+                            minima.append(float(np.min(min_data["values"][i])))
+                            maxima.append(float(np.min(max_data["values"][i])))
+
+                        # Update variable information
+                        file_data.update_var_range(var_name, 'VECTOR', scope='GLOBAL',
+                                                   data={"min": minima, "max": maxima})
+
+                print(file_data.vars)
                 self.report({'INFO'}, "Compute ranges finished")
+                super().stop(context)
                 return {'FINISHED'}
 
-            # Update the progress bar
-            context.scene.tbb.m_op_value = (self.time_point / self.end) * 100
+            self.update_progress(context, self.time_point, self.end)
             self.time_point += 1
 
         return {'PASS_THROUGH'}

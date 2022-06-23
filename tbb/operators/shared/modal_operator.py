@@ -44,6 +44,18 @@ class TBB_ModalOperator():
 
         context.scene.tbb.m_op_running = True
 
+    def update_progress(self, context: Context, step: int, end: int) -> None:
+        """
+        Update progress bar value.
+
+        Args:
+            context (Context): context
+            step (int): current step in the process
+            end (int): ending point of the process
+        """
+
+        context.scene.tbb.m_op_value = (step / end) * 100
+
     def stop(self, context: Context, cancelled: bool = False) -> None:
         """
         Stop the 'create sequence' process. Used for both modules.

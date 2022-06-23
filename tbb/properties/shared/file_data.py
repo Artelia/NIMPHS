@@ -40,7 +40,8 @@ class TBB_FileData():
 
         pass
 
-    def update_var_range(self, name: str, shape: str, scope: str = 'LOCAL', data: np.ndarray = None) -> None:
+    def update_var_range(self, name: str, shape: str, scope: str = 'LOCAL',
+                         data: Union[np.ndarray, tuple, None] = None) -> None:
         """
         Update variable information (value ranges).
 
@@ -49,17 +50,19 @@ class TBB_FileData():
             shape (str): type of the variable. Enum in ['SCALAR', 'VECTOR'].
             scope (str, optional): indicate which information to update. Enum in ['LOCAL', 'GLOBAL'].\
                                    Defaults to 'LOCAL'.
-            data (np.ndarray, optional): data corresponding to the given variable. Defaults to None.
+            data (Union[np.ndarray, tuple, None], optional): data corresponding to the given variable\
+                                                             or min / max values. Defaults to None.
         """
 
-        # Get data if not provided
-        if data is None:
-            data = self.get_point_data(name)
-
+        # Get id of the variable to update in VariablesInformation
         id = self.vars.names.index(name)
 
         # Update local information
         if scope == 'LOCAL':
+
+            # Get data if not provided
+            if data is None:
+                data = self.get_point_data(name)
 
             if shape == 'SCALAR':
                 self.vars.ranges[id][scope.lower()] = {"min": float(np.min(data)), "max": float(np.max(data))}
@@ -75,7 +78,7 @@ class TBB_FileData():
 
         # Update global information
         if scope == 'GLOBAL':
-            pass
+            self.vars.ranges[id][scope.lower()] = data
 
     def is_ok(self) -> bool:
         """
