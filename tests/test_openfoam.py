@@ -7,11 +7,11 @@ import pyvista
 
 # Sample A:
 #   If not skip_zero_time:
-#       U[0]:           min = -1.346832513809204          max = 1.345022439956665
+#       U[0]:           min = -1.346832513809204         max = 1.345022439956665
 #       U[1]:           min = -4.208540108459135e-17     max = 9.689870304643004e-17
 #       U[2]:           min = -4.320412635803223         max = 1.1953175067901611
-#       alpha.water:    min = 0.0 max = 1.0
-#       nut:            min = 0.0 max = 0.006597405299544334
+#       alpha.water:    min = 0.0                        max = 1.0
+#       nut:            min = 0.0                        max = 0.006597405299544334
 #       Number of time points = 21
 #       Number of variables = 3
 
