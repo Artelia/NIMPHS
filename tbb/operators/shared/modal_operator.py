@@ -1,5 +1,5 @@
 # <pep8 compliant>
-from bpy.props import EnumProperty
+from bpy.props import EnumProperty, StringProperty
 from bpy.types import Context, Timer
 
 
@@ -9,13 +9,19 @@ class TBB_ModalOperator():
     register_cls = False
     is_custom_base_cls = True
 
-    #: bpy.props.EnumProperty: Indicate whether the operator should run modal or normal. Enum in ['MODAL', 'NORMAL'].
+    test_data: StringProperty(
+        name="Test data",
+        description="Use this property to pass data as a JSON stringified block of data",
+        default=""
+    )
+
+    #: bpy.props.EnumProperty: Indicate which mode to use for this operator. Enum in ['MODAL', 'TEST'].
     mode: EnumProperty(
         name="Mode",  # noqa: F821
-        description="Indicate whether the operator should run modal or normal. Enum in ['MODAL', 'NORMAL']",
+        description="Indicate which mode to use for this operator. Enum in ['MODAL', 'TEST']",
         items=[
-            ('MODAL', "Modal", "TODO"),  # noqa: F821
-            ('NORMAL', "Normal", "TODO"),  # noqa: F821
+            ('MODAL', "Modal", "Run modal"),  # noqa: F821
+            ('TEST', "Test", "Run for unit tests"),  # noqa: F821
         ],
         options={'HIDDEN'},  # noqa F821
     )

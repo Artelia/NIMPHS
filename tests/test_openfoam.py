@@ -347,7 +347,7 @@ def test_create_mesh_sequence_openfoam():
     # WARNING: next tests are based on the following frame
     bpy.context.scene.frame_set(9)
     op = bpy.ops.tbb.openfoam_create_mesh_sequence
-    state = op('EXEC_DEFAULT', start=0, max_length=21, end=4, name="My_OpenFOAM_Sim", mode='NORMAL')
+    state = op('EXEC_DEFAULT', start=0, max_length=21, end=4, name="My_OpenFOAM_Sim", mode='TEST')
     assert state == {"FINISHED"}
 
 

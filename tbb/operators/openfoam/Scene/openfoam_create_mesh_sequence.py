@@ -74,7 +74,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
         self.max_length = context.scene.tbb.file_data["ops"].nb_time_points
 
         # Used in tests (will run in iterative mode instead of modal)
-        if self.mode == 'NORMAL':
+        if self.mode == 'TEST':
             return {'FINISHED'}
 
         return context.window_manager.invoke_props_dialog(self)

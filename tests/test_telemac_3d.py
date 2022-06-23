@@ -215,7 +215,7 @@ def test_create_mesh_sequence_telemac_3d(preview_object):
     # WARNING: next tests are based on the following frame
     bpy.context.scene.frame_set(9)
     op = bpy.ops.tbb.telemac_create_mesh_sequence
-    state = op('EXEC_DEFAULT', start=0, max_length=10, end=4, name="My_TELEMAC_Sim_3D", mode='NORMAL')
+    state = op('EXEC_DEFAULT', start=0, max_length=10, end=4, name="My_TELEMAC_Sim_3D", mode='TEST')
     assert state == {"FINISHED"}
 
 

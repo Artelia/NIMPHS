@@ -99,14 +99,15 @@ class TBB_CreateMeshSequence(TBB_CreateSequence, TBB_ModalOperator):
             super().prepare(context, "Generating sequence...")
             return {'RUNNING_MODAL'}
 
-        elif self.mode == 'NORMAL':
+        elif self.mode == 'TEST':
             # Run the process without modal mode (used in tests)
             self.invoke(context, None)
+
             while self.time_point < self.end:
                 self.run_one_step(context)
                 self.time_point += 1
                 self.frame += 1
-            self.stop(context)
+
             return {'FINISHED'}
 
         else:

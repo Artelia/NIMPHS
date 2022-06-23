@@ -169,26 +169,35 @@ def test_point_data_preview_object_telemac_2d(preview_object):
 
 
 def test_compute_ranges_point_data_values(preview_object, point_data):
-    # Set point data on which to compute value ranges
-    bpy.context.scene.tbb.op_vars = point_data
-
     op = bpy.ops.tbb.compute_ranges_point_data_values
-    assert op('EXEC_DEFAULT', mode='NORMAL') == {'FINISHED'}
+    assert op('EXEC_DEFAULT', mode='TEST', test_data=point_data.dumps()) == {'FINISHED'}
 
     file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
     assert file_data is not None
 
-    # Test computed values
-    variables = file_data.vars
-    assert variables.length() == 8
-
-    fond = variables.get("FOND", prop='RANGE')["global"]
-    assert fond is not None
+    fond = file_data.vars.get("FOND", prop='RANGE')["global"]
     assert fond["min"] == -5.0 and fond["max"] == 2.5
 
-    vitesse_u = variables.get("VITESSE U", prop='RANGE')["global"]
-    assert vitesse_u is not None
+    vitesse_u = file_data.vars.get("VITESSE U", prop='RANGE')["global"]
     assert vitesse_u["min"] == -2.861448049545288 and vitesse_u["max"] == 0.801839292049408
+
+    vitesse_v = file_data.vars.get("VITESSE V", prop='RANGE')["global"]
+    assert vitesse_v["min"] == -0.44414040446281433 and vitesse_v["max"] == 0.6261451244354248
+
+    salinite = file_data.vars.get("SALINITE", prop='RANGE')["global"]
+    assert salinite["min"] == -4.410864619220242e-19 and salinite["max"] == 35.0
+
+    hauteur_eau = file_data.vars.get("HAUTEUR D'EAU", prop='RANGE')["global"]
+    assert hauteur_eau["min"] == 0.0 and hauteur_eau["max"] == 7.579009532928467
+
+    surface_libre = file_data.vars.get("SURFACE LIBRE", prop='RANGE')["global"]
+    assert surface_libre["min"] == 1.9149115085601807 and surface_libre["max"] == 7.1949639320373535
+
+    debit_sol_en_x = file_data.vars.get("DEBIT SOL EN X", prop='RANGE')["global"]
+    assert debit_sol_en_x["min"] == -137.33761596679688 and debit_sol_en_x["max"] == 94.22285461425781
+
+    debit_sol_en_y = file_data.vars.get("DEBIT SOL EN Y", prop='RANGE')["global"]
+    assert debit_sol_en_y["min"] == -53.73036575317383 and debit_sol_en_y["max"] == 56.772369384765625
 
 
 def test_create_streaming_sequence_telemac_2d(preview_object, point_data_test):
@@ -266,7 +275,7 @@ def test_create_mesh_sequence_telemac_2d(preview_object):
     # WARNING: next tests are based on the following frame
     bpy.context.scene.frame_set(9)
     op = bpy.ops.tbb.telemac_create_mesh_sequence
-    state = op('EXEC_DEFAULT', start=0, max_length=21, end=4, name="My_TELEMAC_Sim_2D", mode='NORMAL')
+    state = op('EXEC_DEFAULT', start=0, max_length=21, end=4, name="My_TELEMAC_Sim_2D", mode='TEST')
     assert state == {"FINISHED"}
 
 

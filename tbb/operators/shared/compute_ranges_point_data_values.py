@@ -79,8 +79,8 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
         context.scene.tbb.file_data["ops"] = context.scene.tbb.file_data[self.obj.tbb.uid]
         self.max_length = context.scene.tbb.file_data["ops"].nb_time_points
 
-        # Used in tests (will run in iterative mode instead of modal)
-        if self.mode == 'NORMAL':
+        # Used for unit tests
+        if self.mode == 'TEST':
             return {'FINISHED'}
 
         return context.window_manager.invoke_props_dialog(self)
@@ -127,12 +127,16 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
         self.maxima.clear()
 
         # Add chosen point data in minima and maxima dictionaries
-        self.point_data.list = context.scene.tbb.op_vars.dumps()
+        if self.mode == 'TEST':
+            self.point_data.list = self.test_data
+        else:
+            self.point_data.list = context.scene.tbb.op_vars.dumps()
+
         vars = VariablesInformation(self.point_data.list)
 
         # If no data selected, do nothing
         if vars.length() <= 0:
-            return {'FINISHED'}
+            return {'CANCELLED'}
 
         for var_name, var_type, var_dim in zip(vars.names, vars.types, vars.dimensions):
             self.minima[var_name] = {"type": var_type, "values": [[]] * var_dim if var_dim > 1 else [], "dim": var_dim}
@@ -145,10 +149,16 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
             super().prepare(context, "Computing...")
             return {'RUNNING_MODAL'}
 
-        if self.mode == 'NORMAL':
-            pass
+        # Run operator for unit tests
+        if self.mode == 'TEST':
+            self.invoke(context, None)
 
-        return {'FINISHED'}
+            for i in range(self.end + 2):
+                state = self.modal(context, None)
+                if state != {'PASS_THROUGH'}:
+                    return state
+
+        return {'CANCELLED'}
 
     def modal(self, context: Context, event: Event) -> set:
         """
@@ -162,11 +172,11 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
             set: state of the operator
         """
 
-        if event.type == 'ESC':
+        if event is not None and event.type == 'ESC':
             super().stop(context, cancelled=True)
             return {'CANCELLED'}
 
-        if event.type == 'TIMER':
+        if self.mode == 'TEST' or (event is not None and event.type == 'TIMER'):
             if self.time_point <= self.end:
 
                 file_data = context.scene.tbb.file_data["ops"]
@@ -192,7 +202,7 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
                 if file_data is None:
                     self.report({'ERROR'}, "File data not found. Can't update.")
                     super().stop(context)
-                    return {'FINISHED'}
+                    return {'CANCELLED'}
 
                 # Compute global minima and maxima from list of local values
                 for var_name in self.minima.keys():
