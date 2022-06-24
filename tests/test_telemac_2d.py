@@ -173,7 +173,7 @@ def test_point_data_preview_object_telemac_2d(preview_object, get_mean_value):
         assert vitesse_u is not None
 
         # Test point data values (compare mean values, less than .1% of difference is ok)
-        assert np.abs(get_mean_value(vitesse_u, child, 0) - 0.7980087919076801) < 0.001
+        assert np.abs(get_mean_value(vitesse_u, child, 0) - 0.7980087919076801) < 0.002
 
 
 def test_compute_ranges_point_data_values_telemac_2d(preview_object, point_data_test):
@@ -209,6 +209,12 @@ def test_compute_ranges_point_data_values_telemac_2d(preview_object, point_data_
 
 
 def test_create_streaming_sequence_telemac_2d(preview_object, point_data_test):
+    # ---------------------------------------------------------- #
+    # /!\ WARNING: next tests are based on the following frame /!\
+    # ---------------------------------------------------------- #
+    # Change frame to load time point 5
+    bpy.context.scene.frame_set(5)
+
     op = bpy.ops.tbb.telemac_create_streaming_sequence
     state = op('EXEC_DEFAULT', start=0, max_length=31, length=31, name="My_TELEMAC_Streaming_Sim_2D",
                module='TELEMAC', shade_smooth=True)
@@ -225,6 +231,7 @@ def test_create_streaming_sequence_telemac_2d(preview_object, point_data_test):
 
 
 def test_streaming_sequence_telemac_2d(streaming_sequence, frame_change_pre, point_data_test):
+    # Check streaming sequence object
     assert streaming_sequence is not None
     assert len(streaming_sequence.children) == 2
 
@@ -234,61 +241,83 @@ def test_streaming_sequence_telemac_2d(streaming_sequence, frame_change_pre, poi
     handler(bpy.context.scene)
 
     # Test object settings
-    assert streaming_sequence.tbb.is_streaming_sequence is True
-    assert streaming_sequence.tbb.is_mesh_sequence is False
     assert streaming_sequence.tbb.uid != ""
     assert streaming_sequence.tbb.module == 'TELEMAC'
+    assert streaming_sequence.tbb.is_mesh_sequence is False
+    assert streaming_sequence.tbb.is_streaming_sequence is True
     assert streaming_sequence.tbb.settings.file_path == FILE_PATH
 
     # Test streaming sequence settings
     sequence = streaming_sequence.tbb.settings.telemac.s_sequence
     assert sequence is not None
-    assert sequence.update is True
+
     assert sequence.start == 0
-    assert sequence.max_length == 31
     assert sequence.length == 31
+    assert sequence.update is True
+    assert sequence.max_length == 31
 
     # Disable updates for this sequence object during the next tests
     sequence.update = False
 
 
 def test_geometry_streaming_sequence_telemac_2d(streaming_sequence):
-    assert streaming_sequence is not None
-    assert len(streaming_sequence.children) == 2
-
     # Test geometry
     for child in streaming_sequence.children:
-        assert len(child.data.vertices) == 12506
         assert len(child.data.edges) == 36704
+        assert len(child.data.vertices) == 12506
         assert len(child.data.polygons) == 24199
 
 
-def test_point_data_streaming_sequence_telemac_2d(streaming_sequence):
-    # Test point data (only test if they exist)
-    # TODO: compare values (warning: color data are ramapped into [0; 1])
+def test_point_data_streaming_sequence_telemac_2d(streaming_sequence, get_mean_value):
     for child in streaming_sequence.children:
+        # Check number vertex colors arrays
         vertex_colors = child.data.vertex_colors
         assert len(vertex_colors) == 3
+
+        # Test point data values
         data = vertex_colors.get("FOND, VITESSE U, VITESSE V", None)
         assert data is not None
+
+        assert np.abs(get_mean_value(data, child, 0) - 0.04131595387433874) < 0.002
+        assert np.abs(get_mean_value(data, child, 1) - 0.7980087919076801) < 0.002
+        assert np.abs(get_mean_value(data, child, 2) - 0.564615949978801) < 0.002
+
         data = vertex_colors.get("SALINITE, HAUTEUR D'EAU, SURFACE LIBRE", None)
         assert data is not None
+
+        assert np.abs(get_mean_value(data, child, 0) - 0.37128353934125063) < 0.002
+        assert np.abs(get_mean_value(data, child, 1) - 0.9557430329482625) < 0.002
+        assert np.abs(get_mean_value(data, child, 2) - 0.6245944487400504) < 0.002
+
         data = vertex_colors.get("DEBIT SOL EN X, DEBIT SOL EN Y, None", None)
         assert data is not None
 
+        assert np.abs(get_mean_value(data, child, 0) - 0.7086518611281863) < 0.002
+        assert np.abs(get_mean_value(data, child, 1) - 0.47028401108210977) < 0.002
+
 
 def test_create_mesh_sequence_telemac_2d(preview_object):
-    # Change frame to create the mesh sequence from another frame
-    # WARNING: next tests are based on the following frame
-    bpy.context.scene.frame_set(9)
+    # ---------------------------------------------------------- #
+    # /!\ WARNING: next tests are based on the following frame /!\
+    # ---------------------------------------------------------- #
+    # Change frame to load time point 8
+    bpy.context.scene.frame_set(8)
+
     op = bpy.ops.tbb.telemac_create_mesh_sequence
-    state = op('EXEC_DEFAULT', start=0, max_length=21, end=4, name="My_TELEMAC_Sim_2D", mode='TEST')
+    state = op('EXEC_DEFAULT', start=0, max_length=21, end=6, name="My_TELEMAC_Sim_2D", mode='TEST')
     assert state == {"FINISHED"}
 
 
-def test_mesh_sequence_telemac_2d(mesh_sequence, frame_change_post):
+def test_mesh_sequence_telemac_2d(mesh_sequence, frame_change_post, point_data_test):
+    # Check sequence object
     assert mesh_sequence is not None
     assert len(mesh_sequence.children) == 2
+
+    # ---------------------------------------------------------- #
+    # /!\ WARNING: next tests are based on the following frame /!\
+    # ---------------------------------------------------------- #
+    # Change frame to load time point 13
+    bpy.context.scene.frame_set(13)
 
     # Get file_data
     file_data = bpy.context.scene.tbb.file_data[mesh_sequence.tbb.uid]
@@ -296,7 +325,7 @@ def test_mesh_sequence_telemac_2d(mesh_sequence, frame_change_post):
 
     # Add point data settings
     mesh_sequence.tbb.settings.point_data.import_data = True
-    mesh_sequence.tbb.settings.point_data.list = json.dumps(file_data.vars.get(0))
+    mesh_sequence.tbb.settings.point_data.list = point_data_test.dumps()
 
     # Force update telemac mesh sequences
     handler = frame_change_post("update_telemac_mesh_sequences")
@@ -304,39 +333,51 @@ def test_mesh_sequence_telemac_2d(mesh_sequence, frame_change_post):
     handler(bpy.context.scene)
 
     # Test object settings
-    assert mesh_sequence.tbb.is_streaming_sequence is False
-    assert mesh_sequence.tbb.is_mesh_sequence is True
     assert mesh_sequence.tbb.uid != ""
     assert mesh_sequence.tbb.module == 'TELEMAC'
+    assert mesh_sequence.tbb.is_mesh_sequence is True
+    assert mesh_sequence.tbb.is_streaming_sequence is False
     assert mesh_sequence.tbb.settings.file_path == FILE_PATH
 
-    # Test sequence data
+    # Test sequence data (shape_keys)
     for child in mesh_sequence.children:
-        assert len(child.data.shape_keys.key_blocks) == 4
-
-
-def test_geometry_mesh_sequence_telemac_2d(mesh_sequence):
-    assert mesh_sequence is not None
-    assert len(mesh_sequence.children) == 2
-
-    # Test geometry
-    for child in mesh_sequence.children:
-        assert len(child.data.vertices) == 12506
-        assert len(child.data.edges) == 36704
-        assert len(child.data.polygons) == 24199
-
-
-def test_point_data_mesh_sequence_telemac_2d(mesh_sequence):
-    assert mesh_sequence is not None
-    assert len(mesh_sequence.children) == 2
-
-    # Test point data (only test if they exist)
-    # TODO: compare values (warning: color data are ramapped into [0; 1])
-    for child in mesh_sequence.children:
-        vertex_colors = child.data.vertex_colors
-        assert len(vertex_colors) == 1
-        data = vertex_colors.get("VITESSE U, None, None", None)
-        assert data is not None
+        assert len(child.data.shape_keys.key_blocks) == 6
 
     # Disable updates for this sequence object during the next tests
     mesh_sequence.tbb.settings.point_data.import_data = False
+
+
+def test_geometry_mesh_sequence_telemac_2d(mesh_sequence):
+    # Test geometry
+    for child in mesh_sequence.children:
+        assert len(child.data.edges) == 36704
+        assert len(child.data.vertices) == 12506
+        assert len(child.data.polygons) == 24199
+
+
+def test_point_data_mesh_sequence_telemac_2d(mesh_sequence, get_mean_value):
+    for child in mesh_sequence.children:
+        # Check number vertex colors arrays
+        vertex_colors = child.data.vertex_colors
+        assert len(vertex_colors) == 3
+
+        # Test point data values
+        data = vertex_colors.get("FOND, VITESSE U, VITESSE V", None)
+        assert data is not None
+
+        assert np.abs(get_mean_value(data, child, 0) - 0.04131595387433874) < 0.002
+        assert np.abs(get_mean_value(data, child, 1) - 0.7980087919076801) < 0.002
+        assert np.abs(get_mean_value(data, child, 2) - 0.564615949978801) < 0.002
+
+        data = vertex_colors.get("SALINITE, HAUTEUR D'EAU, SURFACE LIBRE", None)
+        assert data is not None
+
+        assert np.abs(get_mean_value(data, child, 0) - 0.37128353934125063) < 0.002
+        assert np.abs(get_mean_value(data, child, 1) - 0.9557430329482625) < 0.002
+        assert np.abs(get_mean_value(data, child, 2) - 0.6245944487400504) < 0.002
+
+        data = vertex_colors.get("DEBIT SOL EN X, DEBIT SOL EN Y, None", None)
+        assert data is not None
+
+        assert np.abs(get_mean_value(data, child, 0) - 0.7086518611281863) < 0.002
+        assert np.abs(get_mean_value(data, child, 1) - 0.47028401108210977) < 0.002
