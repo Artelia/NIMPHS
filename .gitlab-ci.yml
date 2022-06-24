@@ -117,6 +117,8 @@ generate-addon:
     - apt-get update
     - apt-get install -y zip unzip
 
+    # Remove DEV_MODE = True in files
+    - find ${MODULE_NAME}/ -type f -name "*.py" -exec sed -i 's/DEV_MODE = True/DEV_MODE = False/g' {} +
     # Upload addon
     - zip -r "${MODULE_NAME}" "${MODULE_NAME}"
     - mv "${MODULE_NAME}.zip" "${ADDON_FILE_NAME}.zip"
