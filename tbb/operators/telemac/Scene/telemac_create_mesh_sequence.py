@@ -68,8 +68,11 @@ class TBB_OT_TelemacCreateMeshSequence(TBB_CreateMeshSequence):
         context.scene.tbb.file_data["ops"] = context.scene.tbb.file_data[self.obj.tbb.uid]
         self.max_length = context.scene.tbb.file_data["ops"].nb_time_points
 
-        # Used in tests
+        # -------------------------------- #
+        # /!\ For testing purpose only /!\ #
+        # -------------------------------- #
         if self.mode == 'TEST':
+            self.point_data.list = self.test_data
             return {'FINISHED'}
 
         return context.window_manager.invoke_props_dialog(self)

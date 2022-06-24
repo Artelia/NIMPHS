@@ -7,10 +7,20 @@ from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 
 
 class TBB_CreateSequence(Operator):
-    """Base class of the 'CreateSequence' operators."""
+    """Base class of 'CreateSequence' operators."""
 
     register_cls = False
     is_custom_base_cls = True
+
+    # -------------------------------- #
+    # /!\ For testing purpose only /!\ #
+    # -------------------------------- #
+    #: bpy.props.StringProperty: Use this property to pass data as a JSON stringified block of data.
+    test_data: StringProperty(
+        name="Test data",
+        description="Use this property to pass data as a JSON stringified block of data",
+        default=""
+    )
 
     #: bpy.props.EnumProperty: Indicate which module to use. Enum in ['OpenFOAM', 'TELEMAC'].
     module: EnumProperty(

@@ -3,19 +3,21 @@ import os
 import bpy
 import json
 import pytest
+import numpy as np
 
 # Sample 2D:
 #   Number of variables = 8
 
 #   Variables:
-#   FOND:             min = -5.0                      max = 2.5
-#   VITESSE U:        min = -2.861448049545288        max = 0.801839292049408
-#   VITESSE V:        min = -0.44414040446281433      max = 0.6261451244354248
-#   SALINITE:         min = -4.410864619220242E-19    max = 35.0
-#   HAUTEUR D'EAU:    min = 0.0                       max = 7.579009532928467
-#   SURFACE LIBRE:    min = 1.9149115085601807        max = 7.1949639320373535
-#   DEBIT SOL EN X:   min = -137.33761596679688       max = 94.22285461425781
-#   DEBIT SOL EN Y:   min = -53.73036575317383        max = 56.772369384765625
+#                     (Time point = 5, remapped)    (GLOBAL)                        (GLOBAL)
+#   FOND:             mean = 0.04131595387433874    min = -5.0                      max = 2.5                 (M)
+#   VITESSE U:        mean = 0.7980087919076801     min = -2.861448049545288        max = 0.801839292049408   (M/S)
+#   VITESSE V:        mean = 0.564615949978801      min = -0.44414040446281433      max = 0.6261451244354248  (M/S)
+#   SALINITE:         mean = 0.37128353934125063    min = -4.410864619220242e-19    max = 35.0                (NONE)
+#   HAUTEUR D'EAU:    mean = 0.9557430329482625     min = 0.0                       max = 7.579009532928467   (M)
+#   SURFACE LIBRE:    mean = 0.6245944487400504     min = 1.9149115085601807        max = 7.1949639320373535  (M)
+#   DEBIT SOL EN X:   mean = 0.7086518611281863     min = -137.33761596679688       max = 94.22285461425781   (M2/S)
+#   DEBIT SOL EN Y:   mean = 0.47028401108210977    min = -53.73036575317383        max = 56.772369384765625  (M2/S)
 
 #   Number of planes = 0
 #   Is not from a 3D simulation
@@ -51,16 +53,29 @@ def point_data_test():
     from tbb.properties.utils import VariablesInformation
 
     data = VariablesInformation()
-    data.append(name="FOND", type="SCALAR")
-    data.append(name="VITESSE U", type="SCALAR")
-    data.append(name="VITESSE V", type="SCALAR")
-    data.append(name="SALINITE", type="SCALAR")
-    data.append(name="HAUTEUR D'EAU", type="SCALAR")
-    data.append(name="SURFACE LIBRE", type="SCALAR")
-    data.append(name="DEBIT SOL EN X", type="SCALAR")
-    data.append(name="DEBIT SOL EN Y", type="SCALAR")
+    data.append(name="FOND", unit="M", type="SCALAR")
+    data.append(name="VITESSE U", unit="M/S", type="SCALAR")
+    data.append(name="VITESSE V", unit="M/S", type="SCALAR")
+    data.append(name="SALINITE", unit="NONE", type="SCALAR")
+    data.append(name="HAUTEUR D'EAU", unit="M", type="SCALAR")
+    data.append(name="SURFACE LIBRE", unit="M", type="SCALAR")
+    data.append(name="DEBIT SOL EN X", unit="M2/S", type="SCALAR")
+    data.append(name="DEBIT SOL EN Y", unit="M2/S", type="SCALAR")
 
     return data
+
+
+@pytest.fixture
+def get_mean_value():
+    from bpy.types import Object, MeshLoopColorLayer
+
+    def mean_value(colors: MeshLoopColorLayer, obj: Object, channel: int):
+        data = [0] * len(obj.data.loops) * 4
+        colors.data.foreach_get("color", data)
+        extracted = [data[i] for i in range(channel, len(data), 4)]
+        return np.sum(extracted) / len(obj.data.loops)
+
+    return mean_value
 
 
 @pytest.fixture
@@ -98,7 +113,8 @@ def test_import_telemac_2d():
     assert op('EXEC_DEFAULT', filepath=FILE_PATH, name="TBB_TELEMAC_preview_2D") == {"FINISHED"}
 
 
-def test_geometry_imported_preview_object_telemac_2d(preview_object):
+def test_geometry_imported_object_telemac_2d(preview_object):
+    # Check imported object
     assert preview_object is not None
     assert len(preview_object.children) == 2
 
@@ -109,7 +125,7 @@ def test_geometry_imported_preview_object_telemac_2d(preview_object):
         assert len(child.data.polygons) == 24199
 
 
-def test_reload_telemac_2d(preview_object):
+def test_reload_file_data_telemac_2d(preview_object):
     assert bpy.ops.tbb.reload_telemac_file('EXEC_DEFAULT') == {"FINISHED"}
 
     # Test file data
@@ -127,33 +143,37 @@ def test_reload_telemac_2d(preview_object):
     assert file_data.is_3d() is False
 
 
-def test_preview_telemac_2d(preview_object):
+def test_preview_telemac_2d(preview_object, point_data_test):
     # Set preview settings
-    file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
-    preview_object.tbb.settings.preview_point_data = json.dumps(file_data.vars.get(0))
+    preview_object.tbb.settings.preview_time_point = 5
+    preview_object.tbb.settings.preview_point_data = json.dumps(point_data_test.get("VITESSE U"))
 
     assert bpy.ops.tbb.telemac_preview('EXEC_DEFAULT') == {"FINISHED"}
 
 
 def test_geometry_preview_object_telemac_2d(preview_object):
+    # Check preview object
     assert preview_object is not None
     assert len(preview_object.children) == 2
 
     # Test geometry
     for child in preview_object.children:
-        assert len(child.data.vertices) == 12506
         assert len(child.data.edges) == 36704
+        assert len(child.data.vertices) == 12506
         assert len(child.data.polygons) == 24199
 
 
-def test_point_data_preview_object_telemac_2d(preview_object):
-    # Test point data (only test if they exist)
-    # TODO: compare values (warning: color data are ramapped into [0; 1])
+def test_point_data_preview_object_telemac_2d(preview_object, get_mean_value):
     for child in preview_object.children:
+        # Check number vertex colors arrays
         vertex_colors = child.data.vertex_colors
         assert len(vertex_colors) == 1
-        data = vertex_colors.get("VITESSE U, None, None", None)
-        assert data is not None
+
+        vitesse_u = vertex_colors.get("VITESSE U, None, None", None)
+        assert vitesse_u is not None
+
+        # Test point data values (compare mean values, less than .1% of difference is ok)
+        assert np.abs(get_mean_value(vitesse_u, child, 0) - 0.7980087919076801) < 0.001
 
 
 def test_compute_ranges_point_data_values_telemac_2d(preview_object, point_data_test):

@@ -81,6 +81,7 @@ class VariablesInformation():
                     "range": self.ranges[id],
                     "dim": self.dimensions[id],
                 }
+                return output
 
             elif prop in ['NAME', 'UNIT', 'TYPE', 'RANGE', 'DIM']:
                 if prop == 'NAME':
@@ -96,8 +97,7 @@ class VariablesInformation():
 
             else:
                 log.critical(f"Property '{prop}' is undefined", exc_info=1)
-
-            return output
+                return None
 
         else:
             log.critical(f"Index '{id}' out of bound (length = {len(self.names)})", exc_info=1)

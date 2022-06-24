@@ -9,6 +9,10 @@ class TBB_ModalOperator():
     register_cls = False
     is_custom_base_cls = True
 
+    # -------------------------------- #
+    # /!\ For testing purpose only /!\ #
+    # -------------------------------- #
+    #: bpy.props.StringProperty: Use this property to pass data as a JSON stringified block of data.
     test_data: StringProperty(
         name="Test data",
         description="Use this property to pass data as a JSON stringified block of data",

@@ -35,9 +35,9 @@ class TBB_OT_TelemacPreview(Operator):
 
         obj = get_selected_object(context)
         collection = context.scene.collection
-        file_data = context.scene.tbb.file_data.get(obj.tbb.uid, None)
         time_point = obj.tbb.settings.preview_time_point
         point_data = obj.tbb.settings.preview_point_data
+        file_data = context.scene.tbb.file_data.get(obj.tbb.uid, None)
 
         try:
             file_data.update_data(time_point)
@@ -54,6 +54,6 @@ class TBB_OT_TelemacPreview(Operator):
             return {'FINISHED'}
 
         log.info("{:.4f}".format(time.time() - start) + "s")
-        self.report({'INFO'}, "Mesh successfully built: checkout the viewport.")
+        self.report({'INFO'}, "Preview done")
 
         return {'FINISHED'}

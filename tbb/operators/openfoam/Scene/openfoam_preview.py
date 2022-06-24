@@ -55,18 +55,14 @@ class TBB_OT_OpenfoamPreview(Operator):
 
         # Get settings
         obj = get_selected_object(context)
-        file_data = context.scene.tbb.file_data.get(obj.tbb.uid, None)
+        collection = context.scene.collection
         clip = obj.tbb.settings.openfoam.clip
         io_settings = obj.tbb.settings.openfoam.import_settings
-        collection = context.scene.collection
+        file_data = context.scene.tbb.file_data.get(obj.tbb.uid, None)
 
         if clip.type != "" and clip.scalar.name == "None":
             self.report({'WARNING'}, "Select a scalar to clip on. You may need to reload the file if none are shown")
             return {'FINISHED'}
-
-        # Setup file
-        file_data.file.decompose_polyhedra = io_settings.decompose_polyhedra
-        file_data.file.case_type = io_settings.case_type
 
         prw_time_point = obj.tbb.settings.preview_time_point
 
@@ -82,7 +78,6 @@ class TBB_OT_OpenfoamPreview(Operator):
         # Generate object
         try:
             obj = generate_object_from_data(vertices, faces, "TBB_OpenFOAM_preview")
-            blender_mesh = obj.data
             if collection.name not in [col.name for col in obj.users_collection]:
                 collection.objects.link(obj)
         except Exception:
@@ -95,10 +90,10 @@ class TBB_OT_OpenfoamPreview(Operator):
         if point_data is not None and point_data != 'NONE':
             res = prepare_openfoam_point_data(obj.data, point_data, file_data)
             if len(res[0]) > 0:
-                generate_vertex_colors(blender_mesh, *res)
+                generate_vertex_colors(obj.data, *res)
                 generate_preview_material(obj, res[0][0]["name"] if len(res[0]) > 0 else 'None')
 
         log.info("{:.4f}".format(time.time() - start) + "s")
-        self.report({'INFO'}, "Mesh successfully built: checkout the viewport.")
+        self.report({'INFO'}, "Preview done")
 
         return {'FINISHED'}
