@@ -21,6 +21,8 @@ import numpy as np
 #   Triangulated mesh: Vertices = 4,624 | Edges = 13,601 | Faces = 8,978 | Triangles = 8,978
 
 FILE_PATH = os.path.abspath("./data/telemac_sample_3d.slf")
+# Point data value threshold for tests
+PDV_THRESHOLD = 0.008
 
 
 @pytest.fixture
@@ -170,7 +172,7 @@ def test_point_data_preview_object_telemac_3d(preview_object, get_mean_value):
         # Test point data values
         spmv_0 += get_mean_value(elevation_z, child, 0)
 
-    assert np.abs(spmv_0 - 1.3966979898702376) < 0.008
+    assert np.abs(spmv_0 - 1.3966979898702376) < PDV_THRESHOLD
 
 
 def test_compute_ranges_point_data_values_telemac_3d(preview_object, point_data_test):
@@ -271,10 +273,10 @@ def test_point_data_streaming_sequence_telemac_3d(streaming_sequence, get_mean_v
 
         spmv[3] += get_mean_value(data, child, 0)
 
-    assert np.abs(spmv[0] - 1.3966979898702376) < 0.008
-    assert np.abs(spmv[1] - 1.499999413975607) < 0.008
-    assert np.abs(spmv[2] - 1.499999413975607) < 0.008
-    assert np.abs(spmv[3] - 0.818980118090674) < 0.008
+    assert np.abs(spmv[0] - 1.3966979898702376) < PDV_THRESHOLD
+    assert np.abs(spmv[1] - 1.499999413975607) < PDV_THRESHOLD
+    assert np.abs(spmv[2] - 1.499999413975607) < PDV_THRESHOLD
+    assert np.abs(spmv[3] - 0.818980118090674) < PDV_THRESHOLD
 
 
 def test_create_mesh_sequence_telemac_3d(preview_object):
@@ -356,7 +358,7 @@ def test_point_data_mesh_sequence_telemac_3d(mesh_sequence, get_mean_value):
 
         spmv[3] += get_mean_value(data, child, 0)
 
-    assert np.abs(spmv[0] - 1.3966979898702376) < 0.008
-    assert np.abs(spmv[1] - 1.499999413975607) < 0.008
-    assert np.abs(spmv[2] - 1.499999413975607) < 0.008
-    assert np.abs(spmv[3] - 0.818980118090674) < 0.008
+    assert np.abs(spmv[0] - 1.3966979898702376) < PDV_THRESHOLD
+    assert np.abs(spmv[1] - 1.499999413975607) < PDV_THRESHOLD
+    assert np.abs(spmv[2] - 1.499999413975607) < PDV_THRESHOLD
+    assert np.abs(spmv[3] - 0.818980118090674) < PDV_THRESHOLD

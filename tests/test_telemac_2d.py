@@ -25,6 +25,8 @@ import numpy as np
 #   Triangulated mesh: Vertices = 12,506 | Edges = 36,704 | Faces = 24,199 | Triangles = 24,199
 
 FILE_PATH = os.path.abspath("./data/telemac_sample_2d.slf")
+# Point data value threshold for tests
+PDV_THRESHOLD = 0.008
 
 
 @pytest.fixture
@@ -173,7 +175,7 @@ def test_point_data_preview_object_telemac_2d(preview_object, get_mean_value):
         assert vitesse_u is not None
 
         # Test point data values (compare mean values, less than .1% of difference is ok)
-        assert np.abs(get_mean_value(vitesse_u, child, 0) - 0.7980087919076801) < 0.008
+        assert np.abs(get_mean_value(vitesse_u, child, 0) - 0.7980087919076801) < PDV_THRESHOLD
 
 
 def test_compute_ranges_point_data_values_telemac_2d(preview_object, point_data_test):
@@ -276,22 +278,22 @@ def test_point_data_streaming_sequence_telemac_2d(streaming_sequence, get_mean_v
         data = vertex_colors.get("FOND, VITESSE U, VITESSE V", None)
         assert data is not None
 
-        assert np.abs(get_mean_value(data, child, 0) - 0.04131595387433874) < 0.008
-        assert np.abs(get_mean_value(data, child, 1) - 0.7980087919076801) < 0.008
-        assert np.abs(get_mean_value(data, child, 2) - 0.564615949978801) < 0.008
+        assert np.abs(get_mean_value(data, child, 0) - 0.04131595387433874) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 1) - 0.7980087919076801) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 2) - 0.564615949978801) < PDV_THRESHOLD
 
         data = vertex_colors.get("SALINITE, HAUTEUR D'EAU, SURFACE LIBRE", None)
         assert data is not None
 
-        assert np.abs(get_mean_value(data, child, 0) - 0.37128353934125063) < 0.008
-        assert np.abs(get_mean_value(data, child, 1) - 0.9557430329482625) < 0.008
-        assert np.abs(get_mean_value(data, child, 2) - 0.6245944487400504) < 0.008
+        assert np.abs(get_mean_value(data, child, 0) - 0.37128353934125063) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 1) - 0.9557430329482625) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 2) - 0.6245944487400504) < PDV_THRESHOLD
 
         data = vertex_colors.get("DEBIT SOL EN X, DEBIT SOL EN Y, None", None)
         assert data is not None
 
-        assert np.abs(get_mean_value(data, child, 0) - 0.7086518611281863) < 0.008
-        assert np.abs(get_mean_value(data, child, 1) - 0.47028401108210977) < 0.008
+        assert np.abs(get_mean_value(data, child, 0) - 0.7086518611281863) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 1) - 0.47028401108210977) < PDV_THRESHOLD
 
 
 def test_create_mesh_sequence_telemac_2d(preview_object):
@@ -363,19 +365,19 @@ def test_point_data_mesh_sequence_telemac_2d(mesh_sequence, get_mean_value):
         data = vertex_colors.get("FOND, VITESSE U, VITESSE V", None)
         assert data is not None
 
-        assert np.abs(get_mean_value(data, child, 0) - 0.04131595387433874) < 0.008
-        assert np.abs(get_mean_value(data, child, 1) - 0.7980087919076801) < 0.008
-        assert np.abs(get_mean_value(data, child, 2) - 0.564615949978801) < 0.008
+        assert np.abs(get_mean_value(data, child, 0) - 0.04131595387433874) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 1) - 0.7980087919076801) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 2) - 0.564615949978801) < PDV_THRESHOLD
 
         data = vertex_colors.get("SALINITE, HAUTEUR D'EAU, SURFACE LIBRE", None)
         assert data is not None
 
-        assert np.abs(get_mean_value(data, child, 0) - 0.37128353934125063) < 0.008
-        assert np.abs(get_mean_value(data, child, 1) - 0.9557430329482625) < 0.008
-        assert np.abs(get_mean_value(data, child, 2) - 0.6245944487400504) < 0.008
+        assert np.abs(get_mean_value(data, child, 0) - 0.37128353934125063) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 1) - 0.9557430329482625) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 2) - 0.6245944487400504) < PDV_THRESHOLD
 
         data = vertex_colors.get("DEBIT SOL EN X, DEBIT SOL EN Y, None", None)
         assert data is not None
 
-        assert np.abs(get_mean_value(data, child, 0) - 0.7086518611281863) < 0.008
-        assert np.abs(get_mean_value(data, child, 1) - 0.47028401108210977) < 0.008
+        assert np.abs(get_mean_value(data, child, 0) - 0.7086518611281863) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 1) - 0.47028401108210977) < PDV_THRESHOLD
