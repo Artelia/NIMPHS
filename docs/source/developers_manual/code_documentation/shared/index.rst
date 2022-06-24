@@ -24,6 +24,14 @@ Operators
    :members:
    :show-inheritance:
 
+.. autoclass:: tbb.operators.shared.modal_operator.TBB_ModalOperator
+   :members:
+   :show-inheritance:
+
+.. autoclass:: tbb.operators.shared.compute_ranges_point_data_values.TBB_OT_ComputeRangesPointDataValues
+   :members:
+   :show-inheritance:
+
 .. autoclass:: tbb.operators.shared.edit_file_path.TBB_OT_EditFilePath
    :members:
    :show-inheritance:

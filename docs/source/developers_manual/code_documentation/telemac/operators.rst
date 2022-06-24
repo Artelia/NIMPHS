@@ -17,6 +17,10 @@ Scene
    :members:
    :show-inheritance:
 
+.. autoclass:: tbb.operators.telemac.Scene.telemac_extract_point_data.TBB_OT_TelemacExtractPointData
+   :members:
+   :show-inheritance:
+
 .. autoclass:: tbb.operators.telemac.Scene.telemac_import_file.TBB_OT_TelemacImportFile
    :members:
    :show-inheritance:
