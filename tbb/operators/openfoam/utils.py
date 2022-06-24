@@ -206,9 +206,11 @@ def generate_openfoam_streaming_sequence_obj(context: Context, obj: Object, name
     # Copy import settings from the selected object
     data = obj.tbb.settings.openfoam.import_settings
     dest = sequence.tbb.settings.openfoam.import_settings
-    dest.decompose_polyhedra = data.decompose_polyhedra
-    dest.triangulate = data.triangulate
+
     dest.case_type = data.case_type
+    dest.triangulate = data.triangulate
+    dest.skip_zero_time = data.skip_zero_time
+    dest.decompose_polyhedra = data.decompose_polyhedra
 
     # Load file data
     sequence.tbb.uid = str(time.time())

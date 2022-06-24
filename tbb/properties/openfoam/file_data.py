@@ -73,13 +73,15 @@ class TBB_OpenfoamFileData(TBB_FileData):
 
         # Update import settings
         if io_settings is not None:
-            self.file.decompose_polyhedra = io_settings.decompose_polyhedra
-            self.file.case_type = io_settings.case_type
             self.triangulate = io_settings.triangulate
+            self.file.case_type = io_settings.case_type
+            self.file.skip_zero_time = io_settings.skip_zero_time
+            self.file.decompose_polyhedra = io_settings.decompose_polyhedra
         else:
+            self.triangulate = True
+            self.file.skip_zero_time = False  # TODO: change this to True
             self.file.decompose_polyhedra = True
             self.file.case_type = 'reconstructed'
-            self.triangulate = True
 
         # Update mesh
         try:

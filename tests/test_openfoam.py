@@ -282,7 +282,7 @@ def test_preview_point_data(preview_object, point_data_test_a):
 
 
 def test_point_data_preview_object_openfoam(preview_object, get_mean_value):
-    # Check preveiw object
+    # Check preview object
     assert preview_object is not None
 
     # Check number vertex colors arrays

@@ -111,6 +111,8 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         row = box.row()
         row.prop(self.import_settings, "decompose_polyhedra", text="Decompose polyhedra")
         row = box.row()
+        row.prop(self.import_settings, "skip_zero_time", text="Skip zero time")
+        row = box.row()
         row.prop(self.import_settings, "triangulate", text="Triangulate")
 
         # Others
@@ -137,6 +139,7 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         obj.tbb.settings.file_path = self.filepath
         io_settings.case_type = self.import_settings.case_type
         io_settings.decompose_polyhedra = self.import_settings.decompose_polyhedra
+        io_settings.skip_zero_time = self.import_settings.skip_zero_time
         io_settings.case_type = self.import_settings.case_type
 
         # Others

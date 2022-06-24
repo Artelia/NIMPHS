@@ -72,6 +72,8 @@ class TBB_PT_OpenfoamStreamingSequence(TBB_StreamingSequenceSettingsPanel):
             row = box.row()
             row.prop(import_settings, "decompose_polyhedra", text="Decompose polyhedra")
             row = box.row()
+            row.prop(import_settings, "skip_zero_time", text="Skip zero time")
+            row = box.row()
             row.prop(import_settings, "triangulate", text="Triangulate")
             row = box.row()
             row.prop(import_settings, "case_type", text="Case")

@@ -39,6 +39,9 @@ class TBB_PT_OpenfoamMainPanel(TBB_ModulePanel):
             row.prop(import_settings, "decompose_polyhedra", text="Decompose polyhedra")
             row = box.row()
             row.enabled = enable_rows
+            row.prop(import_settings, "skip_zero_time", text="Skip zero time")
+            row = box.row()
+            row.enabled = enable_rows
             row.prop(import_settings, "triangulate", text="Triangulate")
             row = box.row()
             row.enabled = enable_rows
