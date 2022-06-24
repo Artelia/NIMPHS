@@ -131,16 +131,16 @@ def test_reload_file_data_telemac_2d(preview_object):
     # Test file data
     file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
     assert file_data is not None
-    assert file_data.module == "TELEMAC"
-    assert file_data.vertices is not None
-    assert file_data.faces is not None
     assert file_data.nb_vars == 8
-    assert file_data.nb_time_points == 31
-    assert file_data.vars is not None
     assert file_data.nb_planes == 0
+    assert file_data.vars is not None
+    assert file_data.is_3d() is False
+    assert file_data.faces is not None
+    assert file_data.module == "TELEMAC"
+    assert file_data.nb_time_points == 31
+    assert file_data.vertices is not None
     assert file_data.nb_vertices == 12506
     assert file_data.nb_triangles == 24199
-    assert file_data.is_3d() is False
 
 
 def test_preview_telemac_2d(preview_object, point_data_test):
@@ -173,7 +173,7 @@ def test_point_data_preview_object_telemac_2d(preview_object, get_mean_value):
         assert vitesse_u is not None
 
         # Test point data values (compare mean values, less than .1% of difference is ok)
-        assert np.abs(get_mean_value(vitesse_u, child, 0) - 0.7980087919076801) < 0.002
+        assert np.abs(get_mean_value(vitesse_u, child, 0) - 0.7980087919076801) < 0.008
 
 
 def test_compute_ranges_point_data_values_telemac_2d(preview_object, point_data_test):
@@ -209,9 +209,9 @@ def test_compute_ranges_point_data_values_telemac_2d(preview_object, point_data_
 
 
 def test_create_streaming_sequence_telemac_2d(preview_object, point_data_test):
-    # ---------------------------------------------------------- #
-    # /!\ WARNING: next tests are based on the following frame /!\
-    # ---------------------------------------------------------- #
+    # ------------------------------------------------------------ #
+    # /!\ WARNING: next tests are based on the following frame /!\ #
+    # ------------------------------------------------------------ #
     # Change frame to load time point 5
     bpy.context.scene.frame_set(5)
 
@@ -223,7 +223,9 @@ def test_create_streaming_sequence_telemac_2d(preview_object, point_data_test):
 
     # Get sequence
     sequence = bpy.data.objects.get("My_TELEMAC_Streaming_Sim_2D_sequence", None)
+    # Check streaming sequence object
     assert sequence is not None
+    assert len(sequence.children) == 2
 
     # Set point data
     sequence.tbb.settings.point_data.import_data = True
@@ -231,10 +233,6 @@ def test_create_streaming_sequence_telemac_2d(preview_object, point_data_test):
 
 
 def test_streaming_sequence_telemac_2d(streaming_sequence, frame_change_pre, point_data_test):
-    # Check streaming sequence object
-    assert streaming_sequence is not None
-    assert len(streaming_sequence.children) == 2
-
     # Force update streaming sequences
     handler = frame_change_pre("update_telemac_streaming_sequences")
     assert handler is not None
@@ -278,28 +276,28 @@ def test_point_data_streaming_sequence_telemac_2d(streaming_sequence, get_mean_v
         data = vertex_colors.get("FOND, VITESSE U, VITESSE V", None)
         assert data is not None
 
-        assert np.abs(get_mean_value(data, child, 0) - 0.04131595387433874) < 0.002
-        assert np.abs(get_mean_value(data, child, 1) - 0.7980087919076801) < 0.002
-        assert np.abs(get_mean_value(data, child, 2) - 0.564615949978801) < 0.002
+        assert np.abs(get_mean_value(data, child, 0) - 0.04131595387433874) < 0.008
+        assert np.abs(get_mean_value(data, child, 1) - 0.7980087919076801) < 0.008
+        assert np.abs(get_mean_value(data, child, 2) - 0.564615949978801) < 0.008
 
         data = vertex_colors.get("SALINITE, HAUTEUR D'EAU, SURFACE LIBRE", None)
         assert data is not None
 
-        assert np.abs(get_mean_value(data, child, 0) - 0.37128353934125063) < 0.002
-        assert np.abs(get_mean_value(data, child, 1) - 0.9557430329482625) < 0.002
-        assert np.abs(get_mean_value(data, child, 2) - 0.6245944487400504) < 0.002
+        assert np.abs(get_mean_value(data, child, 0) - 0.37128353934125063) < 0.008
+        assert np.abs(get_mean_value(data, child, 1) - 0.9557430329482625) < 0.008
+        assert np.abs(get_mean_value(data, child, 2) - 0.6245944487400504) < 0.008
 
         data = vertex_colors.get("DEBIT SOL EN X, DEBIT SOL EN Y, None", None)
         assert data is not None
 
-        assert np.abs(get_mean_value(data, child, 0) - 0.7086518611281863) < 0.002
-        assert np.abs(get_mean_value(data, child, 1) - 0.47028401108210977) < 0.002
+        assert np.abs(get_mean_value(data, child, 0) - 0.7086518611281863) < 0.008
+        assert np.abs(get_mean_value(data, child, 1) - 0.47028401108210977) < 0.008
 
 
 def test_create_mesh_sequence_telemac_2d(preview_object):
-    # ---------------------------------------------------------- #
-    # /!\ WARNING: next tests are based on the following frame /!\
-    # ---------------------------------------------------------- #
+    # ------------------------------------------------------------ #
+    # /!\ WARNING: next tests are based on the following frame /!\ #
+    # ------------------------------------------------------------ #
     # Change frame to load time point 8
     bpy.context.scene.frame_set(8)
 
@@ -313,9 +311,9 @@ def test_mesh_sequence_telemac_2d(mesh_sequence, frame_change_post, point_data_t
     assert mesh_sequence is not None
     assert len(mesh_sequence.children) == 2
 
-    # ---------------------------------------------------------- #
-    # /!\ WARNING: next tests are based on the following frame /!\
-    # ---------------------------------------------------------- #
+    # ------------------------------------------------------------ #
+    # /!\ WARNING: next tests are based on the following frame /!\ #
+    # ------------------------------------------------------------ #
     # Change frame to load time point 13
     bpy.context.scene.frame_set(13)
 
@@ -365,19 +363,19 @@ def test_point_data_mesh_sequence_telemac_2d(mesh_sequence, get_mean_value):
         data = vertex_colors.get("FOND, VITESSE U, VITESSE V", None)
         assert data is not None
 
-        assert np.abs(get_mean_value(data, child, 0) - 0.04131595387433874) < 0.002
-        assert np.abs(get_mean_value(data, child, 1) - 0.7980087919076801) < 0.002
-        assert np.abs(get_mean_value(data, child, 2) - 0.564615949978801) < 0.002
+        assert np.abs(get_mean_value(data, child, 0) - 0.04131595387433874) < 0.008
+        assert np.abs(get_mean_value(data, child, 1) - 0.7980087919076801) < 0.008
+        assert np.abs(get_mean_value(data, child, 2) - 0.564615949978801) < 0.008
 
         data = vertex_colors.get("SALINITE, HAUTEUR D'EAU, SURFACE LIBRE", None)
         assert data is not None
 
-        assert np.abs(get_mean_value(data, child, 0) - 0.37128353934125063) < 0.002
-        assert np.abs(get_mean_value(data, child, 1) - 0.9557430329482625) < 0.002
-        assert np.abs(get_mean_value(data, child, 2) - 0.6245944487400504) < 0.002
+        assert np.abs(get_mean_value(data, child, 0) - 0.37128353934125063) < 0.008
+        assert np.abs(get_mean_value(data, child, 1) - 0.9557430329482625) < 0.008
+        assert np.abs(get_mean_value(data, child, 2) - 0.6245944487400504) < 0.008
 
         data = vertex_colors.get("DEBIT SOL EN X, DEBIT SOL EN Y, None", None)
         assert data is not None
 
-        assert np.abs(get_mean_value(data, child, 0) - 0.7086518611281863) < 0.002
-        assert np.abs(get_mean_value(data, child, 1) - 0.47028401108210977) < 0.002
+        assert np.abs(get_mean_value(data, child, 0) - 0.7086518611281863) < 0.008
+        assert np.abs(get_mean_value(data, child, 1) - 0.47028401108210977) < 0.008
