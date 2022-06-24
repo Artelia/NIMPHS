@@ -23,7 +23,7 @@ import numpy as np
 #       alpha.water:    min =
 #       nut:            min =
 #
-#       Number of time points = ?
+#       Number of time points = 20
 #       Number of variables = ?
 
 #   Non-triangulated mesh:
@@ -138,7 +138,7 @@ def test_file_data_imported_object_openfoam(preview_object):
     assert file_data.time_point == 0
     assert file_data.vars is not None
     assert file_data.module == "OpenFOAM"
-    assert file_data.nb_time_points == 21
+    assert file_data.nb_time_points == 20  # skip_zero_time defaults to True
     assert isinstance(file_data.mesh, pyvista.PolyData)
     assert isinstance(file_data.file, pyvista.OpenFOAMReader)
     assert isinstance(file_data.raw_mesh, pyvista.UnstructuredGrid)
@@ -154,7 +154,7 @@ def test_reload_file_data_openfoam(preview_object):
     assert file_data.time_point == 0
     assert file_data.vars is not None
     assert file_data.module == "OpenFOAM"
-    assert file_data.nb_time_points == 21
+    assert file_data.nb_time_points == 20  # skip_zero_time defaults to True
     assert isinstance(file_data.file, pyvista.OpenFOAMReader)
     assert isinstance(file_data.mesh, pyvista.UnstructuredGrid)
     assert isinstance(file_data.raw_mesh, pyvista.UnstructuredGrid)
@@ -166,6 +166,7 @@ def test_normal_preview_object_openfoam(preview_object):
 
     # Set preview settings
     io_settings.triangulate = False
+    io_settings.skip_zero_time = False
     io_settings.case_type = 'reconstructed'
     io_settings.decompose_polyhedra = False
 
@@ -189,6 +190,7 @@ def test_normal_decompose_polyhedra_preview_object_openfoam(preview_object):
 
     # Set preview settings
     import_settings.triangulate = False
+    import_settings.skip_zero_time = False
     import_settings.case_type = 'reconstructed'
     import_settings.decompose_polyhedra = True
 
@@ -211,6 +213,7 @@ def test_triangulated_preview_object_openfoam(preview_object):
 
     # Set preview settings
     import_settings.triangulate = True
+    import_settings.skip_zero_time = False
     import_settings.case_type = 'reconstructed'
     import_settings.decompose_polyhedra = False
 
@@ -232,9 +235,10 @@ def test_triangulated_decompose_polyhedra_preview_object_openfoam(preview_object
     import_settings = preview_object.tbb.settings.openfoam.import_settings
 
     # Set preview settings
-    import_settings.decompose_polyhedra = True
     import_settings.triangulate = True
+    import_settings.skip_zero_time = False
     import_settings.case_type = 'reconstructed'
+    import_settings.decompose_polyhedra = True
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
 
@@ -359,6 +363,7 @@ def test_create_streaming_sequence_openfoam(preview_object, point_data_test_a):
 
     # Set import settings
     sequence.tbb.settings.openfoam.import_settings.triangulate = True
+    sequence.tbb.settings.openfoam.import_settings.skip_zero_time = False
     sequence.tbb.settings.openfoam.import_settings.case_type = 'reconstructed'
     sequence.tbb.settings.openfoam.import_settings.decompose_polyhedra = True
 
@@ -396,6 +401,7 @@ def test_streaming_sequence_openfoam(streaming_sequence, frame_change_pre):
 
     # Test import settings
     assert streaming_sequence.tbb.settings.openfoam.import_settings.triangulate is True
+    assert streaming_sequence.tbb.settings.openfoam.import_settings.skip_zero_time is False
     assert streaming_sequence.tbb.settings.openfoam.import_settings.case_type == 'reconstructed'
     assert streaming_sequence.tbb.settings.openfoam.import_settings.decompose_polyhedra is True
 

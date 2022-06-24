@@ -31,7 +31,7 @@ decompose polyhedra into tetrahedra and pyramids",
     skip_zero_time: BoolProperty(
         name="Skip zero time",  # noqa: F821
         description="If True, skip the '/0' time folder",
-        default=False  # TODO: change this to True
+        default=True
     )
 
     #: bpy.props.BoolProperty: If `True`, more complex polygons will be broken down into triangles

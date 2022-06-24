@@ -28,24 +28,12 @@ class TBB_OpenfoamFileData(TBB_FileData):
         super().__init__()
 
         self.module = "OpenFOAM"
+        self.time_point = 0
         self.file = file
 
         # Load data
-        self.update_data(0, io_settings=io_settings)
-        try:
-            self.mesh = self.file.read()["internalMesh"]
-        except KeyError:  # Raised when using wrong case_type
-            self.mesh = None
-            return
-
-        self.nb_time_points = self.file.number_time_points
-
-        # Initialize variables information
-        for name in self.raw_mesh.point_data.keys():
-            data = self.raw_mesh.point_data[name]
-            type = 'SCALAR' if len(data.shape) == 1 else 'VECTOR'
-            dim = 1 if len(data.shape) == 1 else data.shape[1]
-            self.vars.append(name, unit="", range=None, type=type, dim=dim)
+        self.update_data(self.time_point, io_settings=io_settings)
+        self.init_variables_information()
 
     def get_point_data(self, id: Union[str, int]) -> np.ndarray:
         """
@@ -79,9 +67,14 @@ class TBB_OpenfoamFileData(TBB_FileData):
             self.file.decompose_polyhedra = io_settings.decompose_polyhedra
         else:
             self.triangulate = True
-            self.file.skip_zero_time = False  # TODO: change this to True
+            self.file.skip_zero_time = True
             self.file.decompose_polyhedra = True
             self.file.case_type = 'reconstructed'
+
+        # The skip_zero_time property can change a lot of things, so we have to update the following data too
+        self.nb_time_points = self.file.number_time_points
+        if self.raw_mesh is not None:
+            self.init_variables_information()
 
         # Update mesh
         try:
@@ -105,3 +98,13 @@ class TBB_OpenfoamFileData(TBB_FileData):
         """
 
         return self.file is not None
+
+    def init_variables_information(self) -> None:
+        """Initialize variables information."""
+
+        self.vars.clear()
+        for name in self.raw_mesh.point_data.keys():
+            data = self.raw_mesh.point_data[name]
+            type = 'SCALAR' if len(data.shape) == 1 else 'VECTOR'
+            dim = 1 if len(data.shape) == 1 else data.shape[1]
+            self.vars.append(name, unit="", range=None, type=type, dim=dim)
