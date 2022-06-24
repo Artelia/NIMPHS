@@ -20,3 +20,4 @@ class TBB_MT_TelemacPointDataMenu(Menu):
         """
 
         self.layout.operator("tbb.compute_ranges_point_data_values", text="Compute ranges")
+        self.layout.operator("tbb.telemac_extract_point_data", text="Extract")

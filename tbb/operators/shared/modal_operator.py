@@ -1,6 +1,6 @@
 # <pep8 compliant>
-from bpy.props import EnumProperty, StringProperty
 from bpy.types import Context, Timer
+from bpy.props import EnumProperty, StringProperty
 
 
 class TBB_ModalOperator():
