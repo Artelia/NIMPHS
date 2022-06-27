@@ -22,8 +22,8 @@ class TBB_CreateStreamingSequence(TBB_CreateSequence):
             _context (Context): context
         """
 
-        if self.length > self.max_length:
-            self.length = self.max_length
+        if self.length > self.max:
+            self.length = self.max
         elif self.length < 0:
             self.length = 0
 

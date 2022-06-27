@@ -127,6 +127,7 @@ class TBB_CreateMeshSequence(TBB_CreateSequence, TBB_ModalOperator):
             if self.time_point <= self.end:
                 state = self.run_one_step(context)
                 if state != {'PASS_THROUGH'}:
+                    super().stop(context)
                     return state
 
             else:

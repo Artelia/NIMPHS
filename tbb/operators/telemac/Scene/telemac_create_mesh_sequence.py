@@ -66,7 +66,7 @@ class TBB_OT_TelemacCreateMeshSequence(TBB_CreateMeshSequence):
 
         # "Copy" file data
         context.scene.tbb.file_data["ops"] = context.scene.tbb.file_data[self.obj.tbb.uid]
-        self.max_length = context.scene.tbb.file_data["ops"].nb_time_points
+        self.max = context.scene.tbb.file_data["ops"].nb_time_points
 
         # -------------------------------- #
         # /!\ For testing purpose only /!\ #

@@ -71,7 +71,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
 
         # "Copy" file data information
         context.scene.tbb.file_data["ops"] = context.scene.tbb.file_data[self.obj.tbb.uid]
-        self.max_length = context.scene.tbb.file_data["ops"].nb_time_points
+        self.max = context.scene.tbb.file_data["ops"].nb_time_points
 
         # -------------------------------- #
         # /!\ For testing purpose only /!\ #

@@ -353,7 +353,7 @@ def test_create_streaming_sequence_openfoam(preview_object, point_data_test_a):
     bpy.context.scene.frame_set(11)
 
     op = bpy.ops.tbb.openfoam_create_streaming_sequence
-    state = op('EXEC_DEFAULT', name="My_OpenFOAM_Streaming_Sim", start=1, length=21, max_length=21, shade_smooth=True)
+    state = op('EXEC_DEFAULT', name="My_OpenFOAM_Streaming_Sim", start=1, length=21, max=21, shade_smooth=True)
     assert state == {'FINISHED'}
 
     # Get and check sequence
@@ -397,7 +397,7 @@ def test_streaming_sequence_openfoam(streaming_sequence, frame_change_pre):
     # assert sequence.start == 1 # TODO: fix this test.
     assert sequence.length == 21
     assert sequence.update is False
-    assert sequence.max_length == 21
+    assert sequence.max == 21
 
     # Test import settings
     assert streaming_sequence.tbb.settings.openfoam.import_settings.triangulate is True
@@ -443,7 +443,7 @@ def test_create_mesh_sequence_openfoam():
     bpy.context.scene.frame_set(9)
 
     op = bpy.ops.tbb.openfoam_create_mesh_sequence
-    state = op('EXEC_DEFAULT', start=0, max_length=21, end=4, name="My_OpenFOAM_Sim", mode='TEST')
+    state = op('EXEC_DEFAULT', start=0, max=21, end=4, name="My_OpenFOAM_Sim", mode='TEST')
     assert state == {"FINISHED"}
 
 

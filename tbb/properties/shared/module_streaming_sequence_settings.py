@@ -39,7 +39,7 @@ class TBB_ModuleStreamingSequenceSettings(PropertyGroup):
     )
 
     #: bpy.props.IntProperty: Maximum length of the sequence (available time steps).
-    max_length: IntProperty(
+    max: IntProperty(
         name="Maximum sequence length",
         description="Maximum length of the sequence (available time steps)",
         default=1,

@@ -483,8 +483,8 @@ def set_sequence_length(self, value: int) -> None:
         value (int): new value
     """
 
-    if value > self.max_length:
-        self["length"] = self.max_length
+    if value > self.max:
+        self["length"] = self.max
     elif value < 0:
         self["length"] = 0
     else:

@@ -1,18 +1,14 @@
 # <pep8 compliant>
+from bpy.props import EnumProperty, IntProperty
 from bpy.types import Operator, Context, Event, Object
-from bpy.props import EnumProperty, IntProperty, PointerProperty
 
 import logging
 log = logging.getLogger(__name__)
 
-import time
-
 from tbb.panels.utils import get_selected_object
+from tbb.operators.shared.modal_operator import TBB_ModalOperator
 from tbb.properties.utils import VariablesInformation, available_point_data
 from tbb.operators.shared.utils import update_end, update_plane_id, update_start
-from tbb.operators.shared.create_mesh_sequence import TBB_CreateMeshSequence
-from tbb.properties.telemac.import_settings import TBB_TelemacImportSettings
-from tbb.operators.shared.modal_operator import TBB_ModalOperator
 
 
 class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
@@ -146,6 +142,13 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
         # Set default target object
         context.scene.tbb.op_target = self.obj
 
+        # -------------------------------- #
+        # /!\ For testing purpose only /!\ #
+        # -------------------------------- #
+        if self.mode == 'TEST':
+            self.point_data = self.test_data
+            return {'FINISHED'}
+
         return context.window_manager.invoke_props_dialog(self)
 
     def draw(self, context: Context) -> None:
@@ -205,6 +208,23 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
             super().prepare(context, "Extracting...")
             return {'RUNNING_MODAL'}
 
+        # -------------------------------- #
+        # /!\ For testing purpose only /!\ #
+        # -------------------------------- #
+        if self.mode == 'TEST':
+            self.invoke(context, None)
+
+            while self.time_point < self.end:
+
+                state = self.run_one_step(context)
+                if state != {'PASS_THROUGH'}:
+                    return state
+
+                self.time_point += 1
+                self.frame += 1
+
+            return {'FINISHED'}
+
         return {'CANCELLED'}
 
     def modal(self, context: Context, event: Event) -> set:
@@ -225,17 +245,10 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
 
         if event.type == 'TIMER':
             if self.time_point <= self.end:
-                # Get and update file data
-                file_data = context.scene.tbb.file_data["ops"]
-                file_data.update_data(self.time_point)
-
-                # Get value of the selected vertex
-                data_name = VariablesInformation(self.point_data).get(0, 'NAME')
-                value = file_data.get_point_data(data_name)[self.vertex_id]
-
-                # Insert new keyframe in custom property
-                self.obj.tbb.extracted_point_data = value
-                self.obj.tbb.keyframe_insert(data_path="extracted_point_data", frame=self.frame)
+                state = self.run_one_step(context)
+                if state != {'PASS_THROUGH'}:
+                    super().stop(context)
+                    return state
 
             else:
                 super().stop(context)
@@ -246,5 +259,30 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
             super().update_progress(context, self.time_point, self.end)
             self.time_point += 1
             self.frame += 1
+
+        return {'PASS_THROUGH'}
+
+    def run_one_step(self, context: Context) -> set:
+        """
+        Run one step of the process.
+
+        Args:
+            context (Context): context
+
+        Returns:
+            set: state of the operation. Enum in ['PASS_THROUGH', 'CANCELLED'].
+        """
+
+        # Get and update file data
+        file_data = context.scene.tbb.file_data["ops"]
+        file_data.update_data(self.time_point)
+
+        # Get value of the selected vertex
+        data_name = VariablesInformation(self.point_data).get(0, 'NAME')
+        value = file_data.get_point_data(data_name)[self.vertex_id + file_data.nb_vertices * self.plane_id]
+
+        # Insert new keyframe in custom property
+        self.obj.tbb.extracted_point_data = value
+        self.obj.tbb.keyframe_insert(data_path="extracted_point_data", frame=self.frame)
 
         return {'PASS_THROUGH'}

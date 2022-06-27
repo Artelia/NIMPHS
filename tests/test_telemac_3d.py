@@ -203,7 +203,7 @@ def test_create_streaming_sequence_telemac_3d(preview_object, point_data_test):
     bpy.context.scene.frame_set(5)
 
     op = bpy.ops.tbb.telemac_create_streaming_sequence
-    state = op('EXEC_DEFAULT', start=0, max_length=10, length=10, name="My_TELEMAC_Streaming_Sim_3D",
+    state = op('EXEC_DEFAULT', start=0, max=10, length=10, name="My_TELEMAC_Streaming_Sim_3D",
                module='TELEMAC', shade_smooth=True)
 
     assert state == {"FINISHED"}
@@ -238,7 +238,7 @@ def test_streaming_sequence_telemac_3d(streaming_sequence, frame_change_pre, poi
 
     assert sequence.update is True
     assert sequence.start == 0
-    assert sequence.max_length == 10
+    assert sequence.max == 10
     assert sequence.length == 10
 
     # Disable updates for this sequence object during the next tests
@@ -287,7 +287,7 @@ def test_create_mesh_sequence_telemac_3d(preview_object):
     bpy.context.scene.frame_set(8)
 
     op = bpy.ops.tbb.telemac_create_mesh_sequence
-    state = op('EXEC_DEFAULT', start=0, max_length=10, end=6, name="My_TELEMAC_Sim_3D", mode='TEST')
+    state = op('EXEC_DEFAULT', start=0, max=10, end=6, name="My_TELEMAC_Sim_3D", mode='TEST')
     assert state == {"FINISHED"}
 
 

@@ -218,7 +218,7 @@ def test_create_streaming_sequence_telemac_2d(preview_object, point_data_test):
     bpy.context.scene.frame_set(5)
 
     op = bpy.ops.tbb.telemac_create_streaming_sequence
-    state = op('EXEC_DEFAULT', start=0, max_length=31, length=31, name="My_TELEMAC_Streaming_Sim_2D",
+    state = op('EXEC_DEFAULT', start=0, max=31, length=31, name="My_TELEMAC_Streaming_Sim_2D",
                module='TELEMAC', shade_smooth=True)
 
     assert state == {"FINISHED"}
@@ -254,7 +254,7 @@ def test_streaming_sequence_telemac_2d(streaming_sequence, frame_change_pre, poi
     assert sequence.start == 0
     assert sequence.length == 31
     assert sequence.update is True
-    assert sequence.max_length == 31
+    assert sequence.max == 31
 
     # Disable updates for this sequence object during the next tests
     sequence.update = False
@@ -304,7 +304,7 @@ def test_create_mesh_sequence_telemac_2d(preview_object):
     bpy.context.scene.frame_set(8)
 
     op = bpy.ops.tbb.telemac_create_mesh_sequence
-    state = op('EXEC_DEFAULT', start=0, max_length=21, end=6, name="My_TELEMAC_Sim_2D", mode='TEST')
+    state = op('EXEC_DEFAULT', mode='TEST', start=0, max=21, end=6, name="My_TELEMAC_Sim_2D")
     assert state == {"FINISHED"}
 
 
@@ -381,3 +381,13 @@ def test_point_data_mesh_sequence_telemac_2d(mesh_sequence, get_mean_value):
 
         assert np.abs(get_mean_value(data, child, 0) - 0.7086518611281863) < PDV_THRESHOLD
         assert np.abs(get_mean_value(data, child, 1) - 0.47028401108210977) < PDV_THRESHOLD
+
+
+def test_extract_point_data_telemac_2d(preview_object, point_data_test):
+    op = bpy.ops.tbb.telemac_extract_point_data
+
+    # Get test data
+    data = json.dumps(point_data_test.get(0))
+
+    state = op('EXEC_DEFAULT', mode='TEST', vertex_id=1526, max=30, start=0, end=30, test_data=data)
+    assert state == {'FINISHED'}
