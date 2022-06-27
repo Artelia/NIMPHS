@@ -11,17 +11,17 @@ class TBB_PointDataSettings(PropertyGroup):
     register_cls = True
     is_custom_base_cls = False
 
-    #: bpy.props.BoolProperty: Import point data as vertex color groups.
+    #: bpy.props.BoolProperty: Import point data as vertex color.
     import_data: BoolProperty(
         name="Import point data",
-        description="Import point data as vertex color groups",
+        description="Import point data as vertex color",
         default=False,
     )
 
-    #: bpy.props.StringProperty: List of point data to import as vertex color groups.
+    #: bpy.props.StringProperty: List of point data to import as vertex color.
     list: StringProperty(
         name="Point data",
-        description="List of point data to import as vertex color groups.",
+        description="List of point data to import as vertex color.",
         default=VariablesInformation().dumps(),  # noqa F821
     )
 
@@ -31,7 +31,7 @@ class TBB_PointDataSettings(PropertyGroup):
         description="Remapping method for point data",
         items=[
             ("LOCAL", "Local", "Remap point data using a local value range"),  # noqa F821
-            ("GLOBAL", "Global", "Remap point data using a global value range (can take several seconds to compute)"),  # noqa F821
+            ("GLOBAL", "Global", "Remap point data using a global value range"),  # noqa F821
         ]
     )
 

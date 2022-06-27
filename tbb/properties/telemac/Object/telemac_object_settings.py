@@ -20,7 +20,7 @@ class TBB_TelemacObjectSettings(PropertyGroup):
         default=""
     )
 
-    #: bpy.props.TBB_TelemacInterpolateProperty: Interpolation settings
+    #: bpy.props.TBB_TelemacInterpolateProperty: Interpolation settings.
     interpolate: PointerProperty(type=TBB_TelemacInterpolateProperty)
 
     #: TBB_TelemacStreamingSequenceProperty: TELEMAC 'streaming sequence' properties.
