@@ -6,7 +6,7 @@ Linux
 
 #. Install `Blender <https://www.blender.org/download/>`_ (at least version 3.0)
 #. Install dependencies:
-    * Blender add-on: `Stop-motion-OBJ <https://github.com/neverhood311/Stop-motion-OBJ/releases>`_ (at least version 2.2.0.alpha.21)
+    * Blender add-on: `Stop-motion-OBJ <https://github.com/neverhood311/Stop-motion-OBJ/releases>`_ (at least version 2.2.0.alpha.22)
     * Python packages:
 
         .. important::

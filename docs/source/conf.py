@@ -9,21 +9,18 @@
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../../'))
 
-
 # -- Project information -----------------------------------------------------
 
-project = 'Toolsbox blender 0.4.0'
+project = 'Toolbox blender 0.4.0'
 copyright = '2022, Thibault Oudart, Félix Olart'
 author = 'Thibault Oudart, Félix Olart'
 
 # The full version, including alpha/beta/rc tags
 release = '0.4.0'
-
 
 # -- General configuration ---------------------------------------------------
 
@@ -31,16 +28,17 @@ release = '0.4.0'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'myst_parser',
     'sphinx_rtd_theme',
     'sphinx.ext.autodoc',
-    'sphinxemoji.sphinxemoji',
     'sphinx.ext.coverage',
     'sphinx.ext.napoleon',
-    'sphinx.ext.autosectionlabel'
+    'sphinxemoji.sphinxemoji',
 ]
 
-suppress_warnings = ["autosectionlabel.*"]  # Suppress duplicated labels warnings
-html_show_sourcelink = False  # Suppress the 'View page source' button on pages
+# Remove 'View page source' button on pages
+html_show_sourcelink = False
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -49,12 +47,10 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
-
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-#
 html_theme = 'sphinx_rtd_theme'
 
 # Add any paths that contain custom static files (such as style sheets) here,

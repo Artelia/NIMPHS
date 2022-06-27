@@ -132,13 +132,13 @@ def remove_folders_matching_pattern(root_folder: str, pattern: str = "__pycache_
                 os.rmdir(os.path.join(rootDir, subdir))
 
 
-def download_stop_motion_obj_addon(dest: str, version: str = "v2.2.0.alpha.21") -> tuple[str, str]:
+def download_stop_motion_obj_addon(dest: str, version: str = "v2.2.0.alpha.22") -> tuple[str, str]:
     """
     Download the Stop-Motion-OBJ addon.
 
     Args:
         dest (str): destination of the downloaded file.
-        version (str, optional): version to download. Defaults to "v2.2.0.alpha.21".
+        version (str, optional): version to download. Defaults to "v2.2.0.alpha.22".
 
     Raises:
         AttributeError: if the given destination does not exist.
