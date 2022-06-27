@@ -1,6 +1,6 @@
 # <pep8 compliant>
-from bpy.types import PropertyGroup
-from bpy.props import BoolProperty, FloatProperty, StringProperty
+from bpy.types import PropertyGroup, Object
+from bpy.props import BoolProperty, FloatProperty, StringProperty, PointerProperty
 
 from tbb.properties.utils import VariablesInformation, update_progress_bar
 
@@ -17,6 +17,9 @@ class TBB_Scene(PropertyGroup):
 
     #: VariablesInformation: Place to store temporary variables information for operators.
     op_vars: VariablesInformation = VariablesInformation()
+
+    #: bpy.props.PointerPropery: Target object on which extract point data.
+    op_target: PointerProperty(type=Object)
 
     #: bpy.props.BoolProperty: Indicate if a modal operator is running.
     m_op_running: BoolProperty(

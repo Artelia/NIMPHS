@@ -2,6 +2,7 @@
 from bpy.types import Operator, Context, Object
 from bpy.props import PointerProperty, IntProperty, StringProperty, EnumProperty
 
+from tbb.operators.shared.utils import update_start
 from tbb.panels.utils import draw_point_data, get_selected_object
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 
@@ -33,30 +34,19 @@ class TBB_CreateSequence(Operator):
         options={'HIDDEN'},  # noqa F821
     )
 
-    def update_start(self, _context: Context) -> None:  # noqa D417
-        """
-        Make sure the user can't select a wrong value.
-
-        Args:
-            _context (Context): context
-        """
-
-        if self.start > self.max_length - 1:
-            self.start = self.max_length - 1
-        elif self.start < 0:
-            self.start = 0
-
     #: bpy.props.IntProperty: Starting point of the sequence.
     start: IntProperty(
         name="Start",  # noqa F821
         description="Starting point of the sequence",
         default=0,
-        update=update_start
+        update=update_start,
+        soft_min=0,
+        min=0
     )
 
     #: bpy.props.IntProperty: Maximum length of the sequence.
-    max_length: IntProperty(
-        name="Max length",  # noqa F821
+    max: IntProperty(
+        name="Max",  # noqa F821
         description="Maximum length of the sequence",
         default=1,
         options={'HIDDEN'},  # noqa F821

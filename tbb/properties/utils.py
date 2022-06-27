@@ -515,7 +515,7 @@ def available_point_data(self, context: Context) -> list:
 
     try:
         file_data = context.scene.tbb.file_data[self.id_data.tbb.uid]  # Works for objects
-    except AttributeError:  # Raised when called from an operator (WindowManager object has not attribute 'tbb')
+    except AttributeError:  # Raised when called from an operator (WindowManager object has no attribute 'tbb')
         file_data = context.scene.tbb.file_data["ops"]
 
     if file_data is None or not file_data.is_ok() or file_data.vars.length() == 0:
@@ -536,7 +536,7 @@ def available_point_data(self, context: Context) -> list:
 
 def update_preview_time_point(self, context: Context) -> None:  # noqa D417
     """
-    Update selected value of preview time point (make sure you can only select available time points).
+    Update selected value of time point (make sure the user can only select available time points).
 
     Args:
         context (Context): context

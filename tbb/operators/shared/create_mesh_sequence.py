@@ -5,6 +5,7 @@ from bpy.types import Event, Context
 import logging
 log = logging.getLogger(__name__)
 
+from tbb.operators.shared.utils import update_end
 from tbb.operators.shared.modal_operator import TBB_ModalOperator
 from tbb.operators.shared.create_sequence import TBB_CreateSequence
 
@@ -21,25 +22,14 @@ class TBB_CreateMeshSequence(TBB_CreateSequence, TBB_ModalOperator):
     #: int: Current frame during the 'create sequence' process (different from time point)
     frame: int = 0
 
-    def update_end(self, _context: Context) -> None:  # noqa D417
-        """
-        Make sure the user can't select a wrong value.
-
-        Args:
-            _context (Context): context
-        """
-
-        if self.end > self.max_length - 1:
-            self.end = self.max_length - 1
-        elif self.end < 0:
-            self.end = 0
-
     #: bpy.props.IntProperty: Ending point of the sequence.
     end: IntProperty(
         name="End",  # noqa F821
         description="Ending point of the sequence",
         default=1,
-        update=update_end
+        update=update_end,
+        soft_min=0,
+        min=0
     )
 
     def invoke(self, _context: Context, _event: Event) -> set:

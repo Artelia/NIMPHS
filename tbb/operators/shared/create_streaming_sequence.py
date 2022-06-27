@@ -32,7 +32,9 @@ class TBB_CreateStreamingSequence(TBB_CreateSequence):
         name="End",  # noqa F821
         description="Length of the sequence",
         default=1,
-        update=update_length
+        update=update_length,
+        soft_min=0,
+        min=0
     )
 
     #: bpy.props.BoolProperty: Whether to use smooth shading or flat shading
