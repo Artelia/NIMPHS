@@ -24,9 +24,9 @@ import numpy as np
 #   Number of time points = 31
 #   Triangulated mesh: Vertices = 12,506 | Edges = 36,704 | Faces = 24,199 | Triangles = 24,199
 
-FILE_PATH = os.path.abspath("./data/telemac_sample_2d.slf")
+FILE_PATH = os.path.abspath("./data/telemac_2d_sample/telemac_2d.slf")
 # Point data value threshold for tests
-PDV_THRESHOLD = 0.008
+PDV_THRESHOLD = 0.01
 
 
 @pytest.fixture
@@ -387,7 +387,33 @@ def test_extract_point_data_telemac_2d(preview_object, point_data_test):
     op = bpy.ops.tbb.telemac_extract_point_data
 
     # Get test data
-    data = json.dumps(point_data_test.get(0))
+    data = json.dumps(point_data_test.get('SALINITE'))
 
-    state = op('EXEC_DEFAULT', mode='TEST', vertex_id=1526, max=30, start=0, end=30, test_data=data)
+    # Note: Fudaa count indices from 1 to xxx. Here we count indices from 0 to xxx.
+    state = op('EXEC_DEFAULT', mode='TEST', vertex_id=1526 - 1, max=30, start=0, end=30, test_data=data)
     assert state == {'FINISHED'}
+
+    # Test keyframes
+    assert len(preview_object.animation_data.action.fcurves) == 1
+    fcurve = preview_object.animation_data.action.fcurves[0]
+    assert fcurve.data_path == "tbb.extracted_point_data"
+    assert fcurve.range()[0] == 0.0
+    assert fcurve.range()[1] == 30.0
+
+    # Test extracted values
+    ground_truth = open(os.path.abspath("./data/telemac_2d_sample/telemac_2d_salinite_1526.csv"), "r")
+
+    for line, id in zip(ground_truth.readlines(), range(-1, 31, 1)):
+        if 'SALINITE' not in line:
+            value = float(line.split(";")[-1][:-1])
+
+            # ------------------------------------------------------------ #
+            # /!\ WARNING: next tests are based on the following frame /!\ #
+            # ------------------------------------------------------------ #
+            # Change frame to load time point 'id'
+            bpy.context.scene.frame_set(id)
+
+            assert id == bpy.context.scene.frame_current
+            assert np.abs(preview_object.tbb.extracted_point_data - value) < 0.001
+
+    ground_truth.close()

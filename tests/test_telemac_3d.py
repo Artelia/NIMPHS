@@ -20,7 +20,7 @@ import numpy as np
 #   Number of time points = 11
 #   Triangulated mesh: Vertices = 4,624 | Edges = 13,601 | Faces = 8,978 | Triangles = 8,978
 
-FILE_PATH = os.path.abspath("./data/telemac_sample_3d.slf")
+FILE_PATH = os.path.abspath("./data/telemac_3d_sample/telemac_3d.slf")
 # Point data value threshold for tests
 PDV_THRESHOLD = 0.008
 
@@ -362,3 +362,39 @@ def test_point_data_mesh_sequence_telemac_3d(mesh_sequence, get_mean_value):
     assert np.abs(spmv[1] - 1.499999413975607) < PDV_THRESHOLD
     assert np.abs(spmv[2] - 1.499999413975607) < PDV_THRESHOLD
     assert np.abs(spmv[3] - 0.818980118090674) < PDV_THRESHOLD
+
+
+def test_extract_point_data_telemac_3d(preview_object, point_data_test):
+    op = bpy.ops.tbb.telemac_extract_point_data
+
+    # Get test data
+    data = json.dumps(point_data_test.get('VELOCITY V'))
+
+    # Note: Fudaa count indices from 1 to xxx. Here we count indices from 0 to xxx.
+    state = op('EXEC_DEFAULT', mode='TEST', vertex_id=3007 - 1, max=10, start=0, end=10, test_data=data, plane_id=1)
+    assert state == {'FINISHED'}
+
+    # Test keyframes
+    assert len(preview_object.animation_data.action.fcurves) == 1
+    fcurve = preview_object.animation_data.action.fcurves[0]
+    assert fcurve.data_path == "tbb.extracted_point_data"
+    assert fcurve.range()[0] == 0.0
+    assert fcurve.range()[1] == 10.0
+
+    # Test extracted values
+    ground_truth = open(os.path.abspath("./data/telemac_3d_sample/telemac_3d_velocity_v_2_3007.csv"), "r")
+
+    for line, id in zip(ground_truth.readlines(), range(-1, 11, 1)):
+        if 'VELOCITY V' not in line:
+            value = float(line.split(";")[-1][:-1])
+
+            # ------------------------------------------------------------ #
+            # /!\ WARNING: next tests are based on the following frame /!\ #
+            # ------------------------------------------------------------ #
+            # Change frame to load time point 'id'
+            bpy.context.scene.frame_set(id)
+
+            assert id == bpy.context.scene.frame_current
+            assert np.abs(preview_object.tbb.extracted_point_data - value) < 0.001
+
+    ground_truth.close()

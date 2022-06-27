@@ -189,7 +189,6 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
                     data = file_data.get_point_data(var_name)
                     min_data = self.minima[var_name]
                     max_data = self.maxima[var_name]
-                    # print(self.minima[var_name])
 
                     if min_data["type"] == 'SCALAR':
                         min_data["values"].append(float(np.min(data)))

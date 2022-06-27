@@ -1,6 +1,6 @@
 # <pep8 compliant>
-from bpy.props import EnumProperty, IntProperty
 from bpy.types import Operator, Context, Event, Object
+from bpy.props import EnumProperty, IntProperty, StringProperty
 
 import logging
 log = logging.getLogger(__name__)
@@ -39,11 +39,19 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
         min=0,
     )
 
-    #: bpy.props.EnumProperty: Point data to extract data.
+    #: bpy.props.EnumProperty: Point data to extract.
     point_data: EnumProperty(
         name="Point data",
         description="Point data to extract",
         items=available_point_data,
+    )
+
+    #: bpy.props.StringProperty: Name of the chosen variable to extract.
+    chosen_variable: StringProperty(
+        name="Chosen variable",
+        description="Name of the chosen variable to extract",
+        default="",
+        options={'HIDDEN'}
     )
 
     #: bpy.props.IntProperty: Index of the plane on which the vertex is located.
@@ -63,6 +71,7 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
         default=0,
         soft_min=0,
         min=0,
+        options={'HIDDEN'}
     )
 
     #: bpy.props.IntProperty: Number of maximum available time points to extract.
@@ -70,6 +79,7 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
         name="Max",
         description="Number of maximum available time points to extract",
         default=1,
+        options={'HIDDEN'},
     )
 
     #: bpy.props.IntProperty: Start time point.
@@ -146,7 +156,6 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
         # /!\ For testing purpose only /!\ #
         # -------------------------------- #
         if self.mode == 'TEST':
-            self.point_data = self.test_data
             return {'FINISHED'}
 
         return context.window_manager.invoke_props_dialog(self)
@@ -200,11 +209,12 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
             set: state of the operator
         """
 
-        # Setup time settings
-        self.time_point = self.start
+        # Setup operator settings
         self.frame = 0
+        self.time_point = self.start
 
         if self.mode == 'MODAL':
+            self.chosen_variable = VariablesInformation(self.point_data).get(0, prop='NAME')
             super().prepare(context, "Extracting...")
             return {'RUNNING_MODAL'}
 
@@ -213,8 +223,9 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
         # -------------------------------- #
         if self.mode == 'TEST':
             self.invoke(context, None)
+            self.chosen_variable = VariablesInformation(self.test_data).get(0, prop='NAME')
 
-            while self.time_point < self.end:
+            while self.time_point <= self.end:
 
                 state = self.run_one_step(context)
                 if state != {'PASS_THROUGH'}:
@@ -278,8 +289,7 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
         file_data.update_data(self.time_point)
 
         # Get value of the selected vertex
-        data_name = VariablesInformation(self.point_data).get(0, 'NAME')
-        value = file_data.get_point_data(data_name)[self.vertex_id + file_data.nb_vertices * self.plane_id]
+        value = file_data.get_point_data(self.chosen_variable)[self.vertex_id + file_data.nb_vertices * self.plane_id]
 
         # Insert new keyframe in custom property
         self.obj.tbb.extracted_point_data = value

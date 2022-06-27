@@ -41,6 +41,15 @@ def update_plane_id(self, context: Context) -> None:
         context (Context): context
     """
 
+    # -------------------------------- #
+    # /!\ For testing purpose only /!\ #
+    # -------------------------------- #
+    try:
+        if self.mode == 'TEST':
+            return
+    except Exception:
+        pass
+
     if self.plane_id > self.max_plane_id:
         self.plane_id = self.max_plane_id
     elif self.plane_id < 0:
