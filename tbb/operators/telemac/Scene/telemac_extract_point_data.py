@@ -9,7 +9,7 @@ import time
 
 from tbb.panels.utils import get_selected_object
 from tbb.properties.utils import VariablesInformation, available_point_data
-from tbb.operators.shared.utils import update_end, update_start
+from tbb.operators.shared.utils import update_end, update_plane_id, update_start
 from tbb.operators.shared.create_mesh_sequence import TBB_CreateMeshSequence
 from tbb.properties.telemac.import_settings import TBB_TelemacImportSettings
 from tbb.operators.shared.modal_operator import TBB_ModalOperator
@@ -48,6 +48,25 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
         name="Point data",
         description="Point data to extract",
         items=available_point_data,
+    )
+
+    #: bpy.props.IntProperty: Index of the plane on which the vertex is located.
+    plane_id: IntProperty(
+        name="Plane",
+        description="Index of the plane on which the vertex is located",
+        default=0,
+        update=update_plane_id,
+        soft_min=0,
+        min=0,
+    )
+
+    #: bpy.props.IntProperty: Highest available plane id.
+    max_plane_id: IntProperty(
+        name="Plane",
+        description="Highest available plane id",
+        default=0,
+        soft_min=0,
+        min=0,
     )
 
     #: bpy.props.IntProperty: Number of maximum available time points to extract.
@@ -117,8 +136,14 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
 
         # "Copy" file data
         context.scene.tbb.file_data["ops"] = context.scene.tbb.file_data[self.obj.tbb.uid]
-        self.max = context.scene.tbb.file_data["ops"].nb_time_points
-        # Set default target
+        file_data = context.scene.tbb.file_data["ops"]
+
+        # Set 'max' settings
+        if file_data.is_3d():
+            self.max_plane_id = file_data.nb_planes - 1
+        self.max = file_data.nb_time_points - 1
+
+        # Set default target object
         context.scene.tbb.op_target = self.obj
 
         return context.window_manager.invoke_props_dialog(self)
@@ -131,27 +156,35 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
             context (Context): context
         """
 
-        # Extract settings
-        box = self.layout.box()
-        row = box.row()
-        row.label(text="Extract")
+        file_data = context.scene.tbb.file_data.get("ops", None)
 
-        row = box.row()
-        row.prop(self, "vertex_id", text="Vertex ID")
-        row = box.row()
-        row.prop(self, "point_data", text="Point data")
-        row = box.row()
-        row.prop_search(context.scene.tbb, "op_target", context.scene, "objects", text="Target")
+        if file_data is not None:
+            # Extract settings
+            box = self.layout.box()
+            row = box.row()
+            row.label(text="Extract")
 
-        # Time related settings
-        box = self.layout.box()
-        row = box.row()
-        row.label(text="Time")
+            row = box.row()
+            row.prop(self, "vertex_id", text="Vertex ID")
 
-        row = box.row()
-        row.prop(self, "start", text="Start")
-        row = box.row()
-        row.prop(self, "end", text="End")
+            if file_data.is_3d():
+                row = box.row()
+                row.prop(self, "plane_id", text="Plane id")
+
+            row = box.row()
+            row.prop(self, "point_data", text="Point data")
+            row = box.row()
+            row.prop_search(context.scene.tbb, "op_target", context.scene, "objects", text="Target")
+
+            # Time related settings
+            box = self.layout.box()
+            row = box.row()
+            row.label(text="Time")
+
+            row = box.row()
+            row.prop(self, "start", text="Start")
+            row = box.row()
+            row.prop(self, "end", text="End")
 
     def execute(self, context: Context) -> set:
         """
