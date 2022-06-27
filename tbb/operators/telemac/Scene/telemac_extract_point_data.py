@@ -8,7 +8,7 @@ log = logging.getLogger(__name__)
 import time
 
 from tbb.panels.utils import get_selected_object
-from tbb.properties.utils import available_point_data
+from tbb.properties.utils import VariablesInformation, available_point_data
 from tbb.operators.shared.utils import update_end, update_start
 from tbb.operators.shared.create_mesh_sequence import TBB_CreateMeshSequence
 from tbb.properties.telemac.import_settings import TBB_TelemacImportSettings
@@ -24,6 +24,15 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
     bl_idname = "tbb.telemac_extract_point_data"
     bl_label = "Extract point data"
     bl_description = "Extract point data from a TELEMAC object"
+
+    #: int: Time point currently processed.
+    time_point: int = 0
+
+    #: int: Current frame during the process (different from time point).
+    frame: int = 0
+
+    #: bpy.types.Object: Selected object
+    obj: Object = None
 
     #: bpy.props.IntProperty: Index of the vertex from which extract data.
     vertex_id: IntProperty(
@@ -98,19 +107,19 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
             set: state of the operator
         """
 
-        obj = get_selected_object(context)
-        if obj is None:
+        self.obj = get_selected_object(context)
+        if self.obj is None:
             return {'CANCELLED'}
 
-        if context.scene.tbb.file_data.get(obj.tbb.uid, None) is None:
+        if context.scene.tbb.file_data.get(self.obj.tbb.uid, None) is None:
             self.report({'ERROR'}, "Reload file data first")
             return {'CANCELLED'}
 
         # "Copy" file data
-        context.scene.tbb.file_data["ops"] = context.scene.tbb.file_data[obj.tbb.uid]
+        context.scene.tbb.file_data["ops"] = context.scene.tbb.file_data[self.obj.tbb.uid]
         self.max = context.scene.tbb.file_data["ops"].nb_time_points
         # Set default target
-        context.scene.tbb.op_target = obj
+        context.scene.tbb.op_target = self.obj
 
         return context.window_manager.invoke_props_dialog(self)
 
@@ -155,7 +164,15 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
             set: state of the operator
         """
 
-        pass
+        # Setup time settings
+        self.time_point = self.start
+        self.frame = 0
+
+        if self.mode == 'MODAL':
+            super().prepare(context, "Extracting...")
+            return {'RUNNING_MODAL'}
+
+        return {'CANCELLED'}
 
     def modal(self, context: Context, event: Event) -> set:
         """
@@ -169,4 +186,32 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
             set: state of the operator
         """
 
-        pass
+        if event.type == 'ESC':
+            super().stop(context, cancelled=True)
+            return {'CANCELLED'}
+
+        if event.type == 'TIMER':
+            if self.time_point <= self.end:
+                # Get and update file data
+                file_data = context.scene.tbb.file_data["ops"]
+                file_data.update_data(self.time_point)
+
+                # Get value of the selected vertex
+                data_name = VariablesInformation(self.point_data).get(0, 'NAME')
+                value = file_data.get_point_data(data_name)[self.vertex_id]
+
+                # Insert new keyframe in custom property
+                self.obj.tbb.extracted_point_data = value
+                self.obj.tbb.keyframe_insert(data_path="extracted_point_data", frame=self.frame)
+
+            else:
+                super().stop(context)
+                self.report({'INFO'}, "Extracting completed")
+                return {'FINISHED'}
+
+            # Update the progress bar
+            super().update_progress(context, self.time_point, self.end)
+            self.time_point += 1
+            self.frame += 1
+
+        return {'PASS_THROUGH'}
