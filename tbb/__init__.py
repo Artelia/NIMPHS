@@ -39,7 +39,7 @@ except BaseException:
 
 if "numpy" not in globals():
     message = ("\n\n"
-               "The Toolsbox Blender addon depends on the numpy library.\n"
+               "The Toolbox Blender addon depends on the numpy library.\n"
                "Unfortunately the Blender built you are using does not have this library.\n"
                "Please checkout the documentation to fix this issue (installation guide).")
     raise Exception(message)
@@ -51,14 +51,14 @@ except BaseException:
 
 if "pyvista" not in globals():
     message = ("\n\n"
-               "The Toolsbox Blender addon depends on the pyvista library.\n"
+               "The Toolbox Blender addon depends on the pyvista library.\n"
                "Unfortunately the Blender built you are using does not have this library.\n"
                "Please checkout the documentation to fix this issue (installation guide).")
     raise Exception(message)
 
 if bl_version < (3, 0, 0):
     message = ("\n\n"
-               "The Toolsbox Blender addon requires at least Blender 3.0.\n"
+               "The Toolbox Blender addon requires at least Blender 3.0.\n"
                "Your are using an older version.\n"
                "Please download the latest official release.")
     raise Exception(message)
@@ -115,7 +115,7 @@ def register() -> None:  # noqa: D103
 
     Scene.tbb_icons = {"main": icons}
 
-    logger.debug("Registered Toolsbox OpenFOAM/TELEMAC")
+    logger.debug("Registered Toolbox OpenFOAM/TELEMAC")
 
 
 def unregister() -> None:  # noqa: D103
@@ -132,4 +132,4 @@ def unregister() -> None:  # noqa: D103
     # Remove custom menus
     VIEW3D_MT_editor_menus.remove(tbb_menus_draw)
 
-    logger.debug("Unregistered Toolsbox OpenFOAM/TELEMAC")
+    logger.debug("Unregistered Toolbox OpenFOAM/TELEMAC")

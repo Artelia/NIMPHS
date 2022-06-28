@@ -65,7 +65,7 @@ class TBB_OT_TelemacCreateStreamingSequence(TBB_CreateStreamingSequence):
 
         # "Copy" file data
         context.scene.tbb.file_data["ops"] = context.scene.tbb.file_data[obj.tbb.uid]
-        self.max = context.scene.tbb.file_data["ops"].nb_time_points
+        self.max = context.scene.tbb.file_data["ops"].nb_time_points - 1
 
         return context.window_manager.invoke_props_dialog(self)
 

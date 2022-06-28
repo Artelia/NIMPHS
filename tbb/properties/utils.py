@@ -10,7 +10,7 @@ import json
 import numpy as np
 from typing import Union, Any
 
-DEV_MODE = True
+DEV_MODE = False
 
 
 class VariablesInformation():
