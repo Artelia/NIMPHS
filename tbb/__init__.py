@@ -126,6 +126,12 @@ def unregister() -> None:  # noqa: D103
         previews.remove(collection)
     Scene.tbb_icons.clear()
 
+    # Remove custom app handlers
+    frame_change_pre.remove(update_openfoam_streaming_sequences)
+    frame_change_pre.remove(update_telemac_streaming_sequences)
+    frame_change_post.remove(update_telemac_mesh_sequences)
+    save_pre.remove(tbb_on_save_pre)
+
     # Remove custom import operators from 'File > Import'
     TOPBAR_MT_file_import.remove(import_openfoam_menu_draw)
     TOPBAR_MT_file_import.remove(import_telemac_menu_draw)

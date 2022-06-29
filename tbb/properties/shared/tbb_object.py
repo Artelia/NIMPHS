@@ -41,10 +41,3 @@ class TBB_Object(PropertyGroup):
         description="Indicate whether this object is part of a mesh sequence or not",
         default=False
     )
-
-    #: bpy.props.FloatProperty: Property used to save extracted point data.
-    extracted_point_data: FloatProperty(
-        name="Extracted point data",
-        description="Extracted point data",
-        default=0
-    )
