@@ -377,7 +377,7 @@ def test_extract_point_data_telemac_3d(preview_object, point_data_test):
     # Test keyframes
     assert len(preview_object.animation_data.action.fcurves) == 1
     fcurve = preview_object.animation_data.action.fcurves[0]
-    assert fcurve.data_path == "tbb.extracted_point_data"
+    assert fcurve.data_path == '["VELOCITY V"]'
     assert fcurve.range()[0] == 0.0
     assert fcurve.range()[1] == 10.0
 
@@ -395,6 +395,6 @@ def test_extract_point_data_telemac_3d(preview_object, point_data_test):
             bpy.context.scene.frame_set(id)
 
             assert id == bpy.context.scene.frame_current
-            assert np.abs(preview_object.tbb.extracted_point_data - value) < 0.001
+            assert np.abs(preview_object["VELOCITY V"] - value) < 0.001
 
     ground_truth.close()
