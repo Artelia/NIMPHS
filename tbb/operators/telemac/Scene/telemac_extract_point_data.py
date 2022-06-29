@@ -292,7 +292,7 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
         value = file_data.get_point_data(self.chosen_variable)[self.vertex_id + file_data.nb_vertices * self.plane_id]
 
         # Insert new keyframe in custom property
-        self.obj[self.chosen_variable] = value
-        self.obj.keyframe_insert(data_path=f'["{self.chosen_variable}"]', frame=self.frame)
+        context.scene.tbb.op_target[self.chosen_variable] = value
+        context.scene.tbb.op_target.keyframe_insert(data_path=f'["{self.chosen_variable}"]', frame=self.frame)
 
         return {'PASS_THROUGH'}
