@@ -527,6 +527,10 @@ def update_telemac_streaming_sequence(obj: Object, child: Object, file_data: TBB
     # Generate object
     child = generate_object_from_data(vertices, file_data.faces, child.name)
 
+    # Apply smooth shading
+    if sequence.shade_smooth:
+        child.data.polygons.foreach_set("use_smooth", [True] * len(child.data.polygons))
+
     # Update point data
     if point_data.import_data:
         # Remove old vertex colors
