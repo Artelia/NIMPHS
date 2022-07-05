@@ -76,13 +76,7 @@ class TBB_OT_TelemacCreateStreamingSequence(TBB_CreateStreamingSequence):
         Args:
             context (Context): context
         """
-
-        # Import settings
-        box = self.layout.box()
-        box.label(text="Import")
-        row = box.row()
-        row.prop(self.import_settings, "compute_value_ranges", text="Compute value ranges")
-
+        
         super().draw(context)
 
     def execute(self, context: Context) -> set:

@@ -102,14 +102,6 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
             _context (Context): context
         """
 
-        # Import settings
-        box = self.layout.box()
-        row = box.row()
-        row.label(text="Import")
-
-        row = box.row()
-        row.prop(self.import_settings, "compute_value_ranges", text="Compute value ranges")
-
         # Others
         box = self.layout.box()
         row = box.row()

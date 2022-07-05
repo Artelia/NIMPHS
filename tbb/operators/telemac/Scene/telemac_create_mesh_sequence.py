@@ -84,13 +84,7 @@ class TBB_OT_TelemacCreateMeshSequence(TBB_CreateMeshSequence):
         Args:
             context (Context): context
         """
-
-        # Import settings
-        box = self.layout.box()
-        box.label(text="Import")
-        row = box.row()
-        row.prop(self.import_settings, "compute_value_ranges", text="Compute value ranges")
-
+        
         super().draw(context)
 
     def run_one_step(self, context: Context) -> set:
