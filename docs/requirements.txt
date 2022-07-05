@@ -1,7 +1,0 @@
-numpy
-sphinx
-matplotlib
-sphinxemoji
-sphinx_rtd_theme
-fake-bpy-module-latest
-# pyvista >= 0.35.0
