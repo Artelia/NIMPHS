@@ -21,6 +21,8 @@ Linux
 
 
         * Go where python is installed in Blender (in ``.../3.X/python/bin/``)
+        * Make sure we have pip installed: ``sudo python3.X -m ensurepip``
+        * Update pip: ``sudo python3.X -m pip install -U pip``
         * Install `PyVista <https://docs.pyvista.org/#>`_ ``sudo python3.X -m pip install -U pyvista>=0.35.0 -t ../lib/site-packages/``
 
 #. Install the add-on:
