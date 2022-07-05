@@ -4,9 +4,10 @@ include:
 
 stages:
   - check-style-docstring
-  - build
+  - check-spelling-doc
+  - build-doc
   - test
-  - generate-addon
+  - upload
   - release
   - deploy
 
@@ -40,40 +41,70 @@ check-style-docstring:
     - pre-commit run --all-files
 
 
-build-doc:
-  stage: build
+check-spelling-doc:
+  stage: check-spelling-doc
   image: python:latest
-
-  needs:
-    - job: check-style-docstring
 
   extends:
     - .run_automatically
 
   before_script:
     - apt-get update
-    - apt-get install -y zip unzip libgl1-mesa-glx
-    - pip install -r docs/requirements.txt
-    - pip install -U https://github.com/pyvista/pyvista-wheels/raw/main/vtk-9.1.0.dev0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
-    - |
-      curl -L https://github.com/pyvista/pyvista/archive/refs/heads/main.zip --output pyvista.zip
+    - apt-get install -y zip unzip libgl1-mesa-glx libenchant-2-2
+
+    - pip install -r requirements.txt
+    # Install last version of pyvista
+    - curl -L https://github.com/pyvista/pyvista/archive/refs/heads/main.zip --output pyvista.zip
     - unzip pyvista.zip
     - pip install -e pyvista-main
 
-
-  script:
     # Rename ${MODULE_NAME}/__init__.py to avoid problems if a python module is not found
     - mv ${MODULE_NAME}/__init__.py ${MODULE_NAME}/___init__.py
     # Comment '@persistent' decorators because fake-bpy-module defines it at 'None', which is not callable and causes errors during 'sphinx-build'
     - find ${MODULE_NAME}/ -type f -name "*.py" -exec sed -i 's/@persistent/#@persistent/g' {} +
-    - sphinx-build -b html docs/source build_docs
-    - find ${MODULE_NAME}/ -type f -name "*.py" -exec sed -i 's/#@persistent/@persistent/g' {} +
+
+  script:
+    - cd docs
+    - make spelling SPHINXOPTS="-W --keep-going"
+
+  artifacts:
+    paths:
+      - pyvista-main
+    expire_in: '1 hour'
+
+
+build-doc:
+  stage: build-doc
+  image: python:latest
+
+  needs:
+    - job: check-style-docstring
+    - job: check-spelling-doc
+      artifacts: true
+
+  extends:
+    - .run_automatically
+
+  before_script:
+    - apt-get update
+    - apt-get install -y zip unzip libgl1-mesa-glx libenchant-2-2
+
+    - pip install -r requirements.txt
+    # Install last version of pyvista (folder transmitted through artifacts)
+    - pip install -e pyvista-main
+
+  script:
+    - cd docs
+    - make html
+    - mv _build/html ../build_docs
+
     - mv ${MODULE_NAME}/___init__.py ${MODULE_NAME}/__init__.py
+    - find ${MODULE_NAME}/ -type f -name "*.py" -exec sed -i 's/#@persistent/@persistent/g' {} +
 
   artifacts:
     paths:
       - build_docs
-    expire_in: 1 hour
+    expire_in: '1 hour'
 
 
 test-addon:
@@ -94,8 +125,8 @@ test-addon:
     # - python3 -m scripts.run_tests.py
 
 
-generate-addon:
-  stage: generate-addon
+upload:
+  stage: upload
   image: python:latest
 
   needs:
@@ -145,7 +176,7 @@ release:
   image: registry.gitlab.com/gitlab-org/release-cli:latest
 
   needs:
-    - job: generate-addon
+    - job: upload
       artifacts: true
 
   extends:
