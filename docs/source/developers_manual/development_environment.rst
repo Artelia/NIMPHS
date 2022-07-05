@@ -19,7 +19,7 @@ General
 .. warning::
 
     The latest version of `pyvista <https://github.com/pyvista/pyvista>`__ does not contain features that were added since the latest release `(v0.34.1)`.
-    Therefore, you must clone the github repository next to the addon's folder. Make sure to checkout the `main` branch.
+    Therefore, you must clone the github repository next to the add-on's folder. Make sure to checkout the `main` branch.
     Then, do: ``path/to/blender/python pip install -e path/to/pyvista``
 
 | Or install everything manually:
@@ -90,7 +90,7 @@ Setup
 .. warning::
 
     The latest version of `pyvista <https://github.com/pyvista/pyvista>`__ does not contain features that were added since the latest release `(v0.34.1)`.
-    Therefore, you must clone the github repository next to the addon's folder. Make sure to checkout the `main` branch.
+    Therefore, you must clone the github repository next to the add-on's folder. Make sure to checkout the `main` branch.
     The tests scripts will use this version instead of the versions available through PyPi.
 
 Usage

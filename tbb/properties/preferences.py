@@ -4,7 +4,7 @@ from bpy.props import EnumProperty, StringProperty
 
 
 class TBB_Preferences(PropertyGroup):
-    """Addon preferences properties."""
+    """Add-on preferences properties."""
 
     register_cls = True
     is_custom_base_cls = False

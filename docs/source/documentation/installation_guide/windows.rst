@@ -9,7 +9,7 @@ Windows
 
     .. important::
         If you have **administrator privileges** then you can install Blender globally.
-        If not, we recomend you to **install a portable version** otherwise you may not be able
+        If not, we recommend you to **install a portable version** otherwise you may not be able
         to install python dependencies correctly.
 
 

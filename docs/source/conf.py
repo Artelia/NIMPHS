@@ -11,11 +11,14 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 import os
 import sys
+# Source code
 sys.path.insert(0, os.path.abspath('../../'))
+# Filters for spelling
+sys.path.insert(0, os.path.abspath('.'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'Toolbox blender 0.4.0'
+project = 'Toolbox blender'
 copyright = '2022, Thibault Oudart, Félix Olart'
 author = 'Thibault Oudart, Félix Olart'
 
@@ -33,8 +36,23 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.coverage',
     'sphinx.ext.napoleon',
+    'sphinxcontrib.spelling',
     'sphinxemoji.sphinxemoji',
 ]
+
+# String specifying a file containing a list of words known to be spelled
+# correctly but that do not appear in the language dictionary selected
+# by spelling_lang. The file should contain one word per line.
+spelling_word_list_filename = 'spelling_wordlist.txt'
+
+# The PyEnchant tokenizer supports a “filtering” API for processing words
+# from the input. Filters can alter the stream of words by adding,
+# replacing, or dropping values.
+from MethodNameFilter import MethodNameFilter
+spelling_filters = ['MethodNameFilter.MethodNameFilter']
+
+# Show suggestions
+spelling_show_suggestions = True
 
 # Remove 'View page source' button on pages
 html_show_sourcelink = False
@@ -52,6 +70,14 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 html_theme = 'sphinx_rtd_theme'
+
+# Theme options
+html_theme_options = {
+    'logo_only': False,
+    'display_version': True,
+    'prev_next_buttons_location': 'bottom',
+    'style_external_links': False,
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

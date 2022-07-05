@@ -1,8 +1,11 @@
-numpy
-matplotlib
+# pyvista >= 0.35.0
+pytest
+blender-addon-tester
+pre-commit
+pyenchant
 myst-parser
 sphinx
 sphinxemoji
 sphinx-rtd-theme
+sphinxcontrib-spelling
 fake-bpy-module-latest
-# pyvista >= 0.35.0
