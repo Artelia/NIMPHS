@@ -84,7 +84,7 @@ class TBB_OT_TelemacCreateMeshSequence(TBB_CreateMeshSequence):
         Args:
             context (Context): context
         """
-        
+
         super().draw(context)
 
     def run_one_step(self, context: Context) -> set:

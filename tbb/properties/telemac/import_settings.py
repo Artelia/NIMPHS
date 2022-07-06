@@ -1,6 +1,5 @@
 # <pep8 compliant>
 from bpy.types import PropertyGroup
-from bpy.props import BoolProperty
 
 
 class TBB_TelemacImportSettings(PropertyGroup):

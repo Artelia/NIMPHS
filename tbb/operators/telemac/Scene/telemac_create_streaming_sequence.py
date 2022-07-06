@@ -76,7 +76,7 @@ class TBB_OT_TelemacCreateStreamingSequence(TBB_CreateStreamingSequence):
         Args:
             context (Context): context
         """
-        
+
         super().draw(context)
 
     def execute(self, context: Context) -> set:
