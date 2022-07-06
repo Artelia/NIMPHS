@@ -169,25 +169,6 @@ def download_stop_motion_obj_addon(dest: str, version: str = "v2.2.0.alpha.22") 
 # Parser for run_tests.py
 parser = argparse.ArgumentParser(description="Test addon")
 parser.add_argument(
-    "-n",
-    metavar="Name",
-    type=str,
-    nargs='?',
-    default="tbb",
-    help="Name to give to the zip file"
-)
-parser.add_argument(
-    "-a",
-    metavar="Addon path",
-    type=str,
-    nargs='?',
-    default=os.path.join(os.path.abspath("."), "tbb"),
-    help="Addon path to test, can be a path to a directory (will be zipped for you) or to a .zip file.\
-        The Python module name will be that of the (directory or) zip file without extension,\
-        try to make it as pythonic as possible for Blender's Python importer to work properly\
-        with it: letters, digits, underscores."
-)
-parser.add_argument(
     "-b",
     metavar="Blender version",
     type=str,

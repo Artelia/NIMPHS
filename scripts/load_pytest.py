@@ -64,22 +64,6 @@ except Exception:
         sys.exit(1)
 
 # TODO: fix this
-# Temporary workaround to install a local custom version of vtk
-# Reason: no vtk support for python 3.10+
-try:
-    import vtkmodules
-except Exception:
-    from bpy.app import version
-    if version >= (3, 1, 0):
-        install('https://github.com/pyvista/pyvista-wheels/raw/main/\
-vtk-9.1.0.dev0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl', True)
-    elif version >= (3, 0, 0):
-        install("vtk", True)
-    else:
-        print('This addon is not supported for Blender versions under 3.0.0')
-        sys.exit(1)
-
-# TODO: fix this
 # Temporary workaround to install a local custom version of pyvista
 # Reasons: small edit in pyvista which will be available later
 try:
