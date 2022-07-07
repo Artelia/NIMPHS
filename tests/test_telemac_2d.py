@@ -6,23 +6,21 @@ import pytest
 import numpy as np
 
 # Sample 2D:
-#   Number of variables = 8
+#   Number of variables = 6
 
 #   Variables:
 #                     (Time point = 5, remapped)    (GLOBAL)                        (GLOBAL)
-#   FOND:             mean = 0.04131595387433874    min = -5.0                      max = 2.5                 (M)
-#   VITESSE U:        mean = 0.7980087919076801     min = -2.861448049545288        max = 0.801839292049408   (M/S)
-#   VITESSE V:        mean = 0.564615949978801      min = -0.44414040446281433      max = 0.6261451244354248  (M/S)
-#   SALINITE:         mean = 0.37128353934125063    min = -4.410864619220242e-19    max = 35.0                (NONE)
-#   HAUTEUR D'EAU:    mean = 0.9557430329482625     min = 0.0                       max = 7.579009532928467   (M)
-#   SURFACE LIBRE:    mean = 0.6245944487400504     min = 1.9149115085601807        max = 7.1949639320373535  (M)
-#   DEBIT SOL EN X:   mean = 0.7086518611281863     min = -137.33761596679688       max = 94.22285461425781   (M2/S)
-#   DEBIT SOL EN Y:   mean = 0.47028401108210977    min = -53.73036575317383        max = 56.772369384765625  (M2/S)
+#   VELOCITY U:       mean = 0.2148579548180691     min = 0.0                       max = 2.7853646278381348  (M/S)
+#   VELOCITY V:       mean = 0.4044774340143149     min = -0.40747132897377014      max = 0.5237767696380615  (M/S)
+#   WATER DEPTH:      mean = 0.5031066531588434     min = 0.0                       max = 1.0                 (M)
+#   ANALYTIC SOL H:   mean = 0.5015619112950673     min = 0.0                       max = 1.0                 (NONE)
+#   ANALYTIC SOL U:   mean = 0.36766125498385516    min = 0.0                       max = 6.254727840423584   (NONE)
+#   ANALYTIC SOL V:   mean = 1.0                    min = 0.0                       max = 0.0                 (NONE)
 
-#   Number of planes = 0
-#   Is not from a 3D simulation
-#   Number of time points = 31
-#   Triangulated mesh: Vertices = 12,506 | Edges = 36,704 | Faces = 24,199 | Triangles = 24,199
+#   IS 3D = False
+#   NB PLANES = 0
+#   NB TIME POINTS = 11
+#   MESH: Vertices = 3,200 | Edges = 8,941 | Faces = 5,742 | Triangles = 5,742
 
 FILE_PATH = os.path.abspath("./data/telemac_2d_sample/telemac_2d.slf")
 # Point data value threshold for tests
@@ -55,14 +53,12 @@ def point_data_test():
     from tbb.properties.utils import VariablesInformation
 
     data = VariablesInformation()
-    data.append(name="FOND", unit="M", type="SCALAR")
-    data.append(name="VITESSE U", unit="M/S", type="SCALAR")
-    data.append(name="VITESSE V", unit="M/S", type="SCALAR")
-    data.append(name="SALINITE", unit="NONE", type="SCALAR")
-    data.append(name="HAUTEUR D'EAU", unit="M", type="SCALAR")
-    data.append(name="SURFACE LIBRE", unit="M", type="SCALAR")
-    data.append(name="DEBIT SOL EN X", unit="M2/S", type="SCALAR")
-    data.append(name="DEBIT SOL EN Y", unit="M2/S", type="SCALAR")
+    data.append(name="VELOCITY U", unit="M/S", type="SCALAR")
+    data.append(name="VELOCITY V", unit="M/S", type="SCALAR")
+    data.append(name="WATER DEPTH", unit="M", type="SCALAR")
+    data.append(name="ANALYTIC SOL H", unit="NONE", type="SCALAR")
+    data.append(name="ANALYTIC SOL U", unit="NONE", type="SCALAR")
+    data.append(name="ANALYTIC SOL V", unit="NONE", type="SCALAR")
 
     return data
 
@@ -122,9 +118,9 @@ def test_geometry_imported_object_telemac_2d(preview_object):
 
     # Test geometry
     for child in preview_object.children:
-        assert len(child.data.vertices) == 12506
-        assert len(child.data.edges) == 36704
-        assert len(child.data.polygons) == 24199
+        assert len(child.data.vertices) == 3200
+        assert len(child.data.edges) == 8941
+        assert len(child.data.polygons) == 5742
 
 
 def test_reload_file_data_telemac_2d(preview_object):
@@ -133,22 +129,22 @@ def test_reload_file_data_telemac_2d(preview_object):
     # Test file data
     file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
     assert file_data is not None
-    assert file_data.nb_vars == 8
+    assert file_data.nb_vars == 6
     assert file_data.nb_planes == 0
     assert file_data.vars is not None
     assert file_data.is_3d() is False
     assert file_data.faces is not None
     assert file_data.module == "TELEMAC"
-    assert file_data.nb_time_points == 31
+    assert file_data.nb_time_points == 11
     assert file_data.vertices is not None
-    assert file_data.nb_vertices == 12506
-    assert file_data.nb_triangles == 24199
+    assert file_data.nb_vertices == 3200
+    assert file_data.nb_triangles == 5742
 
 
 def test_preview_telemac_2d(preview_object, point_data_test):
     # Set preview settings
     preview_object.tbb.settings.preview_time_point = 5
-    preview_object.tbb.settings.preview_point_data = json.dumps(point_data_test.get("VITESSE U"))
+    preview_object.tbb.settings.preview_point_data = json.dumps(point_data_test.get("VELOCITY U"))
 
     assert bpy.ops.tbb.telemac_preview('EXEC_DEFAULT') == {"FINISHED"}
 
@@ -160,9 +156,9 @@ def test_geometry_preview_object_telemac_2d(preview_object):
 
     # Test geometry
     for child in preview_object.children:
-        assert len(child.data.edges) == 36704
-        assert len(child.data.vertices) == 12506
-        assert len(child.data.polygons) == 24199
+        assert len(child.data.edges) == 8941
+        assert len(child.data.vertices) == 3200
+        assert len(child.data.polygons) == 5742
 
 
 def test_point_data_preview_object_telemac_2d(preview_object, get_mean_value):
@@ -171,11 +167,11 @@ def test_point_data_preview_object_telemac_2d(preview_object, get_mean_value):
         vertex_colors = child.data.vertex_colors
         assert len(vertex_colors) == 1
 
-        vitesse_u = vertex_colors.get("VITESSE U, None, None", None)
+        vitesse_u = vertex_colors.get("VELOCITY U, None, None", None)
         assert vitesse_u is not None
 
         # Test point data values (compare mean values, less than .1% of difference is ok)
-        assert np.abs(get_mean_value(vitesse_u, child, 0) - 0.7980087919076801) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(vitesse_u, child, 0) - 0.2148579548180691) < PDV_THRESHOLD
 
 
 def test_compute_ranges_point_data_values_telemac_2d(preview_object, point_data_test):
@@ -185,29 +181,23 @@ def test_compute_ranges_point_data_values_telemac_2d(preview_object, point_data_
     file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
     assert file_data is not None
 
-    fond = file_data.vars.get("FOND", prop='RANGE')["global"]
-    assert fond["min"] == -5.0 and fond["max"] == 2.5
+    fond = file_data.vars.get("VELOCITY U", prop='RANGE')["global"]
+    assert fond["min"] == 0.0 and fond["max"] == 2.7853646278381348
 
-    vitesse_u = file_data.vars.get("VITESSE U", prop='RANGE')["global"]
-    assert vitesse_u["min"] == -2.861448049545288 and vitesse_u["max"] == 0.801839292049408
+    vitesse_u = file_data.vars.get("VELOCITY V", prop='RANGE')["global"]
+    assert vitesse_u["min"] == -0.40747132897377014 and vitesse_u["max"] == 0.5237767696380615
 
-    vitesse_v = file_data.vars.get("VITESSE V", prop='RANGE')["global"]
-    assert vitesse_v["min"] == -0.44414040446281433 and vitesse_v["max"] == 0.6261451244354248
+    vitesse_v = file_data.vars.get("WATER DEPTH", prop='RANGE')["global"]
+    assert vitesse_v["min"] == 0.0 and vitesse_v["max"] == 1.0
 
-    salinite = file_data.vars.get("SALINITE", prop='RANGE')["global"]
-    assert salinite["min"] == -4.410864619220242e-19 and salinite["max"] == 35.0
+    salinite = file_data.vars.get("ANALYTIC SOL H", prop='RANGE')["global"]
+    assert salinite["min"] == 0.0 and salinite["max"] == 1.0
 
-    hauteur_eau = file_data.vars.get("HAUTEUR D'EAU", prop='RANGE')["global"]
-    assert hauteur_eau["min"] == 0.0 and hauteur_eau["max"] == 7.579009532928467
+    hauteur_eau = file_data.vars.get("ANALYTIC SOL U", prop='RANGE')["global"]
+    assert hauteur_eau["min"] == 0.0 and hauteur_eau["max"] == 6.254727840423584
 
-    surface_libre = file_data.vars.get("SURFACE LIBRE", prop='RANGE')["global"]
-    assert surface_libre["min"] == 1.9149115085601807 and surface_libre["max"] == 7.1949639320373535
-
-    debit_sol_en_x = file_data.vars.get("DEBIT SOL EN X", prop='RANGE')["global"]
-    assert debit_sol_en_x["min"] == -137.33761596679688 and debit_sol_en_x["max"] == 94.22285461425781
-
-    debit_sol_en_y = file_data.vars.get("DEBIT SOL EN Y", prop='RANGE')["global"]
-    assert debit_sol_en_y["min"] == -53.73036575317383 and debit_sol_en_y["max"] == 56.772369384765625
+    surface_libre = file_data.vars.get("ANALYTIC SOL V", prop='RANGE')["global"]
+    assert surface_libre["min"] == 0.0 and surface_libre["max"] == 0.0
 
 
 def test_create_streaming_sequence_telemac_2d(preview_object, point_data_test):
@@ -218,7 +208,7 @@ def test_create_streaming_sequence_telemac_2d(preview_object, point_data_test):
     bpy.context.scene.frame_set(5)
 
     op = bpy.ops.tbb.telemac_create_streaming_sequence
-    state = op('EXEC_DEFAULT', start=0, max=31, length=31, name="My_TELEMAC_Streaming_Sim_2D",
+    state = op('EXEC_DEFAULT', start=0, max=11, length=11, name="My_TELEMAC_Streaming_Sim_2D",
                module='TELEMAC', shade_smooth=True)
 
     assert state == {"FINISHED"}
@@ -252,9 +242,9 @@ def test_streaming_sequence_telemac_2d(streaming_sequence, frame_change_pre, poi
     assert sequence is not None
 
     assert sequence.start == 0
-    assert sequence.length == 31
+    assert sequence.length == 11
     assert sequence.update is True
-    assert sequence.max == 31
+    assert sequence.max == 11
 
     # Disable updates for this sequence object during the next tests
     sequence.update = False
@@ -263,37 +253,31 @@ def test_streaming_sequence_telemac_2d(streaming_sequence, frame_change_pre, poi
 def test_geometry_streaming_sequence_telemac_2d(streaming_sequence):
     # Test geometry
     for child in streaming_sequence.children:
-        assert len(child.data.edges) == 36704
-        assert len(child.data.vertices) == 12506
-        assert len(child.data.polygons) == 24199
+        assert len(child.data.edges) == 8941
+        assert len(child.data.vertices) == 3200
+        assert len(child.data.polygons) == 5742
 
 
 def test_point_data_streaming_sequence_telemac_2d(streaming_sequence, get_mean_value):
     for child in streaming_sequence.children:
         # Check number vertex colors arrays
         vertex_colors = child.data.vertex_colors
-        assert len(vertex_colors) == 3
+        assert len(vertex_colors) == 2
 
         # Test point data values
-        data = vertex_colors.get("FOND, VITESSE U, VITESSE V", None)
+        data = vertex_colors.get("VELOCITY U, VELOCITY V, WATER DEPTH", None)
         assert data is not None
 
-        assert np.abs(get_mean_value(data, child, 0) - 0.04131595387433874) < PDV_THRESHOLD
-        assert np.abs(get_mean_value(data, child, 1) - 0.7980087919076801) < PDV_THRESHOLD
-        assert np.abs(get_mean_value(data, child, 2) - 0.564615949978801) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 0) - 0.2148579548180691) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 1) - 0.4044774340143149) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 2) - 0.5031066531588434) < PDV_THRESHOLD
 
-        data = vertex_colors.get("SALINITE, HAUTEUR D'EAU, SURFACE LIBRE", None)
+        data = vertex_colors.get("ANALYTIC SOL H, ANALYTIC SOL U, ANALYTIC SOL V", None)
         assert data is not None
 
-        assert np.abs(get_mean_value(data, child, 0) - 0.37128353934125063) < PDV_THRESHOLD
-        assert np.abs(get_mean_value(data, child, 1) - 0.9557430329482625) < PDV_THRESHOLD
-        assert np.abs(get_mean_value(data, child, 2) - 0.6245944487400504) < PDV_THRESHOLD
-
-        data = vertex_colors.get("DEBIT SOL EN X, DEBIT SOL EN Y, None", None)
-        assert data is not None
-
-        assert np.abs(get_mean_value(data, child, 0) - 0.7086518611281863) < PDV_THRESHOLD
-        assert np.abs(get_mean_value(data, child, 1) - 0.47028401108210977) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 0) - 0.5015619112950673) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 1) - 0.36766125498385516) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 2) - 1.0) < PDV_THRESHOLD
 
 
 def test_create_mesh_sequence_telemac_2d(preview_object):
@@ -304,7 +288,7 @@ def test_create_mesh_sequence_telemac_2d(preview_object):
     bpy.context.scene.frame_set(8)
 
     op = bpy.ops.tbb.telemac_create_mesh_sequence
-    state = op('EXEC_DEFAULT', mode='TEST', start=0, max=21, end=6, name="My_TELEMAC_Sim_2D")
+    state = op('EXEC_DEFAULT', mode='TEST', start=0, max=11, end=6, name="My_TELEMAC_Sim_2D")
     assert state == {"FINISHED"}
 
 
@@ -350,37 +334,31 @@ def test_mesh_sequence_telemac_2d(mesh_sequence, frame_change_post, point_data_t
 def test_geometry_mesh_sequence_telemac_2d(mesh_sequence):
     # Test geometry
     for child in mesh_sequence.children:
-        assert len(child.data.edges) == 36704
-        assert len(child.data.vertices) == 12506
-        assert len(child.data.polygons) == 24199
+        assert len(child.data.edges) == 8941
+        assert len(child.data.vertices) == 3200
+        assert len(child.data.polygons) == 5742
 
 
 def test_point_data_mesh_sequence_telemac_2d(mesh_sequence, get_mean_value):
     for child in mesh_sequence.children:
         # Check number vertex colors arrays
         vertex_colors = child.data.vertex_colors
-        assert len(vertex_colors) == 3
+        assert len(vertex_colors) == 2
 
         # Test point data values
-        data = vertex_colors.get("FOND, VITESSE U, VITESSE V", None)
+        data = vertex_colors.get("VELOCITY U, VELOCITY V, WATER DEPTH", None)
         assert data is not None
 
-        assert np.abs(get_mean_value(data, child, 0) - 0.04131595387433874) < PDV_THRESHOLD
-        assert np.abs(get_mean_value(data, child, 1) - 0.7980087919076801) < PDV_THRESHOLD
-        assert np.abs(get_mean_value(data, child, 2) - 0.564615949978801) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 0) - 0.2148579548180691) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 1) - 0.4044774340143149) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 2) - 0.5031066531588434) < PDV_THRESHOLD
 
-        data = vertex_colors.get("SALINITE, HAUTEUR D'EAU, SURFACE LIBRE", None)
+        data = vertex_colors.get("ANALYTIC SOL H, ANALYTIC SOL U, ANALYTIC SOL V", None)
         assert data is not None
 
-        assert np.abs(get_mean_value(data, child, 0) - 0.37128353934125063) < PDV_THRESHOLD
-        assert np.abs(get_mean_value(data, child, 1) - 0.9557430329482625) < PDV_THRESHOLD
-        assert np.abs(get_mean_value(data, child, 2) - 0.6245944487400504) < PDV_THRESHOLD
-
-        data = vertex_colors.get("DEBIT SOL EN X, DEBIT SOL EN Y, None", None)
-        assert data is not None
-
-        assert np.abs(get_mean_value(data, child, 0) - 0.7086518611281863) < PDV_THRESHOLD
-        assert np.abs(get_mean_value(data, child, 1) - 0.47028401108210977) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 0) - 0.5015619112950673) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 1) - 0.36766125498385516) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 2) - 1.0) < PDV_THRESHOLD
 
 
 def test_extract_point_data_telemac_2d(preview_object, point_data_test):
