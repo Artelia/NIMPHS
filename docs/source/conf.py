@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.abspath('.'))
 # -- Project information -----------------------------------------------------
 
 project = 'Toolbox blender'
-copyright = '2022, Thibault Oudart, Félix Olart'
+copyright = '2022, ARTELIAGROUP'
 author = 'Thibault Oudart, Félix Olart'
 
 # The full version, including alpha/beta/rc tags
