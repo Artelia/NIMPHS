@@ -1,12 +1,12 @@
 # <pep8 compliant>
 from bpy.types import PropertyGroup
-from bpy.props import PointerProperty, BoolProperty, StringProperty, FloatProperty
+from bpy.props import PointerProperty, BoolProperty, StringProperty
 
 from tbb.properties.shared.tbb_object_settings import TBB_ObjectSettings
 
 
 class TBB_Object(PropertyGroup):
-    """Main property of the addon for objects. This holds all Object data for the addon."""
+    """Main property of the add-on for objects. This holds all Object data for the add-on."""
 
     register_cls = True
     is_custom_base_cls = False

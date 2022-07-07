@@ -4,9 +4,10 @@
 # You can set these variables from the command line, and also
 # from the environment for the first two.
 SPHINXOPTS    ?=
-SPHINXBUILD   ?= ~/OLART/Apps/blender-3.1.1-stable+v31.d91843f3b6c6-linux.x86_64-release/3.1/python/bin/sphinx-build
+SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = source
 BUILDDIR      = _build
+MODULE        = tbb
 
 
 # Put it first so that "make" without argument is like "make help".
@@ -21,8 +22,8 @@ help:
 # Rename tbb/__init__.py to avoid problems if a python module is not found
 # Comment '@persistent' decorator because fake-bpy-module defines it at 'None', which is not callable and causes errors during 'sphinx-build'
 %: Makefile
-	mv ../tbb/__init__.py ../tbb/___init__.py
-	find ../tbb/ -type f -name "*.py" -exec sed -i 's/@persistent/#@persistent/g' {} +
+	mv ../$(MODULE)/__init__.py ../$(MODULE)/___init__.py
+	find ../$(MODULE)/ -type f -name "*.py" -exec sed -i 's/@persistent/#@persistent/g' {} +
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
-	find ../tbb/ -type f -name "*.py" -exec sed -i 's/#@persistent/@persistent/g' {} +
-	mv ../tbb/___init__.py ../tbb/__init__.py
+	find ../$(MODULE)/ -type f -name "*.py" -exec sed -i 's/#@persistent/@persistent/g' {} +
+	mv ../$(MODULE)/___init__.py ../$(MODULE)/__init__.py

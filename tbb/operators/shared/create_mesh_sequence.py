@@ -120,7 +120,7 @@ class TBB_CreateMeshSequence(TBB_CreateSequence, TBB_ModalOperator):
         """
 
         if event.type == 'ESC':
-            super().stop(context, cancelled=True)
+            super().stop(context, canceled=True)
             return {'CANCELLED'}
 
         if event.type == 'TIMER':

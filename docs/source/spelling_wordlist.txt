@@ -11,3 +11,10 @@ gitlab
 keyframe
 keyframes
 viewport
+normals
+np
+ndarray
+idname
+ok
+stringified
+Serafin

@@ -251,7 +251,7 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
         """
 
         if event.type == 'ESC':
-            super().stop(context, cancelled=True)
+            super().stop(context, canceled=True)
             return {'CANCELLED'}
 
         if event.type == 'TIMER':

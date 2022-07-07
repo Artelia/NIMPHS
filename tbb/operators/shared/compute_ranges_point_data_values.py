@@ -175,7 +175,7 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
         """
 
         if event is not None and event.type == 'ESC':
-            super().stop(context, cancelled=True)
+            super().stop(context, canceled=True)
             return {'CANCELLED'}
 
         if self.mode == 'TEST' or (event is not None and event.type == 'TIMER'):

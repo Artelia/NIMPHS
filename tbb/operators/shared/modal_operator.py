@@ -66,13 +66,13 @@ class TBB_ModalOperator():
 
         context.scene.tbb.m_op_value = (step / end) * 100
 
-    def stop(self, context: Context, cancelled: bool = False) -> None:
+    def stop(self, context: Context, canceled: bool = False) -> None:
         """
         Stop the 'create sequence' process. Used for both modules.
 
         Args:
             context (Context): context
-            cancelled (bool, optional): ask to report 'create sequence cancelled'. Defaults to False.
+            canceled (bool, optional): ask to report 'create sequence canceled'. Defaults to False.
         """
 
         # Reset timer if it was running modal
@@ -87,5 +87,5 @@ class TBB_ModalOperator():
         # Reset operator variables information
         context.scene.tbb.op_vars.clear()
 
-        if cancelled:
-            self.report({'INFO'}, "Create sequence cancelled")
+        if canceled:
+            self.report({'INFO'}, "Create sequence canceled")
