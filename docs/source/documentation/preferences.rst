@@ -7,6 +7,7 @@ Add-on preferences
     :width: 85%
     :alt: Addon preferences
     :align: center
+    :class: rounded-corners
 
 |
 

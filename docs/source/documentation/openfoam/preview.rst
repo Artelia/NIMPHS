@@ -13,6 +13,7 @@ Previewing tools
     :width: 75%
     :alt: Preview panel
     :align: center
+    :class: rounded-corners
 
 |
 

@@ -16,3 +16,4 @@ Code documentation
     :width: 80%
     :alt: Data strucute of the addon
     :align: center
+    :class: rounded-corners

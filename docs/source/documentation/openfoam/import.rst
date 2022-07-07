@@ -12,5 +12,6 @@ Import a file
     :width: 60%
     :alt: Import OpenFOAM file
     :align: center
+    :class: rounded-corners
 
 |

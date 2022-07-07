@@ -19,6 +19,7 @@ Mesh sequence
             :width: 85%
             :alt: Preview panel
             :align: center
+            :class: rounded-corners
 
     * Place the time cursor where you want to "center" the Interpolation
 
@@ -26,6 +27,7 @@ Mesh sequence
             :width: 85%
             :alt: Preview panel
             :align: center
+            :class: rounded-corners
 
     * Then, hit ``s`` and scale the interpolation moving the mouse
 
@@ -33,6 +35,7 @@ Mesh sequence
             :width: 85%
             :alt: Preview panel
             :align: center
+            :class: rounded-corners
 
     * Once you are satisfied, press the ``left mouse button``
 
@@ -44,6 +47,7 @@ Mesh sequence
             :width: 85%
             :alt: Preview panel
             :align: center
+            :class: rounded-corners
 
 
     * Select the keyframes you want to edit
@@ -53,6 +57,7 @@ Mesh sequence
             :width: 85%
             :alt: Preview panel
             :align: center
+            :class: rounded-corners
 
 
     * It's done!
@@ -61,6 +66,7 @@ Mesh sequence
             :width: 85%
             :alt: Preview panel
             :align: center
+            :class: rounded-corners
 
 
 Streaming sequence
@@ -79,6 +85,7 @@ Streaming sequence
             :width: 60%
             :alt: Preview panel
             :align: center
+            :class: rounded-corners
 
     * Then, indicate the number of time steps to add between each time point.
 
@@ -86,5 +93,6 @@ Streaming sequence
             :width: 60%
             :alt: Preview panel
             :align: center
+            :class: rounded-corners
 
     * You're done! Interpolated points should now be generated on the fly, when changing frame in the timeline.

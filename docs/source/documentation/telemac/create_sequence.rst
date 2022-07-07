@@ -15,6 +15,7 @@ Mesh sequence
     :width: 60%
     :alt: Create mesh sequence button
     :align: center
+    :class: rounded-corners
 
 |
 
@@ -22,6 +23,7 @@ Mesh sequence
     :width: 60%
     :alt: Create mesh sequence operator
     :align: center
+    :class: rounded-corners
 
 |
 
@@ -47,6 +49,7 @@ Mesh sequence object
     :width: 60%
     :alt: Preview panel
     :align: center
+    :class: rounded-corners
 
 |
 
@@ -60,6 +63,7 @@ Streaming sequence
     :width: 60%
     :alt: Create streaming sequence button
     :align: center
+    :class: rounded-corners
 
 |
 
@@ -67,6 +71,7 @@ Streaming sequence
     :width: 60%
     :alt: Create streaming sequence operator
     :align: center
+    :class: rounded-corners
 
 |
 
@@ -87,5 +92,6 @@ Streaming sequence object
     :width: 60%
     :alt: Preview panel
     :align: center
+    :class: rounded-corners
 
 |

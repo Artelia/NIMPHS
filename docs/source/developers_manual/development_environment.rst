@@ -137,3 +137,4 @@ Testing pipeline
     :width: 80%
     :alt: Unit testing pipeline
     :align: center
+    :class: rounded-corners
