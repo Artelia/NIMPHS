@@ -1,7 +1,7 @@
 Add-on preferences
 ==================
 
-| You can manage add-on preferences in ``Edit > Preferences > Add-ons > Toolsbox blender``.
+| You can manage add-on preferences in ``Edit > Preferences > Add-ons > Toolbox blender``.
 
 .. image:: /images/addon_preferences.png
     :width: 85%
