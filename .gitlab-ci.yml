@@ -17,9 +17,9 @@ variables:
     value: "false"
     description: "Indicate whether to deploy documentation or not."
 
-  ADDON_NAME: "Toolsbox blender"
+  ADDON_NAME: "Toolbox blender"
   MODULE_NAME: "tbb"
-  PACKAGE_NAME: "toolsbox-blender"
+  PACKAGE_NAME: "toolbox-blender"
 
   VERSION: "${CI_COMMIT_TAG}"
   ADDON_FILE_NAME: "${PACKAGE_NAME}"
@@ -58,11 +58,6 @@ check-spelling-doc:
     - unzip pyvista.zip
     - pip install -e pyvista-main
 
-    # Rename ${MODULE_NAME}/__init__.py to avoid problems if a python module is not found
-    - mv ${MODULE_NAME}/__init__.py ${MODULE_NAME}/___init__.py
-    # Comment '@persistent' decorators because fake-bpy-module defines it at 'None', which is not callable and causes errors during 'sphinx-build'
-    - find ${MODULE_NAME}/ -type f -name "*.py" -exec sed -i 's/@persistent/#@persistent/g' {} +
-
   script:
     - cd docs
     - make spelling SPHINXOPTS="-W --keep-going"
@@ -97,9 +92,6 @@ build-doc:
     - cd docs
     - make html
     - mv _build/html ../build_docs
-
-    - mv ${MODULE_NAME}/___init__.py ${MODULE_NAME}/__init__.py
-    - find ${MODULE_NAME}/ -type f -name "*.py" -exec sed -i 's/#@persistent/@persistent/g' {} +
 
   artifacts:
     paths:
@@ -150,6 +142,7 @@ upload:
 
     # Remove DEV_MODE = True in files
     - find ${MODULE_NAME}/ -type f -name "*.py" -exec sed -i 's/DEV_MODE = True/DEV_MODE = False/g' {} +
+    
     # Upload addon
     - zip -r "${MODULE_NAME}" "${MODULE_NAME}"
     - mv "${MODULE_NAME}.zip" "${ADDON_FILE_NAME}.zip"
