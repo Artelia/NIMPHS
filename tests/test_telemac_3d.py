@@ -6,7 +6,7 @@ import pytest
 import numpy as np
 
 # Sample 3D:
-# Number of variables = 4 (ELEVATION Z, VELOCITY U, VELOCITY V, VELOCITY W)
+# Number of variables = 4
 
 #                   spmv = sum partial mean values
 #                   (Time point = 5)            (GLOBAL)                    (GLOBAL)
@@ -15,10 +15,10 @@ import numpy as np
 #   VELOCITY V:     spmv = 1.499999413975607    min = -1.342079997062683    max = 1.3420789241790771    (M/S)
 #   VELOCITY W:     spmv = 0.818980118090674    min = -2.5540032386779785   max = 1.2829135656356812    (M/S)
 
-#   Number of planes = 3
-#   Is from a 3D simulation
-#   Number of time points = 11
-#   Triangulated mesh: Vertices = 4,624 | Edges = 13,601 | Faces = 8,978 | Triangles = 8,978
+#   IS 3D = True
+#   NB PLANES = 3
+#   NB TIME POINTS = 11
+#   MESH: Vertices = 4,624 | Edges = 13,601 | Faces = 8,978 | Triangles = 8,978
 
 FILE_PATH = os.path.abspath("./data/telemac_3d_sample/telemac_3d.slf")
 # Point data value threshold for tests

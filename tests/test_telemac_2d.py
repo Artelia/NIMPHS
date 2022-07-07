@@ -8,7 +8,7 @@ import numpy as np
 # Sample 2D:
 #   Number of variables = 6
 
-#   Variables:
+#                     spmv = sum partial mean values
 #                     (Time point = 5, remapped)    (GLOBAL)                        (GLOBAL)
 #   VELOCITY U:       mean = 0.2148579548180691     min = 0.0                       max = 2.7853646278381348  (M/S)
 #   VELOCITY V:       mean = 0.4044774340143149     min = -0.40747132897377014      max = 0.5237767696380615  (M/S)
@@ -365,24 +365,24 @@ def test_extract_point_data_telemac_2d(preview_object, point_data_test):
     op = bpy.ops.tbb.telemac_extract_point_data
 
     # Get test data
-    data = json.dumps(point_data_test.get('SALINITE'))
+    data = json.dumps(point_data_test.get('VELOCITY U'))
 
     # Note: Fudaa count indices from 1 to xxx. Here we count indices from 0 to xxx.
-    state = op('EXEC_DEFAULT', mode='TEST', vertex_id=1526 - 1, max=30, start=0, end=30, test_data=data)
+    state = op('EXEC_DEFAULT', mode='TEST', vertex_id=125 - 1, max=10, start=0, end=10, test_data=data)
     assert state == {'FINISHED'}
 
     # Test keyframes
     assert len(preview_object.animation_data.action.fcurves) == 1
     fcurve = preview_object.animation_data.action.fcurves[0]
-    assert fcurve.data_path == '["SALINITE"]'
+    assert fcurve.data_path == '["VELOCITY U"]'
     assert fcurve.range()[0] == 0.0
-    assert fcurve.range()[1] == 30.0
+    assert fcurve.range()[1] == 10.0
 
     # Test extracted values
-    ground_truth = open(os.path.abspath("./data/telemac_2d_sample/telemac_2d_salinite_1526.csv"), "r")
+    ground_truth = open(os.path.abspath("./data/telemac_2d_sample/point_data_125.csv"), "r")
 
-    for line, id in zip(ground_truth.readlines(), range(-1, 31, 1)):
-        if 'SALINITE' not in line:
+    for line, id in zip(ground_truth.readlines(), range(-1, 11, 1)):
+        if 'VELOCITY U' not in line:
             value = float(line.split(";")[-1][:-1])
 
             # ------------------------------------------------------------ #
@@ -392,6 +392,6 @@ def test_extract_point_data_telemac_2d(preview_object, point_data_test):
             bpy.context.scene.frame_set(id)
 
             assert id == bpy.context.scene.frame_current
-            assert np.abs(preview_object["SALINITE"] - value) < 0.001
+            assert np.abs(preview_object["VELOCITY U"] - value) < 0.003
 
     ground_truth.close()
