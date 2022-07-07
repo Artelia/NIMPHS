@@ -17,3 +17,5 @@ Code documentation
     :alt: Data strucute of the addon
     :align: center
     :class: rounded-corners
+
+|

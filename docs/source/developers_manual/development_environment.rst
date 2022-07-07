@@ -138,3 +138,5 @@ Testing pipeline
     :alt: Unit testing pipeline
     :align: center
     :class: rounded-corners
+
+|
