@@ -382,7 +382,7 @@ def test_extract_point_data_telemac_3d(preview_object, point_data_test):
     assert fcurve.range()[1] == 10.0
 
     # Test extracted values
-    ground_truth = open(os.path.abspath("./data/telemac_3d_sample/telemac_3d_velocity_v_2_3007.csv"), "r")
+    ground_truth = open(os.path.abspath("./data/telemac_3d_sample/point_data_2_3007.csv"), "r")
 
     for line, id in zip(ground_truth.readlines(), range(-1, 11, 1)):
         if 'VELOCITY V' not in line:
