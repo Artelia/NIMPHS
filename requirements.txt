@@ -1,4 +1,4 @@
-# pyvista >= 0.35.0
+pyvista >= 0.35.1
 pytest
 blender-addon-tester
 pre-commit
