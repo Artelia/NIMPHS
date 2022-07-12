@@ -3,11 +3,13 @@ from bpy.types import Context, Event
 from bpy.props import PointerProperty
 
 import logging
+
 log = logging.getLogger(__name__)
 
 import time
 
 from tbb.panels.utils import get_selected_object
+from tbb.properties.utils import VariablesInformation
 from tbb.panels.openfoam.utils import draw_clip_settings
 from tbb.properties.openfoam.clip import TBB_OpenfoamClipProperty
 from tbb.operators.shared.create_mesh_sequence import TBB_CreateMeshSequence
@@ -70,6 +72,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
             return {'CANCELLED'}
 
         # "Copy" file data information
+        self.import_settings.skip_zero_time = self.obj.tbb.settings.openfoam.import_settings.skip_zero_time
         context.scene.tbb.file_data["ops"] = context.scene.tbb.file_data[self.obj.tbb.uid]
         self.max = context.scene.tbb.file_data["ops"].nb_time_points - 1
 
@@ -78,6 +81,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
         # -------------------------------- #
         if self.mode == 'TEST':
             self.point_data.list = self.test_data
+            self.point_data.import_data = VariablesInformation(self.test_data).length() > 0
             return {'FINISHED'}
 
         return context.window_manager.invoke_props_dialog(self)

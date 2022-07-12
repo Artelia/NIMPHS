@@ -8,23 +8,37 @@ import numpy as np
 
 # Sample A:
 #   If not skip_zero_time:
-#                       (Time point = 11)               (GLOBAL)                        (GLOBAL)
-#       U[0]:           mean = 0.4982270006854066       min = -1.346832513809204        max = 1.345022439956665
+#                       (Time point = 2)                (GLOBAL)                        (GLOBAL)
+#       U[0]:           mean = 0.49963319873423406      min = -1.346832513809204        max = 1.345022439956665
 #       U[1]:           mean = 1.0                      min = -4.208540108459135e-17    max = 9.689870304643004e-17
-#       U[2]:           mean = 0.6844272828995177       min = -4.320412635803223        max = 1.1953175067901611
-#       alpha.water:    mean = 0.8128361873018102       min = 0.0                       max = 1.0
-#       nut:            mean = 0.28475841868228513      min = 0.0                       max = 0.006597405299544334
+#       U[2]:           mean = 0.5781237236145602       min = -4.320412635803223        max = 1.1953175067901611
+#       alpha.water:    mean = 0.8446938232134689       min = 0.0                       max = 1.0
+#       nut:            mean = 0.45965881706639655      min = 0.0                       max = 0.006597405299544334
 #
 #       Number of time points = 21
 #       Number of variables = 3
 
 #   If skip_zero_time:
-#       U:              min =
-#       alpha.water:    min =
-#       nut:            min =
+#                       (Time point = 2)
+#       U[0]:           mean = 0.49963319873423406      min = -1.346832513809204        max = 1.345022439956665
+#       U[1]:           mean = 1.0                      min = -4.208540108459135e-17    max = 9.689870304643004e-17
+#       U[2]:           mean = 0.5781237236145602       min = -4.320412635803223        max = 1.1953175067901611
+#       alpha.water:    mean = 0.8446938232134689       min = 0.0                       max = 1.0
+#       IC.water[0]:    mean = 0.4011691562990132       min = -0.4272400140762329       max = 0.661429226398468
+#       IC.water[1]:    mean = 0.9842908223802445       min = -0.0041363476775586605    max = 0.0
+#       IC.water[2]:    mean = 0.015422046737660927     min = 0.0                       max = 1.5712000131607056
+#       IN.water[0]:    mean = 0.5035181330973892       min = -0.00011999999696854502   max = 0.00011999999696854502
+#       IN.water[1]:    mean = 0.552537428726637        min = -2.092237446049694e-05    max = 6.619574833166553e-06
+#       IN.water[2]:    mean = 0.9388409067237943       min = -0.00012017400149488822   max = 0.00012121000327169895
+#       k:              mean = 0.005675679202984087     min = 1.1634699603746412e-06    max = 2.2228598594665527
+#       nut:            mean = 0.45965881706639655      min = 0.0                       max = 0.006597405299544334
+#       omega:          mean = 0.011089561780501528     min = 0.14538300037384033       max = 1756.1199951171875
+#       p:              mean = 0.25445482450721313      min = -75.70034790039062        max = 14811.5
+#       p_rgh:          mean = 0.2676472253167478       min = -677.535400390625         max = 7789.9501953125
+
 #
 #       Number of time points = 20
-#       Number of variables = ?
+#       Number of variables = 9
 
 #   Non-triangulated mesh:
 #       Vertices = 60,548 | Edges = 120,428 | Faces = 59,882 | Triangles = 121,092
@@ -65,7 +79,7 @@ def preview_object():
 
 
 @pytest.fixture
-def point_data_test_a():
+def point_data_test():
     from tbb.properties.utils import VariablesInformation
 
     data = VariablesInformation()
@@ -108,7 +122,7 @@ def test_import_openfoam():
     # Test with wrong filepath
     assert op('EXEC_DEFAULT', filepath="here.foam") == {'CANCELLED'}
 
-    assert op('EXEC_DEFAULT', filepath=FILE_PATH) == {"FINISHED"}
+    assert op('EXEC_DEFAULT', filepath=FILE_PATH) == {'FINISHED'}
 
 
 def test_imported_object_openfoam(preview_object):
@@ -145,7 +159,7 @@ def test_file_data_imported_object_openfoam(preview_object):
 
 
 def test_reload_file_data_openfoam(preview_object):
-    assert bpy.ops.tbb.reload_openfoam_file('EXEC_DEFAULT') == {"FINISHED"}
+    assert bpy.ops.tbb.reload_openfoam_file('EXEC_DEFAULT') == {'FINISHED'}
 
     file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
     assert file_data is not None
@@ -171,7 +185,7 @@ def test_normal_preview_object_openfoam(preview_object):
     io_settings.decompose_polyhedra = False
 
     # TODO: test every sort of output this operator can generate
-    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
+    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {'FINISHED'}
 
 
 def test_geometry_normal_preview_object(preview_object):
@@ -194,7 +208,7 @@ def test_normal_decompose_polyhedra_preview_object_openfoam(preview_object):
     import_settings.case_type = 'reconstructed'
     import_settings.decompose_polyhedra = True
 
-    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
+    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {'FINISHED'}
 
 
 def test_geometry_normal_decompose_polyhedra_preview_object_openfoam(preview_object):
@@ -217,7 +231,7 @@ def test_triangulated_preview_object_openfoam(preview_object):
     import_settings.case_type = 'reconstructed'
     import_settings.decompose_polyhedra = False
 
-    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
+    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {'FINISHED'}
 
 
 def test_geometry_triangulated_preview_object_openfoam(preview_object):
@@ -240,7 +254,7 @@ def test_triangulated_decompose_polyhedra_preview_object_openfoam(preview_object
     import_settings.case_type = 'reconstructed'
     import_settings.decompose_polyhedra = True
 
-    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
+    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {'FINISHED'}
 
 
 def test_geometry_triangulated_decompose_polyhedra_preview_object_openfoam(preview_object):
@@ -277,12 +291,12 @@ def test_remove_point_data_openfoam(preview_object):
     assert file_data is not None
 
 
-def test_preview_point_data(preview_object, point_data_test_a):
+def test_preview_point_data(preview_object, point_data_test):
     # Set point data to preview
-    preview_object.tbb.settings.preview_time_point = 11
-    preview_object.tbb.settings.preview_point_data = json.dumps(point_data_test_a.get("alpha.water"))
+    preview_object.tbb.settings.preview_time_point = 2
+    preview_object.tbb.settings.preview_point_data = json.dumps(point_data_test.get("alpha.water"))
 
-    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {"FINISHED"}
+    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {'FINISHED'}
 
 
 def test_point_data_preview_object_openfoam(preview_object, get_mean_value):
@@ -297,7 +311,7 @@ def test_point_data_preview_object_openfoam(preview_object, get_mean_value):
     data = vertex_colors.get("alpha.water, None, None", None)
     assert data is not None
 
-    assert np.abs(get_mean_value(data, preview_object, 0) - 0.8128361873018102) < PDV_THRESHOLD
+    assert np.abs(get_mean_value(data, preview_object, 0) - 0.8443170980509084) < PDV_THRESHOLD
 
 
 def test_preview_material_openfoam():
@@ -321,9 +335,9 @@ def test_preview_material_openfoam():
     assert link.to_socket == principled_bsdf_node.inputs[0]
 
 
-def test_compute_ranges_point_data_values_openfoam(preview_object, point_data_test_a):
+def test_compute_ranges_point_data_values_openfoam(preview_object, point_data_test):
     op = bpy.ops.tbb.compute_ranges_point_data_values
-    assert op('EXEC_DEFAULT', mode='TEST', test_data=point_data_test_a.dumps()) == {'FINISHED'}
+    assert op('EXEC_DEFAULT', mode='TEST', test_data=point_data_test.dumps()) == {'FINISHED'}
 
     # Check file data
     file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
@@ -345,7 +359,7 @@ def test_compute_ranges_point_data_values_openfoam(preview_object, point_data_te
     assert u["max"][2] == 1.1953175067901611
 
 
-def test_create_streaming_sequence_openfoam(preview_object, point_data_test_a):
+def test_create_streaming_sequence_openfoam(preview_object, point_data_test):
     # ------------------------------------------------------------ #
     # /!\ WARNING: next tests are based on the following frame /!\ #
     # ------------------------------------------------------------ #
@@ -377,7 +391,7 @@ def test_create_streaming_sequence_openfoam(preview_object, point_data_test_a):
 
     # Set point data
     sequence.tbb.settings.point_data.import_data = True
-    sequence.tbb.settings.point_data.list = point_data_test_a.dumps()
+    sequence.tbb.settings.point_data.list = point_data_test.dumps()
 
 
 def test_streaming_sequence_openfoam(streaming_sequence, frame_change_pre):
@@ -435,16 +449,22 @@ def test_point_data_streaming_sequence_openfoam(streaming_sequence):
     assert data is not None
 
 
-def test_create_mesh_sequence_openfoam():
+def test_create_mesh_sequence_openfoam(preview_object, point_data_test):
     # ------------------------------------------------------------ #
     # /!\ WARNING: next tests are based on the following frame /!\ #
     # ------------------------------------------------------------ #
-    # Change frame to load time point 9
-    bpy.context.scene.frame_set(9)
+    # Change frame to load time point 2
+    bpy.context.scene.frame_set(2)
+
+    # Get test data
+    data = point_data_test.dumps()
+
+    # Force do not skip zero time
+    preview_object.tbb.settings.openfoam.import_settings.skip_zero_time = False
 
     op = bpy.ops.tbb.openfoam_create_mesh_sequence
-    state = op('EXEC_DEFAULT', start=0, max=21, end=4, name="My_OpenFOAM_Sim", mode='TEST')
-    assert state == {"FINISHED"}
+    state = op('EXEC_DEFAULT', start=0, max=21, end=4, name="My_OpenFOAM_Sim", mode='TEST', test_data=data)
+    assert state == {'FINISHED'}
 
 
 def test_mesh_sequence_openfoam(mesh_sequence):
@@ -475,15 +495,21 @@ def test_geometry_mesh_sequence_openfoam(mesh_sequence):
     assert len(mesh_sequence.data.polygons) == 121092
 
 
-def test_point_data_mesh_sequence_openfoam(mesh_sequence):
-    pytest.skip("Not implemented yet")
-
-    # TODO: compare values (warning: color data are ramapped into [0; 1])
-    # TODO: fix 'test generate mesh sequence' to do this test (add point data)
+def test_point_data_mesh_sequence_openfoam(mesh_sequence, get_mean_value):
     # Check number vertex colors arrays
     vertex_colors = mesh_sequence.data.vertex_colors
-    assert len(vertex_colors) == 1
+    assert len(vertex_colors) == 2
 
     # Test point data values
-    data = vertex_colors.get("alpha.water, None, None", None)
+    data = vertex_colors.get("U.x, U.y, U.z", None)
     assert data is not None
+
+    assert np.abs(get_mean_value(data, mesh_sequence, 0) - 0.49963319873423406) < PDV_THRESHOLD
+    assert np.abs(get_mean_value(data, mesh_sequence, 1) - 1.0) < PDV_THRESHOLD
+    assert np.abs(get_mean_value(data, mesh_sequence, 2) - 0.5781237236145602) < PDV_THRESHOLD
+
+    data = vertex_colors.get("alpha.water, nut, None", None)
+    assert data is not None
+
+    assert np.abs(get_mean_value(data, mesh_sequence, 0) - 0.8446938232134689) < PDV_THRESHOLD
+    assert np.abs(get_mean_value(data, mesh_sequence, 1) - 0.45965881706639655) < PDV_THRESHOLD

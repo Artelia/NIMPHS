@@ -104,7 +104,7 @@ def test_import_telemac_3d():
     # Test with wrong filepath
     assert op('EXEC_DEFAULT', filepath="here.slf", name="TBB_TELEMAC_preview_3D") == {'CANCELLED'}
 
-    assert op('EXEC_DEFAULT', filepath=FILE_PATH, name="TBB_TELEMAC_preview_3D") == {"FINISHED"}
+    assert op('EXEC_DEFAULT', filepath=FILE_PATH, name="TBB_TELEMAC_preview_3D") == {'FINISHED'}
 
 
 def test_geometry_imported_object_telemac_3d(preview_object):
@@ -120,7 +120,7 @@ def test_geometry_imported_object_telemac_3d(preview_object):
 
 
 def test_reload_file_data_telemac_3d(preview_object):
-    assert bpy.ops.tbb.reload_telemac_file('EXEC_DEFAULT') == {"FINISHED"}
+    assert bpy.ops.tbb.reload_telemac_file('EXEC_DEFAULT') == {'FINISHED'}
 
     # Test file data
     file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
@@ -142,7 +142,7 @@ def test_preview_telemac_3d(preview_object, point_data_test):
     preview_object.tbb.settings.preview_time_point = 5
     preview_object.tbb.settings.preview_point_data = json.dumps(point_data_test.get("ELEVATION Z"))
 
-    assert bpy.ops.tbb.telemac_preview('EXEC_DEFAULT') == {"FINISHED"}
+    assert bpy.ops.tbb.telemac_preview('EXEC_DEFAULT') == {'FINISHED'}
 
 
 def test_geometry_preview_object_telemac_3d(preview_object):
@@ -206,7 +206,7 @@ def test_create_streaming_sequence_telemac_3d(preview_object, point_data_test):
     state = op('EXEC_DEFAULT', start=0, max=10, length=10, name="My_TELEMAC_Streaming_Sim_3D",
                module='TELEMAC', shade_smooth=True)
 
-    assert state == {"FINISHED"}
+    assert state == {'FINISHED'}
 
     # Get sequence
     sequence = bpy.data.objects.get("My_TELEMAC_Streaming_Sim_3D_sequence", None)
@@ -288,7 +288,7 @@ def test_create_mesh_sequence_telemac_3d(preview_object):
 
     op = bpy.ops.tbb.telemac_create_mesh_sequence
     state = op('EXEC_DEFAULT', start=0, max=10, end=6, name="My_TELEMAC_Sim_3D", mode='TEST')
-    assert state == {"FINISHED"}
+    assert state == {'FINISHED'}
 
 
 def test_mesh_sequence_telemac_3d(mesh_sequence, frame_change_post, point_data_test):
@@ -395,6 +395,6 @@ def test_extract_point_data_telemac_3d(preview_object, point_data_test):
             bpy.context.scene.frame_set(id)
 
             assert id == bpy.context.scene.frame_current
-            assert np.abs(preview_object["VELOCITY V"] - value) < 0.001
+            assert np.abs(preview_object["VELOCITY V"] - value) < PDV_THRESHOLD
 
     ground_truth.close()
