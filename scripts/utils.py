@@ -135,23 +135,21 @@ def remove_folders_matching_pattern(root_folder: str, pattern: str = "__pycache_
 def download_stop_motion_obj_addon(dest: str, version: str = "v2.2.0.alpha.22") -> tuple[str, str]:
     """
     Download the Stop-Motion-OBJ addon.
-
     Args:
         dest (str): destination of the downloaded file.
         version (str, optional): version to download. Defaults to "v2.2.0.alpha.22".
-
-    Raises:
-        AttributeError: if the given destination does not exist.
-
     Returns:
         tuple[str, str]: path to the zip file, name of the module.
     """
+
     module_name = "Stop-motion-OBJ"
     filename = module_name + "-" + version + ".zip"
     path = os.path.abspath(os.path.join(dest, filename))
 
     if (not os.path.exists(dest)):
-        raise AttributeError("The given path does not exist:", dest)
+        print(f"The given path does not exist: {dest}")
+        os.mkdir(dest)
+        print(f"Created destination folder: {dest}")
 
     if (os.path.exists(os.path.join(dest, filename))):
         print("Stop-Motion-OBJ - found:", path)
