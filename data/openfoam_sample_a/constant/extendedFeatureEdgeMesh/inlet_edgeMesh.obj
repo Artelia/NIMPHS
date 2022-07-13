@@ -1,0 +1,20 @@
+# Wavefront OBJ file written 2022-01-21T11:29:20
+o inlet_edgeMesh
+
+# points : 4
+# lines  : 5
+
+# <points count="4">
+v -0.4 0 0
+v -0.4 0 0.3
+v -0.4 0.3 0.3
+v -0.4 0.3 0
+# </points>
+
+# <edges count="5">
+l 3 1
+l 1 2
+l 2 3
+l 3 4
+l 4 1
+# </edges>

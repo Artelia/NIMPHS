@@ -77,7 +77,7 @@ class TBB_OT_OpenfoamPreview(Operator):
 
         # Generate object
         try:
-            obj = generate_object_from_data(vertices, faces, "TBB_OpenFOAM_preview")
+            obj = generate_object_from_data(vertices, faces, obj.name_full)
             if collection.name not in [col.name for col in obj.users_collection]:
                 collection.objects.link(obj)
         except Exception:

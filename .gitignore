@@ -14,7 +14,6 @@ docs/_build/
 *.bkp
 
 # Tests
-data/
 cache/
 local_addon/
 .pytest_cache/

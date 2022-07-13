@@ -1,0 +1,37 @@
+# Wavefront OBJ file written 2022-01-21T11:29:20
+o gate_edgeMesh
+
+# points : 8
+# lines  : 18
+
+# <points count="8">
+v 0 0 0.03
+v 0 0 0.6
+v 0 0.3 0.6
+v 0 0.3 0.03
+v 0.00999999 0.3 0.6
+v 0.00999999 0.3 0.03
+v 0.00999999 0 0.6
+v 0.00999999 0 0.03
+# </points>
+
+# <edges count="18">
+l 1 2
+l 2 3
+l 3 4
+l 4 1
+l 3 5
+l 5 6
+l 6 4
+l 5 7
+l 7 8
+l 8 6
+l 7 2
+l 1 8
+l 3 1
+l 5 4
+l 7 6
+l 2 8
+l 8 4
+l 2 5
+# </edges>

@@ -1,0 +1,28 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      createPatchDict;
+}
+
+pointSync false;
+
+// Patches to create.
+
+patches
+(
+    {
+        name inlet;  // Name of new patch to be created 
+
+        patchInfo
+        {
+                type patch;     // is it a patch or wall? polyMesh/boundary file will be updated accordingly. 
+        }
+
+        constructFrom set;    
+
+        // If constructFrom = set : name of faceSet
+        set inletFaceSet;            // name of the set created in topoSet 
+    }
+);

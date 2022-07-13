@@ -1,0 +1,77 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.1.0                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      sampleDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+interpolationScheme cellPoint;
+
+setFormat       raw;
+surfaceFormat   raw;
+
+surfaces
+(
+constantAlpha
+    {
+        // Iso surface for constant values.
+        // Triangles guaranteed not to cross cells.
+        type            isoSurface;    // always triangulated
+        isoField        alpha1;
+        isoValue        0.5;
+        interpolate     true;
+        regularise      false;              // do not simplify
+        // mergeTol        1e-10;    // Optional: fraction of mesh bounding box
+                                     // to merge points (default=1e-6)
+    }
+);
+sets
+(
+    inlet
+    {
+        type    uniform;
+        axis    z;
+        start   ( -0.35 0.05 0. );
+        end     ( -0.35 0.05 0.12 );
+        nPoints 100;
+    }
+    profil1
+    {
+        type    uniform;
+        axis    z;
+        start   ( -0.175 0.05 0. );
+        end     ( -0.175 0.05 0.12 );
+        nPoints 100;
+    }
+    profil2
+    {
+        type    uniform;
+        axis    z;
+        start   ( -0.05 0.05 0. );
+        end     ( -0.05 0.05 0.12 );
+        nPoints 100;
+    }
+    profil3
+    {
+        type    uniform;
+        axis    z;
+        start   ( 0.5 0.05 0. );
+        end     ( 0.5 0.05 0.12 );
+        nPoints 100;
+    }
+);
+
+fields          ( U alpha1 );
+
+
+// ************************************************************************* //
