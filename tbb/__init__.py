@@ -6,11 +6,8 @@ from bpy.app import version as bl_version
 from bpy.app.handlers import frame_change_pre, frame_change_post, save_pre
 from bpy.types import Scene, Object, TOPBAR_MT_file_import, VIEW3D_MT_editor_menus
 
-# Remove error on building the docs, since fake-bpy-module defines version as 'None'
-if bl_version is None:
-    bl_version = (3, 0, 0)
-
 import os
+
 from . import auto_load
 
 bl_info = {
@@ -32,16 +29,11 @@ bl_info = {
 # addons_directory = os.path.dirname(current_directory)
 # addon_name = os.path.basename(current_directory)
 
-try:
-    import numpy
-except BaseException:
-    pass
-
-if "numpy" not in globals():
+if bl_version is not None and bl_version < (3, 0, 0):
     message = ("\n\n"
-               "The Toolbox Blender addon depends on the numpy library.\n"
-               "Unfortunately the Blender built you are using does not have this library.\n"
-               "Please checkout the documentation to fix this issue (installation guide).")
+               "The Toolbox Blender addon requires at least Blender 3.0.\n"
+               "Your are using an older version.\n"
+               "Please download the latest official release.")
     raise Exception(message)
 
 try:
@@ -54,13 +46,6 @@ if "pyvista" not in globals():
                "The Toolbox Blender addon depends on the pyvista library.\n"
                "Unfortunately the Blender built you are using does not have this library.\n"
                "Please checkout the documentation to fix this issue (installation guide).")
-    raise Exception(message)
-
-if bl_version < (3, 0, 0):
-    message = ("\n\n"
-               "The Toolbox Blender addon requires at least Blender 3.0.\n"
-               "Your are using an older version.\n"
-               "Please download the latest official release.")
     raise Exception(message)
 
 # Register

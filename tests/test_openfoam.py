@@ -54,7 +54,7 @@ import numpy as np
 
 FILE_PATH = os.path.abspath("./data/openfoam_sample_a/foam.foam")
 # Point data value threshold for tests
-PDV_THRESHOLD = 0.008
+PDV_THRESHOLD = 0.01
 
 
 @pytest.fixture

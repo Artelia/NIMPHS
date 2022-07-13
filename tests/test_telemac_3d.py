@@ -22,7 +22,7 @@ import numpy as np
 
 FILE_PATH = os.path.abspath("./data/telemac_3d_sample/telemac_3d.slf")
 # Point data value threshold for tests
-PDV_THRESHOLD = 0.008
+PDV_THRESHOLD = 0.01
 
 
 @pytest.fixture
