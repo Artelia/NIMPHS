@@ -39,6 +39,7 @@ except Exception:
 # Import utils functions
 import blender_addon_tester.addon_helper as BAT
 
+
 # Setup class for PyTest
 class SetupPlugin:
     """Setup class for pytest."""
@@ -82,7 +83,7 @@ class SetupPlugin:
 
         BAT.cleanup(self.addon, self.bpy_module, self.addon_dir)
         BAT.cleanup(self.addon, os.environ.get("STOP_MOTION_OBJ_MODULE", None), self.addon_dir)
-        
+
         # Cleanup zip files
         print("Cleaning up - zip files")
         remove_files_matching_pattern(self.root, exclude_folders=[os.path.abspath("./cache")], pattern="*.zip")
@@ -101,5 +102,5 @@ try:
 except Exception as e:
     print(e)
     exit_val = 1
-    
+
 sys.exit(exit_val)

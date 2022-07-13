@@ -1,85 +1,19 @@
 # <pep8 compliant>
 import os
+import sys
 import bpy
 import json
 import pytest
 import pyvista
 import numpy as np
 
-# Sample A:
-#   If not skip_zero_time:
-#                       (Time point = 2)                (GLOBAL)                        (GLOBAL)
-#       U[0]:           mean = 0.49963319873423406      min = -1.346832513809204        max = 1.345022439956665
-#       U[1]:           mean = 1.0                      min = -4.208540108459135e-17    max = 9.689870304643004e-17
-#       U[2]:           mean = 0.5781237236145602       min = -4.320412635803223        max = 1.1953175067901611
-#       alpha.water:    mean = 0.8446938232134689       min = 0.0                       max = 1.0
-#       nut:            mean = 0.45965881706639655      min = 0.0                       max = 0.006597405299544334
-#
-#       Number of time points = 21
-#       Number of variables = 3
-
-#   If skip_zero_time:
-#                       (Time point = 2)
-#       U[0]:           mean = 0.49963319873423406      min = -1.346832513809204        max = 1.345022439956665
-#       U[1]:           mean = 1.0                      min = -4.208540108459135e-17    max = 9.689870304643004e-17
-#       U[2]:           mean = 0.5781237236145602       min = -4.320412635803223        max = 1.1953175067901611
-#       alpha.water:    mean = 0.8446938232134689       min = 0.0                       max = 1.0
-#       IC.water[0]:    mean = 0.4011691562990132       min = -0.4272400140762329       max = 0.661429226398468
-#       IC.water[1]:    mean = 0.9842908223802445       min = -0.0041363476775586605    max = 0.0
-#       IC.water[2]:    mean = 0.015422046737660927     min = 0.0                       max = 1.5712000131607056
-#       IN.water[0]:    mean = 0.5035181330973892       min = -0.00011999999696854502   max = 0.00011999999696854502
-#       IN.water[1]:    mean = 0.552537428726637        min = -2.092237446049694e-05    max = 6.619574833166553e-06
-#       IN.water[2]:    mean = 0.9388409067237943       min = -0.00012017400149488822   max = 0.00012121000327169895
-#       k:              mean = 0.005675679202984087     min = 1.1634699603746412e-06    max = 2.2228598594665527
-#       nut:            mean = 0.45965881706639655      min = 0.0                       max = 0.006597405299544334
-#       omega:          mean = 0.011089561780501528     min = 0.14538300037384033       max = 1756.1199951171875
-#       p:              mean = 0.25445482450721313      min = -75.70034790039062        max = 14811.5
-#       p_rgh:          mean = 0.2676472253167478       min = -677.535400390625         max = 7789.9501953125
-
-#
-#       Number of time points = 20
-#       Number of variables = 9
-
-#   Non-triangulated mesh:
-#       Vertices = 60,548 | Edges = 120,428 | Faces = 59,882 | Triangles = 121,092
-
-#   Non-triangulated-mesh (decomp. polyh.):
-#       Vertices = 60,548 | Edges = 121,748 | Faces = 61,202 | Triangles = 121,092
-
-#   Triangulated mesh (w/wo decomp. polyh.):
-#       Vertices = 61,616 | Edges = 182,698 | Faces = 121,092 | Triangles = 121,092
-
-#   Time point 11, clip alpha.water (value = 0.5):
-#       Vertices = 55,099 | Edges = 158,461 | Faces = 103,540 | Triangles = 103,540
+sys.path.append(os.path.abspath("."))  # Make helpers module available in this file
+from helpers import utils
 
 FILE_PATH = os.path.abspath("./data/openfoam_sample_a/foam.foam")
-# Point data value threshold for tests
-PDV_THRESHOLD = 0.01
-
 
 @pytest.fixture
-def mesh_sequence():
-    return bpy.data.objects.get("My_OpenFOAM_Sim_sequence", None)
-
-
-@pytest.fixture
-def streaming_sequence():
-    return bpy.data.objects.get("My_OpenFOAM_Streaming_Sim_sequence", None)
-
-
-@pytest.fixture
-def preview_object():
-    obj = bpy.data.objects.get("TBB_OpenFOAM_preview", None)
-    # If not None, select the object
-    if obj is not None:
-        obj.select_set(True)
-        bpy.context.view_layer.objects.active = obj
-
-    return obj
-
-
-@pytest.fixture
-def point_data_test():
+def point_data():
     from tbb.properties.utils import VariablesInformation
 
     data = VariablesInformation()
@@ -88,74 +22,6 @@ def point_data_test():
     data.append(name="nut", type="SCALAR")
 
     return data
-
-
-@pytest.fixture
-def get_mean_value():
-    from bpy.types import Object, MeshLoopColorLayer
-
-    def mean_value(colors: MeshLoopColorLayer, obj: Object, channel: int):
-        data = [0] * len(obj.data.loops) * 4
-        colors.data.foreach_get("color", data)
-        extracted = [data[i] for i in range(channel, len(data), 4)]
-        return np.sum(extracted) / len(obj.data.loops)
-
-    return mean_value
-
-
-@pytest.fixture
-def frame_change_pre():
-
-    def get_handler(name: str):
-        for handler in bpy.app.handlers.frame_change_pre:
-            if handler.__name__ == name:
-                return handler
-
-        return None
-
-    return get_handler
-
-
-def test_import_openfoam():
-    op = bpy.ops.tbb.import_openfoam_file
-
-    # Test with wrong filepath
-    assert op('EXEC_DEFAULT', filepath="here.foam") == {'CANCELLED'}
-
-    assert op('EXEC_DEFAULT', filepath=FILE_PATH) == {'FINISHED'}
-
-
-def test_imported_object_openfoam(preview_object):
-    # Check imported object
-    assert preview_object is not None
-
-    # Test geometry
-    assert len(preview_object.data.edges) == 182698
-    assert len(preview_object.data.vertices) == 61616
-    assert len(preview_object.data.polygons) == 121092
-
-    # Test object properties
-    assert preview_object.tbb.uid != ""
-    assert preview_object.tbb.module == 'OpenFOAM'
-    assert preview_object.tbb.is_mesh_sequence is False
-    assert preview_object.tbb.is_streaming_sequence is False
-
-    # Test object settings
-    assert preview_object.tbb.settings.file_path == FILE_PATH
-
-
-def test_file_data_imported_object_openfoam(preview_object):
-    file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
-    assert file_data is not None
-
-    # Test file data
-    assert file_data.time_point == 0
-    assert file_data.vars is not None
-    assert file_data.module == "OpenFOAM"
-    assert file_data.nb_time_points == 20  # skip_zero_time defaults to True
-    assert isinstance(file_data.mesh, pyvista.PolyData)
-    assert isinstance(file_data.file, pyvista.OpenFOAMReader)
-    assert isinstance(file_data.raw_mesh, pyvista.UnstructuredGrid)
 
 
 def test_reload_file_data_openfoam(preview_object):
@@ -291,15 +157,15 @@ def test_remove_point_data_openfoam(preview_object):
     assert file_data is not None
 
 
-def test_preview_point_data(preview_object, point_data_test):
+def test_preview_point_data(preview_object, point_data):
     # Set point data to preview
     preview_object.tbb.settings.preview_time_point = 2
-    preview_object.tbb.settings.preview_point_data = json.dumps(point_data_test.get("alpha.water"))
+    preview_object.tbb.settings.preview_point_data = json.dumps(point_data.get("alpha.water"))
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {'FINISHED'}
 
 
-def test_point_data_preview_object_openfoam(preview_object, get_mean_value):
+def test_point_data_preview_object_openfoam(preview_object):
     # Check preview object
     assert preview_object is not None
 
@@ -311,7 +177,7 @@ def test_point_data_preview_object_openfoam(preview_object, get_mean_value):
     data = vertex_colors.get("alpha.water, None, None", None)
     assert data is not None
 
-    assert np.abs(get_mean_value(data, preview_object, 0) - 0.8443170980509084) < PDV_THRESHOLD
+    assert np.abs(utils.compute_mean_value(data, preview_object, 0) - 0.8443170980509084) < utils.PDV_THRESHOLD
 
 
 def test_preview_material_openfoam():
@@ -335,9 +201,9 @@ def test_preview_material_openfoam():
     assert link.to_socket == principled_bsdf_node.inputs[0]
 
 
-def test_compute_ranges_point_data_values_openfoam(preview_object, point_data_test):
+def test_compute_ranges_point_data_values_openfoam(preview_object, point_data):
     op = bpy.ops.tbb.compute_ranges_point_data_values
-    assert op('EXEC_DEFAULT', mode='TEST', test_data=point_data_test.dumps()) == {'FINISHED'}
+    assert op('EXEC_DEFAULT', mode='TEST', test_data=point_data.dumps()) == {'FINISHED'}
 
     # Check file data
     file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
@@ -359,7 +225,7 @@ def test_compute_ranges_point_data_values_openfoam(preview_object, point_data_te
     assert u["max"][2] == 1.1953175067901611
 
 
-def test_create_streaming_sequence_openfoam(preview_object, point_data_test):
+def test_create_streaming_sequence_openfoam(preview_object, point_data):
     # ------------------------------------------------------------ #
     # /!\ WARNING: next tests are based on the following frame /!\ #
     # ------------------------------------------------------------ #
@@ -391,7 +257,7 @@ def test_create_streaming_sequence_openfoam(preview_object, point_data_test):
 
     # Set point data
     sequence.tbb.settings.point_data.import_data = True
-    sequence.tbb.settings.point_data.list = point_data_test.dumps()
+    sequence.tbb.settings.point_data.list = point_data.dumps()
 
 
 def test_streaming_sequence_openfoam(streaming_sequence, frame_change_pre):
@@ -449,7 +315,7 @@ def test_point_data_streaming_sequence_openfoam(streaming_sequence):
     assert data is not None
 
 
-def test_create_mesh_sequence_openfoam(preview_object, point_data_test):
+def test_create_mesh_sequence_openfoam(preview_object, point_data):
     # ------------------------------------------------------------ #
     # /!\ WARNING: next tests are based on the following frame /!\ #
     # ------------------------------------------------------------ #
@@ -457,7 +323,7 @@ def test_create_mesh_sequence_openfoam(preview_object, point_data_test):
     bpy.context.scene.frame_set(2)
 
     # Get test data
-    data = point_data_test.dumps()
+    data = point_data.dumps()
 
     # Force do not skip zero time
     preview_object.tbb.settings.openfoam.import_settings.skip_zero_time = False
@@ -504,12 +370,12 @@ def test_point_data_mesh_sequence_openfoam(mesh_sequence, get_mean_value):
     data = vertex_colors.get("U.x, U.y, U.z", None)
     assert data is not None
 
-    assert np.abs(get_mean_value(data, mesh_sequence, 0) - 0.49963319873423406) < PDV_THRESHOLD
-    assert np.abs(get_mean_value(data, mesh_sequence, 1) - 1.0) < PDV_THRESHOLD
-    assert np.abs(get_mean_value(data, mesh_sequence, 2) - 0.5781237236145602) < PDV_THRESHOLD
+    assert np.abs(get_mean_value(data, mesh_sequence, 0) - 0.49963319873423406) < utils.PDV_THRESHOLD
+    assert np.abs(get_mean_value(data, mesh_sequence, 1) - 1.0) < utils.PDV_THRESHOLD
+    assert np.abs(get_mean_value(data, mesh_sequence, 2) - 0.5781237236145602) < utils.PDV_THRESHOLD
 
     data = vertex_colors.get("alpha.water, nut, None", None)
     assert data is not None
 
-    assert np.abs(get_mean_value(data, mesh_sequence, 0) - 0.8446938232134689) < PDV_THRESHOLD
-    assert np.abs(get_mean_value(data, mesh_sequence, 1) - 0.45965881706639655) < PDV_THRESHOLD
+    assert np.abs(get_mean_value(data, mesh_sequence, 0) - 0.8446938232134689) < utils.PDV_THRESHOLD
+    assert np.abs(get_mean_value(data, mesh_sequence, 1) - 0.45965881706639655) < utils.PDV_THRESHOLD

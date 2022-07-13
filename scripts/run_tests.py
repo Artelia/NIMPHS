@@ -82,4 +82,5 @@ def main():
     print(f"{Colors.OKBLUE}{centered_str(' RUN TESTS END ', '=')}{Colors.ENDC}")
     sys.exit(exit_val)
 
+
 main()

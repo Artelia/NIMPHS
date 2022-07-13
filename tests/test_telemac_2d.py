@@ -1,55 +1,18 @@
 # <pep8 compliant>
 import os
+import sys
 import bpy
 import json
 import pytest
 import numpy as np
 
-# Sample 2D:
-#   Number of variables = 6
-
-#                     spmv = sum partial mean values
-#                     (Time point = 5, remapped)    (GLOBAL)                        (GLOBAL)
-#   VELOCITY U:       mean = 0.2148579548180691     min = 0.0                       max = 2.7853646278381348  (M/S)
-#   VELOCITY V:       mean = 0.4044774340143149     min = -0.40747132897377014      max = 0.5237767696380615  (M/S)
-#   WATER DEPTH:      mean = 0.5031066531588434     min = 0.0                       max = 1.0                 (M)
-#   ANALYTIC SOL H:   mean = 0.5015619112950673     min = 0.0                       max = 1.0                 (NONE)
-#   ANALYTIC SOL U:   mean = 0.36766125498385516    min = 0.0                       max = 6.254727840423584   (NONE)
-#   ANALYTIC SOL V:   mean = 1.0                    min = 0.0                       max = 0.0                 (NONE)
-
-#   IS 3D = False
-#   NB PLANES = 0
-#   NB TIME POINTS = 11
-#   MESH: Vertices = 3,200 | Edges = 8,941 | Faces = 5,742 | Triangles = 5,742
+sys.path.append(os.path.abspath("."))  # Make helpers module available in this file
+from helpers import utils
 
 FILE_PATH = os.path.abspath("./data/telemac_2d_sample/telemac_2d.slf")
-# Point data value threshold for tests
-PDV_THRESHOLD = 0.01
-
 
 @pytest.fixture
-def mesh_sequence():
-    return bpy.data.objects.get("My_TELEMAC_Sim_2D_sequence", None)
-
-
-@pytest.fixture
-def streaming_sequence():
-    return bpy.data.objects.get("My_TELEMAC_Streaming_Sim_2D_sequence", None)
-
-
-@pytest.fixture
-def preview_object():
-    obj = bpy.data.objects.get("TBB_TELEMAC_preview_2D", None)
-    # If not None, select the object
-    if obj is not None:
-        obj.select_set(True)
-        bpy.context.view_layer.objects.active = obj
-
-    return obj
-
-
-@pytest.fixture
-def point_data_test():
+def point_data():
     from tbb.properties.utils import VariablesInformation
 
     data = VariablesInformation()
@@ -61,45 +24,6 @@ def point_data_test():
     data.append(name="ANALYTIC SOL V", unit="NONE", type="SCALAR")
 
     return data
-
-
-@pytest.fixture
-def get_mean_value():
-    from bpy.types import Object, MeshLoopColorLayer
-
-    def mean_value(colors: MeshLoopColorLayer, obj: Object, channel: int):
-        data = [0] * len(obj.data.loops) * 4
-        colors.data.foreach_get("color", data)
-        extracted = [data[i] for i in range(channel, len(data), 4)]
-        return np.sum(extracted) / len(obj.data.loops)
-
-    return mean_value
-
-
-@pytest.fixture
-def frame_change_post():
-
-    def get_handler(name: str):
-        for handler in bpy.app.handlers.frame_change_post:
-            if handler.__name__ == name:
-                return handler
-
-        return None
-
-    return get_handler
-
-
-@pytest.fixture
-def frame_change_pre():
-
-    def get_handler(name: str):
-        for handler in bpy.app.handlers.frame_change_pre:
-            if handler.__name__ == name:
-                return handler
-
-        return None
-
-    return get_handler
 
 
 def test_import_telemac_2d():
@@ -141,10 +65,10 @@ def test_reload_file_data_telemac_2d(preview_object):
     assert file_data.nb_triangles == 5742
 
 
-def test_preview_telemac_2d(preview_object, point_data_test):
+def test_preview_telemac_2d(preview_object, point_data):
     # Set preview settings
     preview_object.tbb.settings.preview_time_point = 5
-    preview_object.tbb.settings.preview_point_data = json.dumps(point_data_test.get("VELOCITY U"))
+    preview_object.tbb.settings.preview_point_data = json.dumps(point_data.get("VELOCITY U"))
 
     assert bpy.ops.tbb.telemac_preview('EXEC_DEFAULT') == {'FINISHED'}
 
@@ -171,12 +95,12 @@ def test_point_data_preview_object_telemac_2d(preview_object, get_mean_value):
         assert vitesse_u is not None
 
         # Test point data values (compare mean values, less than .1% of difference is ok)
-        assert np.abs(get_mean_value(vitesse_u, child, 0) - 0.2148579548180691) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(vitesse_u, child, 0) - 0.2148579548180691) < utils.PDV_THRESHOLD
 
 
-def test_compute_ranges_point_data_values_telemac_2d(preview_object, point_data_test):
+def test_compute_ranges_point_data_values_telemac_2d(preview_object, point_data):
     op = bpy.ops.tbb.compute_ranges_point_data_values
-    assert op('EXEC_DEFAULT', mode='TEST', test_data=point_data_test.dumps()) == {'FINISHED'}
+    assert op('EXEC_DEFAULT', mode='TEST', test_data=point_data.dumps()) == {'FINISHED'}
 
     file_data = bpy.context.scene.tbb.file_data.get(preview_object.tbb.uid, None)
     assert file_data is not None
@@ -200,7 +124,7 @@ def test_compute_ranges_point_data_values_telemac_2d(preview_object, point_data_
     assert surface_libre["min"] == 0.0 and surface_libre["max"] == 0.0
 
 
-def test_create_streaming_sequence_telemac_2d(preview_object, point_data_test):
+def test_create_streaming_sequence_telemac_2d(preview_object, point_data):
     # ------------------------------------------------------------ #
     # /!\ WARNING: next tests are based on the following frame /!\ #
     # ------------------------------------------------------------ #
@@ -221,10 +145,10 @@ def test_create_streaming_sequence_telemac_2d(preview_object, point_data_test):
 
     # Set point data
     sequence.tbb.settings.point_data.import_data = True
-    sequence.tbb.settings.point_data.list = point_data_test.dumps()
+    sequence.tbb.settings.point_data.list = point_data.dumps()
 
 
-def test_streaming_sequence_telemac_2d(streaming_sequence, frame_change_pre, point_data_test):
+def test_streaming_sequence_telemac_2d(streaming_sequence, frame_change_pre, point_data):
     # Force update streaming sequences
     handler = frame_change_pre("update_telemac_streaming_sequences")
     assert handler is not None
@@ -268,16 +192,16 @@ def test_point_data_streaming_sequence_telemac_2d(streaming_sequence, get_mean_v
         data = vertex_colors.get("VELOCITY U, VELOCITY V, WATER DEPTH", None)
         assert data is not None
 
-        assert np.abs(get_mean_value(data, child, 0) - 0.2148579548180691) < PDV_THRESHOLD
-        assert np.abs(get_mean_value(data, child, 1) - 0.4044774340143149) < PDV_THRESHOLD
-        assert np.abs(get_mean_value(data, child, 2) - 0.5031066531588434) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 0) - 0.2148579548180691) < utils.PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 1) - 0.4044774340143149) < utils.PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 2) - 0.5031066531588434) < utils.PDV_THRESHOLD
 
         data = vertex_colors.get("ANALYTIC SOL H, ANALYTIC SOL U, ANALYTIC SOL V", None)
         assert data is not None
 
-        assert np.abs(get_mean_value(data, child, 0) - 0.5015619112950673) < PDV_THRESHOLD
-        assert np.abs(get_mean_value(data, child, 1) - 0.36766125498385516) < PDV_THRESHOLD
-        assert np.abs(get_mean_value(data, child, 2) - 1.0) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 0) - 0.5015619112950673) < utils.PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 1) - 0.36766125498385516) < utils.PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 2) - 1.0) < utils.PDV_THRESHOLD
 
 
 def test_create_mesh_sequence_telemac_2d(preview_object):
@@ -292,7 +216,7 @@ def test_create_mesh_sequence_telemac_2d(preview_object):
     assert state == {'FINISHED'}
 
 
-def test_mesh_sequence_telemac_2d(mesh_sequence, frame_change_post, point_data_test):
+def test_mesh_sequence_telemac_2d(mesh_sequence, frame_change_post, point_data):
     # Check sequence object
     assert mesh_sequence is not None
     assert len(mesh_sequence.children) == 2
@@ -309,7 +233,7 @@ def test_mesh_sequence_telemac_2d(mesh_sequence, frame_change_post, point_data_t
 
     # Add point data settings
     mesh_sequence.tbb.settings.point_data.import_data = True
-    mesh_sequence.tbb.settings.point_data.list = point_data_test.dumps()
+    mesh_sequence.tbb.settings.point_data.list = point_data.dumps()
 
     # Force update telemac mesh sequences
     handler = frame_change_post("update_telemac_mesh_sequences")
@@ -349,23 +273,23 @@ def test_point_data_mesh_sequence_telemac_2d(mesh_sequence, get_mean_value):
         data = vertex_colors.get("VELOCITY U, VELOCITY V, WATER DEPTH", None)
         assert data is not None
 
-        assert np.abs(get_mean_value(data, child, 0) - 0.2148579548180691) < PDV_THRESHOLD
-        assert np.abs(get_mean_value(data, child, 1) - 0.4044774340143149) < PDV_THRESHOLD
-        assert np.abs(get_mean_value(data, child, 2) - 0.5031066531588434) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 0) - 0.2148579548180691) < utils.PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 1) - 0.4044774340143149) < utils.PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 2) - 0.5031066531588434) < utils.PDV_THRESHOLD
 
         data = vertex_colors.get("ANALYTIC SOL H, ANALYTIC SOL U, ANALYTIC SOL V", None)
         assert data is not None
 
-        assert np.abs(get_mean_value(data, child, 0) - 0.5015619112950673) < PDV_THRESHOLD
-        assert np.abs(get_mean_value(data, child, 1) - 0.36766125498385516) < PDV_THRESHOLD
-        assert np.abs(get_mean_value(data, child, 2) - 1.0) < PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 0) - 0.5015619112950673) < utils.PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 1) - 0.36766125498385516) < utils.PDV_THRESHOLD
+        assert np.abs(get_mean_value(data, child, 2) - 1.0) < utils.PDV_THRESHOLD
 
 
-def test_extract_point_data_telemac_2d(preview_object, point_data_test):
+def test_extract_point_data_telemac_2d(preview_object, point_data):
     op = bpy.ops.tbb.telemac_extract_point_data
 
     # Get test data
-    data = json.dumps(point_data_test.get('VELOCITY U'))
+    data = json.dumps(point_data.get('VELOCITY U'))
 
     # Note: Fudaa count indices from 1 to xxx. Here we count indices from 0 to xxx.
     state = op('EXEC_DEFAULT', mode='TEST', vertex_id=125 - 1, max=10, start=0, end=10, test_data=data)
@@ -392,6 +316,6 @@ def test_extract_point_data_telemac_2d(preview_object, point_data_test):
             bpy.context.scene.frame_set(id)
 
             assert id == bpy.context.scene.frame_current
-            assert np.abs(preview_object["VELOCITY U"] - value) < PDV_THRESHOLD
+            assert np.abs(preview_object["VELOCITY U"] - value) < utils.PDV_THRESHOLD
 
     ground_truth.close()
