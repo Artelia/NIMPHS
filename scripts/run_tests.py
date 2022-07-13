@@ -5,15 +5,15 @@ import zipfile
 from pathlib import Path
 
 from scripts.utils import (
-    zipdir,
-    parser,
-    bcolors,
     remove_folders_matching_pattern,
     download_stop_motion_obj_addon,
-    get_centered_message
+    centered_str,
+    zipdir,
+    parser,
+    Colors,
 )
 
-print(f"{bcolors.OKBLUE}{get_centered_message(' RUN TESTS START ', '=')}{bcolors.ENDC}")
+print(f"{Colors.OKBLUE}{centered_str(' RUN TESTS START ', '=')}{Colors.ENDC}")
 
 try:
     import blender_addon_tester as BAT
@@ -79,8 +79,7 @@ def main():
         print(e)
         exit_val = 1
 
-    print(f"{bcolors.OKBLUE}{get_centered_message(' RUN TESTS END ', '=')}{bcolors.ENDC}")
+    print(f"{Colors.OKBLUE}{centered_str(' RUN TESTS END ', '=')}{Colors.ENDC}")
     sys.exit(exit_val)
-
 
 main()

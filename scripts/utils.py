@@ -1,5 +1,4 @@
 # <pep8 compliant>
-from ast import arg
 import os
 import sys
 import shutil
@@ -10,7 +9,7 @@ import argparse
 import subprocess
 
 
-class bcolors:
+class Colors:
     """List of color which can be used to color texts in the terminal."""
 
     HEADER = '\033[95m'
@@ -24,7 +23,7 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
-def get_centered_message(message: str, char: str = "-") -> str:
+def centered_str(message: str, char: str = "-") -> str:
     """
     Generate a line full of 'char' with the given message at the center.
 
@@ -85,14 +84,14 @@ def zipdir(path: str, ziph: zipfile.ZipFile) -> None:
         path (str): path to the folder.
         ziph (zipfile.ZipFile): zip file.
     """
-    # Per https://www.tutorialspoint.com/How-to-zip-a-folder-recursively-using-Python
+    # Inspired from: https://www.tutorialspoint.com/How-to-zip-a-folder-recursively-using-Python
     # ziph is zipfile handle
     for root, dirs, files in os.walk(path):
         for file in files:
             ziph.write(os.path.join(root, file))
 
 
-# Code taken here:
+# Inspired from:
 # https://thispointer.com/python-how-to-remove-files-by-matching-pattern-wildcards-certain-extensions-only/
 def remove_files_matching_pattern(root_folder: str, exclude_folders: list[str] = [], pattern: str = "*.zip") -> None:
     """
