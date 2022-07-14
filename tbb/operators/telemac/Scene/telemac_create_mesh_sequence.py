@@ -8,6 +8,7 @@ log = logging.getLogger(__name__)
 import time
 
 from tbb.panels.utils import get_selected_object
+from tbb.properties.utils import VariablesInformation
 from tbb.operators.shared.create_mesh_sequence import TBB_CreateMeshSequence
 from tbb.properties.telemac.import_settings import TBB_TelemacImportSettings
 
@@ -72,7 +73,16 @@ class TBB_OT_TelemacCreateMeshSequence(TBB_CreateMeshSequence):
         # /!\ For testing purpose only /!\ #
         # -------------------------------- #
         if self.mode == 'TEST':
+            import json
+
+            data = json.loads(self.test_data)
+
+            self.end = data["end"]
+            self.start = data["start"]
+            self.time_point = self.start
             self.point_data.list = self.test_data
+            self.point_data.import_data = VariablesInformation(data["vars"]).length() > 0
+
             return {'FINISHED'}
 
         return context.window_manager.invoke_props_dialog(self)

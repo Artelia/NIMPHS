@@ -11,6 +11,7 @@ from helpers import utils
 
 FILE_PATH = os.path.abspath("./data/telemac_2d_sample/telemac_2d.slf")
 
+
 @pytest.fixture
 def point_data():
     from tbb.properties.utils import VariablesInformation
@@ -86,87 +87,6 @@ def test_geometry_streaming_sequence_telemac_2d(streaming_sequence):
 
 def test_point_data_streaming_sequence_telemac_2d(streaming_sequence, get_mean_value):
     for child in streaming_sequence.children:
-        # Check number vertex colors arrays
-        vertex_colors = child.data.vertex_colors
-        assert len(vertex_colors) == 2
-
-        # Test point data values
-        data = vertex_colors.get("VELOCITY U, VELOCITY V, WATER DEPTH", None)
-        assert data is not None
-
-        assert np.abs(get_mean_value(data, child, 0) - 0.2148579548180691) < utils.PDV_THRESHOLD
-        assert np.abs(get_mean_value(data, child, 1) - 0.4044774340143149) < utils.PDV_THRESHOLD
-        assert np.abs(get_mean_value(data, child, 2) - 0.5031066531588434) < utils.PDV_THRESHOLD
-
-        data = vertex_colors.get("ANALYTIC SOL H, ANALYTIC SOL U, ANALYTIC SOL V", None)
-        assert data is not None
-
-        assert np.abs(get_mean_value(data, child, 0) - 0.5015619112950673) < utils.PDV_THRESHOLD
-        assert np.abs(get_mean_value(data, child, 1) - 0.36766125498385516) < utils.PDV_THRESHOLD
-        assert np.abs(get_mean_value(data, child, 2) - 1.0) < utils.PDV_THRESHOLD
-
-
-def test_create_mesh_sequence_telemac_2d(preview_object):
-    # ------------------------------------------------------------ #
-    # /!\ WARNING: next tests are based on the following frame /!\ #
-    # ------------------------------------------------------------ #
-    # Change frame to load time point 8
-    bpy.context.scene.frame_set(8)
-
-    op = bpy.ops.tbb.telemac_create_mesh_sequence
-    state = op('EXEC_DEFAULT', mode='TEST', start=0, max=11, end=6, name="My_TELEMAC_Sim_2D")
-    assert state == {'FINISHED'}
-
-
-def test_mesh_sequence_telemac_2d(mesh_sequence, frame_change_post, point_data):
-    # Check sequence object
-    assert mesh_sequence is not None
-    assert len(mesh_sequence.children) == 2
-
-    # ------------------------------------------------------------ #
-    # /!\ WARNING: next tests are based on the following frame /!\ #
-    # ------------------------------------------------------------ #
-    # Change frame to load time point 13
-    bpy.context.scene.frame_set(13)
-
-    # Get file_data
-    file_data = bpy.context.scene.tbb.file_data[mesh_sequence.tbb.uid]
-    assert file_data is not None
-
-    # Add point data settings
-    mesh_sequence.tbb.settings.point_data.import_data = True
-    mesh_sequence.tbb.settings.point_data.list = point_data.dumps()
-
-    # Force update telemac mesh sequences
-    handler = frame_change_post("update_telemac_mesh_sequences")
-    assert handler is not None
-    handler(bpy.context.scene)
-
-    # Test object settings
-    assert mesh_sequence.tbb.uid != ""
-    assert mesh_sequence.tbb.module == 'TELEMAC'
-    assert mesh_sequence.tbb.is_mesh_sequence is True
-    assert mesh_sequence.tbb.is_streaming_sequence is False
-    assert mesh_sequence.tbb.settings.file_path == FILE_PATH
-
-    # Test sequence data (shape_keys)
-    for child in mesh_sequence.children:
-        assert len(child.data.shape_keys.key_blocks) == 6
-
-    # Disable updates for this sequence object during the next tests
-    mesh_sequence.tbb.settings.point_data.import_data = False
-
-
-def test_geometry_mesh_sequence_telemac_2d(mesh_sequence):
-    # Test geometry
-    for child in mesh_sequence.children:
-        assert len(child.data.edges) == 8941
-        assert len(child.data.vertices) == 3200
-        assert len(child.data.polygons) == 5742
-
-
-def test_point_data_mesh_sequence_telemac_2d(mesh_sequence, get_mean_value):
-    for child in mesh_sequence.children:
         # Check number vertex colors arrays
         vertex_colors = child.data.vertex_colors
         assert len(vertex_colors) == 2
