@@ -19,8 +19,8 @@ from helpers.utils import clean_all_objects
 def test_compute_ranges_point_data_values_openfoam():
     # Import OpenFOAM sample object
     op = bpy.ops.tbb.import_openfoam_file
-    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_OPENFOAM, name=utils.PREVIEW_OBJ_NAME)  == {'FINISHED'}
-    
+    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_OPENFOAM, name=utils.PREVIEW_OBJ_NAME) == {'FINISHED'}
+
     # Select preview object
     obj = utils.get_preview_object()
 
@@ -40,7 +40,7 @@ def test_computed_min_max_values_openfoam():
 
     # Test computed values
     point_data = utils.get_point_data_openfoam(True)
-    for name, type, dim in  zip(point_data.names, point_data.types, point_data.dimensions):
+    for name, type, dim in zip(point_data.names, point_data.types, point_data.dimensions):
         data = file_data.vars.get(name, prop='RANGE')["global"]
 
         if type == 'SCALAR':
@@ -63,7 +63,7 @@ def test_computed_min_max_values_openfoam():
 def test_compute_ranges_point_data_values_telemac_2d():
     # Import TELEMAC 2D sample object
     op = bpy.ops.tbb.import_telemac_file
-    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_2D, name=utils.PREVIEW_OBJ_NAME)  == {'FINISHED'}
+    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_2D, name=utils.PREVIEW_OBJ_NAME) == {'FINISHED'}
 
     # Select preview object
     obj = utils.get_preview_object()
@@ -84,13 +84,12 @@ def test_computed_min_max_values_telemac_2d():
 
     # Test computed values
     point_data = utils.get_point_data_telemac('2D')
-    for name, type, dim in  zip(point_data.names, point_data.types, point_data.dimensions):
+    for name in point_data.names:
         data = file_data.vars.get(name, prop='RANGE')["global"]
 
-        if type == 'SCALAR':
-            ground_truth = {"max": vars[name]["max"], "min": vars[name]["min"]}
-            assert data["min"] == ground_truth["min"]
-            assert data["max"] == ground_truth["max"]
+        ground_truth = {"max": vars[name]["max"], "min": vars[name]["min"]}
+        assert data["min"] == ground_truth["min"]
+        assert data["max"] == ground_truth["max"]
 
 
 # -------------------------- #
@@ -101,7 +100,7 @@ def test_computed_min_max_values_telemac_2d():
 def test_compute_ranges_point_data_values_telemac_3d():
     # Import TELEMAC 3D sample object
     op = bpy.ops.tbb.import_telemac_file
-    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_3D, name=utils.PREVIEW_OBJ_NAME)  == {'FINISHED'}
+    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_3D, name=utils.PREVIEW_OBJ_NAME) == {'FINISHED'}
 
     # Select preview object
     obj = utils.get_preview_object()
@@ -122,10 +121,9 @@ def test_computed_min_max_values_telemac_3d():
 
     # Test computed values
     point_data = utils.get_point_data_telemac('3D')
-    for name, type, dim in  zip(point_data.names, point_data.types, point_data.dimensions):
+    for name in point_data.names:
         data = file_data.vars.get(name, prop='RANGE')["global"]
 
-        if type == 'SCALAR':
-            ground_truth = {"max": vars[name]["max"], "min": vars[name]["min"]}
-            assert data["min"] == ground_truth["min"]
-            assert data["max"] == ground_truth["max"]
+        ground_truth = {"max": vars[name]["max"], "min": vars[name]["min"]}
+        assert data["min"] == ground_truth["min"]
+        assert data["max"] == ground_truth["max"]

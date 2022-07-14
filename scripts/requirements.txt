@@ -1,5 +1,4 @@
-numpy
-pytest
-matplotlib
 pyvista >= 0.35.0
+matplotlib
+pytest
 blender-addon-tester

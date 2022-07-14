@@ -52,14 +52,18 @@ def install(package: str, force: bool = False) -> None:
     subprocess.check_call(args)
 
 
-def install_requirements(requirements: str) -> None:
+def install_requirements(requirements: str, force: bool = False) -> None:
     """
     Install python packages from the given requirements file.
 
     Args:
         requirements (str): path to the requirements file.
+        force (bool, optional): force reinstall. Defaults to False.
     """
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", requirements])
+    args = [sys.executable, "-m", "pip", "install", "-r", requirements, "-U"]
+    if force:
+        args.append("--force-reinstall")
+    subprocess.check_call(args)
 
 
 def install_local_package(path: str, force: bool = False) -> None:

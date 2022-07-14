@@ -29,9 +29,10 @@ try:
     import pyvista
     import matplotlib
     import blender_addon_tester
-except Exception:
+except Exception as e:
+    print("Missing module...", e)
     try:
-        install_requirements(os.path.join(os.path.abspath("./scripts"), "requirements.txt"))
+        install_requirements(os.path.join(os.path.abspath("./scripts"), "requirements.txt"), force=True)
     except Exception as e:
         print(e)
         sys.exit(1)

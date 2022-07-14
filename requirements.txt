@@ -1,6 +1,7 @@
 pyvista >= 0.35.1
 pytest
 blender-addon-tester
+matplotlib
 pre-commit
 pyenchant
 myst-parser
