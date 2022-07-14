@@ -3,6 +3,10 @@
     "is_3d": false,
     "nb_planes": 0,
     "nb_time_points": 11,
+    "preview": {
+        "name": "VELOCITY U",
+        "time_point": 5
+    },
     "mesh": {
         "edges": 8941,
         "faces": 5742,
@@ -10,6 +14,7 @@
         "triangles": 5742
     },
     "variables": {
+        "time_point": 5,
         "VELOCITY U": {
             "mean": 0.2148579548180691,
             "min": 0.0,

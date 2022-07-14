@@ -3,6 +3,10 @@
     "is_3d": true,
     "nb_planes": 3,
     "nb_time_points": 11,
+    "preview": {
+        "name": "VELOCITY U",
+        "time_point": 5
+    },
     "mesh": {
         "edges": 13601,
         "faces": 8978,
@@ -10,6 +14,7 @@
         "triangles": 8978
     },
     "variables": {
+        "time_point": 5,
         "ELEVATION Z": {
             "spmv": 1.3966979898702376,
             "min": 0.0,
@@ -36,9 +41,9 @@
         }
     },
     "point_data_sample": {
-        "name": "VELOCITY V 2",
+        "name": "VELOCITY V",
         "vertex_id": 3007,
-        "plane_id": 2,
+        "plane_id": 1,
         "values": [
             0,
             0.5215196,

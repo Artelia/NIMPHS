@@ -20,7 +20,7 @@ from helpers.utils import clean_all_objects
 def test_normal_preview_object_openfoam():
     # Import OpenFOAM sample object
     op = bpy.ops.tbb.import_openfoam_file
-    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_OPENFOAM, name=utils.PREVIEW_OBJ_NAME)  == {'FINISHED'}
+    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_OPENFOAM, name=utils.PREVIEW_OBJ_NAME) == {'FINISHED'}
 
     obj = utils.get_preview_object()
     assert obj is not None
@@ -133,10 +133,12 @@ def test_geometry_triangulated_decompose_polyhedra_preview_object_openfoam():
 
 def test_preview_point_data():
     obj = utils.get_preview_object()
+    sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
+    var_name = sample["preview"]["name"]
 
     # Set point data to preview
-    obj.tbb.settings.preview_time_point = 2
-    obj.tbb.settings.preview_point_data = json.dumps(utils.get_point_data_openfoam(False).get("nut"))
+    obj.tbb.settings.preview_time_point = sample["preview"]["time_point"]
+    obj.tbb.settings.preview_point_data = json.dumps(utils.get_point_data_openfoam(False).get(var_name))
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {'FINISHED'}
 
@@ -145,6 +147,7 @@ def test_point_data_preview_object_openfoam():
     # Check preview object
     obj = utils.get_preview_object()
     sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
+    var_name = sample["preview"]["name"]
     assert obj is not None
 
     # Check number vertex colors arrays
@@ -152,15 +155,18 @@ def test_point_data_preview_object_openfoam():
     assert len(vertex_colors) == 1
 
     # Test point data values
-    data = vertex_colors.get("nut, None, None", None)
+    data = vertex_colors.get(f"{var_name}, None, None", None)
     assert data is not None
 
-    ground_truth = sample["variables"]["skip_zero_false"]["nut"]["mean"]
-    assert abs(utils.compute_mean_value(data, obj, 0) - ground_truth) < utils.PDV_THRESHOLD
+    ground_truth = sample["variables"]["skip_zero_false"][var_name]["mean"]
+    utils.compare_point_data_value(utils.compute_mean_value(data, obj, 0) - ground_truth, var_name)
 
 
 @pytest.mark.usefixtures("clean_all_objects")
 def test_preview_material_openfoam():
+    sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
+    var_name = sample["preview"]["name"]
+
     # Test preview material
     prw_mat = bpy.data.materials.get("TBB_OpenFOAM_preview_material", None)
     assert prw_mat is not None
@@ -171,7 +177,7 @@ def test_preview_material_openfoam():
     assert principled_bsdf_node is not None
     vertex_color_node = prw_mat.node_tree.nodes.get("TBB_OpenFOAM_preview_material_vertex_color", None)
     assert vertex_color_node is not None
-    assert vertex_color_node.layer_name == "nut, None, None"
+    assert vertex_color_node.layer_name == f"{var_name}, None, None"
 
     # Test links
     link = prw_mat.node_tree.links[-1]
@@ -189,14 +195,16 @@ def test_preview_material_openfoam():
 def test_preview_telemac_2d():
     # Import TELEMAC 2D sample object
     op = bpy.ops.tbb.import_telemac_file
-    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_2D, name=utils.PREVIEW_OBJ_NAME)  == {'FINISHED'}
+    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_2D, name=utils.PREVIEW_OBJ_NAME) == {'FINISHED'}
 
     obj = utils.get_preview_object()
+    sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_2D)
+    var_name = sample["preview"]["name"]
     assert obj is not None
 
     # Set preview settings
     obj.tbb.settings.preview_time_point = 5
-    obj.tbb.settings.preview_point_data = json.dumps(utils.get_point_data_telemac('2D').get("VELOCITY U"))
+    obj.tbb.settings.preview_point_data = json.dumps(utils.get_point_data_telemac('2D').get(var_name))
 
     assert bpy.ops.tbb.telemac_preview('EXEC_DEFAULT') == {'FINISHED'}
 
@@ -216,18 +224,19 @@ def test_geometry_preview_object_telemac_2d():
 def test_point_data_preview_object_telemac_2d():
     obj = utils.get_preview_object()
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_2D)
+    var_name = sample["preview"]["name"]
 
     for child in obj.children:
         # Check number vertex colors arrays
         vertex_colors = child.data.vertex_colors
         assert len(vertex_colors) == 1
 
-        velocity_u = vertex_colors.get("VELOCITY U, None, None", None)
-        assert velocity_u is not None
+        data = vertex_colors.get(f"{var_name}, None, None", None)
+        assert data is not None
 
         # Test point data values
-        ground_truth = sample["variables"]["VELOCITY U"]["mean"]
-        assert abs(utils.compute_mean_value(velocity_u, child, 0) - ground_truth) < utils.PDV_THRESHOLD
+        ground_truth = sample["variables"][var_name]["mean"]
+        utils.compare_point_data_value(utils.compute_mean_value(data, child, 0) - ground_truth, var_name)
 
 
 # -------------------------- #
@@ -238,14 +247,16 @@ def test_point_data_preview_object_telemac_2d():
 def test_preview_telemac_3d():
     # Import TELEMAC 3D sample object
     op = bpy.ops.tbb.import_telemac_file
-    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_3D, name=utils.PREVIEW_OBJ_NAME)  == {'FINISHED'}
+    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_3D, name=utils.PREVIEW_OBJ_NAME) == {'FINISHED'}
 
     obj = utils.get_preview_object()
+    sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_2D)
+    var_name = sample["preview"]["name"]
     assert obj is not None
 
     # Set preview settings
     obj.tbb.settings.preview_time_point = 5
-    obj.tbb.settings.preview_point_data = json.dumps(utils.get_point_data_telemac('3D').get("VELOCITY U"))
+    obj.tbb.settings.preview_point_data = json.dumps(utils.get_point_data_telemac('3D').get(var_name))
 
     assert bpy.ops.tbb.telemac_preview('EXEC_DEFAULT') == {'FINISHED'}
 
@@ -265,6 +276,7 @@ def test_geometry_preview_object_telemac_3d():
 def test_point_data_preview_object_telemac_3d():
     obj = utils.get_preview_object()
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_3D)
+    var_name = sample["preview"]["name"]
 
     # SPMV = Sum partial mean values
     spmv = 0.0
@@ -274,11 +286,11 @@ def test_point_data_preview_object_telemac_3d():
         vertex_colors = child.data.vertex_colors
         assert len(vertex_colors) == 1
 
-        velocity_u = vertex_colors.get("VELOCITY U, None, None", None)
-        assert velocity_u is not None
+        data = vertex_colors.get(f"{var_name}, None, None", None)
+        assert data is not None
 
         # Test point data values
-        spmv += utils.compute_mean_value(velocity_u, child, 0)
+        spmv += utils.compute_mean_value(data, child, 0)
 
-    ground_truth = sample["variables"]["VELOCITY U"]["spmv"]
-    assert abs(spmv - ground_truth) < utils.PDV_THRESHOLD
+    ground_truth = sample["variables"][var_name]["spmv"]
+    utils.compare_point_data_value(abs(spmv - ground_truth), var_name)

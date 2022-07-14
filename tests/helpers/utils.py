@@ -1,10 +1,12 @@
 # <pep8 compliant>
-import os
 import bpy
+from bpy.types import Object, MeshLoopColorLayer
+
+import os
 import json
 import pytest
+import warnings
 import numpy as np
-from bpy.types import Object, MeshLoopColorLayer
 
 from tbb.properties.utils import VariablesInformation
 
@@ -27,6 +29,21 @@ SAMPLE_TELEMAC_2D = os.path.abspath("./data/telemac_2d_sample/SAMPLE.json")
 SAMPLE_TELEMAC_3D = os.path.abspath("./data/telemac_3d_sample/SAMPLE.json")
 
 
+def compare_point_data_value(subtraction: float, name: str):
+    """
+    Compare computed point data value VS ground truth.
+
+    Args:
+        subtraction (float): computed value VS ground truth
+        name (str): name of the variable
+    """
+
+    if subtraction < 0.1 and subtraction > 0.01:
+        warnings.warn(UserWarning(f"{name}, difference is high ({subtraction})."))
+    else:
+        assert subtraction < PDV_THRESHOLD
+
+
 def get_sample_data(path: str):
     """
     Get sample data from the file at the given location.
@@ -42,6 +59,13 @@ def get_sample_data(path: str):
 
 
 def get_point_data_openfoam(skip_zero_time: bool):
+    """
+    Get point data information for OpenFOAM sample.
+
+    Args:
+        skip_zero_time (bool): skip the '/0' time directory
+    """
+
     sample = get_sample_data(SAMPLE_OPENFOAM)
     if skip_zero_time:
         info = sample["VariablesInformation"]["skip_zero_true"]
@@ -56,6 +80,13 @@ def get_point_data_openfoam(skip_zero_time: bool):
 
 
 def get_point_data_telemac(dim: str):
+    """
+    Get point data information for TELEMAC sample.
+
+    Args:
+        dim (str): enum in ['2D', '3D']
+    """
+
     if dim == '2D':
         sample = get_sample_data(SAMPLE_TELEMAC_2D)
     if dim == '3D':

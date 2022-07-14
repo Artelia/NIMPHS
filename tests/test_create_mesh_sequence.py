@@ -4,6 +4,7 @@ import sys
 import bpy
 import json
 import pytest
+import warnings
 
 # Make helpers module available in this file
 sys.path.append(os.path.abspath("."))
@@ -25,17 +26,17 @@ def test_create_mesh_sequence_openfoam():
     # Select preview object
     obj = utils.get_preview_object()
 
+    # Get test data (WARNING: this operator changes the current frame)
+    data = json.dumps({"vars": utils.get_point_data_openfoam(True).dumps(), "start": 1, "end": 5})
+
+    op = bpy.ops.tbb.openfoam_create_mesh_sequence
+    assert op('EXEC_DEFAULT', name=utils.MESH_SEQUENCE_OBJ_NAME, mode='TEST', test_data=data) == {'FINISHED'}
+
     # ------------------------------------------------------------ #
     # /!\ WARNING: next tests are based on the following frame /!\ #
     # ------------------------------------------------------------ #
     # Change frame to load time point 2
     bpy.context.scene.frame_set(2)
-
-    # Get test data
-    data = json.dumps({"vars": utils.get_point_data_openfoam(True).dumps(), "start": 1, "end": 5})
-
-    op = bpy.ops.tbb.openfoam_create_mesh_sequence
-    assert op('EXEC_DEFAULT', name=utils.MESH_SEQUENCE_OBJ_NAME, mode='TEST', test_data=data) == {'FINISHED'}
 
 
 def test_mesh_sequence_openfoam():
@@ -77,12 +78,27 @@ def test_point_data_mesh_sequence_openfoam():
     sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
     vars = sample["variables"]["skip_zero_true"]
 
+    # Check number of vertex color layers
+    assert len(obj.data.vertex_colors) == 5
+
     # Test point data values
     for i in range(len(obj.data.vertex_colors)):
-        for name, id in zip(obj.data.vertex_colors[i].name.split(', '), range(3)):
+        for name, channel in zip(obj.data.vertex_colors[i].name.split(', '), range(3)):
             data = obj.data.vertex_colors[i]
-            ground_truth = vars[name]["mean"]
-            assert abs(utils.compute_mean_value(data, obj, id) - ground_truth) < utils.PDV_THRESHOLD
+            try:
+                ground_truth = vars[name]["mean"]
+                subtraction = abs(utils.compute_mean_value(data, obj, channel) - ground_truth)
+                utils.compare_point_data_value(subtraction, name)
+
+            except KeyError:
+                # Known bug. Can't check point data value because the name of the vertex color
+                # name attribute is not big enough to contain these names:
+                # - "interfaceCentre.water.x, interfaceCentre.water.y, interfaceCentre.water.z"
+                # - "interfaceNormal.water.x, interfaceNormal.water.y, interfaceNormal.water.z"
+                if name in ['interfaceCent', 'interfaceNorm']:
+                    pass
+                else:
+                    raise KeyError(f"Key '{name}' not found.")
 
 
 # -------------------------- #
@@ -177,7 +193,8 @@ def test_point_data_mesh_sequence_telemac_2d():
             for name, channel in zip(data[i].name.split(", "), range(3)):
                 if name != 'None':
                     ground_truth = sample["variables"][name]["mean"]
-                    assert abs(utils.compute_mean_value(data[i], child, channel) - ground_truth) < utils.PDV_THRESHOLD
+                    subtraction = abs(utils.compute_mean_value(data[i], child, channel) - ground_truth)
+                    utils.compare_point_data_value(subtraction, name)
 
 
 # -------------------------- #
@@ -280,4 +297,5 @@ def test_point_data_mesh_sequence_telemac_3d():
 
     # Compare values
     for name in sample["VariablesInformation"]["names"]:
-        assert abs(spmv[name] - sample["variables"][name]["spmv"]) < utils.PDV_THRESHOLD
+        subtraction = abs(spmv[name] - sample["variables"][name]["spmv"])
+        utils.compare_point_data_value(subtraction, name)

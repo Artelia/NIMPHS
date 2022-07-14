@@ -65,7 +65,19 @@ class TBB_OT_TelemacCreateStreamingSequence(TBB_CreateStreamingSequence):
 
         # "Copy" file data
         context.scene.tbb.file_data["ops"] = context.scene.tbb.file_data[obj.tbb.uid]
-        self.max = context.scene.tbb.file_data["ops"].nb_time_points - 1
+        self.max = context.scene.tbb.file_data["ops"].nb_time_points
+
+        # -------------------------------- #
+        # /!\ For testing purpose only /!\ #
+        # -------------------------------- #
+        if self.test_data != "":
+            import json
+
+            data = json.loads(self.test_data)
+            self.start = data["start"]
+            self.length = data["length"]
+
+            return {'FINISHED'}
 
         return context.window_manager.invoke_props_dialog(self)
 
@@ -93,6 +105,12 @@ class TBB_OT_TelemacCreateStreamingSequence(TBB_CreateStreamingSequence):
         selected = get_selected_object(context)
         if selected is None:
             return {'CANCELLED'}
+
+        # -------------------------------- #
+        # /!\ For testing purpose only /!\ #
+        # -------------------------------- #
+        if self.test_data != "":
+            self.invoke(context, None)
 
         obj = generate_telemac_sequence_obj(context, selected, self.name, self.start)
         obj.tbb.settings.telemac.s_sequence.shade_smooth = self.shade_smooth

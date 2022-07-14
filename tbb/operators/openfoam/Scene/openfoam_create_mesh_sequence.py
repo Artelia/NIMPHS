@@ -87,7 +87,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
             self.end = data["end"]
             self.start = data["start"]
             self.time_point = self.start
-            self.point_data.list = self.test_data
+            self.point_data.list = data["vars"]
             self.point_data.import_data = VariablesInformation(data["vars"]).length() > 0
 
             return {'FINISHED'}
