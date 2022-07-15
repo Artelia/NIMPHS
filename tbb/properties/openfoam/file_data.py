@@ -52,9 +52,6 @@ class TBB_OpenfoamFileData(TBB_FileData):
         self.update_data(self.time_point)
         self.init_variables_information()
 
-    def reset(self, file_path: str) -> None:
-        self.module = 'OpenFOAM'
-
     def copy(self, other: TBB_OpenfoamFileData) -> None:
         """
         Copy important information from the given instance of file data.

@@ -7,6 +7,8 @@ import logging
 log = logging.getLogger(__name__)
 
 from tbb.panels.utils import get_selected_object
+from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
+from tbb.properties.telemac.file_data import TBB_TelemacFileData
 
 
 class TBB_OT_EditFilePath(Operator, ImportHelper):
@@ -71,11 +73,24 @@ class TBB_OT_EditFilePath(Operator, ImportHelper):
         # Update file_path property
         obj.tbb.settings.file_path = self.filepath
 
+        try:
+
+            if obj.tbb.module == 'OpenFOAM':
+                file_data = TBB_OpenfoamFileData(self.filepath, obj.tbb.settings.openfoam.import_settings)
+
+            if obj.tbb.module == 'TELEMAC':
+                file_data = TBB_TelemacFileData(self.filepath)
+
+        except BaseException:
+            self.report({'WARNING'}, "An error occurred reading the new file")
+            return {'CANCELLED'}
+
         # Update file data
-        file_data = context.scene.tbb.file_data[obj.tbb.uid]
-        file_data.reset()
+        file_data.copy(context.scene.tbb.file_data[obj.tbb.uid])
+        context.scene.tbb.file_data[obj.tbb.uid] = file_data
 
         if context.area is not None:
             context.area.tag_redraw()
 
+        self.report({'INFO'}, "Path successfully updated")
         return {'FINISHED'}
