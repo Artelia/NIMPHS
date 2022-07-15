@@ -71,6 +71,11 @@ class TBB_OT_EditFilePath(Operator, ImportHelper):
         # Update file_path property
         obj.tbb.settings.file_path = self.filepath
 
+        # Update file data
+        file_data = context.scene.tbb.file_data[obj.tbb.uid]
+        file_data.reset()
+
         if context.area is not None:
             context.area.tag_redraw()
+
         return {'FINISHED'}

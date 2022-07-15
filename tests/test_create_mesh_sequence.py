@@ -23,7 +23,7 @@ def test_create_mesh_sequence_openfoam():
     assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_OPENFOAM, name=utils.PREVIEW_OBJ_NAME) == {'FINISHED'}
 
     # Select preview object
-    obj = utils.get_preview_object()
+    obj = utils.get_preview_object()  # noqa: F841
     sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
     vars = sample["variables"]["skip_zero_true"]
 
@@ -116,7 +116,7 @@ def test_create_mesh_sequence_telemac_2d():
     assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_2D, name=utils.PREVIEW_OBJ_NAME) == {'FINISHED'}
 
     # Select preview object
-    obj = utils.get_preview_object()
+    obj = utils.get_preview_object()  # noqa: F841
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_2D)
     vars = sample["variables"]
 
@@ -214,7 +214,7 @@ def test_create_mesh_sequence_telemac_3d():
     assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_3D, name=utils.PREVIEW_OBJ_NAME) == {'FINISHED'}
 
     # Select preview object
-    obj = utils.get_preview_object()
+    obj = utils.get_preview_object()  # noqa: F841
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_3D)
     vars = sample["variables"]
 

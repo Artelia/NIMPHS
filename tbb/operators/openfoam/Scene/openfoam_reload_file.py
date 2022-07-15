@@ -8,7 +8,6 @@ import time
 
 from tbb.panels.utils import get_selected_object
 from tbb.properties.utils import VariablesInformation
-from tbb.operators.openfoam.utils import load_openfoam_file
 from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
 
 
@@ -37,19 +36,19 @@ class TBB_OT_OpenfoamReloadFile(Operator):
 
         obj = get_selected_object(context)
         io_settings = obj.tbb.settings.openfoam.import_settings
-        success, file_reader = load_openfoam_file(obj.tbb.settings.file_path, io_settings.case_type,
-                                                  io_settings.decompose_polyhedra)
 
-        if not success:
-            self.report({'WARNING'}, "The chosen file can't be read")
-            return {'FINISHED'}
+        try:
+            file_data = TBB_OpenfoamFileData(obj.tbb.settings.file_path, io_settings)
+        except BaseException:
+            self.report({'WARNING'}, "An error occurred reading the file")
+            return {'CANCELLED'}
 
         # Make sure the object still have an identifier
         if obj.tbb.uid == "":
             obj.tbb.uid = str(time.time())
 
-        # Generate new file data and load saved variables information
-        context.scene.tbb.file_data[obj.tbb.uid] = TBB_OpenfoamFileData(file_reader, io_settings)
+        # Generate new file data and load saved information
+        context.scene.tbb.file_data[obj.tbb.uid] = file_data
         if obj.tbb.settings.point_data.save != "":
             context.scene.tbb.file_data[obj.tbb.uid].vars = VariablesInformation(obj.tbb.settings.point_data.save)
 

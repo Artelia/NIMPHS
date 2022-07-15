@@ -29,7 +29,7 @@ class TBB_PT_TelemacStreamingSequence(TBB_StreamingSequenceSettingsPanel):
             bool: state
         """
 
-        return super().poll(context, "TELEMAC")
+        return super().poll(context, 'TELEMAC')
 
     def draw(self, context: Context) -> None:
         """

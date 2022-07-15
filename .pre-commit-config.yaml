@@ -11,8 +11,8 @@ repos:
   rev: v2.1.0
   hooks:
   - id: codespell
+    exclude: data/
     args: [
-      "cicd_tests tests scripts docs",
       "*.py *.rst *.md",
     ]
 
@@ -20,7 +20,7 @@ repos:
   rev: 6.1.1
   hooks:
   - id: pydocstyle
-    exclude: tbb/properties/telemac/serafin.py|tbb/auto_load.py|tests/
+    exclude: tbb/properties/telemac/serafin.py|tbb/auto_load.py|tests/|data/
     args: [
       "-e"
     ]

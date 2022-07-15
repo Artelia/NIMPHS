@@ -22,7 +22,7 @@ def test_compute_ranges_point_data_values_openfoam():
     assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_OPENFOAM, name=utils.PREVIEW_OBJ_NAME) == {'FINISHED'}
 
     # Select preview object
-    obj = utils.get_preview_object()
+    obj = utils.get_preview_object()  # noqa: F841
 
     op = bpy.ops.tbb.compute_ranges_point_data_values
     assert op('EXEC_DEFAULT', mode='TEST', test_data=utils.get_point_data_openfoam(True).dumps()) == {'FINISHED'}
@@ -66,7 +66,7 @@ def test_compute_ranges_point_data_values_telemac_2d():
     assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_2D, name=utils.PREVIEW_OBJ_NAME) == {'FINISHED'}
 
     # Select preview object
-    obj = utils.get_preview_object()
+    obj = utils.get_preview_object()  # noqa: F841
 
     op = bpy.ops.tbb.compute_ranges_point_data_values
     assert op('EXEC_DEFAULT', mode='TEST', test_data=utils.get_point_data_telemac('2D').dumps()) == {'FINISHED'}
@@ -103,7 +103,7 @@ def test_compute_ranges_point_data_values_telemac_3d():
     assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_3D, name=utils.PREVIEW_OBJ_NAME) == {'FINISHED'}
 
     # Select preview object
-    obj = utils.get_preview_object()
+    obj = utils.get_preview_object()  # noqa: F841
 
     op = bpy.ops.tbb.compute_ranges_point_data_values
     assert op('EXEC_DEFAULT', mode='TEST', test_data=utils.get_point_data_telemac('3D').dumps()) == {'FINISHED'}

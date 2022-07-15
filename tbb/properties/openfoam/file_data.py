@@ -1,9 +1,12 @@
 # <pep8 compliant>
+from __future__ import annotations
 import logging
 log = logging.getLogger(__name__)
 
 import numpy as np
+from pathlib import Path
 from typing import Union
+from copy import deepcopy
 from pyvista import POpenFOAMReader, UnstructuredGrid, PolyData
 
 from tbb.properties.shared.file_data import TBB_FileData
@@ -15,25 +18,56 @@ class TBB_OpenfoamFileData(TBB_FileData):
 
     #: UnstructuredGrid: 'internalMesh' from data
     raw_mesh: UnstructuredGrid = None
+
     #: PolyData: lest generated mesh
     mesh: PolyData = None
+
     #: bool: Indicate
     tiangulate: bool = False
+
     #: int: current time point
     time_point: int = 0
 
-    def __init__(self, file: POpenFOAMReader, io_settings: Union[TBB_OpenfoamImportSettings, None]) -> None:
-        """Init method of the class."""
+    def __init__(self, file_path: str, settings: Union[TBB_OpenfoamImportSettings, None]) -> None:
+        """
+        Init method of the class.
 
-        super().__init__()
+        Args:
+            file_path (str): file to the path to load
+            settings (Union[TBB_OpenfoamImportSettings, None]): OpenFOAM import settings
+        """
+        super().__init__()  # Must be called first (otherwise it will erase self.file content)
 
-        self.module = "OpenFOAM"
+        # Try to load the given file
+        if not self.load_file(file_path):
+            raise IOError(f"Unable to read the given file {file_path}")
+
+        # Set common settings
         self.time_point = 0
-        self.file = file
+        self.module = 'OpenFOAM'
 
         # Load data
-        self.update_data(self.time_point, io_settings=io_settings)
+        self.update_import_settings(settings)
+        self.update_data(self.time_point)
         self.init_variables_information()
+
+    def reset(self, file_path: str) -> None:
+        self.module = 'OpenFOAM'
+
+    def copy(self, other: TBB_OpenfoamFileData) -> None:
+        """
+        Copy import information from the given instance of file data.
+
+        Args:
+            other (TBB_OpenfoamFileData): OpenFOAM file data
+        """
+
+        self.module = other.module
+        self.nb_vars = other.nb_vars
+        self.nb_time_points = other.nb_time_points
+        self.vars = deepcopy(other.vars)
+        self.triangulate = other.triangulate
+        self.time_point = other.time_point
 
     def get_point_data(self, id: Union[str, int]) -> np.ndarray:
         """
@@ -50,7 +84,7 @@ class TBB_OpenfoamFileData(TBB_FileData):
 
         return self.raw_mesh.get_array(name=id, preference='point')
 
-    def update_data(self, time_point: int, io_settings: Union[TBB_OpenfoamImportSettings, None] = None) -> None:
+    def update_data(self, time_point: int) -> None:
         """
         Update file data.
 
@@ -58,18 +92,6 @@ class TBB_OpenfoamFileData(TBB_FileData):
             time_point (int): time point to read
             io_settings (Union[TBB_OpenfoamImportSettings, None], optional): import settings. Defaults to None.
         """
-
-        # Update import settings
-        if io_settings is not None:
-            self.triangulate = io_settings.triangulate
-            self.file.case_type = io_settings.case_type
-            self.file.skip_zero_time = io_settings.skip_zero_time
-            self.file.decompose_polyhedra = io_settings.decompose_polyhedra
-        else:
-            self.triangulate = True
-            self.file.skip_zero_time = True
-            self.file.decompose_polyhedra = True
-            self.file.case_type = 'reconstructed'
 
         # The skip_zero_time property can change a lot of things, so we have to update the following data too
         self.nb_time_points = self.file.number_time_points
@@ -88,6 +110,25 @@ class TBB_OpenfoamFileData(TBB_FileData):
         except ValueError:
             log.critical("Caught exception during update", exc_info=1)
             return
+
+    def update_import_settings(self, settings: Union[TBB_OpenfoamImportSettings, None]) -> None:
+        """
+        Update import settings. If none provided, set default settings.
+
+        Args:
+            settings (Union[TBB_OpenfoamImportSettings, None]): OpenFOAM import settings
+        """
+
+        if settings is not None:
+            self.triangulate = settings.triangulate
+            self.file.case_type = settings.case_type
+            self.file.skip_zero_time = settings.skip_zero_time
+            self.file.decompose_polyhedra = settings.decompose_polyhedra
+        else:
+            self.triangulate = True
+            self.file.skip_zero_time = True
+            self.file.decompose_polyhedra = True
+            self.file.case_type = 'reconstructed'
 
     def is_ok(self) -> bool:
         """
@@ -108,3 +149,25 @@ class TBB_OpenfoamFileData(TBB_FileData):
             type = 'SCALAR' if len(data.shape) == 1 else 'VECTOR'
             dim = 1 if len(data.shape) == 1 else data.shape[1]
             self.vars.append(name, unit="", range=None, type=type, dim=dim)
+
+    def load_file(self, file_path: str) -> bool:
+        """
+        Load an OpenFOAM file.
+
+        Args:
+            file_path (str): path to the file to load
+
+        Returns:
+            bool: success
+        """
+
+        path = Path(file_path)
+        if not path.exists():
+            log.error(f"Unknown path: {file_path}")
+            return False
+        elif path.is_dir():
+            log.error("Cannot open files from directories")
+            return False
+
+        self.file = POpenFOAMReader(file_path)
+        return True

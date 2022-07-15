@@ -9,9 +9,8 @@ log = logging.getLogger(__name__)
 import time
 import numpy as np
 from typing import Union
-from pathlib import Path
 from copy import deepcopy
-from pyvista import POpenFOAMReader, UnstructuredGrid
+from pyvista import UnstructuredGrid
 
 from tbb.properties.utils import VariablesInformation
 from tbb.properties.openfoam.clip import TBB_OpenfoamClipProperty
@@ -96,7 +95,8 @@ def generate_mesh_for_sequence(file_data: TBB_OpenfoamFileData,
     """
 
     # Generate mesh data
-    file_data.update_data(op.time_point, op.import_settings)
+    file_data.update_import_settings(op.import_settings)
+    file_data.update_data(op.time_point)
     vertices, faces, file_data.mesh = generate_mesh_data(file_data, clip=op.clip)
     if file_data.mesh is None:
         return None
@@ -212,16 +212,16 @@ def generate_openfoam_streaming_sequence_obj(context: Context, obj: Object, name
     dest.skip_zero_time = data.skip_zero_time
     dest.decompose_polyhedra = data.decompose_polyhedra
 
-    # Load file data
+    # Copy file data
     sequence.tbb.uid = str(time.time())
-    success, file_reader = load_openfoam_file(obj.tbb.settings.file_path)
-    if not success:
-        log.error(f"Unable to open file {obj.tbb.settings.file_path}", exc_info=1)
-        raise IOError(f"Unable to open file {obj.tbb.settings.file_path}")
+    try:
+        file_data = TBB_OpenfoamFileData(obj.tbb.settings.file_path, data)
+    except BaseException:
+        return None
 
-    context.scene.tbb.file_data[sequence.tbb.uid] = TBB_OpenfoamFileData(file_reader, data)
-    # Copy current variable information
-    context.scene.tbb.file_data[sequence.tbb.uid].vars = deepcopy(context.scene.tbb.file_data[obj.tbb.uid].vars)
+    # Copy file data
+    file_data.copy(context.scene.tbb.file_data[obj.tbb.uid])
+    context.scene.tbb.file_data[sequence.tbb.uid] = file_data
 
     return sequence
 
@@ -399,7 +399,8 @@ def update_openfoam_streaming_sequence(scene: Scene, obj: Object, time_point: in
     file_data = scene.tbb.file_data[obj.tbb.uid]
 
     if file_data is not None:
-        file_data.update_data(time_point, io_settings)
+        file_data.update_import_settings(io_settings)
+        file_data.update_data(time_point)
         vertices, faces, file_data.mesh = generate_mesh_data(file_data, clip=obj.tbb.settings.openfoam.clip)
 
         bmesh = obj.data
@@ -422,41 +423,6 @@ def update_openfoam_streaming_sequence(scene: Scene, obj: Object, time_point: in
             for var in selected.names:
                 new_information.append(data=file_data.vars.get(var))
             point_data.list = new_information.dumps()
-
-
-def load_openfoam_file(file_path: str, case_type: str = 'reconstructed',
-                       decompose_polyhedra: bool = False) -> tuple[bool, Union[POpenFOAMReader, None]]:
-    """
-    Load an OpenFOAM file and return the file_reader. Also returns if it succeeded to read.
-
-    Args:
-        file_path (str): path to the file
-        decompose_polyhedra (bool, optional): whether polyhedra are to be decomposed when read.\
-            If `True`, decompose polyhedra into tetrahedra and pyramids. Defaults to `False`.
-        case_type (str, optional): indicate whether decomposed mesh or reconstructed mesh should be read. \
-            If ``'decomposed'``, decomposed mesh should be read. Defaults to `reconstructed`.
-
-    Returns:
-        tuple[bool, Union[POpenFOAMReader, None]]: success, the file reader
-    """
-
-    file = Path(file_path)
-    if not file.exists():
-        log.error(f"Unknown path: {file_path}")
-        return False, None
-    elif file.is_dir():
-        log.error("Cannot open files from directories")
-        return False, None
-
-    if case_type in ['reconstructed', 'decomposed']:
-        file_reader = POpenFOAMReader(file_path)
-        file_reader.case_type = case_type
-    else:
-        log.error(f"Unknown case_type: {case_type}")
-        return False, None
-
-    file_reader.decompose_polyhedra = decompose_polyhedra
-    return True, file_reader
 
 
 # Code taken from the Stop-motion-OBJ addon

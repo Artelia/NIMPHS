@@ -12,33 +12,27 @@ class TBB_FileData():
 
     #: str: Name of the module
     module: str = ''
+
     #: Union[Serafin, POpenFOAMReader]: File reader
     file: Union[Serafin, POpenFOAMReader] = None
+
     #: int: Number of available variables
     nb_vars: int = 0
+
     #: int: Number of readable time points
     nb_time_points: int = 0
+
     #: VariablesInformation: Information on variables
     vars: VariablesInformation = None
 
     def __init__(self) -> None:
         """Init method of the class."""
 
-        self.module = ""
+        self.module = ''
         self.file = None
         self.nb_vars = 0
         self.nb_time_points = 0
         self.vars = VariablesInformation()
-
-    def get_point_data(self, _id: Union[str, int]) -> np.ndarray:
-        """
-        Get point data from the given id.
-
-        Args:
-            _id (Union[str, int]): identifier of the variable from which to get data
-        """
-
-        pass
 
     def update_var_range(self, name: str, shape: str, scope: str = 'LOCAL',
                          data: Union[np.ndarray, tuple, None] = None) -> None:
@@ -79,13 +73,3 @@ class TBB_FileData():
         # Update global information
         if scope == 'GLOBAL':
             self.vars.ranges[id][scope.lower()] = data
-
-    def is_ok(self) -> bool:
-        """
-        Check if file data is up (data are not None or empty).
-
-        Returns:
-            bool: ``True`` if ok
-        """
-
-        pass
