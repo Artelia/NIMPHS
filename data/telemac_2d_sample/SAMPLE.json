@@ -37,19 +37,19 @@
             "mean": 0.5015619112950673,
             "min": 0.0,
             "max": 1.0,
-            "unit": ""
+            "unit": "NONE"
         },
         "ANALYTIC SOL U": {
             "mean": 0.36766125498385516,
             "min": 0.0,
             "max": 6.254727840423584,
-            "unit": ""
+            "unit": "NONE"
         },
         "ANALYTIC SOL V": {
             "mean": 1.0,
             "min": 0.0,
             "max": 0.0,
-            "unit": ""
+            "unit": "NONE"
         }
     },
     "point_data_sample": {
@@ -91,9 +91,9 @@
             "M/S",
             "M/S",
             "M",
-            "",
-            "",
-            ""
+            "NONE",
+            "NONE",
+            "NONE"
         ]
     }
 }

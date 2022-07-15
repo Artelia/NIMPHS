@@ -4,7 +4,6 @@ import sys
 import bpy
 import json
 import pytest
-import warnings
 
 # Make helpers module available in this file
 sys.path.append(os.path.abspath("."))
@@ -25,9 +24,11 @@ def test_create_mesh_sequence_openfoam():
 
     # Select preview object
     obj = utils.get_preview_object()
+    sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
+    vars = sample["variables"]["skip_zero_true"]
 
     # Get test data (WARNING: this operator changes the current frame)
-    data = json.dumps({"vars": utils.get_point_data_openfoam(True).dumps(), "start": 1, "end": 5})
+    data = json.dumps({"vars": utils.get_point_data_openfoam(True).dumps(), "start": 1, "end": vars["time_point"] + 1})
 
     op = bpy.ops.tbb.openfoam_create_mesh_sequence
     assert op('EXEC_DEFAULT', name=utils.MESH_SEQUENCE_OBJ_NAME, mode='TEST', test_data=data) == {'FINISHED'}
@@ -35,8 +36,8 @@ def test_create_mesh_sequence_openfoam():
     # ------------------------------------------------------------ #
     # /!\ WARNING: next tests are based on the following frame /!\ #
     # ------------------------------------------------------------ #
-    # Change frame to load time point 2
-    bpy.context.scene.frame_set(2)
+    # Change frame to load test time point
+    bpy.context.scene.frame_set(vars["time_point"])
 
 
 def test_mesh_sequence_openfoam():
@@ -44,18 +45,21 @@ def test_mesh_sequence_openfoam():
     obj = bpy.data.objects.get(utils.MESH_SEQUENCE_OBJ_NAME + "_sequence", None)
     assert obj is not None
 
+    sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
+    vars = sample["variables"]["skip_zero_true"]
+
     # Test mesh sequence (settings from Stop-Motion-OBJ)
     assert obj.mesh_sequence_settings.name == ""
     assert obj.mesh_sequence_settings.speed == 1.0
     assert obj.mesh_sequence_settings.fileName == ""
-    assert obj.mesh_sequence_settings.numMeshes == 5
+    assert obj.mesh_sequence_settings.startFrame == 1
+    assert obj.mesh_sequence_settings.numMeshes == vars["time_point"] + 1
     assert obj.mesh_sequence_settings.loaded is True
     assert obj.mesh_sequence_settings.meshNames == ""
-    assert obj.mesh_sequence_settings.startFrame == 1
     assert obj.mesh_sequence_settings.frameMode == '4'
     assert obj.mesh_sequence_settings.initialized is True
     assert obj.mesh_sequence_settings.isImported is False
-    assert obj.mesh_sequence_settings.numMeshesInMemory == 5
+    assert obj.mesh_sequence_settings.numMeshesInMemory == vars["time_point"] + 1
     assert obj.mesh_sequence_settings.meshNameArray is not None
     assert obj.mesh_sequence_settings.perFrameMaterial is False
     assert obj.mesh_sequence_settings.streamDuringPlayback is True
@@ -113,15 +117,17 @@ def test_create_mesh_sequence_telemac_2d():
 
     # Select preview object
     obj = utils.get_preview_object()
+    sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_2D)
+    vars = sample["variables"]
+
+    # Get test data
+    data = json.dumps({"vars": utils.get_point_data_telemac('2D').dumps(), "start": 1, "end": vars["time_point"] + 1})
 
     # ------------------------------------------------------------ #
     # /!\ WARNING: next tests are based on the following frame /!\ #
     # ------------------------------------------------------------ #
-    # Change frame to load time point 8
-    bpy.context.scene.frame_set(8)
-
-    # Get test data
-    data = json.dumps({"vars": utils.get_point_data_telemac('2D').dumps(), "start": 0, "end": 6})
+    # Change frame to start mesh sequence at frame n°1
+    bpy.context.scene.frame_set(1)
 
     op = bpy.ops.tbb.telemac_create_mesh_sequence
     assert op('EXEC_DEFAULT', name=utils.MESH_SEQUENCE_OBJ_NAME, mode='TEST', test_data=data) == {'FINISHED'}
@@ -133,11 +139,8 @@ def test_mesh_sequence_telemac_2d():
     assert obj is not None
     assert len(obj.children) == 2
 
-    # ------------------------------------------------------------ #
-    # /!\ WARNING: next tests are based on the following frame /!\ #
-    # ------------------------------------------------------------ #
-    # Change frame to load time point 13
-    bpy.context.scene.frame_set(13)
+    sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_2D)
+    vars = sample["variables"]
 
     # Get file_data
     file_data = bpy.context.scene.tbb.file_data[obj.tbb.uid]
@@ -161,10 +164,7 @@ def test_mesh_sequence_telemac_2d():
 
     # Test sequence data (shape_keys)
     for child in obj.children:
-        assert len(child.data.shape_keys.key_blocks) == 6
-
-    # Disable updates for this sequence object during the next tests
-    obj.tbb.settings.point_data.import_data = False
+        assert len(child.data.shape_keys.key_blocks) == vars["time_point"]
 
 
 def test_geometry_mesh_sequence_telemac_2d():
@@ -182,6 +182,12 @@ def test_geometry_mesh_sequence_telemac_2d():
 def test_point_data_mesh_sequence_telemac_2d():
     obj = bpy.data.objects.get(utils.MESH_SEQUENCE_OBJ_NAME + "_sequence", None)
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_2D)
+
+    # ------------------------------------------------------------ #
+    # /!\ WARNING: next tests are based on the following frame /!\ #
+    # ------------------------------------------------------------ #
+    # Change frame to load test time point
+    bpy.context.scene.frame_set(sample["variables"]["time_point"])
 
     # Test point data values
     for child in obj.children:
@@ -209,15 +215,17 @@ def test_create_mesh_sequence_telemac_3d():
 
     # Select preview object
     obj = utils.get_preview_object()
+    sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_3D)
+    vars = sample["variables"]
+
+    # Get test data
+    data = json.dumps({"vars": utils.get_point_data_telemac('3D').dumps(), "start": 1, "end": vars["time_point"] + 1})
 
     # ------------------------------------------------------------ #
     # /!\ WARNING: next tests are based on the following frame /!\ #
     # ------------------------------------------------------------ #
-    # Change frame to load time point 8
-    bpy.context.scene.frame_set(8)
-
-    # Get test data
-    data = json.dumps({"vars": utils.get_point_data_telemac('3D').dumps(), "start": 0, "end": 6})
+    # Change frame to start mesh sequence at frame n°1
+    bpy.context.scene.frame_set(1)
 
     op = bpy.ops.tbb.telemac_create_mesh_sequence
     assert op('EXEC_DEFAULT', name=utils.MESH_SEQUENCE_OBJ_NAME, mode='TEST', test_data=data) == {'FINISHED'}
@@ -226,14 +234,10 @@ def test_create_mesh_sequence_telemac_3d():
 def test_mesh_sequence_telemac_3d():
     # Check sequence object
     obj = bpy.data.objects.get(utils.MESH_SEQUENCE_OBJ_NAME + "_sequence", None)
+    sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_3D)
+    vars = sample["variables"]
     assert obj is not None
-    assert len(obj.children) == 3
-
-    # ------------------------------------------------------------ #
-    # /!\ WARNING: next tests are based on the following frame /!\ #
-    # ------------------------------------------------------------ #
-    # Change frame to load time point 13
-    bpy.context.scene.frame_set(13)
+    assert len(obj.children) == sample["nb_planes"]
 
     # Get file_data
     file_data = bpy.context.scene.tbb.file_data[obj.tbb.uid]
@@ -257,10 +261,7 @@ def test_mesh_sequence_telemac_3d():
 
     # Test sequence data (shape_keys)
     for child in obj.children:
-        assert len(child.data.shape_keys.key_blocks) == 6
-
-    # Disable updates for this sequence object during the next tests
-    obj.tbb.settings.point_data.import_data = False
+        assert len(child.data.shape_keys.key_blocks) == vars["time_point"]
 
 
 def test_geometry_mesh_sequence_telemac_3d():
@@ -279,12 +280,18 @@ def test_point_data_mesh_sequence_telemac_3d():
     obj = bpy.data.objects.get(utils.MESH_SEQUENCE_OBJ_NAME + "_sequence", None)
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_3D)
 
+    # ------------------------------------------------------------ #
+    # /!\ WARNING: next tests are based on the following frame /!\ #
+    # ------------------------------------------------------------ #
+    # Change frame to load test time point
+    bpy.context.scene.frame_set(sample["variables"]["time_point"])
+
     # Initialize SPMV (Sum partial mean values)
     spmv = {}
     for name in sample["VariablesInformation"]["names"]:
         spmv[name] = 0.0
 
-    # Test point data values
+    # Compute SPMVs
     for child in obj.children:
         # Check number vertex colors arrays
         data = child.data.vertex_colors

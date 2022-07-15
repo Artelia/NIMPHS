@@ -13,6 +13,12 @@ class TBB_CreateSequence(Operator):
     register_cls = False
     is_custom_base_cls = True
 
+    #: TBB_PointDataSettings: Point data settings.
+    point_data: PointerProperty(type=TBB_PointDataSettings)
+
+    #: bpy.types.Object: Selected object
+    obj: Object = None
+
     # -------------------------------- #
     # /!\ For testing purpose only /!\ #
     # -------------------------------- #
@@ -58,12 +64,6 @@ class TBB_CreateSequence(Operator):
         description="Name to give to the generated sequence object",
         default="Mesh",  # noqa F821
     )
-
-    #: TBB_PointDataSettings: Point data settings.
-    point_data: PointerProperty(type=TBB_PointDataSettings)
-
-    #: bpy.types.Object: Selected object
-    obj: Object = None
 
     @classmethod
     def poll(self, context: Context) -> bool:

@@ -44,13 +44,13 @@ class TBB_CreateStreamingSequence(TBB_CreateSequence):
         default=False
     )
 
-    def invoke(self, context: Context, event: Event) -> set:
+    def invoke(self, _context: Context, _event: Event) -> set:
         """
         Prepare operators settings. Function triggered before the user can edit settings.
 
         Args:
-            context (Context): context
-            event (Event): event
+            _context (Context): context
+            _event (Event): event
 
         Returns:
             set: state of the operator
@@ -93,6 +93,7 @@ class TBB_CreateStreamingSequence(TBB_CreateSequence):
         Returns:
             set: state of the operator
         """
+
         from tbb.operators.utils import setup_streaming_sequence_object
 
         # Setup streaming sequence object

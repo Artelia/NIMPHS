@@ -4,7 +4,6 @@ import sys
 import bpy
 import json
 import pytest
-import warnings
 
 # Make helpers module available in this file
 sys.path.append(os.path.abspath("."))
@@ -25,15 +24,17 @@ def test_create_streaming_sequence_openfoam():
 
     # Select preview object
     obj = utils.get_preview_object()
+    sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
+    clip = sample["mesh"]["clipped"]
 
     # ------------------------------------------------------------ #
     # /!\ WARNING: next tests are based on the following frame /!\ #
     # ------------------------------------------------------------ #
-    # Change frame to load time point 11
-    bpy.context.scene.frame_set(11)
+    # Change frame to load test time point
+    bpy.context.scene.frame_set(clip["time_point"])
 
     # Set test data
-    data = json.dumps({"start": 1, "length": 20})
+    data = json.dumps({"start": 1, "length": sample["variables"]["skip_zero_true"]["nb_time_points"]})
 
     op = bpy.ops.tbb.openfoam_create_streaming_sequence
     state = op('EXEC_DEFAULT', name=utils.STREAMING_SEQUENCE_OBJ_NAME, shade_smooth=True, test_data=data)
@@ -55,8 +56,8 @@ def test_create_streaming_sequence_openfoam():
     assert file_data is not None
 
     obj.tbb.settings.openfoam.clip.type = 'SCALAR'
-    obj.tbb.settings.openfoam.clip.scalar.value = 0.5
-    obj.tbb.settings.openfoam.clip.scalar.name = json.dumps(file_data.vars.get("alpha.water"))
+    obj.tbb.settings.openfoam.clip.scalar.value = clip["value"]
+    obj.tbb.settings.openfoam.clip.scalar.name = json.dumps(file_data.vars.get(clip["name"]))
 
     # Set point data
     obj.tbb.settings.point_data.import_data = True
@@ -70,15 +71,17 @@ def test_streaming_sequence_openfoam():
     handler(bpy.context.scene)
 
     obj = bpy.data.objects.get(utils.STREAMING_SEQUENCE_OBJ_NAME + "_sequence", None)
+    sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
+    clip = sample["mesh"]["clipped"]
 
     # Test object settings
     obj.tbb.settings.file_path == utils.FILE_PATH_OPENFOAM
 
     # Test sequence settings
-    assert obj.tbb.settings.openfoam.s_sequence.max == 20
     assert obj.tbb.settings.openfoam.s_sequence.start == 1
-    assert obj.tbb.settings.openfoam.s_sequence.length == 20
     assert obj.tbb.settings.openfoam.s_sequence.update is True
+    assert obj.tbb.settings.openfoam.s_sequence.max == sample["variables"]["skip_zero_true"]["nb_time_points"]
+    assert obj.tbb.settings.openfoam.s_sequence.length == sample["variables"]["skip_zero_true"]["nb_time_points"]
 
     # Test import settings
     assert obj.tbb.settings.openfoam.import_settings.triangulate is True
@@ -91,15 +94,15 @@ def test_streaming_sequence_openfoam():
     assert file_data is not None
 
     assert obj.tbb.settings.openfoam.clip.type == 'SCALAR'
-    assert obj.tbb.settings.openfoam.clip.scalar.value == 0.5
-    assert obj.tbb.settings.openfoam.clip.scalar.name == json.dumps(file_data.vars.get("alpha.water"))
+    assert obj.tbb.settings.openfoam.clip.scalar.value == clip["value"]
+    assert obj.tbb.settings.openfoam.clip.scalar.name == json.dumps(file_data.vars.get(clip["name"]))
 
 
 def test_geometry_streaming_sequence_openfoam():
     obj = bpy.data.objects.get(utils.STREAMING_SEQUENCE_OBJ_NAME + "_sequence", None)
     sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
 
-    # Test geometry (time point 11, clip on alpha.water, 0.5, triangulated, decompose polyhedra)
+    # Test geometry
     mesh = sample["mesh"]["clipped"]["mesh"]
     assert len(obj.data.edges) == mesh["edges"]
     assert len(obj.data.polygons) == mesh["faces"]
@@ -118,16 +121,18 @@ def test_point_data_streaming_sequence_openfoam():
     # ------------------------------------------------------------ #
     # /!\ WARNING: next tests are based on the following frame /!\ #
     # ------------------------------------------------------------ #
-    # Change frame to load time point 2
-    bpy.context.scene.frame_set(3)
+    # Change frame to load test time point
+    bpy.context.scene.frame_set(vars["time_point"] + 1)
 
     # Check number of vertex color layers
     assert len(obj.data.vertex_colors) == 5
 
     # Test point data values
     for i in range(len(obj.data.vertex_colors)):
+
+        data = obj.data.vertex_colors[i]
+
         for name, channel in zip(obj.data.vertex_colors[i].name.split(', '), range(3)):
-            data = obj.data.vertex_colors[i]
             try:
                 ground_truth = vars[name]["mean"]
                 subtraction = abs(utils.compute_mean_value(data, obj, channel) - ground_truth)
@@ -156,9 +161,10 @@ def test_create_streaming_sequence_telemac_2d():
 
     # Select preview object
     obj = utils.get_preview_object()
+    sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_2D)
 
     # Set test data
-    data = json.dumps({"start": 1, "length": 11})
+    data = json.dumps({"start": 1, "length": sample["nb_time_points"]})
 
     op = bpy.ops.tbb.telemac_create_streaming_sequence
     state = op('EXEC_DEFAULT', name=utils.STREAMING_SEQUENCE_OBJ_NAME, module='TELEMAC',
@@ -182,6 +188,7 @@ def test_streaming_sequence_telemac_2d():
     handler(bpy.context.scene)
 
     obj = bpy.data.objects.get(utils.STREAMING_SEQUENCE_OBJ_NAME + "_sequence", None)
+    sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_2D)
 
     # Test object settings
     assert obj.tbb.uid != ""
@@ -191,10 +198,10 @@ def test_streaming_sequence_telemac_2d():
     assert obj.tbb.settings.file_path == utils.FILE_PATH_TELEMAC_2D
 
     # Test streaming sequence settings
-    assert obj.tbb.settings.telemac.s_sequence.max == 11
     assert obj.tbb.settings.telemac.s_sequence.start == 1
-    assert obj.tbb.settings.telemac.s_sequence.length == 11
     assert obj.tbb.settings.telemac.s_sequence.update is True
+    assert obj.tbb.settings.telemac.s_sequence.max == sample["nb_time_points"]
+    assert obj.tbb.settings.telemac.s_sequence.length == sample["nb_time_points"]
 
 
 def test_geometry_streaming_sequence_telemac_2d():
@@ -216,8 +223,8 @@ def test_point_data_streaming_sequence_telemac_2d():
     # ------------------------------------------------------------ #
     # /!\ WARNING: next tests are based on the following frame /!\ #
     # ------------------------------------------------------------ #
-    # Change frame to load time point 5
-    bpy.context.scene.frame_set(6)
+    # Change frame to load test time point
+    bpy.context.scene.frame_set(sample["variables"]["time_point"] + 1)
 
     # Test point data values
     for child in obj.children:
@@ -245,9 +252,10 @@ def test_create_streaming_sequence_telemac_3d():
 
     # Select preview object
     obj = utils.get_preview_object()
+    sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_3D)
 
     # Set test data
-    data = json.dumps({"start": 1, "length": 11})
+    data = json.dumps({"start": 1, "length": sample["nb_time_points"]})
 
     op = bpy.ops.tbb.telemac_create_streaming_sequence
     state = op('EXEC_DEFAULT', name=utils.STREAMING_SEQUENCE_OBJ_NAME, module='TELEMAC',
@@ -257,7 +265,7 @@ def test_create_streaming_sequence_telemac_3d():
     # Get and check sequence object
     obj = bpy.data.objects.get(utils.STREAMING_SEQUENCE_OBJ_NAME + "_sequence", None)
     assert obj is not None
-    assert len(obj.children) == 3
+    assert len(obj.children) == sample["nb_planes"]
 
     # Set point data
     obj.tbb.settings.point_data.import_data = True
@@ -271,6 +279,7 @@ def test_streaming_sequence_telemac_3d():
     handler(bpy.context.scene)
 
     obj = bpy.data.objects.get(utils.STREAMING_SEQUENCE_OBJ_NAME + "_sequence", None)
+    sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_3D)
 
     # Test object settings
     assert obj.tbb.uid != ""
@@ -280,10 +289,10 @@ def test_streaming_sequence_telemac_3d():
     assert obj.tbb.settings.file_path == utils.FILE_PATH_TELEMAC_3D
 
     # Test streaming sequence settings
-    assert obj.tbb.settings.telemac.s_sequence.max == 11
     assert obj.tbb.settings.telemac.s_sequence.start == 1
-    assert obj.tbb.settings.telemac.s_sequence.length == 11
     assert obj.tbb.settings.telemac.s_sequence.update is True
+    assert obj.tbb.settings.telemac.s_sequence.max == sample["nb_time_points"]
+    assert obj.tbb.settings.telemac.s_sequence.length == sample["nb_time_points"]
 
 
 def test_geometry_streaming_sequence_telemac_3d():
@@ -299,14 +308,14 @@ def test_geometry_streaming_sequence_telemac_3d():
 
 @pytest.mark.usefixtures("clean_all_objects")
 def test_point_data_streaming_sequence_telemac_3d():
+    obj = bpy.data.objects.get(utils.STREAMING_SEQUENCE_OBJ_NAME + "_sequence", None)
+    sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_3D)
+
     # ------------------------------------------------------------ #
     # /!\ WARNING: next tests are based on the following frame /!\ #
     # ------------------------------------------------------------ #
-    # Change frame to load time point 5
-    bpy.context.scene.frame_set(6)
-
-    obj = bpy.data.objects.get(utils.STREAMING_SEQUENCE_OBJ_NAME + "_sequence", None)
-    sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_3D)
+    # Change frame to load test time point
+    bpy.context.scene.frame_set(sample["variables"]["time_point"] + 1)
 
     # Initialize SPMV (Sum partial mean values)
     spmv = {}

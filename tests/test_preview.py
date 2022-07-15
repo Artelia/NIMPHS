@@ -203,7 +203,7 @@ def test_preview_telemac_2d():
     assert obj is not None
 
     # Set preview settings
-    obj.tbb.settings.preview_time_point = 5
+    obj.tbb.settings.preview_time_point = sample["preview"]["time_point"]
     obj.tbb.settings.preview_point_data = json.dumps(utils.get_point_data_telemac('2D').get(var_name))
 
     assert bpy.ops.tbb.telemac_preview('EXEC_DEFAULT') == {'FINISHED'}
@@ -255,7 +255,7 @@ def test_preview_telemac_3d():
     assert obj is not None
 
     # Set preview settings
-    obj.tbb.settings.preview_time_point = 5
+    obj.tbb.settings.preview_time_point = sample["preview"]["time_point"]
     obj.tbb.settings.preview_point_data = json.dumps(utils.get_point_data_telemac('3D').get(var_name))
 
     assert bpy.ops.tbb.telemac_preview('EXEC_DEFAULT') == {'FINISHED'}

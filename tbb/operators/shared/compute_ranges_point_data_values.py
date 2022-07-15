@@ -28,12 +28,16 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
 
     #: int: Identifier of the last time point
     end: int = 0
+
     #: int: Current time point
     time_point: int = 0
+
     #: dict: List of minima for each selected variable
     minima: dict = {}
+
     #: dict: List of maxima for each selected variable
     maxima: dict = {}
+
     #: Object: Selected object
     obj: Object = None
 
