@@ -37,12 +37,19 @@ class TBB_OT_TelemacReloadFile(Operator):
 
         obj = get_selected_object(context)
 
+        # Generated new file data
+        try:
+            file_data = TBB_TelemacFileData(obj.tbb.settings.file_path)
+        except BaseException:
+            self.report({'WARNING'}, "An error occurred reading the file")
+            return {'CANCELLED'}
+
         # Make sure the object still have an identifier
         if obj.tbb.uid == "":
             obj.tbb.uid = str(time.time())
 
-        # Update file data
-        context.scene.tbb.file_data[obj.tbb.uid] = TBB_TelemacFileData(obj.tbb.settings.file_path)
+        # Load saved information
+        context.scene.tbb.file_data[obj.tbb.uid] = file_data
         if obj.tbb.settings.point_data.save != "":
             context.scene.tbb.file_data[obj.tbb.uid].vars = VariablesInformation(obj.tbb.settings.point_data.save)
 

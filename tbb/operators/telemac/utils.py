@@ -299,14 +299,18 @@ def generate_telemac_sequence_obj(context: Context, obj: Object, name: str, time
         Object: generated sequence object
     """
 
+    try:
+        file_data = TBB_TelemacFileData(obj.tbb.settings.file_path)
+    except BaseException:
+        return None
+
     # Create sequence object
     sequence = bpy.data.objects.new(name=name + "_sequence", object_data=None)
 
     # Load file data
     sequence.tbb.uid = str(time.time())
-    context.scene.tbb.file_data[sequence.tbb.uid] = TBB_TelemacFileData(obj.tbb.settings.file_path)
-    # Copy current variable information
-    context.scene.tbb.file_data[sequence.tbb.uid].vars = deepcopy(context.scene.tbb.file_data[obj.tbb.uid].vars)
+    file_data.copy(context.scene.tbb.file_data[obj.tbb.uid])
+    context.scene.tbb.file_data[sequence.tbb.uid] = file_data
 
     try:
         children = generate_base_objects(context.scene.tbb.file_data[sequence.tbb.uid], name + "_sequence")

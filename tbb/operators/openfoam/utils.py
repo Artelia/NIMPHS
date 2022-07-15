@@ -199,9 +199,16 @@ def generate_openfoam_streaming_sequence_obj(context: Context, obj: Object, name
         Object: generated object
     """
 
+    # Generate new file data
+    try:
+        file_data = TBB_OpenfoamFileData(obj.tbb.settings.file_path, obj.tbb.settings.openfoam.import_settings)
+    except BaseException:
+        return None
+
     # Create the object
     bmesh = bpy.data.meshes.new(name + "_sequence_mesh")
     sequence = bpy.data.objects.new(name + "_sequence", bmesh)
+    sequence.tbb.uid = str(time.time())
 
     # Copy import settings from the selected object
     data = obj.tbb.settings.openfoam.import_settings
@@ -211,13 +218,6 @@ def generate_openfoam_streaming_sequence_obj(context: Context, obj: Object, name
     dest.triangulate = data.triangulate
     dest.skip_zero_time = data.skip_zero_time
     dest.decompose_polyhedra = data.decompose_polyhedra
-
-    # Copy file data
-    sequence.tbb.uid = str(time.time())
-    try:
-        file_data = TBB_OpenfoamFileData(obj.tbb.settings.file_path, data)
-    except BaseException:
-        return None
 
     # Copy file data
     file_data.copy(context.scene.tbb.file_data[obj.tbb.uid])

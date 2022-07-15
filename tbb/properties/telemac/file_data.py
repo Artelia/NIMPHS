@@ -1,10 +1,12 @@
 # <pep8 compliant>
-import time
-import numpy as np
-from typing import Union
-
+from __future__ import annotations
 import logging
 log = logging.getLogger(__name__)
+
+import numpy as np
+from pathlib import Path
+from typing import Union
+from copy import deepcopy
 
 from tbb.properties.telemac.serafin import Serafin
 from tbb.properties.shared.file_data import TBB_FileData
@@ -16,14 +18,19 @@ class TBB_TelemacFileData(TBB_FileData):
 
     #: np.ndarray: Vertices of the mesh
     vertices: np.ndarray = None
+
     #: np.ndarray: Faces of the mesh
     faces: np.ndarray = None
+
     #: int: Number of planes
     nb_planes: int = 0
+
     #: int: Number of vertices
     nb_vertices: int = 0
+
     #: int: Number of triangles
     nb_triangles: int = 0
+
     #: np.ndarray: Data
     data: np.ndarray = None
 
@@ -35,10 +42,13 @@ class TBB_TelemacFileData(TBB_FileData):
             file_path (str): path to the TELEMAC file
         """
 
-        super().__init__()
+        super().__init__()  # Must be called first (otherwise it will erase self.file content)
 
+        if not self.load_file(file_path):
+            raise IOError(f"Unable to read the given file {file_path}")
+
+        # Set common settings
         self.module = 'TELEMAC'
-        self.file = Serafin(file_path, read_time=True)
 
         self.file.get_2d()  # Read mesh
         self.data = self.file.read(self.file.temps[0])  # Read time step
@@ -67,6 +77,16 @@ class TBB_TelemacFileData(TBB_FileData):
             name = remove_spaces_telemac_var_name(var_name[:16])
             unit = remove_spaces_telemac_var_name(var_name[16:])
             self.vars.append(name=name, unit=unit)
+
+    def copy(self, other: TBB_TelemacFileData) -> None:
+        """
+        Copy important information from the given instance of file data.
+
+        Args:
+            other (TBB_TelemacFileData): TELEMAC file data
+        """
+
+        self.vars = deepcopy(other.vars)
 
     def get_point_data(self, id: Union[str, int]) -> np.ndarray:
         """
@@ -129,3 +149,25 @@ class TBB_TelemacFileData(TBB_FileData):
             raise ValueError("Undefined time point (" + str(time_point) + ")")
 
         return self.file.read(self.file.temps[time_point])
+
+    def load_file(self, file_path: str) -> bool:
+        """
+        Load TELEMAC (Serafin) file.
+
+        Args:
+            file_path (str): path to the file to load
+
+        Returns:
+            bool: success
+        """
+
+        path = Path(file_path)
+        if not path.exists():
+            log.error(f"Unknown path: {file_path}")
+            return False
+        elif path.is_dir():
+            log.error("Cannot open files from directories")
+            return False
+
+        self.file = Serafin(file_path, read_time=True)
+        return True

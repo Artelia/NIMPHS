@@ -36,6 +36,7 @@ class TBB_OpenfoamFileData(TBB_FileData):
             file_path (str): file to the path to load
             settings (Union[TBB_OpenfoamImportSettings, None]): OpenFOAM import settings
         """
+
         super().__init__()  # Must be called first (otherwise it will erase self.file content)
 
         # Try to load the given file
@@ -56,7 +57,7 @@ class TBB_OpenfoamFileData(TBB_FileData):
 
     def copy(self, other: TBB_OpenfoamFileData) -> None:
         """
-        Copy import information from the given instance of file data.
+        Copy important information from the given instance of file data.
 
         Args:
             other (TBB_OpenfoamFileData): OpenFOAM file data

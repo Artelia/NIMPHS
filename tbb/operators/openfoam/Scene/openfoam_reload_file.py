@@ -37,6 +37,7 @@ class TBB_OT_OpenfoamReloadFile(Operator):
         obj = get_selected_object(context)
         io_settings = obj.tbb.settings.openfoam.import_settings
 
+        # Generate new file data
         try:
             file_data = TBB_OpenfoamFileData(obj.tbb.settings.file_path, io_settings)
         except BaseException:
@@ -47,7 +48,7 @@ class TBB_OT_OpenfoamReloadFile(Operator):
         if obj.tbb.uid == "":
             obj.tbb.uid = str(time.time())
 
-        # Generate new file data and load saved information
+        # Load saved information
         context.scene.tbb.file_data[obj.tbb.uid] = file_data
         if obj.tbb.settings.point_data.save != "":
             context.scene.tbb.file_data[obj.tbb.uid].vars = VariablesInformation(obj.tbb.settings.point_data.save)
