@@ -37,7 +37,7 @@ def test_create_streaming_sequence_openfoam():
     data = json.dumps({"start": 1, "length": sample["variables"]["skip_zero_true"]["nb_time_points"]})
 
     op = bpy.ops.tbb.openfoam_create_streaming_sequence
-    state = op('EXEC_DEFAULT', name=utils.STREAMING_SEQUENCE_OBJ_NAME, shade_smooth=True, test_data=data)
+    state = op('EXEC_DEFAULT', mode='TEST', name=utils.STREAMING_SEQUENCE_OBJ_NAME, shade_smooth=True, test_data=data)
     assert state == {'FINISHED'}
 
     # Get and check sequence
@@ -167,7 +167,7 @@ def test_create_streaming_sequence_telemac_2d():
     data = json.dumps({"start": 1, "length": sample["nb_time_points"]})
 
     op = bpy.ops.tbb.telemac_create_streaming_sequence
-    state = op('EXEC_DEFAULT', name=utils.STREAMING_SEQUENCE_OBJ_NAME, module='TELEMAC',
+    state = op('EXEC_DEFAULT', mode='TEST', name=utils.STREAMING_SEQUENCE_OBJ_NAME, module='TELEMAC',
                shade_smooth=True, test_data=data)
     assert state == {'FINISHED'}
 
@@ -258,7 +258,7 @@ def test_create_streaming_sequence_telemac_3d():
     data = json.dumps({"start": 1, "length": sample["nb_time_points"]})
 
     op = bpy.ops.tbb.telemac_create_streaming_sequence
-    state = op('EXEC_DEFAULT', name=utils.STREAMING_SEQUENCE_OBJ_NAME, module='TELEMAC',
+    state = op('EXEC_DEFAULT', mode='TEST', name=utils.STREAMING_SEQUENCE_OBJ_NAME, module='TELEMAC',
                shade_smooth=True, test_data=data)
     assert state == {'FINISHED'}
 

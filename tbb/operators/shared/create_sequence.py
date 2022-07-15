@@ -29,6 +29,17 @@ class TBB_CreateSequence(Operator):
         default=""
     )
 
+    #: bpy.props.EnumProperty: Indicate which mode to use for this operator. Enum in ['MODAL', 'TEST'].
+    mode: EnumProperty(
+        name="Mode",  # noqa: F821
+        description="Indicate which mode to use for this operator. Enum in ['MODAL', 'TEST']",
+        items=[
+            ('MODAL', "Modal", "Run modal"),  # noqa: F821
+            ('TEST', "Test", "Run for unit tests"),  # noqa: F821
+        ],
+        options={'HIDDEN'},  # noqa F821
+    )
+
     #: bpy.props.EnumProperty: Indicate which module to use. Enum in ['OpenFOAM', 'TELEMAC'].
     module: EnumProperty(
         name="Mode",  # noqa: F821

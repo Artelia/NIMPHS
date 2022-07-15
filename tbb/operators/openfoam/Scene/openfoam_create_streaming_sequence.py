@@ -65,7 +65,7 @@ class TBB_OT_OpenfoamCreateStreamingSequence(TBB_CreateStreamingSequence):
         # -------------------------------- #
         # /!\ For testing purpose only /!\ #
         # -------------------------------- #
-        if self.test_data != "":
+        if self.mode == 'TEST':
             import json
 
             data = json.loads(self.test_data)
@@ -104,7 +104,7 @@ class TBB_OT_OpenfoamCreateStreamingSequence(TBB_CreateStreamingSequence):
         # -------------------------------- #
         # /!\ For testing purpose only /!\ #
         # -------------------------------- #
-        if self.test_data != "":
+        if self.mode == 'TEST':
             self.invoke(context, None)
 
         obj = generate_openfoam_streaming_sequence_obj(context, selected, self.name)
