@@ -9,7 +9,6 @@ log = logging.getLogger(__name__)
 import time
 import numpy as np
 from typing import Union
-from copy import deepcopy
 from pyvista import UnstructuredGrid
 
 from tbb.properties.utils import VariablesInformation
