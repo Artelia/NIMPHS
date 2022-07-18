@@ -8,9 +8,9 @@ log = logging.getLogger(__name__)
 import time
 
 from tbb.panels.utils import get_selected_object
-from tbb.properties.utils import VariablesInformation
 from tbb.panels.openfoam.utils import draw_clip_settings
 from tbb.properties.openfoam.clip import TBB_OpenfoamClipProperty
+from tbb.properties.utils.point_data_manager import PointDataManager
 from tbb.operators.shared.create_mesh_sequence import TBB_CreateMeshSequence
 from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
 
@@ -87,7 +87,7 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
             self.start = data["start"]
             self.end = data["end"]
             self.point_data.list = data["vars"]
-            self.point_data.import_data = VariablesInformation(data["vars"]).length() > 0
+            self.point_data.import_data = PointDataManager(data["vars"]).length() > 0
 
             return {'FINISHED'}
 

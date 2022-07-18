@@ -6,7 +6,7 @@ import logging
 log = logging.getLogger(__name__)
 
 from tbb.panels.utils import get_selected_object
-from tbb.properties.utils import VariablesInformation
+from tbb.properties.utils.point_data_manager import PointDataManager
 
 
 class TBB_OT_AddPointData(Operator):
@@ -31,9 +31,9 @@ class TBB_OT_AddPointData(Operator):
         """
 
         items = []
-        vars = VariablesInformation(self.available)
+        vars = PointDataManager(self.available)
 
-        identifier = VariablesInformation()
+        identifier = PointDataManager()
         for name, unit, id in zip(vars.names, vars.units, range(vars.length())):
             identifier.append(data=vars.get(id))
             items.append((identifier.dumps(), (name + ", (" + unit + ")") if unit != "" else name, "Undocumented"))
@@ -90,11 +90,11 @@ class TBB_OT_AddPointData(Operator):
             set: state of the operator
         """
 
-        chosen = VariablesInformation(self.chosen)
-        available = VariablesInformation(self.available)
+        chosen = PointDataManager(self.chosen)
+        available = PointDataManager(self.available)
 
         # Remove already chosen variables from the list of available point data
-        to_present = VariablesInformation()
+        to_present = PointDataManager()
         for name, id in zip(available.names, range(available.length())):
             if name not in chosen.names:
                 to_present.append(data=available.get(id))
@@ -136,13 +136,13 @@ class TBB_OT_AddPointData(Operator):
                 return {'CANCELLED'}
 
             point_data = obj.tbb.settings.point_data.list
-            data = VariablesInformation(point_data)
+            data = PointDataManager(point_data)
 
         if self.source == 'OPERATOR':
             data = context.scene.tbb.op_vars
 
         # Add selected point data to the list
-        add = VariablesInformation(self.point_data)
+        add = PointDataManager(self.point_data)
         data.append(data=add.get(0))
 
         # Save the new list of chosen point data
@@ -153,4 +153,5 @@ class TBB_OT_AddPointData(Operator):
 
         if context.area is not None:
             context.area.tag_redraw()
+
         return {'FINISHED'}

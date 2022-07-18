@@ -7,8 +7,8 @@ import logging
 log = logging.getLogger(__name__)
 
 from tbb.panels.utils import get_selected_object
-from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
 from tbb.properties.telemac.file_data import TBB_TelemacFileData
+from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
 
 
 class TBB_OT_EditFilePath(Operator, ImportHelper):

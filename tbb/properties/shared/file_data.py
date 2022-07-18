@@ -32,7 +32,7 @@ class TBB_FileData():
 
     def get_point_data(self, _id: Union[str, int]) -> np.ndarray:
         """
-        Get point data from the given id. Overriden id derived classes.
+        Get point data from the given id. Overridden id derived classes.
 
         Args:
             _id (Union[str, int]): identifier of the variable from which to get data
@@ -61,7 +61,7 @@ class TBB_FileData():
             # Get data if not provided
             if data is None:
                 data = self.get_point_data(name)
-            
+
             self.vars.ranges[id].minL = float(np.min(data))
             self.vars.ranges[id].maxL = float(np.max(data))
 

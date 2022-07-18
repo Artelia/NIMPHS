@@ -6,7 +6,7 @@ import logging
 log = logging.getLogger(__name__)
 
 from tbb.panels.utils import get_selected_object
-from tbb.properties.utils import VariablesInformation
+from tbb.properties.utils.point_data_manager import PointDataManager
 
 
 class TBB_OT_RemovePointData(Operator):
@@ -57,7 +57,7 @@ class TBB_OT_RemovePointData(Operator):
                 return {'CANCELLED'}
 
             point_data = obj.tbb.settings.point_data.list
-            data = VariablesInformation(point_data)
+            data = PointDataManager(point_data)
 
         if self.source == 'OPERATOR':
             data = context.scene.tbb.op_vars

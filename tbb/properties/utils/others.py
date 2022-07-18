@@ -8,6 +8,7 @@ log = logging.getLogger(__name__)
 
 DEV_MODE = True
 
+
 @persistent
 def tbb_on_save_pre(_dummy) -> None:
     """

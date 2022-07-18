@@ -6,8 +6,9 @@ import logging
 log = logging.getLogger(__name__)
 
 from tbb.panels.utils import get_selected_object
+from tbb.properties.utils.properties import available_point_data
 from tbb.operators.shared.modal_operator import TBB_ModalOperator
-from tbb.properties.utils import VariablesInformation, available_point_data
+from tbb.properties.utils.point_data_manager import PointDataManager
 from tbb.operators.shared.utils import update_end, update_plane_id, update_start
 
 
@@ -214,7 +215,7 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
         self.time_point = self.start
 
         if self.mode == 'MODAL':
-            self.chosen_variable = VariablesInformation(self.point_data).get(0, prop='NAME')
+            self.chosen_variable = PointDataManager(self.point_data).get(0, prop='NAME')
             super().prepare(context, "Extracting...")
             return {'RUNNING_MODAL'}
 
@@ -223,7 +224,7 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
         # -------------------------------- #
         if self.mode == 'TEST':
             self.invoke(context, None)
-            self.chosen_variable = VariablesInformation(self.test_data).get(0, prop='NAME')
+            self.chosen_variable = PointDataManager(self.test_data).get(0, prop='NAME')
 
             while self.time_point <= self.end:
 

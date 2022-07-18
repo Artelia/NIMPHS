@@ -9,7 +9,7 @@ import json
 from tbb.properties.utils.point_data_manager import PointDataManager
 
 
-def update_clip_value(self, value: float) -> None:
+def update_clip_value(self, value: float) -> None:  # noqa: D417
     """
     Set clip value.
 
@@ -25,7 +25,7 @@ def update_clip_value(self, value: float) -> None:
 
         if value < data.range.minL:
             self["value"] = data.range.minL
-        
+
         elif value > data.range.maxL:
             self["value"] = data.range.maxL
 

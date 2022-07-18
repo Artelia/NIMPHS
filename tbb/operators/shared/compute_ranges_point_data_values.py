@@ -7,9 +7,9 @@ log = logging.getLogger(__name__)
 
 import numpy as np
 
-from tbb.properties.utils import VariablesInformation
 from tbb.panels.utils import draw_point_data, get_selected_object
 from tbb.operators.shared.modal_operator import TBB_ModalOperator
+from tbb.properties.utils.point_data_manager import PointDataManager
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 
 
@@ -25,19 +25,14 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
 
     #: TBB_PointDataSettings: Point data settings.
     point_data: PointerProperty(type=TBB_PointDataSettings)
-
     #: int: Identifier of the last time point
     end: int = 0
-
     #: int: Current time point
     time_point: int = 0
-
     #: dict: List of minima for each selected variable
     minima: dict = {}
-
     #: dict: List of maxima for each selected variable
     maxima: dict = {}
-
     #: Object: Selected object
     obj: Object = None
 
@@ -137,15 +132,16 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
         else:
             self.point_data.list = context.scene.tbb.op_vars.dumps()
 
-        vars = VariablesInformation(self.point_data.list)
+        vars = PointDataManager(self.point_data.list)
 
         # If no data selected, do nothing
         if vars.length() <= 0:
             return {'CANCELLED'}
 
-        for var_name, var_type, var_dim in zip(vars.names, vars.types, vars.dimensions):
-            self.minima[var_name] = {"type": var_type, "values": [], "dim": var_dim}
-            self.maxima[var_name] = {"type": var_type, "values": [], "dim": var_dim}
+        # Setup minima and maxima lists
+        for name in vars.names:
+            self.minima[name] = []
+            self.maxima[name] = []
 
         if self.mode == 'MODAL':
             self.time_point = 0
@@ -153,7 +149,9 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
             super().prepare(context, "Computing...")
             return {'RUNNING_MODAL'}
 
-        # Run operator for unit tests
+        # -------------------------------- #
+        # /!\ For testing purpose only /!\ #
+        # -------------------------------- #
         if self.mode == 'TEST':
             state = self.invoke(context, None)
             if state != {'FINISHED'}:
@@ -190,26 +188,14 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
 
                 # Compute local minima and maxima
                 for var_name in self.minima.keys():
+
                     data = file_data.get_point_data(var_name)
-                    min_data = self.minima[var_name]
-                    max_data = self.maxima[var_name]
-
-                    if min_data["type"] == 'SCALAR':
-                        min_data["values"].append(float(np.min(data)))
-                        max_data["values"].append(float(np.max(data)))
-
-                    if min_data["type"] == 'VECTOR':
-                        min_values, max_values = [], []
-
-                        for i in range(min_data["dim"]):
-                            min_values.append(float(np.min(data[:, i])))
-                            max_values.append(float(np.max(data[:, i])))
-
-                        min_data["values"].append(min_values)
-                        max_data["values"].append(max_values)
+                    self.minima.append(float(np.min(data)))
+                    self.maxima.append(float(np.max(data)))
 
             else:
                 file_data = context.scene.tbb.file_data.get(self.obj.tbb.uid, None)
+
                 if file_data is None:
                     self.report({'ERROR'}, "File data not found. Can't update.")
                     super().stop(context)
@@ -217,25 +203,12 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
 
                 # Compute global minima and maxima from list of local values
                 for var_name in self.minima.keys():
-                    min_data = self.minima[var_name]
-                    max_data = self.maxima[var_name]
 
-                    if min_data["type"] == 'SCALAR':
-                        min = float(np.min(min_data["values"]))
-                        max = float(np.max(max_data["values"]))
-                        # Update variable information
-                        file_data.update_var_range(var_name, 'SCALAR', scope='GLOBAL', data={"min": min, "max": max})
+                    min = float(np.min(self.minima[var_name]))
+                    max = float(np.max(self.maxima[var_name]))
 
-                    if min_data["type"] == 'VECTOR':
-                        min_values, max_values = [], []
-
-                        for i in range(min_data["dim"]):
-                            min_values.append(float(np.min(np.array(min_data["values"])[:, i])))
-                            max_values.append(float(np.max(np.array(max_data["values"])[:, i])))
-
-                        # Update variable information
-                        file_data.update_var_range(var_name, 'VECTOR', scope='GLOBAL',
-                                                   data={"min": min_values, "max": max_values})
+                    # Update point data information
+                    file_data.update_var_range(var_name, scope='GLOBAL', data={"min": min, "max": max})
 
                 self.report({'INFO'}, "Compute ranges finished")
                 super().stop(context)

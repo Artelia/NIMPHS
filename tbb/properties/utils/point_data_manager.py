@@ -88,7 +88,7 @@ class PointDataInformation():
             unit (str): unit
             range (ValueRange): point data value ranges information
         """
-        
+
         self.name = name
         self.unit = unit
         self.range = range
@@ -206,8 +206,8 @@ class PointDataManager():
 
         # Check is correct
         if id < self.length():
-            
-            # Return all information
+
+            # Return all information
             if not prop:
                 return PointDataInformation(self.names[id], self.units[id], self.ranges[id])
 
@@ -249,7 +249,7 @@ class PointDataManager():
             self.names.append(name)
             self.units.append(unit)
             self.ranges.append(range)
-                
+
     def __str__(self) -> str:
         """
         Output this data structure as a string.
