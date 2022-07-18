@@ -67,5 +67,5 @@ class TBB_FileData():
 
         # Update global information
         if scope == 'GLOBAL':
-            self.vars.ranges[id].minG = data["min"]
-            self.vars.ranges[id].maxG = data["max"]
+            self.vars.ranges[id].minG = float(data["min"])
+            self.vars.ranges[id].maxG = float(data["max"])

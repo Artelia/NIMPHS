@@ -29,10 +29,10 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
     end: int = 0
     #: int: Current time point
     time_point: int = 0
-    #: dict: List of minima for each selected variable
-    minima: dict = {}
-    #: dict: List of maxima for each selected variable
-    maxima: dict = {}
+    #: list: List of minima for each selected variable
+    minima: list = []
+    #: list: List of maxima for each selected variable
+    maxima: list = []
     #: Object: Selected object
     obj: Object = None
 
@@ -139,9 +139,9 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
             return {'CANCELLED'}
 
         # Setup minima and maxima lists
-        for name in vars.names:
-            self.minima[name] = []
-            self.maxima[name] = []
+        for id in range(vars.length()):
+            self.minima.append([])
+            self.maxima.append([])
 
         if self.mode == 'MODAL':
             self.time_point = 0
@@ -187,11 +187,11 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
                 file_data.update_data(self.time_point)
 
                 # Compute local minima and maxima
-                for var_name in self.minima.keys():
+                for name, id in zip(file_data.vars.names, range(file_data.vars.length())):
 
-                    data = file_data.get_point_data(var_name)
-                    self.minima[var_name].append(float(np.min(data)))
-                    self.maxima[var_name].append(float(np.max(data)))
+                    data = file_data.get_point_data(name)
+                    self.minima[id].append(float(np.min(data)))
+                    self.maxima[id].append(float(np.max(data)))
 
             else:
                 file_data = context.scene.tbb.file_data.get(self.obj.tbb.uid, None)
@@ -201,14 +201,18 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
                     super().stop(context)
                     return {'CANCELLED'}
 
-                # Compute global minima and maxima from list of local values
-                for var_name in self.minima.keys():
+                print(np.min(self.minima[0]))
+                print(np.min(self.minima[1]))
+                assert 1 == 0
 
-                    min = float(np.min(self.minima[var_name]))
-                    max = float(np.max(self.maxima[var_name]))
+                # Compute global minima and maxima from list of local values
+                for name, id in zip(file_data.vars.names, range(file_data.vars.length())):
+
+                    mini = float(np.min(self.minima[id]))
+                    maxi = float(np.max(self.maxima[id]))
 
                     # Update point data information
-                    file_data.update_var_range(var_name, scope='GLOBAL', data={"min": min, "max": max})
+                    file_data.update_var_range(name, scope='GLOBAL', data={"min": mini, "max": maxi})
 
                 self.report({'INFO'}, "Compute ranges finished")
                 super().stop(context)

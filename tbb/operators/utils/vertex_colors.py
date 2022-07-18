@@ -58,8 +58,8 @@ class VertexColorsInformation():
             size += 1
 
         # If last group is not full, fill it
-        for id in range(GRP_SIZE - len(grp_names)):
-            grp_name += f"{name}, "
+        for id in range(GRP_SIZE - len(grp_names) - 1):
+            grp_name += "None, "
             indices.append(-1)
 
         # Add last group

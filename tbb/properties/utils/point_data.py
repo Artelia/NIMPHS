@@ -285,7 +285,6 @@ class PointDataManager():
         """
 
         output = "Point data:\n"
-        output += "NAMES: " + str(self.names) + '\n'
-        output += "UNITS: " + str(self.units) + '\n'
-        output += "RANGES: " + str(self.ranges) + '\n'
+        output += f"NAMES: {self.names}\n"
+        output += f"UNITS: {self.units}\n"
         return output

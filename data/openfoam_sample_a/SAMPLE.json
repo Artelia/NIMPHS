@@ -40,7 +40,7 @@
     },
     "values": {
         "skip_zero_false": {
-            "nb_vars": 3,
+            "nb_vars": 5,
             "time_point": 2,
             "nb_time_points": 21,
             "U.0": {
@@ -75,7 +75,7 @@
             }
         },
         "skip_zero_true": {
-            "nb_vars": 9,
+            "nb_vars": 15,
             "time_point": 2,
             "nb_time_points": 20,
             "U.0": {
@@ -190,6 +190,12 @@
                 "p_rgh"
             ],
             "units": [
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
                 "",
                 "",
                 "",
