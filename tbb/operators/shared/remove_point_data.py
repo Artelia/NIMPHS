@@ -6,7 +6,7 @@ import logging
 log = logging.getLogger(__name__)
 
 from tbb.panels.utils import get_selected_object
-from tbb.properties.utils.point_data_manager import PointDataManager
+from tbb.properties.utils.point_data import PointDataManager
 
 
 class TBB_OT_RemovePointData(Operator):

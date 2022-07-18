@@ -10,7 +10,7 @@ import time
 from tbb.panels.utils import get_selected_object
 from tbb.panels.openfoam.utils import draw_clip_settings
 from tbb.properties.openfoam.clip import TBB_OpenfoamClipProperty
-from tbb.properties.utils.point_data_manager import PointDataManager
+from tbb.properties.utils.point_data import PointDataManager
 from tbb.operators.shared.create_mesh_sequence import TBB_CreateMeshSequence
 from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
 

@@ -3,7 +3,7 @@ from bpy.types import Context, Object, UILayout
 
 from typing import Union
 
-from tbb.properties.utils.point_data_manager import PointDataManager
+from tbb.properties.utils.point_data import PointDataManager
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 
 

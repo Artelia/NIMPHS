@@ -9,7 +9,7 @@ import numpy as np
 
 from tbb.panels.utils import draw_point_data, get_selected_object
 from tbb.operators.shared.modal_operator import TBB_ModalOperator
-from tbb.properties.utils.point_data_manager import PointDataManager
+from tbb.properties.utils.point_data import PointDataManager
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 
 
@@ -190,8 +190,8 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
                 for var_name in self.minima.keys():
 
                     data = file_data.get_point_data(var_name)
-                    self.minima.append(float(np.min(data)))
-                    self.maxima.append(float(np.max(data)))
+                    self.minima[var_name].append(float(np.min(data)))
+                    self.maxima[var_name].append(float(np.max(data)))
 
             else:
                 file_data = context.scene.tbb.file_data.get(self.obj.tbb.uid, None)

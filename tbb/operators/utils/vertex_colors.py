@@ -4,10 +4,12 @@ from bpy.types import Mesh
 import logging
 log = logging.getLogger(__name__)
 
+import json
 import numpy as np
 from typing import Union
 from tbb.operators.utils.others import remap_array
 from tbb.properties.utils.interpolation import InterpInfo
+from tbb.properties.utils.point_data import PointDataManager
 from tbb.properties.telemac.file_data import TBB_TelemacFileData
 from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
@@ -36,6 +38,9 @@ class VertexColorsInformation():
             tuple[list[str], list[list[int]]]: name of the group, indices of point data
         """
 
+        if len(self.names) == 0:
+            return [], []
+
         GRP_SIZE = 3
         size, grp_name, indices = 0, "", []
         grp_names, grp_indices = [], []
@@ -63,6 +68,27 @@ class VertexColorsInformation():
 
         return grp_names, grp_indices
 
+    def is_empty(self) -> bool:
+        """
+        Indicate whether 'names' array is empty.
+
+        Returns:
+            bool: state
+        """
+
+        return len(self.names) <= 0
+
+    def __str__(self) -> str:
+        """
+        Output this data structure as a string.
+
+        Returns:
+            str: output string
+        """
+
+        return "{" + f"\n  names: {self.names},\n  data: {self.data},\n\
+  nb_vertex_indices: {self.nb_vertex_indices},\n  empty: {self.is_empty()}" + "\n}"
+
 
 class VertexColorsUtils():
     """Utility functions for generating vertex colors for both modules."""
@@ -81,13 +107,14 @@ class VertexColorsUtils():
         ones = np.ones((data.nb_vertex_indices,))
         zeros = np.zeros((data.nb_vertex_indices,))
 
-        for name, indices in data.groups():
+        grp_names, grp_indices = data.groups()
+        for name, indices in zip(grp_names, grp_indices):
             vertex_colors = bmesh.vertex_colors.new(name=name, do_init=True)
 
             colors = []
             for id in indices:
                 if id != -1:
-                    colors.append(np.array(data[id]))
+                    colors.append(np.array(data.data[id]))
                 else:
                     colors.append(zeros)
 
@@ -128,11 +155,16 @@ class TelemacVertexColorsUtils(VertexColorsUtils):
         vertex_ids = np.array([triangle.vertices for triangle in bmesh.loop_triangles]).flatten()
 
         # If point_data is string, then the request comes from the preview panel, so use 'LOCAL' method
-        method = 'LOCAL' if isinstance(point_data, str) else point_data.remap_method
+        if isinstance(point_data, str):
+            method = 'LOCAL'
+            names = [] if json.loads(point_data)["name"] == 'None' else [json.loads(point_data)["name"]]
+        else:
+            method = point_data.remap_method
+            names = PointDataManager(point_data.list).names
 
         output = VertexColorsInformation(len(vertex_ids))
 
-        for name in file_data.vars.names:
+        for name in names:
             # Read data
             data = file_data.get_point_data(name)
 
@@ -225,18 +257,18 @@ class OpenfoamVertexColorsUtils(VertexColorsUtils):
         vertex_ids = np.array([triangle.vertices for triangle in bmesh.loop_triangles]).flatten()
 
         # If point_data is string, then the request comes from the preview panel, so use 'LOCAL' method
-        method = 'LOCAL' if isinstance(point_data, str) else point_data.remap_method
+        if isinstance(point_data, str):
+            method = 'LOCAL'
+            names = [] if json.loads(point_data)["name"] == 'None' else [json.loads(point_data)["name"]]
+        else:
+            method = point_data.remap_method
+            names = PointDataManager(point_data.list).names
 
         output = VertexColorsInformation(len(vertex_ids))
 
-        for name in file_data.vars.names:
+        for name in names:
             # Read data
             data = file_data.get_point_data(name)[vertex_ids]
-
-            # If vector value
-            if name.split('.')[-1].isnumeric():
-                id = int(name.split('.')[-1])
-                data = data[:, id]
 
             # Get value range
             if method == 'LOCAL':

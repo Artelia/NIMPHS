@@ -34,7 +34,7 @@ def test_create_streaming_sequence_openfoam():
     bpy.context.scene.frame_set(clip["time_point"])
 
     # Set test data
-    data = json.dumps({"start": 1, "length": sample["variables"]["skip_zero_true"]["nb_time_points"]})
+    data = json.dumps({"start": 1, "length": sample["values"]["skip_zero_true"]["nb_time_points"]})
 
     op = bpy.ops.tbb.openfoam_create_streaming_sequence
     state = op('EXEC_DEFAULT', mode='TEST', name=utils.STREAMING_SEQUENCE_OBJ_NAME, shade_smooth=True, test_data=data)
@@ -80,8 +80,8 @@ def test_streaming_sequence_openfoam():
     # Test sequence settings
     assert obj.tbb.settings.openfoam.s_sequence.start == 1
     assert obj.tbb.settings.openfoam.s_sequence.update is True
-    assert obj.tbb.settings.openfoam.s_sequence.max == sample["variables"]["skip_zero_true"]["nb_time_points"]
-    assert obj.tbb.settings.openfoam.s_sequence.length == sample["variables"]["skip_zero_true"]["nb_time_points"]
+    assert obj.tbb.settings.openfoam.s_sequence.max == sample["values"]["skip_zero_true"]["nb_time_points"]
+    assert obj.tbb.settings.openfoam.s_sequence.length == sample["values"]["skip_zero_true"]["nb_time_points"]
 
     # Test import settings
     assert obj.tbb.settings.openfoam.import_settings.triangulate is True
@@ -113,7 +113,7 @@ def test_geometry_streaming_sequence_openfoam():
 def test_point_data_streaming_sequence_openfoam():
     obj = bpy.data.objects.get(utils.STREAMING_SEQUENCE_OBJ_NAME + "_sequence", None)
     sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
-    vars = sample["variables"]["skip_zero_true"]
+    vars = sample["values"]["skip_zero_true"]
 
     # Remove clip settings to test point data values
     obj.tbb.settings.openfoam.clip.type = 'NONE'
@@ -224,7 +224,7 @@ def test_point_data_streaming_sequence_telemac_2d():
     # /!\ WARNING: next tests are based on the following frame /!\ #
     # ------------------------------------------------------------ #
     # Change frame to load test time point
-    bpy.context.scene.frame_set(sample["variables"]["time_point"] + 1)
+    bpy.context.scene.frame_set(sample["values"]["time_point"] + 1)
 
     # Test point data values
     for child in obj.children:
@@ -235,7 +235,7 @@ def test_point_data_streaming_sequence_telemac_2d():
         for i in range(len(data)):
             for name, channel in zip(data[i].name.split(", "), range(3)):
                 if name != 'None':
-                    ground_truth = sample["variables"][name]["mean"]
+                    ground_truth = sample["values"][name]["mean"]
                     subtraction = abs(utils.compute_mean_value(data[i], child, channel) - ground_truth)
                     utils.compare_point_data_value(subtraction, name)
 
@@ -315,11 +315,11 @@ def test_point_data_streaming_sequence_telemac_3d():
     # /!\ WARNING: next tests are based on the following frame /!\ #
     # ------------------------------------------------------------ #
     # Change frame to load test time point
-    bpy.context.scene.frame_set(sample["variables"]["time_point"] + 1)
+    bpy.context.scene.frame_set(sample["values"]["time_point"] + 1)
 
     # Initialize SPMV (Sum partial mean values)
     spmv = {}
-    for name in sample["VariablesInformation"]["names"]:
+    for name in sample["point_data"]["names"]:
         spmv[name] = 0.0
 
     # Test point data values
@@ -334,6 +334,6 @@ def test_point_data_streaming_sequence_telemac_3d():
                     spmv[name] += utils.compute_mean_value(data[i], child, channel)
 
     # Compare values
-    for name in sample["VariablesInformation"]["names"]:
-        subtraction = abs(spmv[name] - sample["variables"][name]["spmv"])
+    for name in sample["point_data"]["names"]:
+        subtraction = abs(spmv[name] - sample["values"][name]["spmv"])
         utils.compare_point_data_value(subtraction, name)

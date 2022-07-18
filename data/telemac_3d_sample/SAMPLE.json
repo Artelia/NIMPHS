@@ -13,7 +13,7 @@
         "vertices": 4624,
         "triangles": 8978
     },
-    "variables": {
+    "values": {
         "time_point": 5,
         "ELEVATION Z": {
             "spmv": 1.3966979898702376,
@@ -40,7 +40,7 @@
             "unit": "M/S"
         }
     },
-    "point_data_sample": {
+    "extracted_value": {
         "name": "VELOCITY V",
         "vertex_id": 3007,
         "plane_id": 1,
@@ -58,18 +58,12 @@
             -0.041871022
         ]
     },
-    "VariablesInformation": {
+    "point_data": {
         "names": [
             "ELEVATION Z",
             "VELOCITY U",
             "VELOCITY V",
             "VELOCITY W"
-        ],
-        "dimensions": [
-            1,
-            1,
-            1,
-            1
         ],
         "units": [
             "M",

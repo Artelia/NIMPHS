@@ -32,7 +32,7 @@ def test_compute_ranges_point_data_values_openfoam():
 def test_computed_min_max_values_openfoam():
     obj = utils.get_preview_object()
     sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
-    vars = sample["variables"]["skip_zero_true"]
+    vars = sample["values"]["skip_zero_true"]
 
     # Get file data
     file_data = bpy.context.scene.tbb.file_data.get(obj.tbb.uid, None)
@@ -40,19 +40,12 @@ def test_computed_min_max_values_openfoam():
 
     # Test computed values
     point_data = utils.get_point_data_openfoam(True)
-    for name, type, dim in zip(point_data.names, point_data.types, point_data.dimensions):
-        data = file_data.vars.get(name, prop='RANGE')["global"]
+    for name in point_data.names:
+        data = file_data.vars.get(name, prop='RANGE')
 
-        if type == 'SCALAR':
-            ground_truth = {"max": vars[name]["max"], "min": vars[name]["min"]}
-            assert data["min"] == ground_truth["min"]
-            assert data["max"] == ground_truth["max"]
-
-        if type == 'VECTOR':
-            for i, suffix in zip(range(dim), ['.x', '.y', '.z']):
-                ground_truth = {"max": vars[name + suffix]["max"], "min": vars[name + suffix]["min"]}
-                assert data["min"][i] == ground_truth["min"]
-                assert data["max"][i] == ground_truth["max"]
+        ground_truth = {"max": vars[name]["max"], "min": vars[name]["min"]}
+        assert data.minG == ground_truth["min"]
+        assert data.maxG == ground_truth["max"]
 
 
 # -------------------------- #
@@ -76,7 +69,7 @@ def test_compute_ranges_point_data_values_telemac_2d():
 def test_computed_min_max_values_telemac_2d():
     obj = utils.get_preview_object()
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_2D)
-    vars = sample["variables"]
+    vars = sample["values"]
 
     # Get file data
     file_data = bpy.context.scene.tbb.file_data.get(obj.tbb.uid, None)
@@ -113,7 +106,7 @@ def test_compute_ranges_point_data_values_telemac_3d():
 def test_computed_min_max_values_telemac_3d():
     obj = utils.get_preview_object()
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_3D)
-    vars = sample["variables"]
+    vars = sample["values"]
 
     # Get file data
     file_data = bpy.context.scene.tbb.file_data.get(obj.tbb.uid, None)

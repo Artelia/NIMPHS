@@ -52,11 +52,14 @@ if "pyvista" not in globals():
 from tbb.menus.menus import tbb_menus_draw
 from tbb.properties.shared.tbb_scene import TBB_Scene
 from tbb.properties.shared.tbb_object import TBB_Object
-from tbb.operators.openfoam.utils import update_openfoam_streaming_sequences
-from tbb.properties.utils import register_custom_progress_bar, tbb_on_save_pre
 from tbb.operators.telemac.Scene.telemac_import_file import import_telemac_menu_draw
+from tbb.properties.utils.others import register_custom_progress_bar, tbb_on_save_pre
 from tbb.operators.openfoam.Scene.openfoam_import_file import import_openfoam_menu_draw
-from tbb.operators.telemac.utils import update_telemac_streaming_sequences, update_telemac_mesh_sequences
+from tbb.operators.utils.sequence import (
+    update_openfoam_streaming_sequences,
+    update_telemac_streaming_sequences,
+    update_telemac_mesh_sequences,
+)
 
 # Setup logger
 import logging

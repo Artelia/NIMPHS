@@ -38,7 +38,7 @@ def test_reload_file_data_openfoam():
     assert file_data.time_point == 0
     assert file_data.module == 'OpenFOAM'
     assert file_data.vars.dumps() == utils.get_point_data_openfoam(True).dumps()
-    assert file_data.nb_time_points == sample["variables"]["skip_zero_true"]["nb_time_points"]
+    assert file_data.nb_time_points == sample["values"]["skip_zero_true"]["nb_time_points"]
     assert isinstance(file_data.file, pyvista.OpenFOAMReader)
     assert isinstance(file_data.mesh, pyvista.UnstructuredGrid)
     assert isinstance(file_data.raw_mesh, pyvista.UnstructuredGrid)

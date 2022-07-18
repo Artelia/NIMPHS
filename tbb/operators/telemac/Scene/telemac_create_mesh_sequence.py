@@ -8,7 +8,7 @@ log = logging.getLogger(__name__)
 import time
 
 from tbb.panels.utils import get_selected_object
-from tbb.properties.utils.point_data_manager import PointDataManager
+from tbb.properties.utils.point_data import PointDataManager
 from tbb.operators.shared.create_mesh_sequence import TBB_CreateMeshSequence
 from tbb.properties.telemac.import_settings import TBB_TelemacImportSettings
 

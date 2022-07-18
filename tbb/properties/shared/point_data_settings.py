@@ -2,7 +2,7 @@
 from bpy.types import PropertyGroup
 from bpy.props import StringProperty, BoolProperty, EnumProperty
 
-from tbb.properties.utils.point_data_manager import PointDataManager
+from tbb.properties.utils.point_data import PointDataManager
 
 
 class TBB_PointDataSettings(PropertyGroup):

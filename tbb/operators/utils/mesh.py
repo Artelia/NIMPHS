@@ -8,10 +8,10 @@ import numpy as np
 from typing import Union
 from pyvista import PolyData
 from tbb.properties.utils.interpolation import InterpInfo
+from tbb.properties.utils.point_data import PointDataManager
 from tbb.properties.telemac.file_data import TBB_TelemacFileData
 from tbb.properties.openfoam.clip import TBB_OpenfoamClipProperty
 from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
-from tbb.properties.utils.point_data_manager import PointDataManager
 
 
 class TelemacMeshUtils():
@@ -197,11 +197,18 @@ class OpenfoamMeshUtils():
             # Make sure there is a scalar selected
             if info.length() > 0:
                 info = info.get(0)
-                mesh.set_active_scalars(name=info.name, preference="point")
-                mesh.clip_scalar(inplace=True, scalars=info.name, invert=clip.scalar.invert, value=clip.scalar.value)
+
+                channel = info.name.split('.')[-1]
+                name = info.name[-2] if channel.isnumeric() else info.name
+
+                mesh.set_active_scalars(name=name, preference="point")
+                mesh.clip_scalar(inplace=True, scalars=name, invert=clip.scalar.invert, value=clip.scalar.value)
                 surface = mesh.extract_surface(nonlinear_subdivision=0)
             else:
                 log.warning("Can't apply clip. No scalar selected.")
                 surface = mesh.extract_surface(nonlinear_subdivision=0)
+
+        else:
+            surface = mesh.extract_surface(nonlinear_subdivision=0)
 
         return surface

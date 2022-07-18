@@ -25,7 +25,7 @@ def test_create_mesh_sequence_openfoam():
     # Select preview object
     obj = utils.get_preview_object()  # noqa: F841
     sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
-    vars = sample["variables"]["skip_zero_true"]
+    vars = sample["values"]["skip_zero_true"]
 
     # Get test data (WARNING: this operator changes the current frame)
     data = json.dumps({"vars": utils.get_point_data_openfoam(True).dumps(), "start": 1, "end": vars["time_point"] + 1})
@@ -46,7 +46,7 @@ def test_mesh_sequence_openfoam():
     assert obj is not None
 
     sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
-    vars = sample["variables"]["skip_zero_true"]
+    vars = sample["values"]["skip_zero_true"]
 
     # Test mesh sequence (settings from Stop-Motion-OBJ)
     assert obj.mesh_sequence_settings.name == ""
@@ -80,7 +80,7 @@ def test_geometry_mesh_sequence_openfoam():
 def test_point_data_mesh_sequence_openfoam():
     obj = bpy.data.objects.get(utils.MESH_SEQUENCE_OBJ_NAME + "_sequence", None)
     sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
-    vars = sample["variables"]["skip_zero_true"]
+    vars = sample["values"]["skip_zero_true"]
 
     # Check number of vertex color layers
     assert len(obj.data.vertex_colors) == 5
@@ -118,7 +118,7 @@ def test_create_mesh_sequence_telemac_2d():
     # Select preview object
     obj = utils.get_preview_object()  # noqa: F841
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_2D)
-    vars = sample["variables"]
+    vars = sample["values"]
 
     # Get test data
     data = json.dumps({"vars": utils.get_point_data_telemac('2D').dumps(), "start": 1, "end": vars["time_point"] + 1})
@@ -140,7 +140,7 @@ def test_mesh_sequence_telemac_2d():
     assert len(obj.children) == 2
 
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_2D)
-    vars = sample["variables"]
+    vars = sample["values"]
 
     # Get file_data
     file_data = bpy.context.scene.tbb.file_data[obj.tbb.uid]
@@ -187,7 +187,7 @@ def test_point_data_mesh_sequence_telemac_2d():
     # /!\ WARNING: next tests are based on the following frame /!\ #
     # ------------------------------------------------------------ #
     # Change frame to load test time point
-    bpy.context.scene.frame_set(sample["variables"]["time_point"])
+    bpy.context.scene.frame_set(sample["values"]["time_point"])
 
     # Test point data values
     for child in obj.children:
@@ -198,7 +198,7 @@ def test_point_data_mesh_sequence_telemac_2d():
         for i in range(len(data)):
             for name, channel in zip(data[i].name.split(", "), range(3)):
                 if name != 'None':
-                    ground_truth = sample["variables"][name]["mean"]
+                    ground_truth = sample["values"][name]["mean"]
                     subtraction = abs(utils.compute_mean_value(data[i], child, channel) - ground_truth)
                     utils.compare_point_data_value(subtraction, name)
 
@@ -216,7 +216,7 @@ def test_create_mesh_sequence_telemac_3d():
     # Select preview object
     obj = utils.get_preview_object()  # noqa: F841
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_3D)
-    vars = sample["variables"]
+    vars = sample["values"]
 
     # Get test data
     data = json.dumps({"vars": utils.get_point_data_telemac('3D').dumps(), "start": 1, "end": vars["time_point"] + 1})
@@ -235,7 +235,7 @@ def test_mesh_sequence_telemac_3d():
     # Check sequence object
     obj = bpy.data.objects.get(utils.MESH_SEQUENCE_OBJ_NAME + "_sequence", None)
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_3D)
-    vars = sample["variables"]
+    vars = sample["values"]
     assert obj is not None
     assert len(obj.children) == sample["nb_planes"]
 
@@ -284,11 +284,11 @@ def test_point_data_mesh_sequence_telemac_3d():
     # /!\ WARNING: next tests are based on the following frame /!\ #
     # ------------------------------------------------------------ #
     # Change frame to load test time point
-    bpy.context.scene.frame_set(sample["variables"]["time_point"])
+    bpy.context.scene.frame_set(sample["values"]["time_point"])
 
     # Initialize SPMV (Sum partial mean values)
     spmv = {}
-    for name in sample["VariablesInformation"]["names"]:
+    for name in sample["point_data"]["names"]:
         spmv[name] = 0.0
 
     # Compute SPMVs
@@ -303,6 +303,6 @@ def test_point_data_mesh_sequence_telemac_3d():
                     spmv[name] += utils.compute_mean_value(data[i], child, channel)
 
     # Compare values
-    for name in sample["VariablesInformation"]["names"]:
-        subtraction = abs(spmv[name] - sample["variables"][name]["spmv"])
+    for name in sample["point_data"]["names"]:
+        subtraction = abs(spmv[name] - sample["values"][name]["spmv"])
         utils.compare_point_data_value(subtraction, name)

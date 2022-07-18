@@ -7,6 +7,7 @@ log = logging.getLogger(__name__)
 
 
 class TelemacMaterialUtils():
+    """Utility functions to generate materials for the TELEMAC module."""
 
     @classmethod
     def generate_preview(cls, obj: Object, var_name: str, name: str = "TBB_TELEMAC_preview_material") -> None:
@@ -72,6 +73,7 @@ class TelemacMaterialUtils():
 
 
 class OpenfoamMaterialUtils():
+    """Utility functions to generate materials for the OpenFOAM module."""
 
     @classmethod
     def generate_preview(cls, obj: Object, scalar: str, name: str = "TBB_OpenFOAM_preview_material") -> None:

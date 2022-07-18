@@ -38,24 +38,24 @@
             }
         }
     },
-    "variables": {
+    "values": {
         "skip_zero_false": {
             "nb_vars": 3,
             "time_point": 2,
             "nb_time_points": 21,
-            "U.x": {
+            "U.0": {
                 "mean": 0.49985609944795867,
                 "min": -1.346832513809204,
                 "max": 1.345022439956665,
                 "unit": ""
             },
-            "U.y": {
+            "U.1": {
                 "mean": 1.0,
                 "min": -4.208540108459135e-17,
                 "max": 9.689870304643004e-17,
                 "unit": ""
             },
-            "U.z": {
+            "U.2": {
                 "mean": 0.7169345498612671,
                 "min": -4.320412635803223,
                 "max": 1.1953175067901611,
@@ -78,19 +78,19 @@
             "nb_vars": 9,
             "time_point": 2,
             "nb_time_points": 20,
-            "U.x": {
+            "U.0": {
                 "mean": 0.49963319873423406,
                 "min": -1.346832513809204,
                 "max": 1.345022439956665,
                 "unit": ""
             },
-            "U.y": {
+            "U.1": {
                 "mean": 1.0,
                 "min": -4.208540108459135e-17,
                 "max": 9.689870304643004e-17,
                 "unit": ""
             },
-            "U.z": {
+            "U.2": {
                 "mean": 0.5781237236145602,
                 "min": -4.320412635803223,
                 "max": 1.1953175067901611,
@@ -102,37 +102,37 @@
                 "max": 1.0,
                 "unit": ""
             },
-            "interfaceCentre.water.x": {
+            "interfaceCentre.water.0": {
                 "mean": 0.4011553849838145,
                 "min": -0.4272400140762329,
                 "max": 0.661429226398468,
                 "unit": ""
             },
-            "interfaceCentre.water.y": {
+            "interfaceCentre.water.1": {
                 "mean": 0.9843760967538151,
                 "min": -0.0041363476775586605,
                 "max": 0.0,
                 "unit": ""
             },
-            "interfaceCentre.water.z": {
+            "interfaceCentre.water.2": {
                 "mean": 0.015519227771767853,
                 "min": 0.0,
                 "max": 1.5712000131607056,
                 "unit": ""
             },
-            "interfaceNormal.water.x": {
+            "interfaceNormal.water.0": {
                 "mean": 0.5038774763410847,
                 "min": -0.00011999999696854502,
                 "max": 0.00011999999696854502,
                 "unit": ""
             },
-            "interfaceNormal.water.y": {
+            "interfaceNormal.water.1": {
                 "mean": 0.6458408214612469,
                 "min": -2.092237446049694e-05,
                 "max": 6.619574833166553e-06,
                 "unit": ""
             },
-            "interfaceNormal.water.z": {
+            "interfaceNormal.water.2": {
                 "mean": 0.8881131757035741,
                 "min": -0.00012017400149488822,
                 "max": 0.00012121000327169895,
@@ -170,29 +170,24 @@
             }
         }
     },
-    "VariablesInformation": {
+    "point_data": {
         "skip_zero_true": {
             "names": [
-                "U",
+                "U.0",
+                "U.1",
+                "U.2",
                 "alpha.water",
-                "interfaceCentre.water",
-                "interfaceNormal.water",
+                "interfaceCentre.water.0",
+                "interfaceCentre.water.1",
+                "interfaceCentre.water.2",
+                "interfaceNormal.water.0",
+                "interfaceNormal.water.1",
+                "interfaceNormal.water.2",
                 "k",
                 "nut",
                 "omega",
                 "p",
                 "p_rgh"
-            ],
-            "dimensions": [
-                3,
-                1,
-                3,
-                3,
-                1,
-                1,
-                1,
-                1,
-                1
             ],
             "units": [
                 "",
@@ -208,14 +203,11 @@
         },
         "skip_zero_false": {
             "names": [
-                "U",
+                "U.0",
+                "U.1",
+                "U.2",
                 "alpha.water",
                 "nut"
-            ],
-            "dimensions": [
-                3,
-                1,
-                1
             ],
             "units": [
                 "",

@@ -4,7 +4,7 @@ from typing import Union
 from pyvista import POpenFOAMReader
 
 from tbb.properties.telemac.serafin import Serafin
-from tbb.properties.utils.point_data_manager import PointDataManager
+from tbb.properties.utils.point_data import PointDataManager
 
 
 class TBB_FileData():

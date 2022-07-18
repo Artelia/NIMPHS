@@ -13,7 +13,7 @@
         "vertices": 3200,
         "triangles": 5742
     },
-    "variables": {
+    "values": {
         "time_point": 5,
         "VELOCITY U": {
             "mean": 0.2148579548180691,
@@ -52,7 +52,7 @@
             "unit": "NONE"
         }
     },
-    "point_data_sample": {
+    "extracted_value": {
         "name": "VELOCITY U",
         "vertex_id": 125,
         "plane_id": 0,
@@ -70,7 +70,7 @@
             0.12885670363903046
         ]
     },
-    "VariablesInformation": {
+    "point_data": {
         "names": [
             "VELOCITY U",
             "VELOCITY V",
@@ -78,14 +78,6 @@
             "ANALYTIC SOL H",
             "ANALYTIC SOL U",
             "ANALYTIC SOL V"
-        ],
-        "dimensions": [
-            1,
-            1,
-            1,
-            1,
-            1,
-            1
         ],
         "units": [
             "M/S",

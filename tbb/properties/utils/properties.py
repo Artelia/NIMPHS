@@ -6,7 +6,7 @@ log = logging.getLogger(__name__)
 
 import json
 
-from tbb.properties.utils.point_data_manager import PointDataManager
+from tbb.properties.utils.point_data import PointDataManager
 
 
 def update_clip_value(self, value: float) -> None:  # noqa: D417
@@ -60,7 +60,7 @@ def available_point_data(self, context: Context) -> list:
 
     for id in range(file_data.vars.length()):
         identifier = file_data.vars.get(id)
-        items.append((json.dumps(identifier), identifier["name"], "Undocumented"))
+        items.append((identifier.dumps(), identifier.name, "Undocumented"))
 
     return items
 

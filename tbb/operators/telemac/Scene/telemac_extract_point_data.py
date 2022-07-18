@@ -6,9 +6,9 @@ import logging
 log = logging.getLogger(__name__)
 
 from tbb.panels.utils import get_selected_object
+from tbb.properties.utils.point_data import PointDataManager
 from tbb.properties.utils.properties import available_point_data
 from tbb.operators.shared.modal_operator import TBB_ModalOperator
-from tbb.properties.utils.point_data_manager import PointDataManager
 from tbb.operators.shared.utils import update_end, update_plane_id, update_start
 
 

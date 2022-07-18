@@ -7,8 +7,8 @@ log = logging.getLogger(__name__)
 import time
 
 from tbb.panels.utils import get_selected_object
+from tbb.properties.utils.point_data import PointDataManager
 from tbb.properties.telemac.file_data import TBB_TelemacFileData
-from tbb.properties.utils.point_data_manager import PointDataManager
 
 
 class TBB_OT_TelemacReloadFile(Operator):

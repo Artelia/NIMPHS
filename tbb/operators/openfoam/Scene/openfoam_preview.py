@@ -94,8 +94,9 @@ class TBB_OT_OpenfoamPreview(Operator):
         point_data = obj.tbb.settings.preview_point_data
         if point_data is not None and point_data != 'NONE':
             data = OpenfoamVertexColorsUtils.prepare(obj.data, point_data, file_data)
-            OpenfoamVertexColorsUtils.generate(obj.data, data)
-            OpenfoamMaterialUtils.generate_preview(obj, data.names[0])
+            if not data.is_empty():
+                OpenfoamVertexColorsUtils.generate(obj.data, data)
+                OpenfoamMaterialUtils.generate_preview(obj, data.names[0])
 
         log.info("{:.4f}".format(time.time() - start) + "s")
         self.report({'INFO'}, "Preview done")

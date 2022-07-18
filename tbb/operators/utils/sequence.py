@@ -7,7 +7,7 @@ log = logging.getLogger(__name__)
 
 import time
 
-from tbb.properties.utils.point_data_manager import PointDataManager
+from tbb.properties.utils.point_data import PointDataManager
 from tbb.properties.utils.interpolation import InterpInfoMeshSequence
 from tbb.operators.utils.object import OpenfoamObjectUtils, TelemacObjectUtils
 

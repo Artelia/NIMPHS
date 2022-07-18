@@ -158,7 +158,7 @@ def test_point_data_preview_object_openfoam():
     data = vertex_colors.get(f"{var_name}, None, None", None)
     assert data is not None
 
-    ground_truth = sample["variables"]["skip_zero_false"][var_name]["mean"]
+    ground_truth = sample["values"]["skip_zero_false"][var_name]["mean"]
     utils.compare_point_data_value(utils.compute_mean_value(data, obj, 0) - ground_truth, var_name)
 
 
@@ -235,7 +235,7 @@ def test_point_data_preview_object_telemac_2d():
         assert data is not None
 
         # Test point data values
-        ground_truth = sample["variables"][var_name]["mean"]
+        ground_truth = sample["values"][var_name]["mean"]
         utils.compare_point_data_value(utils.compute_mean_value(data, child, 0) - ground_truth, var_name)
 
 
@@ -292,5 +292,5 @@ def test_point_data_preview_object_telemac_3d():
         # Test point data values
         spmv += utils.compute_mean_value(data, child, 0)
 
-    ground_truth = sample["variables"][var_name]["spmv"]
+    ground_truth = sample["values"][var_name]["spmv"]
     utils.compare_point_data_value(abs(spmv - ground_truth), var_name)

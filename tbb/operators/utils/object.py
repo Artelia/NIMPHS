@@ -8,9 +8,9 @@ log = logging.getLogger(__name__)
 import time
 import numpy as np
 from typing import Union
+from tbb.properties.utils.point_data import PointDataManager
 from tbb.properties.telemac.file_data import TBB_TelemacFileData
 from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
-from tbb.properties.utils.point_data_manager import PointDataManager
 from tbb.operators.utils.mesh import OpenfoamMeshUtils, TelemacMeshUtils
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 from tbb.operators.shared.create_streaming_sequence import TBB_CreateStreamingSequence

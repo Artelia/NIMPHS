@@ -8,7 +8,7 @@ import pytest
 import warnings
 import numpy as np
 
-from tbb.properties.utils import VariablesInformation
+from tbb.properties.utils.point_data import PointDataManager
 
 # Point data value threshold for tests
 PDV_THRESHOLD = 0.01
@@ -68,15 +68,15 @@ def get_point_data_openfoam(skip_zero_time: bool):
 
     sample = get_sample_data(SAMPLE_OPENFOAM)
     if skip_zero_time:
-        info = sample["VariablesInformation"]["skip_zero_true"]
+        info = sample["point_data"]["skip_zero_true"]
     else:
-        info = sample["VariablesInformation"]["skip_zero_false"]
+        info = sample["point_data"]["skip_zero_false"]
 
-    vars_info = VariablesInformation()
-    for name, dim, unit in zip(info["names"], info["dimensions"], info["units"]):
-        vars_info.append(name=name, unit=unit, type='VECTOR' if dim > 1 else 'SCALAR', dim=dim)
+    point_data = PointDataManager()
+    for name, unit in zip(info["names"], info["units"]):
+        point_data.append(name=name, unit=unit)
 
-    return vars_info
+    return point_data
 
 
 def get_point_data_telemac(dim: str):
@@ -92,12 +92,12 @@ def get_point_data_telemac(dim: str):
     if dim == '3D':
         sample = get_sample_data(SAMPLE_TELEMAC_3D)
 
-    info = sample["VariablesInformation"]
-    vars_info = VariablesInformation()
-    for name, dim, unit in zip(info["names"], info["dimensions"], info["units"]):
-        vars_info.append(name=name, unit=unit, dim=dim)
+    info = sample["point_data"]
+    point_data = PointDataManager()
+    for name, unit in zip(info["names"], info["units"]):
+        point_data.append(name=name, unit=unit)
 
-    return vars_info
+    return point_data
 
 
 def get_preview_object():

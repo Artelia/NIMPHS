@@ -71,12 +71,18 @@ class TBB_OpenfoamFileData(TBB_FileData):
             id (Union[str, int]): identifier of the variable from which to get data
         """
 
+        channel = id.split('.')[-1]
+        name = id[:-2] if channel.isnumeric() else id
+
         # If these are different, then a clip or something like that has probably been applied
         # So return point data from self.mesh
         if self.mesh.points.size != self.raw_mesh.points.size:
-            return self.mesh.get_array(name=id, preference='point')
+            data = self.mesh.get_array(name=name, preference='point')
 
-        return self.raw_mesh.get_array(name=id, preference='point')
+            return data[:, int(channel)] if channel.isnumeric() else data
+
+        data = self.raw_mesh.get_array(name=name, preference='point')
+        return data[:, int(channel)] if channel.isnumeric() else data
 
     def update_data(self, time_point: int) -> None:
         """
@@ -139,6 +145,15 @@ class TBB_OpenfoamFileData(TBB_FileData):
 
         self.vars.clear()
         for name in self.raw_mesh.point_data.keys():
+
+            data = self.raw_mesh.point_data[name]
+            if len(data.shape) > 1:
+
+                for i in range(data.shape[1]):
+                    self.vars.append(f"{name}.{i}")
+
+                continue
+
             self.vars.append(name)
 
     def load_file(self, file_path: str) -> bool:

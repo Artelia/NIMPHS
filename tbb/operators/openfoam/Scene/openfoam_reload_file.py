@@ -8,7 +8,7 @@ import time
 
 from tbb.panels.utils import get_selected_object
 from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
-from tbb.properties.utils.point_data_manager import PointDataManager
+from tbb.properties.utils.point_data import PointDataManager
 
 
 class TBB_OT_OpenfoamReloadFile(Operator):

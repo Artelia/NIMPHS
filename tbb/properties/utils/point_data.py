@@ -93,6 +93,32 @@ class PointDataInformation():
         self.unit = unit
         self.range = range
 
+    def dumps(self) -> str:
+        """
+        Serialize this data structure to a JSON formatted str.
+
+        Returns:
+            str: JSON stringified data
+        """
+
+        data = {
+            "name": self.name,
+            "unit": self.unit,
+            "range": self.range.dumps(),
+        }
+
+        return json.dumps(data)
+
+    def __str__(self) -> str:
+        """
+        Output this data structure as a string.
+
+        Returns:
+            str: output string
+        """
+
+        return "{" + f"name: {self.name}, unit: {self.unit}, range: {self.range}" + "}"
+
 
 class PointDataManager():
     """Data structure to manage point data information for both modules."""
