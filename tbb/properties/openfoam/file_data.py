@@ -18,13 +18,10 @@ class TBB_OpenfoamFileData(TBB_FileData):
 
     #: UnstructuredGrid: 'internalMesh' from data
     raw_mesh: UnstructuredGrid = None
-
     #: PolyData: lest generated mesh
     mesh: PolyData = None
-
-    #: bool: Indicate
+    #: bool: Indicate whether triangulation should be applied or not
     tiangulate: bool = False
-
     #: int: current time point
     time_point: int = 0
 
@@ -61,7 +58,6 @@ class TBB_OpenfoamFileData(TBB_FileData):
         """
 
         self.module = other.module
-        self.nb_vars = other.nb_vars
         self.nb_time_points = other.nb_time_points
         self.vars = deepcopy(other.vars)
         self.triangulate = other.triangulate
@@ -143,10 +139,7 @@ class TBB_OpenfoamFileData(TBB_FileData):
 
         self.vars.clear()
         for name in self.raw_mesh.point_data.keys():
-            data = self.raw_mesh.point_data[name]
-            type = 'SCALAR' if len(data.shape) == 1 else 'VECTOR'
-            dim = 1 if len(data.shape) == 1 else data.shape[1]
-            self.vars.append(name, unit="", range=None, type=type, dim=dim)
+            self.vars.append(name)
 
     def load_file(self, file_path: str) -> bool:
         """

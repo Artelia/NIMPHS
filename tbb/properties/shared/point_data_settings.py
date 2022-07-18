@@ -2,7 +2,7 @@
 from bpy.types import PropertyGroup
 from bpy.props import StringProperty, BoolProperty, EnumProperty
 
-from tbb.properties.utils import VariablesInformation
+from tbb.properties.utils.point_data_manager import PointDataManager
 
 
 class TBB_PointDataSettings(PropertyGroup):
@@ -22,7 +22,7 @@ class TBB_PointDataSettings(PropertyGroup):
     list: StringProperty(
         name="Point data",
         description="List of point data to import as vertex color.",
-        default=VariablesInformation().dumps(),  # noqa F821
+        default=PointDataManager().dumps(),  # noqa F821
     )
 
     #: bpy.props.EnumProperty: Indicate whether point data should be remapped using local or global value ranges.

@@ -4,7 +4,7 @@ log = logging.getLogger(__name__)
 
 import json
 import numpy as np
-from typing import Union, Any
+from typing import Union
 
 
 class ValueRange():
@@ -69,15 +69,40 @@ class ValueRange():
         return "{" + f"minL: {self.minL}, minG: {self.minG}, maxL: {self.maxL}, maxG: {self.maxG}" + "}"
 
 
+class PointDataInformation():
+    """Data structure which hold information on a given point data."""
+
+    #: str: Name of point data
+    name: str = ''
+    #: str: Unit of point data
+    unit: str = ''
+    #: ValueRange: Point data value ranges information
+    range: ValueRange = ValueRange()
+
+    def __init__(self, name: str, unit: str, range: ValueRange) -> None:
+        """
+        Init method of the class.
+
+        Args:
+            name (str): name
+            unit (str): unit
+            range (ValueRange): point data value ranges information
+        """
+        
+        self.name = name
+        self.unit = unit
+        self.range = range
+
+
 class PointDataManager():
     """Data structure to manage point data information for both modules."""
 
-    #: list: Point data names
-    names: list = []
-    #: list: Point data units
-    units: list = []
-    #: list: List of ValueRange
-    ranges: list = []
+    #: list[str]: Point data names
+    names: list[str] = []
+    #: list[str]: Point data units
+    units: list[str] = []
+    #: list[ValueRange]: List of ValueRange
+    ranges: list[ValueRange] = []
 
     def __init__(self, json_string: str = "") -> None:
         """
@@ -159,7 +184,7 @@ class PointDataManager():
 
         return json.dumps(data)
 
-    def get(self, id: Union[str, int], prop: str = "") -> Union[dict, Any, None]:
+    def get(self, id: Union[str, int], prop: str = "") -> Union[PointDataInformation, str, ValueRange, None]:
         """
         Return information about point data at the given index.
 
@@ -168,7 +193,7 @@ class PointDataManager():
             prop (str, optional): name of a specific property to get. If not set, return all. Defaults to "".
 
         Returns:
-            Union[dict, Any, None]: information on point data.
+            Union[PointDataInformation, str, ValueRange, None]: information on point data.
         """
 
         # Get id of the variable
@@ -183,13 +208,8 @@ class PointDataManager():
         if id < self.length():
             
             # Return all information
-            if prop == "":
-                output = {
-                    "name": self.names[id],
-                    "unit": self.units[id],
-                    "range": self.ranges[id],
-                }
-                return output
+            if not prop:
+                return PointDataInformation(self.names[id], self.units[id], self.ranges[id])
 
             # Return specific information
             elif prop in ['NAME', 'UNIT', 'RANGE']:
@@ -208,14 +228,14 @@ class PointDataManager():
             log.critical(f"Index '{id}' out of bound (length = {len(self.names)})", exc_info=1)
             return None
 
-    def append(self, name: str = 'NONE', unit: str = "", range: ValueRange = None, data: dict = None) -> None:
+    def append(self, name: str = 'NONE', unit: str = "", range: ValueRange = ValueRange(), data: dict = None) -> None:
         """
         Append new point data to the data structure.
 
         Args:
             name (str, optional): name. Defaults to "".
             unit (str, optional): unit. Defaults to "".
-            range (ValueRange, optional): value range. Defaults to None.
+            range (ValueRange, optional): value range. Defaults to ValueRange().
             data (dict, optional): data. Defaults to None.
         """
 

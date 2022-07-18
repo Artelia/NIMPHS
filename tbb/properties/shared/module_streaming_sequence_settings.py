@@ -2,7 +2,7 @@
 from bpy.types import PropertyGroup
 from bpy.props import BoolProperty, IntProperty
 
-from tbb.properties.utils import set_sequence_length, get_sequence_length
+from tbb.properties.utils.properties import set_sequence_length, get_sequence_length
 
 
 class TBB_ModuleStreamingSequenceSettings(PropertyGroup):

@@ -4,7 +4,7 @@ from typing import Union
 from pyvista import POpenFOAMReader
 
 from tbb.properties.telemac.serafin import Serafin
-from tbb.properties.utils import VariablesInformation
+from tbb.properties.utils.point_data_manager import PointDataManager
 
 
 class TBB_FileData():
@@ -16,32 +16,36 @@ class TBB_FileData():
     #: Union[Serafin, POpenFOAMReader]: File reader
     file: Union[Serafin, POpenFOAMReader] = None
 
-    #: int: Number of available variables
-    nb_vars: int = 0
-
     #: int: Number of readable time points
     nb_time_points: int = 0
 
-    #: VariablesInformation: Information on variables
-    vars: VariablesInformation = None
+    #: PointDataManager: Information on variables
+    vars: PointDataManager = None
 
     def __init__(self) -> None:
         """Init method of the class."""
 
         self.module = ''
         self.file = None
-        self.nb_vars = 0
         self.nb_time_points = 0
-        self.vars = VariablesInformation()
+        self.vars = PointDataManager()
 
-    def update_var_range(self, name: str, shape: str, scope: str = 'LOCAL',
-                         data: Union[np.ndarray, tuple, None] = None) -> None:
+    def get_point_data(self, _id: Union[str, int]) -> np.ndarray:
         """
-        Update variable information (value ranges).
+        Get point data from the given id. Overriden id derived classes.
+
+        Args:
+            _id (Union[str, int]): identifier of the variable from which to get data
+        """
+
+        pass
+
+    def update_var_range(self, name: str, scope: str = 'LOCAL', data: Union[np.ndarray, tuple, None] = None) -> None:
+        """
+        Update point data information (value ranges).
 
         Args:
             name (str): name of the variable to update
-            shape (str): type of the variable. Enum in ['SCALAR', 'VECTOR'].
             scope (str, optional): indicate which information to update. Enum in ['LOCAL', 'GLOBAL'].\
                                    Defaults to 'LOCAL'.
             data (Union[np.ndarray, tuple, None], optional): data corresponding to the given variable\
@@ -57,19 +61,11 @@ class TBB_FileData():
             # Get data if not provided
             if data is None:
                 data = self.get_point_data(name)
-
-            if shape == 'SCALAR':
-                self.vars.ranges[id][scope.lower()] = {"min": float(np.min(data)), "max": float(np.max(data))}
-
-            if shape == 'VECTOR':
-                minima, maxima = [], []
-
-                for i in range(data.shape[1]):
-                    minima.append(float(np.min(data[:, i])))
-                    maxima.append(float(np.max(data[:, i])))
-
-                self.vars.ranges[id][scope.lower()] = {"min": minima, "max": maxima}
+            
+            self.vars.ranges[id].minL = float(np.min(data))
+            self.vars.ranges[id].maxL = float(np.max(data))
 
         # Update global information
         if scope == 'GLOBAL':
-            self.vars.ranges[id][scope.lower()] = data
+            self.vars.ranges[id].minG = data["min"]
+            self.vars.ranges[id].maxG = data["max"]

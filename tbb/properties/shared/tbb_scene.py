@@ -2,7 +2,8 @@
 from bpy.types import PropertyGroup, Object
 from bpy.props import BoolProperty, FloatProperty, StringProperty, PointerProperty
 
-from tbb.properties.utils import VariablesInformation, update_progress_bar
+from tbb.properties.utils.others import update_progress_bar
+from tbb.properties.utils.point_data_manager import PointDataInformation
 
 
 class TBB_Scene(PropertyGroup):
@@ -16,7 +17,7 @@ class TBB_Scene(PropertyGroup):
     file_data: dict = {"ops": None}
 
     #: VariablesInformation: Place to store temporary variables information for operators.
-    op_vars: VariablesInformation = VariablesInformation()
+    op_vars: PointDataInformation = PointDataInformation()
 
     #: bpy.props.PointerPropery: Target object on which extract point data.
     op_target: PointerProperty(type=Object)

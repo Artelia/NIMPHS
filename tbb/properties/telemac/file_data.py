@@ -10,7 +10,22 @@ from copy import deepcopy
 
 from tbb.properties.telemac.serafin import Serafin
 from tbb.properties.shared.file_data import TBB_FileData
-from tbb.properties.telemac.utils import remove_spaces_telemac_var_name
+
+
+def remove_spaces(name: str):
+    """
+    Remove spaces at the end of the variable name (if the 16 characters are not used).
+
+    Args:
+        string (str): input string
+
+    Returns:
+        str: name
+    """
+
+    for i in range(len(name) - 1, -1, -1):
+        if name[i] != " ":
+            return name[:i + 1]
 
 
 class TBB_TelemacFileData(TBB_FileData):
@@ -18,19 +33,14 @@ class TBB_TelemacFileData(TBB_FileData):
 
     #: np.ndarray: Vertices of the mesh
     vertices: np.ndarray = None
-
     #: np.ndarray: Faces of the mesh
     faces: np.ndarray = None
-
     #: int: Number of planes
     nb_planes: int = 0
-
     #: int: Number of vertices
     nb_vertices: int = 0
-
     #: int: Number of triangles
     nb_triangles: int = 0
-
     #: np.ndarray: Data
     data: np.ndarray = None
 
@@ -57,7 +67,6 @@ class TBB_TelemacFileData(TBB_FileData):
 
         self.nb_vertices = self.file.npoin2d if self.is_3d() else self.file.npoin
         self.nb_triangles = len(self.file.ikle2d) if self.is_3d() else int(len(self.file.ikle) / 3)
-        self.nb_vars = self.file.nbvar
 
         self.nb_time_points = self.file.nb_pdt
 
@@ -71,12 +80,7 @@ class TBB_TelemacFileData(TBB_FileData):
         else:
             self.faces = self.file.ikle2d
 
-        # Initialize variables information
-        for var_name in self.file.nomvar:
-            # Note: var_name is always 32 chars long with 16 chars for the name and 16 for the unit name
-            name = remove_spaces_telemac_var_name(var_name[:16])
-            unit = remove_spaces_telemac_var_name(var_name[16:])
-            self.vars.append(name=name, unit=unit)
+        self.init_variables_information()
 
     def copy(self, other: TBB_TelemacFileData) -> None:
         """
@@ -121,6 +125,16 @@ class TBB_TelemacFileData(TBB_FileData):
 
         return self.file is not None and self.vertices is not None and self.faces is not None
 
+    def init_variables_information(self) -> None:
+        """Initialize variables information."""
+
+        self.vars.clear()
+        for var_name in self.file.nomvar:
+            # Note: var_name is always 32 chars long with 16 chars for the name and 16 for the unit name
+            name = remove_spaces(var_name[:16])
+            unit = remove_spaces(var_name[16:])
+            self.vars.append(name=name, unit=unit)
+
     def is_3d(self) -> bool:
         """
         Indicate if the file is from a 3D simulation.
@@ -131,22 +145,20 @@ class TBB_TelemacFileData(TBB_FileData):
 
         return self.nb_planes > 1
 
-    def read(self, time_point: int = 0) -> np.ndarray:
+    def read(self, time_point: int = 0) -> Union[np.ndarray, None]:
         """
         Read and return data at the given time point.
 
         Args:
             time_point (int, optional): time point from which to read data. Defaults to 0.
 
-        Raises:
-            ValueError: if the time point does not exist
-
         Returns:
-            np.ndarray: data
+            Union[np.ndarray, None]: data
         """
 
         if time_point > self.nb_time_points or time_point < 0:
-            raise ValueError("Undefined time point (" + str(time_point) + ")")
+            log.error(f"Undefined time point ({time_point})")
+            return None
 
         return self.file.read(self.file.temps[time_point])
 

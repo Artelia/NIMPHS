@@ -1,9 +1,9 @@
 # <pep8 compliant>
 from bpy.types import PropertyGroup
-from bpy.props import BoolProperty, EnumProperty, PointerProperty, FloatProperty, FloatVectorProperty, StringProperty
+from bpy.props import BoolProperty, EnumProperty, PointerProperty, FloatProperty, StringProperty
 
-from tbb.properties.utils import available_point_data
-from tbb.properties.openfoam.utils import set_clip_values, get_clip_values
+from tbb.properties.utils.properties import update_clip_value
+from tbb.properties.utils.properties import available_point_data
 
 
 class TBB_OpenfoamClipScalarProperty(PropertyGroup):
@@ -19,19 +19,7 @@ class TBB_OpenfoamClipScalarProperty(PropertyGroup):
         default=0.5,
         precision=6,
         step=1,
-        set=set_clip_values,
-        get=get_clip_values,
-    )
-
-    #: bpy.props.FloatProperty: Set the clipping value
-    vector_value: FloatVectorProperty(
-        name="Value",  # noqa: F821
-        description="Set the clipping value",
-        default=(0.5, 0.5, 0.5),
-        precision=6,
-        step=1,
-        set=set_clip_values,
-        get=get_clip_values,
+        update=update_clip_value,
     )
 
     #: bpy.props.EnumProperty: Name of scalars to clip on
