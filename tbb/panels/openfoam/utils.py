@@ -1,7 +1,6 @@
 # <pep8 compliant>
 from bpy.types import UILayout
 
-from tbb.properties.utils import VariablesInformation
 from tbb.properties.openfoam.clip import TBB_OpenfoamClipProperty
 
 
@@ -30,13 +29,7 @@ def draw_clip_settings(layout: UILayout, clip: TBB_OpenfoamClipProperty, enable:
 
             row = box.row()
             row.enabled = enable
-
-            var_type = VariablesInformation(clip.scalar.name).get(0, prop='TYPE')
-
-            if var_type == 'VECTOR':
-                row.prop(clip.scalar, "vector_value", text="Value")
-            else:
-                row.prop(clip.scalar, "value", text="Value")
+            row.prop(clip.scalar, "value", text="Value")
 
             row = box.row()
             row.enabled = enable

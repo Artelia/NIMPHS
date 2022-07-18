@@ -3,7 +3,7 @@ from bpy.types import Context, Object, UILayout
 
 from typing import Union
 
-from tbb.properties.utils import VariablesInformation
+from tbb.properties.utils.point_data_manager import PointDataManager
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 
 
@@ -45,48 +45,24 @@ def draw_point_data(layout: UILayout, point_data: TBB_PointDataSettings, show_re
         row.prop(point_data, "remap_method", text="Method")
 
     # Display selected point data
-    data = VariablesInformation(point_data.list)
-    for name, unit, values, type, dim in zip(data.names, data.units, data.ranges, data.types, data.dimensions):
+    data = PointDataManager(point_data.list)
+    for name, unit, values in zip(data.names, data.units, data.ranges):
 
         if values is None:
             info = "None"
 
         else:
-            range_data = values[point_data.remap_method.lower()]
 
             if point_data.remap_method == 'LOCAL':
 
-                if range_data["min"] is not None and range_data["max"] is not None:
-
-                    if type == 'SCALAR':
-                        info = "[" + "{:.4f}".format(range_data["min"]) + " ; "
-                        info += "{:.4f}".format(range_data["max"]) + "]"
-
-                    if type == 'VECTOR':
-                        info = ""
-                        for i in range(dim):
-                            info += "[" + "{:.4f}".format(range_data["min"][i]) + " ; "
-                            info += "{:.4f}".format(range_data["max"][i]) + "]"
-
-                else:
-                    info = "None"
+                info = "[" + "{:.4f}".format(values.minL) + " ; "
+                info += "{:.4f}".format(values.maxL) + "]"
 
             elif point_data.remap_method == 'GLOBAL':
 
-                if range_data["min"] is not None and range_data["max"] is not None:
+                info = "[" + "{:.4f}".format(values.minG) + " ; "
+                info += "{:.4f}".format(values.maxG) + "]"
 
-                    if type == 'SCALAR':
-                        info = "[" + "{:.4f}".format(range_data["min"]) + " ; "
-                        info += "{:.4f}".format(range_data["max"]) + "]"
-
-                    if type == 'VECTOR':
-                        info = ""
-                        for i in range(dim):
-                            info += "[" + "{:.4f}".format(range_data["min"][i]) + " ; "
-                            info += "{:.4f}".format(range_data["max"][i]) + "]"
-
-                else:
-                    info = "None"
             else:
                 info = "None"
 

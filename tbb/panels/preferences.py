@@ -17,12 +17,12 @@ class TBB_Preferences(AddonPreferences):
     # Access through `context.preferences.addons['tbb'].preferences.settings`.
     settings: PointerProperty(type=TBB_Preferences)
 
-    def draw(self, context: Context) -> None:
+    def draw(self, _context: Context) -> None:
         """
         UI layout of this panel.
 
         Args:
-            context (Context): context
+            _context (Context): context
         """
 
         # Files preferences

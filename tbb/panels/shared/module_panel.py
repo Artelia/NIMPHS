@@ -56,7 +56,7 @@ class TBB_ModulePanel(Panel):
             row = self.layout.row()
             row.enabled = enable_rows
             row.label(text="Reload data: ", icon='ERROR')
-            row.operator("tbb.reload_" + module.lower() + "_file", text="Reload", icon='FILE_REFRESH')
+            row.operator(f"tbb.reload_{module.lower()}_file", text="Reload", icon='FILE_REFRESH')
             return False, False, obj
 
         return enable_rows, True, obj
