@@ -105,6 +105,28 @@ class TBB_TelemacFileData(TBB_FileData):
 
         return self.data[id]
 
+    def get_point_data_from_list(self, names: list[str]) -> tuple[np.ndarray, str]:
+        """
+        Check for every variable name and return data associated to the first occurrence.
+
+        Args:
+            names (list[str]): list of possible variables
+
+        Returns:
+            tuple[np.ndarray, str]: data, name of the variable
+        """
+
+        for name in names:
+            try:
+                data = self.get_point_data(name)
+                data = data.reshape(data.shape[0], 1)
+                return data, name
+            except Exception:
+                pass
+
+        log.error(f"No data available from var names {names}", exc_info=1)
+        return np.zeros((self.nb_vertices, 1)), ''
+
     def update_data(self, time_point: int) -> None:
         """
         Update file data.
