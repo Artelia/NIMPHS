@@ -2,13 +2,16 @@
 from bpy.types import Operator, Context
 
 import logging
+
+from tbb.operators.utils.mesh import OpenfoamMeshUtils
+from tbb.operators.utils.object import OpenfoamObjectUtils
+from tbb.operators.utils.material import OpenfoamMaterialUtils
+from tbb.operators.utils.vertex_colors import OpenfoamVertexColorsUtils
 log = logging.getLogger(__name__)
 
 import time
 
 from tbb.panels.utils import get_selected_object
-from tbb.operators.utils import generate_object_from_data, generate_vertex_colors
-from tbb.operators.openfoam.utils import generate_mesh_data, prepare_openfoam_point_data, generate_preview_material
 
 
 class TBB_OT_OpenfoamPreview(Operator):
@@ -70,7 +73,8 @@ class TBB_OT_OpenfoamPreview(Operator):
         try:
             file_data.update_import_settings(io_settings)
             file_data.update_data(prw_time_point)
-            vertices, faces, file_data.mesh = generate_mesh_data(file_data, clip=clip)
+            vertices, file_data.mesh = OpenfoamMeshUtils.vertices(file_data, clip)
+            faces = OpenfoamMeshUtils.faces(file_data.mesh)
         except Exception:
             log.debug("Something went wrong building the mesh", exc_info=1)
             self.report({'WARNING'}, "Something went wrong building the mesh")
@@ -78,7 +82,7 @@ class TBB_OT_OpenfoamPreview(Operator):
 
         # Generate object
         try:
-            obj = generate_object_from_data(vertices, faces, obj.name_full)
+            obj = OpenfoamObjectUtils.generate(vertices, faces, obj.name_full)
             if collection.name not in [col.name for col in obj.users_collection]:
                 collection.objects.link(obj)
         except Exception:
@@ -89,10 +93,9 @@ class TBB_OT_OpenfoamPreview(Operator):
         # Import point data as vertex colors
         point_data = obj.tbb.settings.preview_point_data
         if point_data is not None and point_data != 'NONE':
-            res = prepare_openfoam_point_data(obj.data, point_data, file_data)
-            if len(res[0]) > 0:
-                generate_vertex_colors(obj.data, *res)
-                generate_preview_material(obj, res[0][0]["name"] if len(res[0]) > 0 else 'None')
+            data = OpenfoamVertexColorsUtils.prepare(obj.data, point_data, file_data)
+            OpenfoamVertexColorsUtils.generate(obj.data, data)
+            OpenfoamMaterialUtils.generate_preview(obj, data.names[0])
 
         log.info("{:.4f}".format(time.time() - start) + "s")
         self.report({'INFO'}, "Preview done")

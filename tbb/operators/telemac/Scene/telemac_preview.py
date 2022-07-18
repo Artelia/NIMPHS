@@ -7,7 +7,7 @@ log = logging.getLogger(__name__)
 import time
 
 from tbb.panels.utils import get_selected_object
-from tbb.operators.telemac.utils import generate_base_objects
+from tbb.operators.utils.object import TelemacObjectUtils
 
 
 class TBB_OT_TelemacPreview(Operator):
@@ -41,7 +41,7 @@ class TBB_OT_TelemacPreview(Operator):
 
         try:
             file_data.update_data(time_point)
-            children = generate_base_objects(file_data, obj.name, point_data)
+            children = TelemacObjectUtils.base(file_data, obj.name, point_data)
 
             for child in children:
                 # Check if not already in collection

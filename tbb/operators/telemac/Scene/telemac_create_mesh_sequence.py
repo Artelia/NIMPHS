@@ -108,12 +108,12 @@ class TBB_OT_TelemacCreateMeshSequence(TBB_CreateMeshSequence):
             set: state of the operation. Enum in ['PASS_THROUGH', 'CANCELLED'].
         """
 
-        from tbb.operators.telemac.utils import run_one_step_create_mesh_sequence_telemac
+        from tbb.operators.utils.object import TelemacObjectUtils
 
         start = time.time()
 
         try:
-            run_one_step_create_mesh_sequence_telemac(context, self)
+            TelemacObjectUtils.step_create_mesh_sequence(context, self)
         except Exception:
             log.error(f"Error generating mesh sequence at time point '{self.time_point}'", exc_info=1)
             self.report({'ERROR'}, "An error occurred creating the sequence")

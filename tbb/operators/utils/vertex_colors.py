@@ -9,12 +9,21 @@ from typing import Union
 from tbb.operators.utils.others import remap_array
 from tbb.properties.utils.interpolation import InterpInfo
 from tbb.properties.telemac.file_data import TBB_TelemacFileData
+from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 
 
 class VertexColorsInformation():
+    """Utility class which hold information on vertex colors to generate."""
 
     def __init__(self, nb_vertex_indices: int = 0) -> None:
+        """
+        Init method of the class.
+
+        Args:
+            nb_vertex_indices (int, optional): number of vertex indices. Defaults to 0.
+        """
+
         self.names = []
         self.data = []
         self.nb_vertex_indices = nb_vertex_indices
@@ -56,6 +65,7 @@ class VertexColorsInformation():
 
 
 class VertexColorsUtils():
+    """Utility functions for generating vertex colors for both modules."""
 
     @classmethod
     def generate(cls, bmesh: Mesh, data: VertexColorsInformation) -> None:
@@ -64,7 +74,7 @@ class VertexColorsUtils():
 
         Args:
             bmesh (Mesh): mesh on which to add vertex colors
-            VertexColorsInformation (np.ndarray):  point data information to generate vertex colors
+            data (VertexColorsInformation):  point data information to generate vertex colors
         """
 
         # Data for alpha and empty channels
@@ -92,12 +102,13 @@ class VertexColorsUtils():
 
 
 class TelemacVertexColorsUtils(VertexColorsUtils):
+    """Utility functions for generating vertex colors for the TELEMAC module."""
 
     @classmethod
     def prepare(cls, bmesh: Mesh, point_data: Union[TBB_PointDataSettings, str], file_data: TBB_TelemacFileData,
                 offset: int = 0) -> VertexColorsInformation:
         """
-        Prepare point data for the 'generate vertex colors' process.
+        Prepare point data to generate vertex colors.
 
         Args:
             bmesh (Mesh): blender mesh
@@ -127,7 +138,8 @@ class TelemacVertexColorsUtils(VertexColorsUtils):
 
             # Get right range of data in case of 3D simulation
             if file_data.is_3d():
-                start_id, end_id = offset * file_data.nb_vertices, offset * file_data.nb_vertices + file_data.nb_vertices
+                start_id = offset * file_data.nb_vertices
+                end_id = offset * file_data.nb_vertices + file_data.nb_vertices
                 data = data[start_id:end_id]
 
             # Get value range
@@ -137,7 +149,7 @@ class TelemacVertexColorsUtils(VertexColorsUtils):
                 var_range = file_data.vars.get(name, prop='RANGE')
                 min, max = var_range.minL, var_range.maxL
 
-            elif method == 'GLOBAL':
+            if method == 'GLOBAL':
                 var_range = file_data.vars.get(name, prop='RANGE')
                 min, max = var_range.minG, var_range.maxG
 
@@ -166,12 +178,12 @@ class TelemacVertexColorsUtils(VertexColorsUtils):
 
         # Get data from left time point
         file_data.update_data(time_info.left)
-        left = cls.telemac(bmesh, point_data, file_data, offset=offset)
+        left = cls.prepare(bmesh, point_data, file_data, offset=offset)
 
         if not time_info.exists:
             # Get data from right time point
             file_data.update_data(time_info.right)
-            right = cls.telemac(bmesh, point_data, file_data, offset=offset)
+            right = cls.prepare(bmesh, point_data, file_data, offset=offset)
 
             percentage = np.abs(time_info.frame - time_info.left_frame) / (time_info.time_steps + 1)
 
@@ -185,3 +197,60 @@ class TelemacVertexColorsUtils(VertexColorsUtils):
         else:
             # If it is an existing time point, no need to interpolate
             return left
+
+
+class OpenfoamVertexColorsUtils(VertexColorsUtils):
+    """Utility functions for generating vertex colors for the OpenFOAM module."""
+
+    @classmethod
+    def prepare(cls, bmesh: Mesh, point_data: Union[TBB_PointDataSettings, str],
+                file_data: TBB_OpenfoamFileData) -> VertexColorsInformation:
+        """
+        Prepare point data to generate vertex colors.
+
+        Args:
+            bmesh (Mesh): blender mesh
+            point_data (Union[TBB_PointDataSettings, str]): point data settings
+            file_data (TBB_OpenfoamFileData): file data
+
+        Returns:
+            tuple[list[dict], dict, int]: vertex colors groups, color data, number of vertices
+        """
+
+        # Prepare the mesh to loop over all its triangles
+        if len(bmesh.loop_triangles) == 0:
+            bmesh.calc_loop_triangles()
+
+        # Get vertex indices
+        vertex_ids = np.array([triangle.vertices for triangle in bmesh.loop_triangles]).flatten()
+
+        # If point_data is string, then the request comes from the preview panel, so use 'LOCAL' method
+        method = 'LOCAL' if isinstance(point_data, str) else point_data.remap_method
+
+        output = VertexColorsInformation(len(vertex_ids))
+
+        for name in file_data.vars.names:
+            # Read data
+            data = file_data.get_point_data(name)[vertex_ids]
+
+            # If vector value
+            if name.split('.')[-1].isnumeric():
+                id = int(name.split('.')[-1])
+                data = data[:, id]
+
+            # Get value range
+            if method == 'LOCAL':
+                # Update point data information
+                file_data.update_var_range(name, scope=method)
+                var_range = file_data.vars.get(name, prop='RANGE')
+                min, max = var_range.minL, var_range.maxL
+
+            if method == 'GLOBAL':
+                var_range = file_data.vars.get(name, prop='RANGE')
+                min, max = var_range.minG, var_range.maxG
+
+            # Append point data to output list
+            output.names.append(name)
+            output.data.append(remap_array(np.array(data), in_min=min, in_max=max))
+
+        return output

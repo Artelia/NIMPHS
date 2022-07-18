@@ -6,7 +6,7 @@ import logging
 log = logging.getLogger(__name__)
 
 from tbb.panels.utils import get_selected_object
-from tbb.operators.telemac.utils import generate_telemac_sequence_obj
+from tbb.operators.utils.object import TelemacObjectUtils
 from tbb.properties.telemac.import_settings import TBB_TelemacImportSettings
 from tbb.operators.shared.create_streaming_sequence import TBB_CreateStreamingSequence
 
@@ -112,6 +112,6 @@ class TBB_OT_TelemacCreateStreamingSequence(TBB_CreateStreamingSequence):
         if self.mode == 'TEST':
             self.invoke(context, None)
 
-        obj = generate_telemac_sequence_obj(context, selected, self.name, self.start)
+        obj = TelemacObjectUtils.sequence(context, selected, self.name, self.start)
         obj.tbb.settings.telemac.s_sequence.shade_smooth = self.shade_smooth
         return super().execute(context, obj, selected)

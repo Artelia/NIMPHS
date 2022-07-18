@@ -9,7 +9,7 @@ log = logging.getLogger(__name__)
 
 import time
 
-from tbb.operators.telemac.utils import generate_base_objects
+from tbb.operators.utils.object import TelemacObjectUtils
 from tbb.properties.telemac.file_data import TBB_TelemacFileData
 from tbb.properties.telemac.import_settings import TBB_TelemacImportSettings
 
@@ -82,7 +82,7 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         context.scene.tbb.file_data[obj.tbb.uid] = file_data
 
         # Generate objects
-        children = generate_base_objects(file_data, self.name)
+        children = TelemacObjectUtils.base(file_data, self.name)
         # Link generated objects to main 'Null' object
         for child in children:
             context.scene.collection.objects.link(child)

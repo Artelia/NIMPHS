@@ -8,10 +8,10 @@ log = logging.getLogger(__name__)
 
 import time
 
-from tbb.operators.utils import generate_object_from_data
+from tbb.operators.utils.mesh import OpenfoamMeshUtils
+from tbb.operators.utils.object import OpenfoamObjectUtils
 from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
 from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
-from tbb.operators.openfoam.utils import generate_mesh_data
 
 
 def import_openfoam_menu_draw(self, context: Context) -> None:  # noqa D417
@@ -76,8 +76,9 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
         # the preview mesh may already be loaded. Moreover, this step takes a while for large meshes.
         try:
             # Generate object
-            vertices, faces, file_data.mesh = generate_mesh_data(file_data)
-            obj = generate_object_from_data(vertices, faces, self.name, new=True)
+            vertices, file_data.mesh = OpenfoamMeshUtils.vertices(file_data)
+            faces = OpenfoamMeshUtils.faces(file_data.mesh)
+            obj = OpenfoamObjectUtils.generate(vertices, faces, self.name, new=True)
             # Setup and link generated object
             self.setup_generated_obj(context, obj, file_data)
             context.scene.collection.objects.link(obj)

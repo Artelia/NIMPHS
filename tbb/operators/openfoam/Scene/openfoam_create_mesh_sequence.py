@@ -129,11 +129,11 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
             set: state of the operator. Enum in ['PASS_THROUGH', 'CANCELLED'].
         """
 
-        from tbb.operators.openfoam.utils import run_one_step_create_mesh_sequence_openfoam
+        from tbb.operators.utils.object import OpenfoamObjectUtils
         start = time.time()
 
         try:
-            run_one_step_create_mesh_sequence_openfoam(context, self)
+            OpenfoamObjectUtils.step_create_mesh_sequence(context, self)
         except Exception:
             log.critical(f"Error at time point {self.time_point}, frame {self.frame}", exc_info=1)
             self.report({'ERROR'}, "An error occurred creating the sequence")

@@ -6,7 +6,7 @@ log = logging.getLogger(__name__)
 
 import numpy as np
 from typing import Union
-from pyvista import UnstructuredGrid, PolyData
+from pyvista import PolyData
 from tbb.properties.utils.interpolation import InterpInfo
 from tbb.properties.telemac.file_data import TBB_TelemacFileData
 from tbb.properties.openfoam.clip import TBB_OpenfoamClipProperty
@@ -104,27 +104,26 @@ class TelemacMeshUtils():
 
 
 class OpenfoamMeshUtils():
+    """Utility functions for generating meshes for the OpenFOAM module."""
 
     @classmethod
     def vertices(cls, file_data: TBB_OpenfoamFileData,
-                 clip: TBB_OpenfoamClipProperty = None) -> tuple[np.ndarray, np.ndarray, UnstructuredGrid]:
+                 clip: TBB_OpenfoamClipProperty = None) -> tuple[Union[np.ndarray, None], Union[PolyData, np.ndarray]]:
         """
-        Generate mesh data for Blender using the given OpenFOAM file data. Applies the clip if defined.\
-        This function may apply these operations on the OpenFOAM mesh: clip, extract_surface,\
-        triangulation and compute_normals.
+        Generate vertices and extracted surface of the given OpenFOAM file.
 
         Args:
             file_data (TBB_OpenfoamFileData): file data
             clip (TBB_OpenfoamClipProperty, optional): clip settings. Defaults to None.
 
         Returns:
-            tuple[np.array, np.array, UnstructuredGrid]: vertices, faces, resulting UnstructuredGrid
+            tuple[Union[np.ndarray, None], Union[PolyData, np.ndarray]]: vertices, extracted surface
         """
 
         # Get raw mesh
         mesh = file_data.raw_mesh
         if mesh is None:
-            return [], [], None
+            return None, None
 
         # Apply clip
         if clip is not None:
@@ -140,7 +139,7 @@ class OpenfoamMeshUtils():
         return np.array(surface.points), surface
 
     @classmethod
-    def faces(cls, surface: PolyData) -> np.ndarray:
+    def faces(cls, surface: PolyData) -> Union[np.ndarray, None]:
         """
         Get faces array of an extracted surface.
 
@@ -150,6 +149,9 @@ class OpenfoamMeshUtils():
         Returns:
             np.ndarray: faces array
         """
+
+        if surface is None:
+            return None
 
         if surface.is_all_triangles:
             faces = np.array(surface.faces).reshape(-1, 4)[:, 1:4]
@@ -171,7 +173,7 @@ class OpenfoamMeshUtils():
         return faces
 
     @classmethod
-    def clip(cls, file_data: TBB_OpenfoamFileData, clip: TBB_OpenfoamClipProperty) -> Union[UnstructuredGrid, None]:
+    def clip(cls, file_data: TBB_OpenfoamFileData, clip: TBB_OpenfoamClipProperty) -> Union[PolyData, None]:
         """
         Generate clipped surface.
 
@@ -180,7 +182,7 @@ class OpenfoamMeshUtils():
             clip (TBB_OpenfoamClipProperty): clip settings
 
         Returns:
-            Union[UnstructuredGrid, None]: UnstructuredGrid
+            Union[PolyData, None]: PolyData
         """
 
         # Get raw mesh
@@ -199,7 +201,7 @@ class OpenfoamMeshUtils():
                 mesh.clip_scalar(inplace=True, scalars=info.name, invert=clip.scalar.invert, value=clip.scalar.value)
                 surface = mesh.extract_surface(nonlinear_subdivision=0)
             else:
-                log.warning("Can't apply clip. No scalar selcted.")
+                log.warning("Can't apply clip. No scalar selected.")
                 surface = mesh.extract_surface(nonlinear_subdivision=0)
 
         return surface
