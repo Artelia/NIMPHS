@@ -3,7 +3,6 @@ from bpy.types import Context, Event
 from bpy.props import PointerProperty
 
 import logging
-
 log = logging.getLogger(__name__)
 
 import time
@@ -84,9 +83,9 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
 
             data = json.loads(self.test_data)
 
-            self.end = data["end"]
+            self.time_point = data["start"]
             self.start = data["start"]
-            self.time_point = self.start
+            self.end = data["end"]
             self.point_data.list = data["vars"]
             self.point_data.import_data = VariablesInformation(data["vars"]).length() > 0
 

@@ -31,7 +31,7 @@ def test_create_mesh_sequence_openfoam():
     data = json.dumps({"vars": utils.get_point_data_openfoam(True).dumps(), "start": 1, "end": vars["time_point"] + 1})
 
     op = bpy.ops.tbb.openfoam_create_mesh_sequence
-    assert op('EXEC_DEFAULT', name=utils.MESH_SEQUENCE_OBJ_NAME, mode='TEST', test_data=data) == {'FINISHED'}
+    assert op('EXEC_DEFAULT', mode='TEST', name=utils.MESH_SEQUENCE_OBJ_NAME, test_data=data) == {'FINISHED'}
 
     # ------------------------------------------------------------ #
     # /!\ WARNING: next tests are based on the following frame /!\ #
@@ -53,16 +53,16 @@ def test_mesh_sequence_openfoam():
     assert obj.mesh_sequence_settings.speed == 1.0
     assert obj.mesh_sequence_settings.fileName == ""
     assert obj.mesh_sequence_settings.startFrame == 1
-    assert obj.mesh_sequence_settings.numMeshes == vars["time_point"] + 1
     assert obj.mesh_sequence_settings.loaded is True
     assert obj.mesh_sequence_settings.meshNames == ""
     assert obj.mesh_sequence_settings.frameMode == '4'
     assert obj.mesh_sequence_settings.initialized is True
     assert obj.mesh_sequence_settings.isImported is False
-    assert obj.mesh_sequence_settings.numMeshesInMemory == vars["time_point"] + 1
     assert obj.mesh_sequence_settings.meshNameArray is not None
     assert obj.mesh_sequence_settings.perFrameMaterial is False
     assert obj.mesh_sequence_settings.streamDuringPlayback is True
+    assert obj.mesh_sequence_settings.numMeshes == vars["time_point"] + 1
+    assert obj.mesh_sequence_settings.numMeshesInMemory == vars["time_point"] + 1
 
 
 def test_geometry_mesh_sequence_openfoam():
