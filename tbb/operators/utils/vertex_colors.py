@@ -1,5 +1,5 @@
 # <pep8 compliant>
-from bpy.types import Object, Mesh
+from bpy.types import Mesh
 
 import logging
 log = logging.getLogger(__name__)
@@ -9,7 +9,6 @@ from typing import Union
 from tbb.operators.utils.others import remap_array
 from tbb.properties.utils.interpolation import InterpInfo
 from tbb.properties.telemac.file_data import TBB_TelemacFileData
-from tbb.properties.utils.point_data_manager import PointDataManager
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 
 
@@ -56,10 +55,10 @@ class VertexColorsInformation():
         return grp_names, grp_indices
 
 
-class PointDataUtils():
+class VertexColorsUtils():
 
     @classmethod
-    def vertex_colors(cls, bmesh: Mesh, data: VertexColorsInformation) -> None:
+    def generate(cls, bmesh: Mesh, data: VertexColorsInformation) -> None:
         """
         Generate vertex colors for the given mesh.
 
@@ -91,8 +90,11 @@ class PointDataUtils():
             colors = colors.flatten()
             vertex_colors.data.foreach_set("color", colors)
 
+
+class TelemacVertexColorsUtils(VertexColorsUtils):
+
     @classmethod
-    def telemac(cls, bmesh: Mesh, point_data: Union[TBB_PointDataSettings, str], file_data: TBB_TelemacFileData,
+    def prepare(cls, bmesh: Mesh, point_data: Union[TBB_PointDataSettings, str], file_data: TBB_TelemacFileData,
                 offset: int = 0) -> VertexColorsInformation:
         """
         Prepare point data for the 'generate vertex colors' process.
@@ -146,7 +148,7 @@ class PointDataUtils():
         return output
 
     @classmethod
-    def telemac_LI(cls, bmesh: Mesh, point_data: TBB_PointDataSettings, file_data: TBB_TelemacFileData,
+    def prepare_LI(cls, bmesh: Mesh, point_data: TBB_PointDataSettings, file_data: TBB_TelemacFileData,
                    time_info: InterpInfo, offset: int = 0) -> VertexColorsInformation:
         """
         Prepare point data for linear interpolation of TELEMAC sequences.

@@ -6,8 +6,12 @@ log = logging.getLogger(__name__)
 
 import numpy as np
 from typing import Union
-from tbb.properties.telemac.file_data import TBB_TelemacFileData
+from pyvista import UnstructuredGrid, PolyData
 from tbb.properties.utils.interpolation import InterpInfo
+from tbb.properties.telemac.file_data import TBB_TelemacFileData
+from tbb.properties.openfoam.clip import TBB_OpenfoamClipProperty
+from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
+from tbb.properties.utils.point_data_manager import PointDataManager
 
 
 class TelemacMeshUtils():
@@ -97,3 +101,105 @@ class TelemacMeshUtils():
         else:
             # If it is an existing time point, no need to interpolate
             return left
+
+
+class OpenfoamMeshUtils():
+
+    @classmethod
+    def vertices(cls, file_data: TBB_OpenfoamFileData,
+                 clip: TBB_OpenfoamClipProperty = None) -> tuple[np.ndarray, np.ndarray, UnstructuredGrid]:
+        """
+        Generate mesh data for Blender using the given OpenFOAM file data. Applies the clip if defined.\
+        This function may apply these operations on the OpenFOAM mesh: clip, extract_surface,\
+        triangulation and compute_normals.
+
+        Args:
+            file_data (TBB_OpenfoamFileData): file data
+            clip (TBB_OpenfoamClipProperty, optional): clip settings. Defaults to None.
+
+        Returns:
+            tuple[np.array, np.array, UnstructuredGrid]: vertices, faces, resulting UnstructuredGrid
+        """
+
+        # Get raw mesh
+        mesh = file_data.raw_mesh
+        if mesh is None:
+            return [], [], None
+
+        # Apply clip
+        if clip is not None:
+            surface = cls.clip(file_data, clip)
+        else:
+            surface = mesh.extract_surface(nonlinear_subdivision=0)
+
+        # Triangulate
+        if file_data.triangulate:
+            surface.triangulate(inplace=True)
+            surface.compute_normals(inplace=True, consistent_normals=False, split_vertices=True)
+
+        return np.array(surface.points), surface
+
+    @classmethod
+    def faces(cls, surface: PolyData) -> np.ndarray:
+        """
+        Get faces array of an extracted surface.
+
+        Args:
+            surface (PolyData): extracted surface
+
+        Returns:
+            np.ndarray: faces array
+        """
+
+        if surface.is_all_triangles:
+            faces = np.array(surface.faces).reshape(-1, 4)[:, 1:4]
+
+        else:
+            faces_indices = np.array(surface.faces)
+            padding, padding_id = 0, 0
+            faces = []
+
+            for id in range(surface.n_faces):
+
+                if padding_id >= faces_indices.size:
+                    break
+
+                padding = faces_indices[padding_id]
+                faces.append(faces_indices[padding_id + 1: padding_id + 1 + padding])
+                padding_id = padding_id + (padding + 1)
+
+        return faces
+
+    @classmethod
+    def clip(cls, file_data: TBB_OpenfoamFileData, clip: TBB_OpenfoamClipProperty) -> Union[UnstructuredGrid, None]:
+        """
+        Generate clipped surface.
+
+        Args:
+            file_data (TBB_OpenfoamFileData): file data
+            clip (TBB_OpenfoamClipProperty): clip settings
+
+        Returns:
+            Union[UnstructuredGrid, None]: UnstructuredGrid
+        """
+
+        # Get raw mesh
+        mesh = file_data.raw_mesh
+        if mesh is None:
+            return None
+
+        # Apply clip
+        if clip.type == 'SCALAR':
+            info = PointDataManager(clip.scalar.name)
+
+            # Make sure there is a scalar selected
+            if info.length() > 0:
+                info = info.get(0)
+                mesh.set_active_scalars(name=info.name, preference="point")
+                mesh.clip_scalar(inplace=True, scalars=info.name, invert=clip.scalar.invert, value=clip.scalar.value)
+                surface = mesh.extract_surface(nonlinear_subdivision=0)
+            else:
+                log.warning("Can't apply clip. No scalar selcted.")
+                surface = mesh.extract_surface(nonlinear_subdivision=0)
+
+        return surface
