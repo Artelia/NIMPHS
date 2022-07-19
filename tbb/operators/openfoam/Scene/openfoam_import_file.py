@@ -79,10 +79,12 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
 
         try:
             file_data = TBB_OpenfoamFileData(self.filepath, self.import_settings)
+
             # Update point data local value ranges
             if self.mode != 'TEST':
                 for name in file_data.vars.names:
-                    file_data.update_var_range(name)
+                    file_data.update_var_range(name, data=file_data.get_point_data_from_raw(name))
+
         except BaseException:
             self.report({'WARNING'}, "An error occurred reading the file")
             return {'CANCELLED'}

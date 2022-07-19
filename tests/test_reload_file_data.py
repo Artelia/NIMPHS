@@ -28,7 +28,7 @@ def test_reload_file_data_openfoam():
     sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
 
     op = bpy.ops.tbb.reload_openfoam_file
-    assert op('EXEC_DEFAULT') == {'FINISHED'}
+    assert op('EXEC_DEFAULT', mode='TEST') == {'FINISHED'}
 
     # Get file_data
     file_data = bpy.context.scene.tbb.file_data.get(obj.tbb.uid, None)

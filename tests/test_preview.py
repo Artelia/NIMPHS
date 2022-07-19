@@ -34,7 +34,7 @@ def test_normal_preview_object_openfoam():
 
     assert obj.tbb.settings.openfoam.import_settings.triangulate is False
 
-    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {'FINISHED'}
+    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT', mode='TEST') == {'FINISHED'}
 
 
 def test_geometry_normal_preview_object():
@@ -61,7 +61,7 @@ def test_normal_decompose_polyhedra_preview_object_openfoam():
     io_settings.case_type = 'reconstructed'
     io_settings.decompose_polyhedra = True
 
-    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {'FINISHED'}
+    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT', mode='TEST') == {'FINISHED'}
 
 
 def test_geometry_normal_decompose_polyhedra_preview_object_openfoam():
@@ -88,7 +88,7 @@ def test_triangulated_preview_object_openfoam():
     io_settings.case_type = 'reconstructed'
     io_settings.decompose_polyhedra = False
 
-    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {'FINISHED'}
+    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT', mode='TEST') == {'FINISHED'}
 
 
 def test_geometry_triangulated_preview_object_openfoam():
@@ -115,7 +115,7 @@ def test_triangulated_decompose_polyhedra_preview_object_openfoam():
     io_settings.case_type = 'reconstructed'
     io_settings.decompose_polyhedra = True
 
-    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {'FINISHED'}
+    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT', mode='TEST') == {'FINISHED'}
 
 
 def test_geometry_triangulated_decompose_polyhedra_preview_object_openfoam():
@@ -140,7 +140,7 @@ def test_preview_point_data_openfoam():
     obj.tbb.settings.preview_time_point = sample["preview"]["time_point"]
     obj.tbb.settings.preview_point_data = utils.get_point_data_openfoam(False).get(var_name).dumps()
 
-    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {'FINISHED'}
+    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT', mode='TEST') == {'FINISHED'}
 
 
 def test_point_data_preview_object_openfoam():

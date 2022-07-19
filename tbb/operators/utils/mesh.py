@@ -1,4 +1,5 @@
 # <pep8 compliant>
+from copy import deepcopy
 from bpy.types import Object
 
 import logging
@@ -6,9 +7,9 @@ log = logging.getLogger(__name__)
 
 import numpy as np
 from typing import Union
-from pyvista import PolyData
+from pyvista import PolyData, UnstructuredGrid
 from tbb.properties.utils.interpolation import InterpInfo
-from tbb.properties.utils.point_data import PointDataManager
+from tbb.properties.utils.point_data import PointDataInformation
 from tbb.properties.telemac.file_data import TBB_TelemacFileData
 from tbb.properties.openfoam.clip import TBB_OpenfoamClipProperty
 from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
@@ -121,13 +122,13 @@ class OpenfoamMeshUtils():
         """
 
         # Get raw mesh
-        mesh = file_data.raw_mesh
+        mesh = deepcopy(file_data.raw_mesh)
         if mesh is None:
             return None, None
 
         # Apply clip
         if clip is not None:
-            surface = cls.clip(file_data, clip)
+            surface = cls.clip(mesh, clip)
         else:
             surface = mesh.extract_surface(nonlinear_subdivision=0)
 
@@ -173,36 +174,39 @@ class OpenfoamMeshUtils():
         return faces
 
     @classmethod
-    def clip(cls, file_data: TBB_OpenfoamFileData, clip: TBB_OpenfoamClipProperty) -> Union[PolyData, None]:
+    def clip(cls, mesh: UnstructuredGrid, clip: TBB_OpenfoamClipProperty) -> Union[PolyData, None]:
         """
         Generate clipped surface.
 
         Args:
-            file_data (TBB_OpenfoamFileData): file data
+            mesh (UnstructuredGrid): mesh
             clip (TBB_OpenfoamClipProperty): clip settings
 
         Returns:
             Union[PolyData, None]: PolyData
         """
 
-        # Get raw mesh
-        mesh = file_data.raw_mesh
-        if mesh is None:
-            return None
-
         # Apply clip
         if clip.type == 'SCALAR':
-            info = PointDataManager(clip.scalar.name)
+            info = PointDataInformation(json_string=clip.scalar.name)
 
             # Make sure there is a scalar selected
-            if info.length() > 0:
-                info = info.get(0)
+            if info.name != "None":
 
                 channel = info.name.split('.')[-1]
                 name = info.name[-2] if channel.isnumeric() else info.name
 
                 mesh.set_active_scalars(name=name, preference="point")
-                mesh.clip_scalar(inplace=True, scalars=name, invert=clip.scalar.invert, value=clip.scalar.value)
+
+                # Safely get the value (avoid using a value which is not in the range)
+                if clip.scalar.value > info.range.maxL:
+                    value = info.range.maxL
+                elif clip.scalar.value < info.range.minL:
+                    value = info.range.minL
+                else:
+                    value = clip.scalar.value
+
+                mesh.clip_scalar(inplace=True, scalars=name, invert=clip.scalar.invert, value=value)
                 surface = mesh.extract_surface(nonlinear_subdivision=0)
             else:
                 log.warning("Can't apply clip. No scalar selected.")

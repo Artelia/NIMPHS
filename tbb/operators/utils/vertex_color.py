@@ -261,8 +261,14 @@ class OpenfoamVertexColorUtils(VertexColorUtils):
 
         # If point_data is string, then the request comes from the preview panel, so use 'LOCAL' method
         if isinstance(point_data, str):
-            method = 'LOCAL'
-            names = [] if json.loads(point_data)["name"] == 'None' else [json.loads(point_data)["name"]]
+
+            if len(point_data) > 0:
+                method = 'LOCAL'
+                names = [] if json.loads(point_data)["name"] == 'None' else [json.loads(point_data)["name"]]
+            else:
+                log.warning("No point data information given")
+                return VertexColorInformation(len(vertex_ids))
+
         else:
             method = point_data.remap_method
             names = PointDataManager(point_data.list).names

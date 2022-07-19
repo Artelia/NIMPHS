@@ -12,13 +12,10 @@ class TBB_FileData():
 
     #: str: Name of the module
     module: str = ''
-
     #: Union[Serafin, POpenFOAMReader]: File reader
     file: Union[Serafin, POpenFOAMReader] = None
-
     #: int: Number of readable time points
     nb_time_points: int = 0
-
     #: PointDataManager: Information on variables
     vars: PointDataManager = None
 

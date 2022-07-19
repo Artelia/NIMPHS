@@ -1,4 +1,5 @@
 # <pep8 compliant>
+from bpy.props import EnumProperty
 from bpy.types import Operator, Context
 
 import logging
@@ -23,6 +24,17 @@ class TBB_OT_OpenfoamPreview(Operator):
     bl_idname = "tbb.openfoam_preview"
     bl_label = "Preview"
     bl_description = "Preview the selected object"
+
+    #: bpy.props.EnumProperty: Indicate which mode to use for this operator. Enum in ['NORMAL', 'TEST'].
+    mode: EnumProperty(
+        name="Mode",  # noqa: F821
+        description="Indicate which mode to use for this operator. Enum in ['NORMAL', 'TEST']",
+        items=[
+            ('NORMAL', "Normal", "Run normal"),  # noqa: F821
+            ('TEST', "Test", "Run for unit tests"),  # noqa: F821
+        ],
+        options={'HIDDEN'},  # noqa F821
+    )
 
     @classmethod
     def poll(cls, context: Context) -> bool:
@@ -87,7 +99,7 @@ class TBB_OT_OpenfoamPreview(Operator):
                 collection.objects.link(obj)
         except Exception:
             log.debug("Something went generating the object", exc_info=1)
-            self.report({'WARNING'}, "Something went generating the object")
+            self.report({'WARNING'}, "Something went wrong generating the object")
             return {'CANCELLED'}
 
         # Import point data as vertex colors
@@ -97,6 +109,14 @@ class TBB_OT_OpenfoamPreview(Operator):
             if not data.is_empty():
                 OpenfoamVertexColorUtils.generate(obj.data, data)
                 OpenfoamMaterialUtils.generate_preview(obj, data.names[0], "OpenFOAM_preview_material")
+
+        try:
+            # Update point data local value ranges
+            if self.mode != 'TEST':
+                for name in file_data.vars.names:
+                    file_data.update_var_range(name, data=file_data.get_point_data_from_raw(name))
+        except BaseException:
+            log.warning("An error occurred updating point data local value range.", exc_info=1)
 
         log.info("{:.4f}".format(time.time() - start) + "s")
         self.report({'INFO'}, "Preview done")

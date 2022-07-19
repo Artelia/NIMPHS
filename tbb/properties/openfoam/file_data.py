@@ -80,6 +80,19 @@ class TBB_OpenfoamFileData(TBB_FileData):
             data = self.mesh.get_array(name=name, preference='point')
             return data[:, int(channel)] if channel.isnumeric() else data
 
+        return self.get_point_data_from_raw(id)
+
+    def get_point_data_from_raw(self, id: Union[str, int]) -> np.ndarray:
+        """
+        Force to get point data from the raw mesh.
+
+        Args:
+            id (Union[str, int]): identifier of the variable from which to get data
+        """
+
+        channel = id.split('.')[-1]
+        name = id[:-2] if channel.isnumeric() else id
+
         data = self.raw_mesh.get_array(name=name, preference='point')
         return data[:, int(channel)] if channel.isnumeric() else data
 
@@ -91,11 +104,6 @@ class TBB_OpenfoamFileData(TBB_FileData):
             time_point (int): time point to read
             io_settings (Union[TBB_OpenfoamImportSettings, None], optional): import settings. Defaults to None.
         """
-
-        # The skip_zero_time property can change a lot of things, so we have to update the following data too
-        self.nb_time_points = self.file.number_time_points
-        if self.raw_mesh is not None:
-            self.init_variables_information()
 
         # Update mesh
         try:
@@ -109,6 +117,10 @@ class TBB_OpenfoamFileData(TBB_FileData):
         except ValueError:
             log.critical("Caught exception during update", exc_info=1)
             return
+
+        # The skip_zero_time property can change a lot of things, so we have to update the following data too
+        self.nb_time_points = self.file.number_time_points
+        self.init_variables_information()
 
     def update_import_settings(self, settings: Union[TBB_OpenfoamImportSettings, None]) -> None:
         """
@@ -142,18 +154,20 @@ class TBB_OpenfoamFileData(TBB_FileData):
     def init_variables_information(self) -> None:
         """Initialize variables information."""
 
-        self.vars.clear()
-        for name in self.raw_mesh.point_data.keys():
+        if self.raw_mesh is not None:
 
-            data = self.raw_mesh.point_data[name]
-            if len(data.shape) > 1:
+            self.vars.clear()
+            for name in self.raw_mesh.point_data.keys():
 
-                for i in range(data.shape[1]):
-                    self.vars.append(f"{name}.{i}")
+                data = self.raw_mesh.point_data[name]
+                if len(data.shape) > 1:
 
-                continue
+                    for i in range(data.shape[1]):
+                        self.vars.append(f"{name}.{i}")
 
-            self.vars.append(name)
+                    continue
+
+                self.vars.append(name)
 
     def load_file(self, file_path: str) -> bool:
         """

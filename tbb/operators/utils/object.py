@@ -235,7 +235,7 @@ class TelemacObjectUtils(ObjectUtils):
             obj.tbb.settings.point_data.import_data = op.point_data.import_data
             obj.tbb.settings.point_data.list = op.point_data.list
             obj.tbb.settings.point_data.remap_method = op.point_data.remap_method
-            context.scene.collection.objects.link(obj)
+            context.collection.objects.link(obj)
 
         # Other time points, update vertices
         else:

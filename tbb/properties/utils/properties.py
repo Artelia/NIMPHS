@@ -5,6 +5,7 @@ import logging
 log = logging.getLogger(__name__)
 
 import json
+import numpy as np
 
 from tbb.properties.utils.point_data import PointDataInformation
 
