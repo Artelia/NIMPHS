@@ -7,6 +7,7 @@ log = logging.getLogger(__name__)
 
 
 class MaterialUtils():
+    """Utility functions to generate materials for the both modules."""
 
     @classmethod
     def generate_preview(cls, obj: Object, name: str = "TBB_preview_material") -> None:
