@@ -14,7 +14,7 @@ from tbb.properties.utils.point_data import PointDataManager
 PDV_THRESHOLD = 0.01
 
 # Object names
-PREVIEW_OBJ_NAME = "Preview"
+PRW_OBJ_NAME = "Preview"
 MESH_SEQUENCE_OBJ_NAME = "Mesh"
 STREAMING_SEQUENCE_OBJ_NAME = "Streaming"
 
@@ -103,7 +103,7 @@ def get_point_data_telemac(dim: str):
 def get_preview_object():
     """Get preview object. If it does not exist, return None."""
 
-    obj = bpy.data.objects.get(PREVIEW_OBJ_NAME, None)
+    obj = bpy.data.objects.get(PRW_OBJ_NAME, None)
     # If not None, select the object
     if obj is not None:
         obj.select_set(True)

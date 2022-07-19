@@ -20,7 +20,7 @@ from helpers.utils import clean_all_objects
 def test_normal_preview_object_openfoam():
     # Import OpenFOAM sample object
     op = bpy.ops.tbb.import_openfoam_file
-    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_OPENFOAM, name=utils.PREVIEW_OBJ_NAME) == {'FINISHED'}
+    assert op('EXEC_DEFAULT', mode='TEST', filepath=utils.FILE_PATH_OPENFOAM, name=utils.PRW_OBJ_NAME) == {'FINISHED'}
 
     obj = utils.get_preview_object()
     assert obj is not None
@@ -131,7 +131,7 @@ def test_geometry_triangulated_decompose_polyhedra_preview_object_openfoam():
     assert len(obj.data.polygons) == mesh["faces"]
 
 
-def test_preview_point_data():
+def test_preview_point_data_openfoam():
     obj = utils.get_preview_object()
     sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
     var_name = sample["preview"]["name"]
@@ -210,7 +210,7 @@ def test_preview_material_openfoam():
 def test_preview_telemac_2d():
     # Import TELEMAC 2D sample object
     op = bpy.ops.tbb.import_telemac_file
-    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_2D, name=utils.PREVIEW_OBJ_NAME) == {'FINISHED'}
+    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_2D, name=utils.PRW_OBJ_NAME) == {'FINISHED'}
 
     obj = utils.get_preview_object()
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_2D)
@@ -262,7 +262,7 @@ def test_point_data_preview_object_telemac_2d():
 def test_preview_telemac_3d():
     # Import TELEMAC 3D sample object
     op = bpy.ops.tbb.import_telemac_file
-    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_3D, name=utils.PREVIEW_OBJ_NAME) == {'FINISHED'}
+    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_3D, name=utils.PRW_OBJ_NAME) == {'FINISHED'}
 
     obj = utils.get_preview_object()
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_2D)

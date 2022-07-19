@@ -21,9 +21,9 @@ def test_import_openfoam():
     op = bpy.ops.tbb.import_openfoam_file
 
     # Test with wrong filepath
-    assert op('EXEC_DEFAULT', filepath="test.foam", name=utils.PREVIEW_OBJ_NAME) == {'CANCELLED'}
+    assert op('EXEC_DEFAULT', filepath="test.foam", name=utils.PRW_OBJ_NAME) == {'CANCELLED'}
 
-    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_OPENFOAM, name=utils.PREVIEW_OBJ_NAME) == {'FINISHED'}
+    assert op('EXEC_DEFAULT', mode='TEST', filepath=utils.FILE_PATH_OPENFOAM, name=utils.PRW_OBJ_NAME) == {'FINISHED'}
 
 
 def test_imported_object_openfoam():
@@ -43,8 +43,6 @@ def test_imported_object_openfoam():
     assert obj.tbb.module == 'OpenFOAM'
     assert obj.tbb.is_mesh_sequence is False
     assert obj.tbb.is_streaming_sequence is False
-
-    # Test object settings
     assert obj.tbb.settings.file_path == utils.FILE_PATH_OPENFOAM
 
 
@@ -52,6 +50,7 @@ def test_imported_object_openfoam():
 def test_file_data_imported_object_openfoam():
     obj = utils.get_preview_object()
     sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
+    point_data = utils.get_point_data_openfoam(True)
 
     # Get file_data
     file_data = bpy.context.scene.tbb.file_data.get(obj.tbb.uid, None)
@@ -60,7 +59,8 @@ def test_file_data_imported_object_openfoam():
     # Test file data
     assert file_data.time_point == 0
     assert file_data.module == 'OpenFOAM'
-    assert file_data.vars.dumps() == utils.get_point_data_openfoam(True).dumps()
+    assert file_data.vars.names == point_data.names
+    assert file_data.vars.units == point_data.units
     assert file_data.nb_time_points == sample["values"]["skip_zero_true"]["nb_time_points"]
     assert isinstance(file_data.mesh, pyvista.PolyData)
     assert isinstance(file_data.file, pyvista.OpenFOAMReader)
@@ -76,9 +76,9 @@ def test_import_telemac_2d():
     op = bpy.ops.tbb.import_telemac_file
 
     # Test with wrong filepath
-    assert op('EXEC_DEFAULT', filepath="test.slf", name=utils.PREVIEW_OBJ_NAME) == {'CANCELLED'}
+    assert op('EXEC_DEFAULT', filepath="test.slf", name=utils.PRW_OBJ_NAME) == {'CANCELLED'}
 
-    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_2D, name=utils.PREVIEW_OBJ_NAME) == {'FINISHED'}
+    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_2D, name=utils.PRW_OBJ_NAME) == {'FINISHED'}
 
 
 def test_file_data_imported_object_telemac_2d():
@@ -115,9 +115,9 @@ def test_import_telemac_3d():
     op = bpy.ops.tbb.import_telemac_file
 
     # Test with wrong filepath
-    assert op('EXEC_DEFAULT', filepath="test.slf", name=utils.PREVIEW_OBJ_NAME) == {'CANCELLED'}
+    assert op('EXEC_DEFAULT', filepath="test.slf", name=utils.PRW_OBJ_NAME) == {'CANCELLED'}
 
-    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_3D, name=utils.PREVIEW_OBJ_NAME) == {'FINISHED'}
+    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_3D, name=utils.PRW_OBJ_NAME) == {'FINISHED'}
 
 
 def test_file_data_imported_object_telemac_3d():

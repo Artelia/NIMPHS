@@ -20,7 +20,7 @@ from helpers.utils import clean_all_objects
 def test_edit_file_path_openfoam():
     # Import OpenFOAM sample object
     op = bpy.ops.tbb.import_openfoam_file
-    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_OPENFOAM, name=utils.PREVIEW_OBJ_NAME) == {'FINISHED'}
+    assert op('EXEC_DEFAULT', mode='TEST', filepath=utils.FILE_PATH_OPENFOAM, name=utils.PRW_OBJ_NAME) == {'FINISHED'}
 
     obj = utils.get_preview_object()  # noqa: F841
 
@@ -37,7 +37,7 @@ def test_edit_file_path_openfoam():
 def test_edit_file_path_telemac_2d():
     # Import TELEMAC 2D sample object
     op = bpy.ops.tbb.import_telemac_file
-    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_2D, name=utils.PREVIEW_OBJ_NAME) == {'FINISHED'}
+    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_2D, name=utils.PRW_OBJ_NAME) == {'FINISHED'}
 
     obj = utils.get_preview_object()  # noqa: F841
 
@@ -54,7 +54,7 @@ def test_edit_file_path_telemac_2d():
 def test_edit_file_path_telemac_3d():
     # Import TELEMAC 3D sample object
     op = bpy.ops.tbb.import_telemac_file
-    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_3D, name=utils.PREVIEW_OBJ_NAME) == {'FINISHED'}
+    assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_3D, name=utils.PRW_OBJ_NAME) == {'FINISHED'}
 
     obj = utils.get_preview_object()  # noqa: F841
 

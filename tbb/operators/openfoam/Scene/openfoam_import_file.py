@@ -1,7 +1,7 @@
 # <pep8 compliant>
 from bpy_extras.io_utils import ImportHelper
 from bpy.types import Operator, Context, Object
-from bpy.props import StringProperty, PointerProperty
+from bpy.props import StringProperty, PointerProperty, EnumProperty
 
 import logging
 log = logging.getLogger(__name__)
@@ -37,6 +37,17 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
     bl_label = "Import"
     bl_description = "Import an OpenFOAM file"
 
+    #: bpy.props.EnumProperty: Indicate which mode to use for this operator. Enum in ['NORMAL', 'TEST'].
+    mode: EnumProperty(
+        name="Mode",  # noqa: F821
+        description="Indicate which mode to use for this operator. Enum in ['NORMAL', 'TEST']",
+        items=[
+            ('NORMAL', "Normal", "Run normal"),  # noqa: F821
+            ('TEST', "Test", "Run for unit tests"),  # noqa: F821
+        ],
+        options={'HIDDEN'},  # noqa F821
+    )
+
     #: bpy.props.StringProperty: List of allowed file extensions.
     filter_glob: StringProperty(
         default="*.foam",  # multiple allowed types: "*.foam;*.[];*.[]" etc ...
@@ -68,6 +79,10 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
 
         try:
             file_data = TBB_OpenfoamFileData(self.filepath, self.import_settings)
+            # Update point data local value ranges
+            if self.mode != 'TEST':
+                for name in file_data.vars.names:
+                    file_data.update_var_range(name)
         except BaseException:
             self.report({'WARNING'}, "An error occurred reading the file")
             return {'CANCELLED'}

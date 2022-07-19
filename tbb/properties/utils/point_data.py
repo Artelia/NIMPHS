@@ -80,19 +80,28 @@ class PointDataInformation():
     #: ValueRange: Point data value ranges information
     range: ValueRange = ValueRange()
 
-    def __init__(self, name: str, unit: str, range: ValueRange) -> None:
+    def __init__(self, name: str = "None", unit: str = "",
+                 range: ValueRange = ValueRange(), json_string: str = "") -> None:
         """
         Init method of the class.
 
         Args:
-            name (str): name
-            unit (str): unit
-            range (ValueRange): point data value ranges information
+            name (str, optional): name. Defaults to "None".
+            unit (str, optional): unit. Defaults to "".
+            range (ValueRange, optional): point data value ranges information. Defaults to ValueRange().
+            json_string (str, optional): JSON stringified data. Defaults to "".
         """
 
-        self.name = name
-        self.unit = unit
-        self.range = range
+        if not json_string:
+            self.name = name
+            self.unit = unit
+            self.range = range
+
+        else:
+            data = json.loads(json_string)
+            self.name = data.get("name", "None")
+            self.unit = data.get("unit", "")
+            self.range = ValueRange(data.get("range", ""))
 
     def dumps(self) -> str:
         """

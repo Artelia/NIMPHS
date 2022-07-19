@@ -6,10 +6,10 @@ log = logging.getLogger(__name__)
 
 import json
 
-from tbb.properties.utils.point_data import PointDataManager
+from tbb.properties.utils.point_data import PointDataInformation
 
 
-def update_clip_value(self, value: float) -> None:  # noqa: D417
+def update_clip_value(self, _context: Context) -> None:  # noqa: D417
     """
     Set clip value.
 
@@ -17,11 +17,13 @@ def update_clip_value(self, value: float) -> None:  # noqa: D417
     is in the value range of the selected scalar. Set the value to the nearest bound if outside the range.
 
     Args:
-        value (float): new value
+        context (Context): context
     """
 
+    value = self["value"]
+
     if self.name is not None:
-        data = PointDataManager(self.name).get(0)
+        data = PointDataInformation(json_string=self.name)
 
         if value < data.range.minL:
             self["value"] = data.range.minL
@@ -31,6 +33,27 @@ def update_clip_value(self, value: float) -> None:  # noqa: D417
 
         else:
             self["value"] = value
+
+
+def scalars(self, context: Context) -> list:
+    """
+    Generate the list of available scalars for clipping.
+
+    Args:
+        context (Context): context
+
+    Returns:
+        list: point data
+    """
+
+    items = []
+
+    # Filter vector values
+    for item in available_point_data(self, context):
+        if item[1].split('.')[-1] not in ['x', 'y', 'z']:
+            items.append(item)
+
+    return items
 
 
 def available_point_data(self, context: Context) -> list:
@@ -60,7 +83,14 @@ def available_point_data(self, context: Context) -> list:
 
     for id in range(file_data.vars.length()):
         identifier = file_data.vars.get(id)
-        items.append((identifier.dumps(), identifier.name, "Undocumented"))
+
+        channel = identifier.name.split('.')[-1]
+        if channel.isnumeric():
+            name = f"{identifier.name[:-2]}.{['x', 'y', 'z'][int(channel)]}"
+        else:
+            name = identifier.name
+
+        items.append((identifier.dumps(), name, "Undocumented"))
 
     return items
 
