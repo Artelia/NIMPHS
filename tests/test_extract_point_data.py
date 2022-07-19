@@ -33,9 +33,9 @@ def test_extract_point_data_telemac_2d():
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_2D)
 
     # Get test data
-    var_name = sample["point_data_sample"]["name"]
-    vertex_id = sample["point_data_sample"]["vertex_id"]
-    data = json.dumps(utils.get_point_data_telemac('2D').get(var_name))
+    var_name = sample["extracted_value"]["name"]
+    vertex_id = sample["extracted_value"]["vertex_id"]
+    data = utils.get_point_data_telemac('2D').get(var_name).dumps()
 
     # Note: Fudaa count indices from 1 to xxx. Here we count indices from 0 to xxx.
     op = bpy.ops.tbb.telemac_extract_point_data
@@ -50,7 +50,7 @@ def test_extract_point_data_telemac_2d():
     assert fcurve.range()[1] == 10.0
 
     # Test extracted values
-    ground_truth = sample["point_data_sample"]["values"]
+    ground_truth = sample["extracted_value"]["values"]
 
     for value, id in zip(ground_truth, range(len(ground_truth))):
         # ------------------------------------------------------------ #
@@ -79,10 +79,10 @@ def test_extract_point_data_telemac_3d():
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_3D)
 
     # Get test data
-    var_name = sample["point_data_sample"]["name"]
-    vertex_id = sample["point_data_sample"]["vertex_id"]
-    plane_id = sample["point_data_sample"]["plane_id"]
-    data = json.dumps(utils.get_point_data_telemac('3D').get(var_name))
+    var_name = sample["extracted_value"]["name"]
+    vertex_id = sample["extracted_value"]["vertex_id"]
+    plane_id = sample["extracted_value"]["plane_id"]
+    data = utils.get_point_data_telemac('3D').get(var_name).dumps()
 
     # Note: Fudaa count indices from 1 to xxx. Here we count indices from 0 to xxx.
     op = bpy.ops.tbb.telemac_extract_point_data
@@ -98,7 +98,7 @@ def test_extract_point_data_telemac_3d():
     assert fcurve.range()[1] == 10.0
 
     # Test extracted values
-    ground_truth = sample["point_data_sample"]["values"]
+    ground_truth = sample["extracted_value"]["values"]
 
     for value, id in zip(ground_truth, range(len(ground_truth))):
         # ------------------------------------------------------------ #

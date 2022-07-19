@@ -155,7 +155,7 @@ class TBB_TelemacFileData(TBB_FileData):
             # Note: var_name is always 32 chars long with 16 chars for the name and 16 for the unit name
             name = remove_spaces(var_name[:16])
             unit = remove_spaces(var_name[16:])
-            self.vars.append(name=name, unit=unit)
+            self.vars.append(name=name, unit=unit if unit is not None else 'NONE')
 
     def is_3d(self) -> bool:
         """

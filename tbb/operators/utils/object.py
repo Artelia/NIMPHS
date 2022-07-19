@@ -227,7 +227,7 @@ class TelemacObjectUtils(ObjectUtils):
         # First time point, create the sequence object
         if op.time_point == op.start:
 
-            obj = cls.sequence(context, op.obj, op.name, op.start, shape_keys=True)
+            obj = cls.sequence(context, op.obj, op.name, shape_keys=True)
             obj.tbb.module = 'TELEMAC'
             obj.tbb.is_mesh_sequence = True
             obj.tbb.settings.file_path = op.obj.tbb.settings.file_path
@@ -543,7 +543,7 @@ class OpenfoamObjectUtils(ObjectUtils):
                 # Import point data as vertex colors
                 point_data = obj.tbb.settings.point_data
                 if point_data.import_data and file_data.mesh is not None:
-                    data = OpenfoamVertexColorUtils.prepare(bmesh, point_data.list, file_data)
+                    data = OpenfoamVertexColorUtils.prepare(bmesh, point_data, file_data)
                     OpenfoamVertexColorUtils.generate(bmesh, data)
 
                     # Update information of selected point data

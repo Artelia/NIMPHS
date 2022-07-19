@@ -7,6 +7,7 @@ log = logging.getLogger(__name__)
 import json
 import numpy as np
 from typing import Union
+from copy import deepcopy
 from tbb.operators.utils.others import remap_array
 from tbb.properties.utils.interpolation import InterpInfo
 from tbb.properties.utils.point_data import PointDataManager
@@ -49,7 +50,7 @@ class VertexColorInformation():
 
             if size >= GRP_SIZE:
                 grp_names.append(grp_name[:-2])
-                grp_indices.append(indices)
+                grp_indices.append(deepcopy(indices))
                 size, grp_name = 0, ""
                 indices.clear()
 
@@ -58,13 +59,14 @@ class VertexColorInformation():
             size += 1
 
         # If last group is not full, fill it
-        for id in range(GRP_SIZE - len(grp_names) - 1):
-            grp_name += "None, "
-            indices.append(-1)
+        if GRP_SIZE - len(indices) > 0:
+            for id in range(GRP_SIZE - len(indices)):
+                grp_name += "None, "
+                indices.append(-1)
 
         # Add last group
         grp_names.append(grp_name[:-2])
-        grp_indices.append(indices)
+        grp_indices.append(deepcopy(indices))
 
         return grp_names, grp_indices
 
@@ -103,13 +105,12 @@ class VertexColorUtils():
             data (VertexColorInformation):  point data information to generate vertex colors
         """
 
-        print(data)
-
         # Data for alpha and empty channels
         ones = np.ones((data.nb_vertex_indices,))
         zeros = np.zeros((data.nb_vertex_indices,))
 
         grp_names, grp_indices = data.groups()
+
         for name, indices in zip(grp_names, grp_indices):
             vertex_colors = bmesh.vertex_colors.new(name=name, do_init=True)
 

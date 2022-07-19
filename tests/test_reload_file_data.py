@@ -67,7 +67,7 @@ def test_reload_file_data_telemac_2d():
     assert file_data is not None
 
     # Test file data
-    assert file_data.nb_vars == sample["nb_vars"]
+    assert file_data.vars.length() == sample["nb_vars"]
     assert file_data.nb_planes == sample["nb_planes"]
     assert file_data.is_3d() is sample["is_3d"]
     assert file_data.faces is not None
@@ -102,7 +102,7 @@ def test_reload_file_data_telemac_3d():
     assert file_data is not None
 
     # Test file data
-    assert file_data.nb_vars == sample["nb_vars"]
+    assert file_data.vars.length() == sample["nb_vars"]
     assert file_data.nb_planes == sample["nb_planes"]
     assert file_data.is_3d() is sample["is_3d"]
     assert file_data.faces is not None

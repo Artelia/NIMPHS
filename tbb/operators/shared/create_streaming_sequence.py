@@ -94,10 +94,10 @@ class TBB_CreateStreamingSequence(TBB_CreateSequence):
             set: state of the operator
         """
 
-        from tbb.operators.utils import setup_streaming_sequence_object
+        from tbb.operators.utils.object import ObjectUtils
 
         # Setup streaming sequence object
-        setup_streaming_sequence_object(obj, self, selected.tbb.settings.file_path)
+        ObjectUtils.setup_streaming_sequence(obj, self, selected.tbb.settings.file_path)
         context.scene.collection.objects.link(obj)
 
         # As mentioned here, lock the interface because the custom handler will alter data on frame change

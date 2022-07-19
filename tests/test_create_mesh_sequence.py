@@ -42,7 +42,7 @@ def test_create_mesh_sequence_openfoam():
 
 def test_mesh_sequence_openfoam():
     # Check sequence object
-    obj = bpy.data.objects.get(utils.MESH_SEQUENCE_OBJ_NAME + "_sequence", None)
+    obj = bpy.data.objects.get(f"{utils.MESH_SEQUENCE_OBJ_NAME}_sequence", None)
     assert obj is not None
 
     sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
@@ -66,7 +66,7 @@ def test_mesh_sequence_openfoam():
 
 
 def test_geometry_mesh_sequence_openfoam():
-    obj = bpy.data.objects.get(utils.MESH_SEQUENCE_OBJ_NAME + "_sequence", None)
+    obj = bpy.data.objects.get(f"{utils.MESH_SEQUENCE_OBJ_NAME}_sequence", None)
     sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
 
     # Test geometry
@@ -78,7 +78,7 @@ def test_geometry_mesh_sequence_openfoam():
 
 @pytest.mark.usefixtures("clean_all_objects")
 def test_point_data_mesh_sequence_openfoam():
-    obj = bpy.data.objects.get(utils.MESH_SEQUENCE_OBJ_NAME + "_sequence", None)
+    obj = bpy.data.objects.get(f"{utils.MESH_SEQUENCE_OBJ_NAME}_sequence", None)
     sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
     vars = sample["values"]["skip_zero_true"]
 
@@ -138,7 +138,7 @@ def test_create_mesh_sequence_telemac_2d():
 
 def test_mesh_sequence_telemac_2d():
     # Check sequence object
-    obj = bpy.data.objects.get(utils.MESH_SEQUENCE_OBJ_NAME + "_sequence", None)
+    obj = bpy.data.objects.get(f"{utils.MESH_SEQUENCE_OBJ_NAME}_sequence", None)
     assert obj is not None
     assert len(obj.children) == 2
 
@@ -171,7 +171,7 @@ def test_mesh_sequence_telemac_2d():
 
 
 def test_geometry_mesh_sequence_telemac_2d():
-    obj = bpy.data.objects.get(utils.MESH_SEQUENCE_OBJ_NAME + "_sequence", None)
+    obj = bpy.data.objects.get(f"{utils.MESH_SEQUENCE_OBJ_NAME}_sequence", None)
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_2D)
 
     # Test geometry
@@ -183,7 +183,7 @@ def test_geometry_mesh_sequence_telemac_2d():
 
 @pytest.mark.usefixtures("clean_all_objects")
 def test_point_data_mesh_sequence_telemac_2d():
-    obj = bpy.data.objects.get(utils.MESH_SEQUENCE_OBJ_NAME + "_sequence", None)
+    obj = bpy.data.objects.get(f"{utils.MESH_SEQUENCE_OBJ_NAME}_sequence", None)
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_2D)
 
     # ------------------------------------------------------------ #
@@ -236,7 +236,7 @@ def test_create_mesh_sequence_telemac_3d():
 
 def test_mesh_sequence_telemac_3d():
     # Check sequence object
-    obj = bpy.data.objects.get(utils.MESH_SEQUENCE_OBJ_NAME + "_sequence", None)
+    obj = bpy.data.objects.get(f"{utils.MESH_SEQUENCE_OBJ_NAME}_sequence", None)
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_3D)
     vars = sample["values"]
     assert obj is not None
@@ -268,7 +268,7 @@ def test_mesh_sequence_telemac_3d():
 
 
 def test_geometry_mesh_sequence_telemac_3d():
-    obj = bpy.data.objects.get(utils.MESH_SEQUENCE_OBJ_NAME + "_sequence", None)
+    obj = bpy.data.objects.get(f"{utils.MESH_SEQUENCE_OBJ_NAME}_sequence", None)
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_3D)
 
     # Test geometry
@@ -280,7 +280,7 @@ def test_geometry_mesh_sequence_telemac_3d():
 
 @pytest.mark.usefixtures("clean_all_objects")
 def test_point_data_mesh_sequence_telemac_3d():
-    obj = bpy.data.objects.get(utils.MESH_SEQUENCE_OBJ_NAME + "_sequence", None)
+    obj = bpy.data.objects.get(f"{utils.MESH_SEQUENCE_OBJ_NAME}_sequence", None)
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_3D)
 
     # ------------------------------------------------------------ #

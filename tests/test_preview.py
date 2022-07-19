@@ -138,7 +138,7 @@ def test_preview_point_data():
 
     # Set point data to preview
     obj.tbb.settings.preview_time_point = sample["preview"]["time_point"]
-    obj.tbb.settings.preview_point_data = json.dumps(utils.get_point_data_openfoam(False).get(var_name))
+    obj.tbb.settings.preview_point_data = utils.get_point_data_openfoam(False).get(var_name).dumps()
 
     assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT') == {'FINISHED'}
 
@@ -166,25 +166,40 @@ def test_point_data_preview_object_openfoam():
 def test_preview_material_openfoam():
     sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
     var_name = sample["preview"]["name"]
+    material_name = "OpenFOAM_preview_material"
 
     # Test preview material
-    prw_mat = bpy.data.materials.get("TBB_OpenFOAM_preview_material", None)
-    assert prw_mat is not None
-    assert prw_mat.use_nodes is True
+    material = bpy.data.materials.get(material_name, None)
+    assert material is not None
+    assert material.use_nodes is True
 
     # Test nodes
-    principled_bsdf_node = prw_mat.node_tree.nodes.get("Principled BSDF", None)
-    assert principled_bsdf_node is not None
-    vertex_color_node = prw_mat.node_tree.nodes.get("TBB_OpenFOAM_preview_material_vertex_color", None)
-    assert vertex_color_node is not None
-    assert vertex_color_node.layer_name == f"{var_name}, None, None"
+    principled_bsdf = material.node_tree.nodes.get("Principled BSDF", None)
+    assert principled_bsdf is not None
+    vertex_color = material.node_tree.nodes.get(f"{material_name}_vertex_color", None)
+    assert vertex_color is not None
+    assert vertex_color.layer_name == f"{var_name}, None, None"
+    separate_rgb = material.node_tree.nodes.get(f"{material_name}_separate_rgb", None)
+    assert separate_rgb is not None
+    output = material.node_tree.nodes.get("Material Output", None)
+    assert output is not None
 
     # Test links
-    link = prw_mat.node_tree.links[-1]
-    assert link.from_node == vertex_color_node
-    assert link.from_socket == vertex_color_node.outputs[0]
-    assert link.to_node == principled_bsdf_node
-    assert link.to_socket == principled_bsdf_node.inputs[0]
+    link = material.node_tree.links[0]
+    assert link.from_node == principled_bsdf
+    assert link.from_socket == principled_bsdf.outputs[0]
+    assert link.to_node == output
+    assert link.to_socket == output.inputs[0]
+    link = material.node_tree.links[1]
+    assert link.from_node == vertex_color
+    assert link.from_socket == vertex_color.outputs[0]
+    assert link.to_node == separate_rgb
+    assert link.to_socket == separate_rgb.inputs[0]
+    link = material.node_tree.links[2]
+    assert link.from_node == separate_rgb
+    assert link.from_socket == separate_rgb.outputs[0]
+    assert link.to_node == principled_bsdf
+    assert link.to_socket == principled_bsdf.inputs[0]
 
 
 # -------------------------- #
@@ -204,7 +219,7 @@ def test_preview_telemac_2d():
 
     # Set preview settings
     obj.tbb.settings.preview_time_point = sample["preview"]["time_point"]
-    obj.tbb.settings.preview_point_data = json.dumps(utils.get_point_data_telemac('2D').get(var_name))
+    obj.tbb.settings.preview_point_data = utils.get_point_data_telemac('2D').get(var_name).dumps()
 
     assert bpy.ops.tbb.telemac_preview('EXEC_DEFAULT') == {'FINISHED'}
 
@@ -256,7 +271,7 @@ def test_preview_telemac_3d():
 
     # Set preview settings
     obj.tbb.settings.preview_time_point = sample["preview"]["time_point"]
-    obj.tbb.settings.preview_point_data = json.dumps(utils.get_point_data_telemac('3D').get(var_name))
+    obj.tbb.settings.preview_point_data = utils.get_point_data_telemac('3D').get(var_name).dumps()
 
     assert bpy.ops.tbb.telemac_preview('EXEC_DEFAULT') == {'FINISHED'}
 
