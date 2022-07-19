@@ -24,6 +24,8 @@ class TBB_OpenfoamFileData(TBB_FileData):
     tiangulate: bool = False
     #: int: current time point
     time_point: int = 0
+    #: bool: indicate if the skip_zero_time property has changed
+    skip_zero_has_changed: bool = False
 
     def __init__(self, file_path: str, settings: Union[TBB_OpenfoamImportSettings, None]) -> None:
         """
@@ -43,6 +45,7 @@ class TBB_OpenfoamFileData(TBB_FileData):
         # Set common settings
         self.time_point = 0
         self.module = 'OpenFOAM'
+        self.skip_zero_has_changed = False
 
         # Load data
         self.update_import_settings(settings)
@@ -119,8 +122,10 @@ class TBB_OpenfoamFileData(TBB_FileData):
             return
 
         # The skip_zero_time property can change a lot of things, so we have to update the following data too
-        self.nb_time_points = self.file.number_time_points
-        self.init_variables_information()
+        if self.skip_zero_has_changed:
+            self.nb_time_points = self.file.number_time_points
+            self.init_variables_information()
+            self.skip_zero_has_changed = False
 
     def update_import_settings(self, settings: Union[TBB_OpenfoamImportSettings, None]) -> None:
         """
@@ -129,6 +134,8 @@ class TBB_OpenfoamFileData(TBB_FileData):
         Args:
             settings (Union[TBB_OpenfoamImportSettings, None]): OpenFOAM import settings
         """
+
+        old = self.file.skip_zero_time
 
         if settings is not None:
             self.triangulate = settings.triangulate
@@ -140,6 +147,10 @@ class TBB_OpenfoamFileData(TBB_FileData):
             self.file.skip_zero_time = True
             self.file.decompose_polyhedra = True
             self.file.case_type = 'reconstructed'
+
+        # Indicate that the skip_zero_time property has changed
+        if old != self.file.skip_zero_time:
+            self.skip_zero_has_changed = True
 
     def is_ok(self) -> bool:
         """
