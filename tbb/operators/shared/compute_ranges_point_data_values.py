@@ -201,10 +201,6 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
                     super().stop(context)
                     return {'CANCELLED'}
 
-                print(np.min(self.minima[0]))
-                print(np.min(self.minima[1]))
-                assert 1 == 0
-
                 # Compute global minima and maxima from list of local values
                 for name, id in zip(file_data.vars.names, range(file_data.vars.length())):
 

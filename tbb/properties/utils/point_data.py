@@ -5,6 +5,7 @@ log = logging.getLogger(__name__)
 import json
 import numpy as np
 from typing import Union
+from copy import deepcopy
 
 
 class ValueRange():
@@ -274,7 +275,7 @@ class PointDataManager():
         else:
             self.names.append(name)
             self.units.append(unit)
-            self.ranges.append(range)
+            self.ranges.append(deepcopy(range))
 
     def __str__(self) -> str:
         """
