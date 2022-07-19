@@ -1,6 +1,6 @@
 # <pep8 compliant>
-from bpy.types import AddonPreferences, Context
 from bpy.props import PointerProperty
+from bpy.types import AddonPreferences, Context
 
 from tbb.properties.preferences import TBB_Preferences
 

@@ -8,8 +8,8 @@ log = logging.getLogger(__name__)
 import time
 
 from tbb.panels.utils import get_selected_object
-from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
 from tbb.properties.utils.point_data import PointDataManager
+from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
 
 
 class TBB_OT_OpenfoamReloadFile(Operator):
