@@ -16,8 +16,8 @@ from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 from tbb.operators.shared.create_streaming_sequence import TBB_CreateStreamingSequence
 from tbb.properties.utils.interpolation import InterpInfo, InterpInfoStreamingSequence
 from tbb.operators.utils.vertex_color import OpenfoamVertexColorUtils, TelemacVertexColorUtils
-from tbb.operators.telemac.Scene.telemac_create_mesh_sequence import TBB_OT_TelemacCreateMeshSequence
-from tbb.operators.openfoam.Scene.openfoam_create_mesh_sequence import TBB_OT_OpenfoamCreateMeshSequence
+from tbb.operators.telemac.telemac_create_mesh_sequence import TBB_OT_TelemacCreateMeshSequence
+from tbb.operators.openfoam.openfoam_create_mesh_sequence import TBB_OT_OpenfoamCreateMeshSequence
 
 
 class ObjectUtils():

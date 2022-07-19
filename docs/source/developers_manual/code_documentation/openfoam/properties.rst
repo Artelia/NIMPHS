@@ -40,11 +40,11 @@ Import settings
 Object
 ######
 
-.. autoclass:: tbb.properties.openfoam.Object.openfoam_object_settings.TBB_OpenfoamObjectSettings
+.. autoclass:: tbb.properties.openfoam.openfoam_object_settings.TBB_OpenfoamObjectSettings
    :members:
    :show-inheritance:
 
-.. autoclass:: tbb.properties.openfoam.Object.openfoam_streaming_sequence.TBB_OpenfoamStreamingSequenceProperty
+.. autoclass:: tbb.properties.openfoam.openfoam_streaming_sequence.TBB_OpenfoamStreamingSequenceProperty
    :members:
    :show-inheritance:
 

@@ -3,8 +3,8 @@ from bpy.types import PropertyGroup
 from bpy.props import PointerProperty, StringProperty
 
 from tbb.properties.telemac.interpolate import TBB_TelemacInterpolateProperty
-from tbb.properties.telemac.Object.telemac_mesh_sequence import TBB_TelemacMeshSequenceProperty
-from tbb.properties.telemac.Object.telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
+from tbb.properties.telemac.telemac_mesh_sequence import TBB_TelemacMeshSequenceProperty
+from tbb.properties.telemac.telemac_streaming_sequence import TBB_TelemacStreamingSequenceProperty
 
 
 class TBB_TelemacObjectSettings(PropertyGroup):

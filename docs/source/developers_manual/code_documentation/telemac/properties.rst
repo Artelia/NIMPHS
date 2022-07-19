@@ -37,15 +37,15 @@ Import settings
 Object
 ######
 
-.. autoclass:: tbb.properties.telemac.Object.telemac_streaming_sequence.TBB_TelemacStreamingSequenceProperty
+.. autoclass:: tbb.properties.telemac.telemac_streaming_sequence.TBB_TelemacStreamingSequenceProperty
    :members:
    :show-inheritance:
 
-.. autoclass:: tbb.properties.telemac.Object.telemac_mesh_sequence.TBB_TelemacMeshSequenceProperty
+.. autoclass:: tbb.properties.telemac.telemac_mesh_sequence.TBB_TelemacMeshSequenceProperty
    :members:
    :show-inheritance:
 
-.. autoclass:: tbb.properties.telemac.Object.telemac_object_settings.TBB_TelemacObjectSettings
+.. autoclass:: tbb.properties.telemac.telemac_object_settings.TBB_TelemacObjectSettings
    :members:
    :show-inheritance:
    
