@@ -7,9 +7,9 @@ log = logging.getLogger(__name__)
 
 import numpy as np
 
+from tbb.properties.utils.point_data import PointDataManager
 from tbb.panels.utils import draw_point_data, get_selected_object
 from tbb.operators.shared.modal_operator import TBB_ModalOperator
-from tbb.properties.utils.point_data import PointDataManager
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 
 
@@ -52,7 +52,13 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
         if obj is None:
             return False
 
-        return obj.tbb.module in ['OpenFOAM', 'TELEMAC'] and not context.scene.tbb.m_op_running
+        if context.scene.tbb.m_op_running:
+            return False
+
+        if obj.tbb.module not in ['OpenFOAM', 'TELEMAC']:
+            return False
+
+        return True
 
     def invoke(self, context: Context, _event: Event) -> set:
         """

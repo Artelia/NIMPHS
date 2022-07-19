@@ -1,6 +1,8 @@
 # <pep8 compliant>
 from bpy.types import Menu, Context
 
+from tbb.panels.utils import get_selected_object
+
 
 class TBB_MT_OpenfoamPointDataMenu(Menu):
     """Main menu for OpenFOAM > Point data."""
@@ -11,12 +13,16 @@ class TBB_MT_OpenfoamPointDataMenu(Menu):
     bl_idname = "TBB_MT_OpenfoamPointDataMenu"
     bl_label = "Point data"
 
-    def draw(self, _context: Context) -> None:
+    def draw(self, context: Context) -> None:
         """
         UI layout of the menu.
 
         Args:
-            _context (Context): context
+            context (Context): context
         """
 
-        self.layout.operator("tbb.compute_ranges_point_data_values", text="Compute ranges")
+        obj = get_selected_object(context)
+
+        row = self.layout.row()
+        row.enabled = obj.tbb.module == 'OpenFOAM' if obj is not None else False
+        row.operator("tbb.compute_ranges_point_data_values", text="Compute ranges")

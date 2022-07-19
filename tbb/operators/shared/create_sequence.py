@@ -43,7 +43,7 @@ class TBB_CreateSequence(Operator):
     #: bpy.props.EnumProperty: Indicate which module to use. Enum in ['OpenFOAM', 'TELEMAC'].
     module: EnumProperty(
         name="Mode",  # noqa: F821
-        description="Indicate whether the operator should run modal or not. Enum in ['OpenFOAM', 'TELEMAC']",
+        description="Indicate which module to use. Enum in ['OpenFOAM', 'TELEMAC']",
         items=[
             ('OpenFOAM', "OpenFOAM", "Use OpenFOAM module"),  # noqa: F821
             ('TELEMAC', "TELEMAC", "Use TELEMAC module"),  # noqa: F821
