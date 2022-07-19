@@ -87,11 +87,14 @@ def test_point_data_mesh_sequence_openfoam():
 
     # Test point data values
     for i in range(len(obj.data.vertex_colors)):
+
+        data = obj.data.vertex_colors[i]
+
         for name, channel in zip(obj.data.vertex_colors[i].name.split(', '), range(3)):
-            data = obj.data.vertex_colors[i]
             try:
                 ground_truth = vars[name]["mean"]
                 subtraction = abs(utils.compute_mean_value(data, obj, channel) - ground_truth)
+                print(name, utils.compute_mean_value(data, obj, channel), ground_truth)
                 utils.compare_point_data_value(subtraction, name)
 
             except KeyError:

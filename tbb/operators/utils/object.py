@@ -15,7 +15,7 @@ from tbb.operators.utils.mesh import OpenfoamMeshUtils, TelemacMeshUtils
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 from tbb.operators.shared.create_streaming_sequence import TBB_CreateStreamingSequence
 from tbb.properties.utils.interpolation import InterpInfo, InterpInfoStreamingSequence
-from tbb.operators.utils.vertex_colors import OpenfoamVertexColorsUtils, TelemacVertexColorsUtils
+from tbb.operators.utils.vertex_color import OpenfoamVertexColorUtils, TelemacVertexColorUtils
 from tbb.operators.telemac.Scene.telemac_create_mesh_sequence import TBB_OT_TelemacCreateMeshSequence
 from tbb.operators.openfoam.Scene.openfoam_create_mesh_sequence import TBB_OT_OpenfoamCreateMeshSequence
 
@@ -123,8 +123,8 @@ class TelemacObjectUtils(ObjectUtils):
                 obj.tbb.settings.telemac.z_name = type
 
                 if import_point_data:
-                    data = TelemacVertexColorsUtils.prepare(obj.data, point_data, file_data)
-                    TelemacVertexColorsUtils.generate(obj.data, data)
+                    data = TelemacVertexColorUtils.prepare(obj.data, point_data, file_data)
+                    TelemacVertexColorUtils.generate(obj.data, data)
 
                 objects.append(obj)
         else:
@@ -135,8 +135,8 @@ class TelemacObjectUtils(ObjectUtils):
                 obj.tbb.settings.telemac.z_name = str(plane_id)
 
                 if import_point_data:
-                    data = TelemacVertexColorsUtils.prepare(obj.data, point_data, file_data, offset=plane_id)
-                    TelemacVertexColorsUtils.generate(obj.data, data)
+                    data = TelemacVertexColorUtils.prepare(obj.data, point_data, file_data, offset=plane_id)
+                    TelemacVertexColorUtils.generate(obj.data, data)
 
                 objects.append(obj)
 
@@ -271,8 +271,8 @@ class TelemacObjectUtils(ObjectUtils):
             bmesh.vertex_colors.remove(bmesh.vertex_colors[0])
 
         # Update point data
-        data = TelemacVertexColorsUtils.prepare_LI(bmesh, point_data, file_data, time_info, offset=offset)
-        OpenfoamVertexColorsUtils.generate(bmesh, data)
+        data = TelemacVertexColorUtils.prepare_LI(bmesh, point_data, file_data, time_info, offset=offset)
+        OpenfoamVertexColorUtils.generate(bmesh, data)
 
         # Update information of selected point data
         new_information = PointDataManager()
@@ -324,12 +324,12 @@ class TelemacObjectUtils(ObjectUtils):
 
             # Update vertex colors data
             if interpolate.type == 'LINEAR':
-                data = TelemacVertexColorsUtils.prepare_LI(child.data, point_data, file_data, time_info, offset=offset)
+                data = TelemacVertexColorUtils.prepare_LI(child.data, point_data, file_data, time_info, offset=offset)
             elif interpolate.type == 'NONE':
                 file_data.update_data(time_point)
-                data = TelemacVertexColorsUtils.prepare(child.data, point_data, file_data, offset=offset)
+                data = TelemacVertexColorUtils.prepare(child.data, point_data, file_data, offset=offset)
 
-            TelemacVertexColorsUtils.generate(child.data, data)
+            TelemacVertexColorUtils.generate(child.data, data)
 
             # Update information of selected point data
             new_information = PointDataManager()
@@ -433,8 +433,8 @@ class OpenfoamObjectUtils(ObjectUtils):
 
         # Import point data as vertex colors
         if op.point_data.import_data:
-            data = OpenfoamVertexColorsUtils.prepare(bmesh, op.point_data, file_data)
-            OpenfoamVertexColorsUtils.generate(bmesh, data)
+            data = OpenfoamVertexColorUtils.prepare(bmesh, op.point_data, file_data)
+            OpenfoamVertexColorUtils.generate(bmesh, data)
 
         return bmesh
 
@@ -543,8 +543,8 @@ class OpenfoamObjectUtils(ObjectUtils):
                 # Import point data as vertex colors
                 point_data = obj.tbb.settings.point_data
                 if point_data.import_data and file_data.mesh is not None:
-                    data = OpenfoamVertexColorsUtils.prepare(bmesh, point_data.list, file_data)
-                    OpenfoamVertexColorsUtils.generate(bmesh, data)
+                    data = OpenfoamVertexColorUtils.prepare(bmesh, point_data.list, file_data)
+                    OpenfoamVertexColorUtils.generate(bmesh, data)
 
                     # Update information of selected point data
                     new_information = PointDataManager()

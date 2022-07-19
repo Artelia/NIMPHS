@@ -255,7 +255,8 @@ class PointDataManager():
             log.critical(f"Index '{id}' out of bound (length = {len(self.names)})", exc_info=1)
             return None
 
-    def append(self, name: str = 'NONE', unit: str = "", range: ValueRange = ValueRange(), data: dict = None) -> None:
+    def append(self, name: str = 'NONE', unit: str = "", range: ValueRange = ValueRange(),
+               data: Union[dict, PointDataInformation] = None) -> None:
         """
         Append new point data to the data structure.
 
@@ -263,14 +264,20 @@ class PointDataManager():
             name (str, optional): name. Defaults to "".
             unit (str, optional): unit. Defaults to "".
             range (ValueRange, optional): value range. Defaults to ValueRange().
-            data (dict, optional): data. Defaults to None.
+            data (Union[dict, PointDataInformation], optional): data. Defaults to None.
         """
 
         # Check if append by data
         if data is not None:
-            self.names.append(data.get("name", "NONE"))
-            self.units.append(data.get("unit", ""))
-            self.ranges.append(data.get("range", ValueRange()))
+
+            if isinstance(data, PointDataInformation):
+                self.names.append(data.name)
+                self.units.append(data.unit)
+                self.ranges.append(deepcopy(data.range))
+            else:
+                self.names.append(data.get("name", "NONE"))
+                self.units.append(data.get("unit", ""))
+                self.ranges.append(data.get("range", ValueRange()))
 
         else:
             self.names.append(name)

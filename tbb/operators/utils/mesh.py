@@ -62,7 +62,7 @@ class TelemacMeshUtils():
                 # Compute 'FREE SURFACE' from 'WATER_DEPTH' and 'BOTTOM'
                 if name in ["WATER DEPTH", "HAUTEUR D'EAU"]:
                     # Get data for z-values
-                    bottom = file_data.get_point_data_from_list(["BOTTOM", "FOND"])
+                    bottom, name = file_data.get_point_data_from_list(["BOTTOM", "FOND"])
                     data += bottom
 
                 vertices = np.hstack((file_data.vertices, data))

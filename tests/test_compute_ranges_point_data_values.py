@@ -78,11 +78,11 @@ def test_computed_min_max_values_telemac_2d():
     # Test computed values
     point_data = utils.get_point_data_telemac('2D')
     for name in point_data.names:
-        data = file_data.vars.get(name, prop='RANGE')["global"]
+        data = file_data.vars.get(name, prop='RANGE')
 
         ground_truth = {"max": vars[name]["max"], "min": vars[name]["min"]}
-        assert data["min"] == ground_truth["min"]
-        assert data["max"] == ground_truth["max"]
+        assert data.minG == ground_truth["min"]
+        assert data.maxG == ground_truth["max"]
 
 
 # -------------------------- #
@@ -115,8 +115,8 @@ def test_computed_min_max_values_telemac_3d():
     # Test computed values
     point_data = utils.get_point_data_telemac('3D')
     for name in point_data.names:
-        data = file_data.vars.get(name, prop='RANGE')["global"]
+        data = file_data.vars.get(name, prop='RANGE')
 
         ground_truth = {"max": vars[name]["max"], "min": vars[name]["min"]}
-        assert data["min"] == ground_truth["min"]
-        assert data["max"] == ground_truth["max"]
+        assert data.minG == ground_truth["min"]
+        assert data.maxG == ground_truth["max"]

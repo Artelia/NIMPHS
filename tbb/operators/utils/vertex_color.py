@@ -15,7 +15,7 @@ from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
 
 
-class VertexColorsInformation():
+class VertexColorInformation():
     """Utility class which hold information on vertex colors to generate."""
 
     def __init__(self, nb_vertex_indices: int = 0) -> None:
@@ -90,18 +90,20 @@ class VertexColorsInformation():
   nb_vertex_indices: {self.nb_vertex_indices},\n  empty: {self.is_empty()}" + "\n}"
 
 
-class VertexColorsUtils():
+class VertexColorUtils():
     """Utility functions for generating vertex colors for both modules."""
 
     @classmethod
-    def generate(cls, bmesh: Mesh, data: VertexColorsInformation) -> None:
+    def generate(cls, bmesh: Mesh, data: VertexColorInformation) -> None:
         """
         Generate vertex colors for the given mesh.
 
         Args:
             bmesh (Mesh): mesh on which to add vertex colors
-            data (VertexColorsInformation):  point data information to generate vertex colors
+            data (VertexColorInformation):  point data information to generate vertex colors
         """
+
+        print(data)
 
         # Data for alpha and empty channels
         ones = np.ones((data.nb_vertex_indices,))
@@ -128,12 +130,12 @@ class VertexColorsUtils():
             vertex_colors.data.foreach_set("color", colors)
 
 
-class TelemacVertexColorsUtils(VertexColorsUtils):
+class TelemacVertexColorUtils(VertexColorUtils):
     """Utility functions for generating vertex colors for the TELEMAC module."""
 
     @classmethod
     def prepare(cls, bmesh: Mesh, point_data: Union[TBB_PointDataSettings, str], file_data: TBB_TelemacFileData,
-                offset: int = 0) -> VertexColorsInformation:
+                offset: int = 0) -> VertexColorInformation:
         """
         Prepare point data to generate vertex colors.
 
@@ -144,7 +146,7 @@ class TelemacVertexColorsUtils(VertexColorsUtils):
             offset (int, optional): offset for data reading (id of the plane for 3D simulations). Defaults to 0.
 
         Returns:
-            VertexColorsInformation: point data information to generate vertex colors
+            VertexColorInformation: point data information to generate vertex colors
         """
 
         # Prepare the mesh to loop over all its triangles
@@ -162,7 +164,7 @@ class TelemacVertexColorsUtils(VertexColorsUtils):
             method = point_data.remap_method
             names = PointDataManager(point_data.list).names
 
-        output = VertexColorsInformation(len(vertex_ids))
+        output = VertexColorInformation(len(vertex_ids))
 
         for name in names:
             # Read data
@@ -193,7 +195,7 @@ class TelemacVertexColorsUtils(VertexColorsUtils):
 
     @classmethod
     def prepare_LI(cls, bmesh: Mesh, point_data: TBB_PointDataSettings, file_data: TBB_TelemacFileData,
-                   time_info: InterpInfo, offset: int = 0) -> VertexColorsInformation:
+                   time_info: InterpInfo, offset: int = 0) -> VertexColorInformation:
         """
         Prepare point data for linear interpolation of TELEMAC sequences.
 
@@ -205,7 +207,7 @@ class TelemacVertexColorsUtils(VertexColorsUtils):
             offset (int, optional): offset for data reading (id of the plane for 3D simulations). Defaults to 0.
 
         Returns:
-            VertexColorsInformation: point data information to generate vertex colors
+            VertexColorInformation: point data information to generate vertex colors
         """
 
         # Get data from left time point
@@ -231,12 +233,12 @@ class TelemacVertexColorsUtils(VertexColorsUtils):
             return left
 
 
-class OpenfoamVertexColorsUtils(VertexColorsUtils):
+class OpenfoamVertexColorUtils(VertexColorUtils):
     """Utility functions for generating vertex colors for the OpenFOAM module."""
 
     @classmethod
     def prepare(cls, bmesh: Mesh, point_data: Union[TBB_PointDataSettings, str],
-                file_data: TBB_OpenfoamFileData) -> VertexColorsInformation:
+                file_data: TBB_OpenfoamFileData) -> VertexColorInformation:
         """
         Prepare point data to generate vertex colors.
 
@@ -246,7 +248,7 @@ class OpenfoamVertexColorsUtils(VertexColorsUtils):
             file_data (TBB_OpenfoamFileData): file data
 
         Returns:
-            tuple[list[dict], dict, int]: vertex colors groups, color data, number of vertices
+            VertexColorInformation: vertex colors groups, color data, number of vertices
         """
 
         # Prepare the mesh to loop over all its triangles
@@ -264,7 +266,7 @@ class OpenfoamVertexColorsUtils(VertexColorsUtils):
             method = point_data.remap_method
             names = PointDataManager(point_data.list).names
 
-        output = VertexColorsInformation(len(vertex_ids))
+        output = VertexColorInformation(len(vertex_ids))
 
         for name in names:
             # Read data

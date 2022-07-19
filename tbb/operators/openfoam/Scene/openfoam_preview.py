@@ -6,7 +6,7 @@ import logging
 from tbb.operators.utils.mesh import OpenfoamMeshUtils
 from tbb.operators.utils.object import OpenfoamObjectUtils
 from tbb.operators.utils.material import OpenfoamMaterialUtils
-from tbb.operators.utils.vertex_colors import OpenfoamVertexColorsUtils
+from tbb.operators.utils.vertex_color import OpenfoamVertexColorUtils
 log = logging.getLogger(__name__)
 
 import time
@@ -93,9 +93,9 @@ class TBB_OT_OpenfoamPreview(Operator):
         # Import point data as vertex colors
         point_data = obj.tbb.settings.preview_point_data
         if point_data is not None and point_data != 'NONE':
-            data = OpenfoamVertexColorsUtils.prepare(obj.data, point_data, file_data)
+            data = OpenfoamVertexColorUtils.prepare(obj.data, point_data, file_data)
             if not data.is_empty():
-                OpenfoamVertexColorsUtils.generate(obj.data, data)
+                OpenfoamVertexColorUtils.generate(obj.data, data)
                 OpenfoamMaterialUtils.generate_preview(obj, data.names[0])
 
         log.info("{:.4f}".format(time.time() - start) + "s")

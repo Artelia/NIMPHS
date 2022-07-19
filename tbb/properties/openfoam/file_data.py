@@ -78,7 +78,6 @@ class TBB_OpenfoamFileData(TBB_FileData):
         # So return point data from self.mesh
         if self.mesh.points.size != self.raw_mesh.points.size:
             data = self.mesh.get_array(name=name, preference='point')
-
             return data[:, int(channel)] if channel.isnumeric() else data
 
         data = self.raw_mesh.get_array(name=name, preference='point')
