@@ -9,7 +9,7 @@ log = logging.getLogger(__name__)
 class MaterialUtils():
 
     @classmethod
-    def generate_preview(cls, obj: Object, var_name: str, name: str = "TBB_preview_material") -> None:
+    def generate_preview(cls, obj: Object, name: str = "TBB_preview_material") -> None:
         """
         Generate or update the preview material.
 
@@ -21,12 +21,12 @@ class MaterialUtils():
 
         Args:
             obj (Object): object on which to apply the material
-            var_name (str): name of the variable to preview
             name (str, optional): name of the material. Defaults to "TBB_preview_material".
-
-        Raises:
-            NameError: if the variable is not found in the vertex colors groups
         """
+
+        if len(obj.data.vertex_colors) <= 0:
+            log.warning("No vertex color layer")
+            return
 
         # Get the preview material
         material = bpy.data.materials.get(name)
@@ -34,16 +34,7 @@ class MaterialUtils():
             material = bpy.data.materials.new(name=name)
             material.use_nodes = True
 
-        # Get channel and vertex colors group for the given variable name
-        channel_id, group_name = -1, ""
-        for group in obj.data.vertex_colors:
-            names = group.name.split(", ")
-            for var, chan_id in zip(names, range(len(names))):
-                if var == var_name:
-                    channel_id, group_name = chan_id, group.name
-
-        if channel_id == -1:
-            raise NameError(f"Point data {var_name} not found in vertex colors data")
+        layer_name = obj.data.vertex_colors[0].name
 
         # Get node tree
         tree = material.node_tree
@@ -63,10 +54,10 @@ class MaterialUtils():
 
         principled_bsdf = tree.nodes.get("Principled BSDF")
         # No need to remove old links thanks to the 'verify limits' argument
-        tree.links.new(separate_rgb.outputs[channel_id], principled_bsdf.inputs[0])
+        tree.links.new(separate_rgb.outputs[0], principled_bsdf.inputs[0])
 
         # Update vertex colors group to preview
-        vertex_color.layer_name = group_name
+        vertex_color.layer_name = layer_name
         # Make sure it is the active material
         obj.active_material = material
 

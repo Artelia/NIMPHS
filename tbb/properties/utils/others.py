@@ -6,7 +6,7 @@ from bpy.types import Context, VIEW3D_HT_tool_header
 import logging
 log = logging.getLogger(__name__)
 
-DEV_MODE = False
+DEV_MODE = True
 
 
 @persistent

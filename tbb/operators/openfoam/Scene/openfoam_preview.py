@@ -70,7 +70,6 @@ class TBB_OT_OpenfoamPreview(Operator):
 
         # Get settings
         obj = get_selected_object(context)
-        collection = context.collection
         clip = obj.tbb.settings.openfoam.clip
         io_settings = obj.tbb.settings.openfoam.import_settings
         file_data = context.scene.tbb.file_data.get(obj.tbb.uid, None)
@@ -95,8 +94,8 @@ class TBB_OT_OpenfoamPreview(Operator):
         # Generate object
         try:
             obj = OpenfoamObjectUtils.generate(vertices, faces, obj.name_full)
-            if collection.name not in [col.name for col in obj.users_collection]:
-                collection.objects.link(obj)
+            if context.collection.name not in [col.name for col in obj.users_collection]:
+                context.collection.objects.link(obj)
         except Exception:
             log.debug("Something went generating the object", exc_info=1)
             self.report({'WARNING'}, "Something went wrong generating the object")
@@ -108,7 +107,7 @@ class TBB_OT_OpenfoamPreview(Operator):
             data = OpenfoamVertexColorUtils.prepare(obj.data, point_data, file_data)
             if not data.is_empty():
                 OpenfoamVertexColorUtils.generate(obj.data, data)
-                OpenfoamMaterialUtils.generate_preview(obj, data.names[0], "OpenFOAM_preview_material")
+                OpenfoamMaterialUtils.generate_preview(obj, name="OpenFOAM_preview_material")
 
         try:
             # Update point data local value ranges

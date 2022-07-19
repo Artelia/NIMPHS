@@ -8,6 +8,7 @@ import time
 
 from tbb.panels.utils import get_selected_object
 from tbb.operators.utils.object import TelemacObjectUtils
+from tbb.operators.utils.material import TelemacMaterialUtils
 
 
 class TBB_OT_TelemacPreview(Operator):
@@ -34,7 +35,6 @@ class TBB_OT_TelemacPreview(Operator):
         start = time.time()
 
         obj = get_selected_object(context)
-        collection = context.collection
         time_point = obj.tbb.settings.preview_time_point
         point_data = obj.tbb.settings.preview_point_data
         file_data = context.scene.tbb.file_data.get(obj.tbb.uid, None)
@@ -43,10 +43,12 @@ class TBB_OT_TelemacPreview(Operator):
             file_data.update_data(time_point)
             children = TelemacObjectUtils.base(file_data, obj.name, point_data)
 
-            for child in children:
+            for child, id in zip(children, range(len(children))):
                 # Check if not already in collection
-                if collection.name not in [col.name for col in child.users_collection]:
-                    collection.objects.link(obj)
+                if context.collection.name not in [col.name for col in child.users_collection]:
+                    context.collection.objects.link(obj)
+
+                TelemacMaterialUtils.generate_preview(child, name=f"Telemac_preview_material_{id}")
 
         except Exception:
             log.error("An error occurred during preview", exc_info=1)
