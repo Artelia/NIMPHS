@@ -70,7 +70,7 @@ class TBB_OT_OpenfoamPreview(Operator):
 
         # Get settings
         obj = get_selected_object(context)
-        collection = context.scene.collection
+        collection = context.collection
         clip = obj.tbb.settings.openfoam.clip
         io_settings = obj.tbb.settings.openfoam.import_settings
         file_data = context.scene.tbb.file_data.get(obj.tbb.uid, None)

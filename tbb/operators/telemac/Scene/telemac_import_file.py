@@ -74,7 +74,7 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
 
         # Generate parent object
         obj = bpy.data.objects.new(self.name, object_data=None)
-        context.scene.collection.objects.link(obj)
+        context.collection.objects.link(obj)
         # Setup common settings
         obj.tbb.module = 'TELEMAC'
         obj.tbb.uid = str(time.time())
@@ -85,7 +85,7 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
         children = TelemacObjectUtils.base(file_data, self.name)
         # Link generated objects to main 'Null' object
         for child in children:
-            context.scene.collection.objects.link(child)
+            context.collection.objects.link(child)
             child.parent = obj
 
         log.info("{:.4f}".format(time.time() - start) + "s")

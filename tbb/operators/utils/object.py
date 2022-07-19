@@ -182,7 +182,7 @@ class TelemacObjectUtils(ObjectUtils):
                 # Add 'Basis' shape key
                 child.shape_key_add(name="Basis", from_mix=False)
             # Add the object to the collection
-            context.scene.collection.objects.link(child)
+            context.collection.objects.link(child)
             # Parent object
             child.parent = sequence
 
@@ -372,7 +372,7 @@ class OpenfoamObjectUtils(ObjectUtils):
             obj = bpy.data.objects.new(op.name, bmesh)
             # The object created from the convert_to_mesh_sequence() method adds
             # "_sequence" at the end of the name
-            context.scene.collection.objects.link(obj)
+            context.collection.objects.link(obj)
             # Convert it to a mesh sequence
             context.view_layer.objects.active = obj
 

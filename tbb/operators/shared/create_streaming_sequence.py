@@ -98,7 +98,7 @@ class TBB_CreateStreamingSequence(TBB_CreateSequence):
 
         # Setup streaming sequence object
         ObjectUtils.setup_streaming_sequence(obj, self, selected.tbb.settings.file_path)
-        context.scene.collection.objects.link(obj)
+        context.collection.objects.link(obj)
 
         # As mentioned here, lock the interface because the custom handler will alter data on frame change
         # https://docs.blender.org/api/current/bpy.app.handlers.html?highlight=app%20handlers#module-bpy.app.handlers

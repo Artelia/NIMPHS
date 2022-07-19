@@ -98,7 +98,7 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
             obj = OpenfoamObjectUtils.generate(vertices, faces, self.name, new=True)
             # Setup and link generated object
             self.setup_generated_obj(context, obj, file_data)
-            context.scene.collection.objects.link(obj)
+            context.collection.objects.link(obj)
         except Exception:
             log.error("Something went wrong building the mesh", exc_info=1)
             self.report({'WARNING'}, "Something went wrong building the mesh. See logs.")

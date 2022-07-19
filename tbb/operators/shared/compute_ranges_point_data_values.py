@@ -181,13 +181,16 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
             return {'CANCELLED'}
 
         if self.mode == 'TEST' or (event is not None and event.type == 'TIMER'):
+
+            vars = PointDataManager(self.point_data.list)
+
             if self.time_point <= self.end:
 
                 file_data = context.scene.tbb.file_data["ops"]
                 file_data.update_data(self.time_point)
 
                 # Compute local minima and maxima
-                for name, id in zip(file_data.vars.names, range(file_data.vars.length())):
+                for name, id in zip(vars.names, range(vars.length())):
 
                     data = file_data.get_point_data(name)
                     self.minima[id].append(float(np.min(data)))
@@ -202,7 +205,7 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
                     return {'CANCELLED'}
 
                 # Compute global minima and maxima from list of local values
-                for name, id in zip(file_data.vars.names, range(file_data.vars.length())):
+                for name, id in zip(vars.names, range(vars.length())):
 
                     mini = float(np.min(self.minima[id]))
                     maxi = float(np.max(self.maxima[id]))
