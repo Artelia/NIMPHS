@@ -55,7 +55,7 @@ class InterpInfo():
 
 
 class InterpInfoStreamingSequence(InterpInfo):
-    """Utility class to get interpolation information for 'Streaming Sequence' objects."""
+    """Utility class to get interpolation information for 'streaming sequence' objects."""
 
     def __init__(self, frame: int, start: int, time_steps: int) -> None:
         """
@@ -71,7 +71,7 @@ class InterpInfoStreamingSequence(InterpInfo):
 
     def compute(self, frame: int, start: int, time_steps: int) -> None:
         """
-        Compute time information for interpolation of 'Streaming Sequence' objects.
+        Compute time information for interpolation of 'streaming sequence' objects.
 
         Args:
             frame (int): _description_
@@ -103,7 +103,7 @@ class InterpInfoStreamingSequence(InterpInfo):
 
     def scan(self, time_point: int, time_steps: int) -> tuple[int, int, bool]:
         """
-        Scan time information for interpolation of 'Streaming Sequence' objects.
+        Scan time information for interpolation of 'streaming sequence' objects.
 
         Args:
             time_point (int): current time point
@@ -121,14 +121,14 @@ class InterpInfoStreamingSequence(InterpInfo):
 
 
 class InterpInfoMeshSequence(InterpInfo):
-    """Utility class to get interpolation information for 'Mesh Sequence' objects."""
+    """Utility class to get interpolation information for 'mesh sequence' objects."""
 
     def __init__(self, obj: Object, frame: int, threshold: float = 0.0001) -> None:
         """
         Init method of the class.
 
         Args:
-            obj (Object): 'Mesh Sequence' object
+            obj (Object): 'mesh sequence' object
             frame (int): current frame
             threshold (float, optional): shape_key value threshold. Defaults to 0.0001.
         """
@@ -137,7 +137,7 @@ class InterpInfoMeshSequence(InterpInfo):
 
     def compute(self, obj: Object, frame: int, threshold: float = 0.0001) -> None:
         """
-        Compute time information for interpolation of 'Mesh Sequence' objects.
+        Compute time information for interpolation of 'mesh sequence' objects.
 
         Args:
             obj (Object): sequence object
@@ -147,6 +147,7 @@ class InterpInfoMeshSequence(InterpInfo):
 
         # Get information from shape keys
         info = self.scan(obj.data, threshold=threshold)
+        print(info["frame_start"], info["frame_end"])
 
         if info["frame_start"] <= frame <= info["frame_end"]:
             self.has_data = True
@@ -180,7 +181,7 @@ class InterpInfoMeshSequence(InterpInfo):
 
     def scan(self, bmesh: Mesh, threshold: float = 0.0001) -> None:
         """
-        Scan time information for interpolation of 'Mesh Sequence' objects.
+        Scan time information for interpolation of 'mesh sequence' objects.
 
         .. code-block:: text
 

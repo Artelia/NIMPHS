@@ -270,16 +270,20 @@ class TelemacObjectUtils(ObjectUtils):
         while bmesh.vertex_colors:
             bmesh.vertex_colors.remove(bmesh.vertex_colors[0])
 
+        # Exit if no point data selected
+        selected = PointDataManager(point_data.list)
+        if selected.length() <= 0:
+            return
+
         # Update point data
         data = TelemacVertexColorUtils.prepare_LI(bmesh, point_data, file_data, time_info, offset=offset)
         OpenfoamVertexColorUtils.generate(bmesh, data)
 
         # Update information of selected point data
-        new_information = PointDataManager()
-        selected = PointDataManager(point_data.list)
+        new = PointDataManager()
         for var in selected.names:
-            new_information.append(data=file_data.vars.get(var))
-        point_data.list = new_information.dumps()
+            new.append(data=file_data.vars.get(var))
+        point_data.list = new.dumps()
 
     @classmethod
     def update_streaming_sequence(cls, obj: Object, child: Object, file_data: TBB_TelemacFileData,
@@ -292,7 +296,7 @@ class TelemacObjectUtils(ObjectUtils):
             child (Object): child object of the sequence
             file_data (TBB_TelemacFileData): file data
             frame (int): frame
-            offset (int, optional): offset for data reading (id of the plane for 3D simulations). Defaults to 0.
+            offset (int): offset for data reading (id of the plane for 3D simulations).
         """
 
         # Get settings
@@ -304,9 +308,9 @@ class TelemacObjectUtils(ObjectUtils):
         if interpolate.type == 'LINEAR':
             time_info = InterpInfoStreamingSequence(frame, sequence.start, interpolate.time_steps)
             vertices = TelemacMeshUtils.vertices_LI(child, file_data, time_info, offset)
-
-        else:
+        elif interpolate.type == 'NONE':
             time_point = frame - sequence.start
+            file_data.update_data(time_point)
             vertices = TelemacMeshUtils.vertices(file_data, offset=offset, type=child.tbb.settings.telemac.z_name)
 
         # Generate object
@@ -318,6 +322,12 @@ class TelemacObjectUtils(ObjectUtils):
 
         # Update point data
         if point_data.import_data:
+
+            # Exit if not point data selected
+            selected = PointDataManager(point_data.list)
+            if selected.length() <= 0:
+                return
+
             # Remove old vertex colors
             while child.data.vertex_colors:
                 child.data.vertex_colors.remove(child.data.vertex_colors[0])
@@ -326,17 +336,15 @@ class TelemacObjectUtils(ObjectUtils):
             if interpolate.type == 'LINEAR':
                 data = TelemacVertexColorUtils.prepare_LI(child.data, point_data, file_data, time_info, offset=offset)
             elif interpolate.type == 'NONE':
-                file_data.update_data(time_point)
                 data = TelemacVertexColorUtils.prepare(child.data, point_data, file_data, offset=offset)
 
             TelemacVertexColorUtils.generate(child.data, data)
 
             # Update information of selected point data
-            new_information = PointDataManager()
-            selected = PointDataManager(point_data.list)
+            new = PointDataManager()
             for var in selected.names:
-                new_information.append(data=file_data.vars.get(var))
-            point_data.list = new_information.dumps()
+                new.append(data=file_data.vars.get(var))
+            point_data.list = new.dumps()
 
 
 class OpenfoamObjectUtils(ObjectUtils):
@@ -443,6 +451,7 @@ class OpenfoamObjectUtils(ObjectUtils):
 
     # Code taken from the Stop-motion-OBJ addon
     # Link: https://github.com/neverhood311/Stop-motion-OBJ/blob/rename-module-name/src/stop_motion_obj.py
+    # Line: 1192
     @classmethod
     def add_mesh_to_sequence(cls, obj: Object, bmesh: Mesh) -> int:
         """
@@ -514,7 +523,7 @@ class OpenfoamObjectUtils(ObjectUtils):
         return sequence
 
     @classmethod
-    def update_openfoam_streaming_sequence(cls, scene: Scene, obj: Object, time_point: int) -> None:
+    def update_streaming_sequence(cls, scene: Scene, obj: Object, time_point: int) -> None:
         """
         Update the given OpenFOAM sequence object.
 
@@ -528,30 +537,41 @@ class OpenfoamObjectUtils(ObjectUtils):
         io_settings = obj.tbb.settings.openfoam.import_settings
         file_data = scene.tbb.file_data[obj.tbb.uid]
 
-        if file_data is not None:
-            file_data.update_import_settings(io_settings)
-            file_data.update_data(time_point)
-            vertices, file_data.mesh = OpenfoamMeshUtils.vertices(file_data, clip=obj.tbb.settings.openfoam.clip)
-            faces = OpenfoamMeshUtils.faces(file_data.mesh)
+        # Check file data
+        if file_data is None:
+            return
 
-            if vertices is not None and faces is not None:
-                bmesh = obj.data
-                bmesh.clear_geometry()
-                bmesh.from_pydata(vertices, [], faces)
+        file_data.update_import_settings(io_settings)
+        file_data.update_data(time_point)
+        vertices, file_data.mesh = OpenfoamMeshUtils.vertices(file_data, clip=obj.tbb.settings.openfoam.clip)
+        faces = OpenfoamMeshUtils.faces(file_data.mesh)
 
-                # Shade smooth
-                if obj.tbb.settings.openfoam.s_sequence.shade_smooth:
-                    bmesh.polygons.foreach_set("use_smooth", [True] * len(bmesh.polygons))
+        # Check mesh data
+        if vertices is None or faces is None:
+            return
 
-                # Import point data as vertex colors
-                point_data = obj.tbb.settings.point_data
-                if point_data.import_data and file_data.mesh is not None:
-                    data = OpenfoamVertexColorUtils.prepare(bmesh, point_data, file_data)
-                    OpenfoamVertexColorUtils.generate(bmesh, data)
+        bmesh = obj.data
+        bmesh.clear_geometry()
+        bmesh.from_pydata(vertices, [], faces)
 
-                    # Update information of selected point data
-                    new_information = PointDataManager()
-                    selected = PointDataManager(point_data.list)
-                    for var in selected.names:
-                        new_information.append(data=file_data.vars.get(var))
-                    point_data.list = new_information.dumps()
+        # Shade smooth
+        if obj.tbb.settings.openfoam.s_sequence.shade_smooth:
+            bmesh.polygons.foreach_set("use_smooth", [True] * len(bmesh.polygons))
+
+        # Import point data as vertex colors
+        point_data = obj.tbb.settings.point_data
+        if point_data.import_data and file_data.mesh is not None:
+
+            # Exit if no point data selected
+            selected = PointDataManager(point_data.list)
+            if selected.length() <= 0:
+                return
+
+            data = OpenfoamVertexColorUtils.prepare(bmesh, point_data, file_data)
+            OpenfoamVertexColorUtils.generate(bmesh, data)
+
+            # Update information of selected point data
+            new = PointDataManager()
+            for var in selected.names:
+                new.append(data=file_data.vars.get(var))
+            point_data.list = new.dumps()

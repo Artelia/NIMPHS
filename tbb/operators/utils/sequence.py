@@ -15,7 +15,7 @@ from tbb.operators.utils.object import OpenfoamObjectUtils, TelemacObjectUtils
 @persistent
 def update_openfoam_streaming_sequences(scene: Scene) -> None:
     """
-    Update all OpenFOAM 'streaming sequences' of the scene.
+    Update all OpenFOAM 'streaming sequence' objects of the scene.
 
     Args:
         scene (Scene): scene
@@ -44,7 +44,7 @@ def update_openfoam_streaming_sequences(scene: Scene) -> None:
                     start = time.time()
 
                     try:
-                        OpenfoamObjectUtils.update_openfoam_streaming_sequence(scene, obj, time_point)
+                        OpenfoamObjectUtils.update_streaming_sequence(scene, obj, time_point)
                     except Exception:
                         log.error(f"Error updating {obj.name}", exc_info=1)
 
@@ -54,7 +54,7 @@ def update_openfoam_streaming_sequences(scene: Scene) -> None:
 @persistent
 def update_telemac_streaming_sequences(scene: Scene) -> None:
     """
-    Update all TELEMAC 'streaming sequences' of the scene.
+    Update all TELEMAC 'streaming sequence' objects of the scene.
 
     Args:
         scene (Scene): scene
@@ -143,7 +143,7 @@ def update_telemac_mesh_sequences(scene: Scene) -> None:
                     offset = id if file_data.is_3d() else 0
                     TelemacObjectUtils.update_mesh_sequence(child.data, file_data, offset, point_data, time_info)
 
-                cumulated_time += time.time() - start
+                    cumulated_time += time.time() - start
 
             if cumulated_time > 0.0:
                 log.info(obj.name + ", " + "{:.4f}".format(cumulated_time) + "s")

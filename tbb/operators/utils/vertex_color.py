@@ -224,7 +224,7 @@ class TelemacVertexColorUtils(VertexColorUtils):
 
             # Linearly interpolate
             interpolated = left
-            for id in range(len(interpolated["names"])):
+            for id in range(len(interpolated.names)):
                 interpolated.data[id] = left.data[id] + (right.data[id] - left.data[id]) * percentage
 
             return interpolated

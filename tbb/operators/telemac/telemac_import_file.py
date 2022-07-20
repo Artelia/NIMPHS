@@ -47,7 +47,7 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
     name: StringProperty(
         name="Name",  # noqa F821
         description="Name to give to the imported object",
-        default="TBB_TELEMAC_preview",  # noqa F821
+        default="TELEMAC_preview",  # noqa F821
     )
 
     #: TBB_TelemacImportSettings: Import settings.

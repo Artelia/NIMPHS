@@ -95,7 +95,7 @@ class TelemacMeshUtils():
             file_data.update_data(time_info.right)
             right = cls.vertices(file_data, offset=offset, type=obj.tbb.settings.telemac.z_name)
 
-            percentage = np.abs(time_info.frame - time_info.left) / (time_info.time_steps + 1)
+            percentage = np.abs(time_info.frame - time_info.left_frame) / (time_info.time_steps + 1)
 
             return (left.T + (right.T - left.T) * percentage).T
 

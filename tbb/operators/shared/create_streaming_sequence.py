@@ -9,7 +9,7 @@ from tbb.operators.shared.create_sequence import TBB_CreateSequence
 
 
 class TBB_CreateStreamingSequence(TBB_CreateSequence):
-    """Operator to create 'streaming sequences'."""
+    """Operator to create 'streaming sequence' objects."""
 
     register_cls = False
     is_custom_base_cls = True

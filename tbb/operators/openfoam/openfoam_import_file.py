@@ -58,7 +58,7 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
     name: StringProperty(
         name="Name",  # noqa F821
         description="Name to give to the imported object",
-        default="TBB_OpenFOAM_preview",  # noqa F821
+        default="OpenFOAM_preview",  # noqa F821
     )
 
     #: TBB_OpenfoamImportSettings: Import settings.

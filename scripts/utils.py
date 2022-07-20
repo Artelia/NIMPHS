@@ -135,20 +135,20 @@ def remove_folders_matching_pattern(root_folder: str, pattern: str = "__pycache_
                 os.rmdir(os.path.join(rootDir, subdir))
 
 
-def download_stop_motion_obj_addon(dest: str, version: str = "v2.2.0.alpha.22") -> tuple[str, str]:
+def download_stop_motion_obj_addon(dest: str, version: str = "v2.2.0.alpha.23") -> tuple[str, str]:
     """
     Download the Stop-Motion-OBJ addon.
 
     Args:
         dest (str): destination of the downloaded file.
-        version (str, optional): version to download. Defaults to "v2.2.0.alpha.22".
+        version (str, optional): version to download. Defaults to "v2.2.0.alpha.23".
 
     Returns:
         tuple[str, str]: path to the zip file, name of the module.
     """
 
     module_name = "Stop-motion-OBJ"
-    filename = module_name + "-" + version + ".zip"
+    filename = f"{module_name}-{version}.zip"
     path = os.path.abspath(os.path.join(dest, filename))
 
     if (not os.path.exists(dest)):
@@ -157,12 +157,12 @@ def download_stop_motion_obj_addon(dest: str, version: str = "v2.2.0.alpha.22") 
         print(f"Created destination folder: {dest}")
 
     if (os.path.exists(os.path.join(dest, filename))):
-        print("Stop-Motion-OBJ - found:", path)
+        print(f"Stop-Motion-OBJ - found: {path}")
         return path, module_name
 
     # Else, download it and save it at the given destination
-    print("Downloading:", filename)
-    url = "https://github.com/neverhood311/Stop-motion-OBJ/releases/download/" + version + "/"
+    print(f"Downloading: {filename}")
+    url = f"https://github.com/neverhood311/Stop-motion-OBJ/releases/download/{version}/"
     response = requests.get(url + filename)
     open(os.path.join(dest, filename), "wb").write(response.content)
 
