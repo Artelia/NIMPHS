@@ -164,7 +164,7 @@ class TelemacObjectUtils(ObjectUtils):
             return None
 
         # Create sequence object
-        sequence = bpy.data.objects.new(name=f"{name}_sequence", object_data=None)
+        sequence = bpy.data.objects.new(name=name, object_data=None)
 
         # Load file data
         sequence.tbb.uid = str(time.time())
@@ -172,7 +172,7 @@ class TelemacObjectUtils(ObjectUtils):
         context.scene.tbb.file_data[sequence.tbb.uid] = file_data
 
         try:
-            children = cls.base(context.scene.tbb.file_data[sequence.tbb.uid], f"{name}_sequence")
+            children = cls.base(context.scene.tbb.file_data[sequence.tbb.uid], name)
         except BaseException:
             log.error("An error occurred generating the sequence object")
             return None
@@ -239,7 +239,7 @@ class TelemacObjectUtils(ObjectUtils):
 
         # Other time points, update vertices
         else:
-            obj = bpy.data.objects[f"{op.name}_sequence"]
+            obj = bpy.data.objects[op.name]
             file_data = context.scene.tbb.file_data.get(obj.tbb.uid, None)
 
             file_data.update_data(op.time_point)
@@ -378,9 +378,12 @@ class OpenfoamObjectUtils(ObjectUtils):
 
             # TODO: is it possible not to call an operator and do it using functions?
             bpy.ops.ms.convert_to_mesh_sequence()
+            # Remove '_sequence' at the end of the name
+            obj = bpy.data.objects.get(f"{op.name}_sequence")
+            obj.name = obj.name[:-len("_sequence")]
         else:
             # Add mesh to the sequence
-            obj = bpy.data.objects[op.name + "_sequence"]
+            obj = bpy.data.objects[op.name]
             context.scene.frame_set(frame=op.frame)
 
             # Code taken from the Stop-motion-OBJ addon
@@ -491,8 +494,8 @@ class OpenfoamObjectUtils(ObjectUtils):
             return None
 
         # Create the object
-        bmesh = bpy.data.meshes.new(f"{name}_sequence_mesh")
-        sequence = bpy.data.objects.new(f"{name}_sequence", bmesh)
+        bmesh = bpy.data.meshes.new(f"{name}_mesh")
+        sequence = bpy.data.objects.new(name, bmesh)
         sequence.tbb.uid = str(time.time())
 
         # Copy import settings from the selected object

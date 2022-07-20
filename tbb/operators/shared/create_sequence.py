@@ -73,7 +73,7 @@ class TBB_CreateSequence(Operator):
     name: StringProperty(
         name="Name",  # noqa F821
         description="Name to give to the generated sequence object",
-        default="Mesh",  # noqa F821
+        default="NAME",  # noqa F821
     )
 
     @classmethod

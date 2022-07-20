@@ -41,7 +41,7 @@ def test_create_streaming_sequence_openfoam():
     assert state == {'FINISHED'}
 
     # Get and check sequence
-    obj = bpy.data.objects.get(f"{utils.STREAMING_SEQUENCE_OBJ_NAME}_sequence", None)
+    obj = bpy.data.objects.get(utils.STREAMING_SEQUENCE_OBJ_NAME, None)
     assert obj is not None
     assert obj.tbb.is_streaming_sequence is True
 
@@ -70,7 +70,7 @@ def test_streaming_sequence_openfoam():
     assert handler is not None
     handler(bpy.context.scene)
 
-    obj = bpy.data.objects.get(f"{utils.STREAMING_SEQUENCE_OBJ_NAME}_sequence", None)
+    obj = bpy.data.objects.get(utils.STREAMING_SEQUENCE_OBJ_NAME, None)
     sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
     clip = sample["mesh"]["clipped"]
 
@@ -99,7 +99,7 @@ def test_streaming_sequence_openfoam():
 
 
 def test_geometry_streaming_sequence_openfoam():
-    obj = bpy.data.objects.get(f"{utils.STREAMING_SEQUENCE_OBJ_NAME}_sequence", None)
+    obj = bpy.data.objects.get(utils.STREAMING_SEQUENCE_OBJ_NAME, None)
     sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
 
     # Test geometry
@@ -111,7 +111,7 @@ def test_geometry_streaming_sequence_openfoam():
 
 @pytest.mark.usefixtures("clean_all_objects")
 def test_point_data_streaming_sequence_openfoam():
-    obj = bpy.data.objects.get(f"{utils.STREAMING_SEQUENCE_OBJ_NAME}_sequence", None)
+    obj = bpy.data.objects.get(utils.STREAMING_SEQUENCE_OBJ_NAME, None)
     sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
     vars = sample["values"]["skip_zero_true"]
 
@@ -172,7 +172,7 @@ def test_create_streaming_sequence_telemac_2d():
     assert state == {'FINISHED'}
 
     # Get and check sequence object
-    obj = bpy.data.objects.get(f"{utils.STREAMING_SEQUENCE_OBJ_NAME}_sequence", None)
+    obj = bpy.data.objects.get(utils.STREAMING_SEQUENCE_OBJ_NAME, None)
     assert obj is not None
     assert len(obj.children) == 2
 
@@ -187,7 +187,7 @@ def test_streaming_sequence_telemac_2d():
     assert handler is not None
     handler(bpy.context.scene)
 
-    obj = bpy.data.objects.get(f"{utils.STREAMING_SEQUENCE_OBJ_NAME}_sequence", None)
+    obj = bpy.data.objects.get(utils.STREAMING_SEQUENCE_OBJ_NAME, None)
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_2D)
 
     # Test object settings
@@ -205,7 +205,7 @@ def test_streaming_sequence_telemac_2d():
 
 
 def test_geometry_streaming_sequence_telemac_2d():
-    obj = bpy.data.objects.get(f"{utils.STREAMING_SEQUENCE_OBJ_NAME}_sequence", None)
+    obj = bpy.data.objects.get(utils.STREAMING_SEQUENCE_OBJ_NAME, None)
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_2D)
 
     # Test geometry
@@ -217,7 +217,7 @@ def test_geometry_streaming_sequence_telemac_2d():
 
 @pytest.mark.usefixtures("clean_all_objects")
 def test_point_data_streaming_sequence_telemac_2d():
-    obj = bpy.data.objects.get(f"{utils.STREAMING_SEQUENCE_OBJ_NAME}_sequence", None)
+    obj = bpy.data.objects.get(utils.STREAMING_SEQUENCE_OBJ_NAME, None)
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_2D)
 
     # ------------------------------------------------------------ #
@@ -263,7 +263,7 @@ def test_create_streaming_sequence_telemac_3d():
     assert state == {'FINISHED'}
 
     # Get and check sequence object
-    obj = bpy.data.objects.get(f"{utils.STREAMING_SEQUENCE_OBJ_NAME}_sequence", None)
+    obj = bpy.data.objects.get(utils.STREAMING_SEQUENCE_OBJ_NAME, None)
     assert obj is not None
     assert len(obj.children) == sample["nb_planes"]
 
@@ -278,7 +278,7 @@ def test_streaming_sequence_telemac_3d():
     assert handler is not None
     handler(bpy.context.scene)
 
-    obj = bpy.data.objects.get(f"{utils.STREAMING_SEQUENCE_OBJ_NAME}_sequence", None)
+    obj = bpy.data.objects.get(utils.STREAMING_SEQUENCE_OBJ_NAME, None)
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_3D)
 
     # Test object settings
@@ -296,7 +296,7 @@ def test_streaming_sequence_telemac_3d():
 
 
 def test_geometry_streaming_sequence_telemac_3d():
-    obj = bpy.data.objects.get(f"{utils.STREAMING_SEQUENCE_OBJ_NAME}_sequence", None)
+    obj = bpy.data.objects.get(utils.STREAMING_SEQUENCE_OBJ_NAME, None)
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_3D)
 
     # Test geometry
@@ -308,7 +308,7 @@ def test_geometry_streaming_sequence_telemac_3d():
 
 @pytest.mark.usefixtures("clean_all_objects")
 def test_point_data_streaming_sequence_telemac_3d():
-    obj = bpy.data.objects.get(f"{utils.STREAMING_SEQUENCE_OBJ_NAME}_sequence", None)
+    obj = bpy.data.objects.get(utils.STREAMING_SEQUENCE_OBJ_NAME, None)
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_3D)
 
     # ------------------------------------------------------------ #

@@ -15,8 +15,8 @@ PDV_THRESHOLD = 0.01
 
 # Object names
 PRW_OBJ_NAME = "Preview"
-MESH_SEQUENCE_OBJ_NAME = "Mesh"
-STREAMING_SEQUENCE_OBJ_NAME = "Streaming"
+MESH_SEQUENCE_OBJ_NAME = "Mesh_sequence"
+STREAMING_SEQUENCE_OBJ_NAME = "Streaming_sequence"
 
 # Files
 FILE_PATH_OPENFOAM = os.path.abspath("./data/openfoam_sample_a/foam.foam")

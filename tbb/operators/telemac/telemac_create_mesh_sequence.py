@@ -84,6 +84,9 @@ class TBB_OT_TelemacCreateMeshSequence(TBB_CreateMeshSequence):
             self.point_data.import_data = PointDataManager(data["vars"]).length() > 0
 
             return {'FINISHED'}
+        else:
+            # Do not change the name if the operator runs in 'TEST' mode
+            self.name = "Mesh_sequence"
 
         return context.window_manager.invoke_props_dialog(self)
 

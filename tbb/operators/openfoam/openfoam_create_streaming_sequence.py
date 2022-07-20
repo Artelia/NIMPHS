@@ -73,6 +73,9 @@ class TBB_OT_OpenfoamCreateStreamingSequence(TBB_CreateStreamingSequence):
             self.length = data["length"]
 
             return {'FINISHED'}
+        else:
+            # Do not change the name if the operator runs in 'TEST' mode
+            self.name = "Streaming_sequence"
 
         return context.window_manager.invoke_props_dialog(self)
 
