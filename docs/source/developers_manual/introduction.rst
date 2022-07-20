@@ -1,11 +1,10 @@
+.. _developer-documentation-introduction:
+
 Introduction
 ============
 
-* :ref:`file_architecture`
-* :ref:`auto_loader`
-* :ref:`coding_style`
 
-.. _file_architecture:
+.. _addon-file-architecture:
 
 File architecture
 #################
@@ -23,10 +22,14 @@ File architecture
 * A ``properties`` folder
     | Contains all the properties definitions
 
-| Most of these folders contain an ``openfoam`` folder, a ``telemac`` folder and a ``shared`` folder.
-| These contain all the code for each module. The ``shared`` folder contains code used in both modules.
+| Most of these folders contain one folder per module (the folder is then named with the module's name).
+| Moreover, you may find these folders in all parent folders:
 
-.. _auto_loader:
+  * ``utils``: contains utility functions used in all modules.
+  * ``shared``: contains code used in all modules.
+
+
+.. _addon-auto-loader:
 
 Auto-loader
 ###########
@@ -34,14 +37,15 @@ Auto-loader
 | This addon is loaded using an 'autoloader' helper.
   This is one is mostly inspired from the 'autoloader' used in `animation nodes <https://github.com/JacquesLucke/animation_nodes>`_.
 
-| Consequently, every folder in the ``tbb`` directory must contain an ``__init__.py`` file.
+| Consequently, every folder in the source directory must contain an ``__init__.py`` file.
 
 | For each class, you need to define two attributes:
 
-* The ``register_cls`` attribute (bool), indicates if this class has to be registered
-* The ``is_custom_base_cls`` attribute (bool), indicates if this class is a custom base class of other classes
+* The ``register_cls`` attribute (bool), indicates if this class has to be registered.
+* The ``is_custom_base_cls`` attribute (bool), indicates if this class is a custom base class of other classes.
 
-.. _coding_style:
+
+.. _addon-coding-style:
 
 Coding style
 ############

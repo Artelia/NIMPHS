@@ -1,13 +1,13 @@
-.. _telemac_previewing_tools:
+.. _telemac-preview:
 
 Previewing tools
 ================
 
 | Once you have imported a file, you should see the mesh in the viewport.
-  You can select the imported object and hit ``.`` on your numpad to center the view on it.
+  You can select the imported object and press ``.`` on your numpad to center the view on it.
 
 .. note:: 
-    Hit ``n`` to open the sidebar if you do not find it (with mouse focus in the 3D viewport).
+    Press ``n`` to open the sidebar if you do not find it (with mouse focus in the 3D viewport).
 
 .. image:: /images/telemac/preview.png
     :width: 75%
@@ -19,6 +19,9 @@ Previewing tools
 
 .. important:: 
     If you change a parameter, you have to click on the `preview` button to update the mesh.
+
+
+.. _telemac-preview-settings:
 
 Preview
 -------

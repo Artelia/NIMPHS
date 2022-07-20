@@ -1,4 +1,4 @@
-.. _telemac_import_file:
+.. _telemac-import-file:
 
 Import a file
 =============

@@ -1,3 +1,5 @@
+.. _addon-preferences:
+
 Add-on preferences
 ==================
 
@@ -11,11 +13,17 @@ Add-on preferences
 
 |
 
+
+.. _addon-preferences-files:
+
 Files
 -----
 
 * **OpenFOAM**: list of files to accept when importing OpenFOAM files (defaults to ``*.foam``)
 * **TELEMAC**: list of files to accept when importing TELEMAC files (defaults to ``*.slf``)
+
+
+.. _addon-preferences-system:
 
 System
 ------

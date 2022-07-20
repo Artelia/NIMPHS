@@ -1,37 +1,18 @@
-.. _development_environment:
+.. _development-environment:
 
 Development environment
 =======================
 
-* :ref:`general_dev_env`
-* :ref:`tests_dev_env`
 
-.. _general_dev_env:
+.. _development-environment-information:
 
 General
 #######
 
-| You will need the following python packages to develop.
+| You will need extra python packages to develop.
   What you can do is to use the python environment which comes with blender and install them there.
 
 | Install using: ``path/to/blender/python -m pip install -r requirements.txt``
-
-.. warning::
-
-    The latest version of `pyvista <https://github.com/pyvista/pyvista>`__ does not contain features that were added since the latest release `(v0.34.1)`.
-    Therefore, you must clone the github repository next to the add-on's folder. Make sure to checkout the `main` branch.
-    Then, do: ``path/to/blender/python pip install -e path/to/pyvista``
-
-| Or install everything manually:
-
-* `PyVista <https://docs.pyvista.org/#>`__ ``pip install pyvista`` (python 3.10 workaround `here <https://github.com/pyvista/pyvista/discussions/2064>`__)
-* `Numpy <https://numpy.org/doc/stable/#>`__ ``pip install numpy``
-* `MatPlotLib <https://matplotlib.org/>`__ ``pip install matplotlib``
-* `fake-bpy-module <https://pypi.org/project/fake-bpy-module-latest/>`_ ``pip install fake-bpy-module-latest``
-* `sphinx <https://pypi.org/project/Sphinx/>`__, ``pip install sphinx`` or ``apt install sphinx`` (for Ubuntu)
-* `sphinxemoji <https://pypi.org/project/sphinxemoji/>`__ ``pip install sphinxemoji``
-* `sphinx_rtd_theme <https://pypi.org/project/sphinx-rtd-theme/>`__ ``pip install sphinx_rtd_theme``
-
 
 | We recommend you to use `Microsoft Visual Studio Code <https://code.visualstudio.com/>`__
 | It offers you the possibility to use the following extensions:
@@ -42,21 +23,6 @@ General
     | Generates python docstrings automatically (we use the ``google`` format)
 * `reStructuredText <https://marketplace.visualstudio.com/items?itemName=lextudio.restructuredtext>`__
     | reStructuredText language support (RST/ReST linter, preview, IntelliSense and more)
-* `Run on save <https://marketplace.visualstudio.com/items?itemName=emeraldwalk.RunOnSave>`__
-    | Run commands when a file is saved in vscode. You can use the following configuration:
-    
-    .. code-block:: json
-
-        "emeraldwalk.runonsave": {
-            "autoClearConsole": true,
-            "commands": [
-                {
-                    "match": "\\.rst$",
-                    "isAsync": true,
-                    "cmd": "cd docs && make html"
-                }
-            ]
-        }
 
 | You can also setup the `autopep8 <https://code.visualstudio.com/docs/python/editing#_formatting>`__ tool which will automatically format your code.
 | We use the following autopep8 arguments:
@@ -74,24 +40,18 @@ General
 | Using VSCode also let you to choose a custom python interpreter, which can be handy.
 | Thus you can tell VSCode to use the python version which comes with blender for linting, etc.
 
-.. _tests_dev_env:
+
+.. _development-environment-unit-testing:
 
 Unit tests
 ##########
 
 | In order to make sure new features do not break what already work, we try to maintain a high testing rate.
-  We use the `blender-addon-tester <https://github.com/nangtani/blender-addon-tester>`__ python package along with `pytest <https://docs.pytest.org/en/7.1.x/>`__ to make our unit tests.
+  We use the `blender-addon-tester <https://github.com/nangtani/blender-addon-tester>`__ python package
+  along with `pytest <https://docs.pytest.org/en/7.1.x/>`__ to make our unit tests.
 
-Setup
------
 
-* Install the ``blender-addon-tester`` python package: ``pip install blender-addon-tester``
-
-.. warning::
-
-    The latest version of `pyvista <https://github.com/pyvista/pyvista>`__ does not contain features that were added since the latest release `(v0.34.1)`.
-    Therefore, you must clone the github repository next to the add-on's folder. Make sure to checkout the `main` branch.
-    The tests scripts will use this version instead of the versions available through PyPi.
+.. _development-environment-unit-testing-usage:
 
 Usage
 -----
@@ -101,20 +61,14 @@ Usage
 
 * Arguments for ``run_tests.py``
 
-    * -a (str, optional, defaults to ``"[current_directory]/tbb"`` so you have to run this script from the root folder (`toolsbox_blender`))
-  
-        | Addon path to test, can be a path to a directory or a `.zip` file.
-
-    * -n (str, optional, default to ``"tbb"``)
-
-        | Name to give to the zip file (in case the path to the addon is a directory)
-
     * -b (str, optional, defaults to ``"3.0.0"``)
 
         | Blender version to test
 
-| So type the following command to run tests for a given version of Blender (make sure you are in the ``toolsbox_blender`` folder): ``python -m scripts.run_tests.py -b "x.x.x"``
+| So type the following command to run tests for a given version of Blender: ``python -m scripts.run_tests.py -b "x.x.x"``
 
+
+.. _development-environment-unit-testing-write-new-tests:
 
 Write new tests
 ---------------
@@ -127,6 +81,8 @@ Write new tests
 
     Please make sure test data are lightweight as possible, no need to have samples with hundreds of time steps and thousands of vertices.
 
+
+.. _development-environment-unit-testing-pipeline:
 
 Testing pipeline
 ----------------

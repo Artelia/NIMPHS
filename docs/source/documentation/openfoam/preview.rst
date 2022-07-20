@@ -1,13 +1,13 @@
-.. _openfoam_previewing_tools:
+.. _openfoam-preview:
 
 Previewing tools
 ================
 
 | Once you have imported a file, you should see the mesh in the viewport.
-  You can select the imported object and hit ``.`` on your numpad to center the view on it.
+  You can select the imported object and press ``.`` on your numpad to center the view on it.
 
 .. note:: 
-    Hit ``n`` to open the sidebar if you do not find it (with mouse focus in the 3D viewport).
+    Press ``n`` to open the sidebar if you do not find it (with mouse focus in the 3D viewport).
 
 .. image:: /images/openfoam/preview.png
     :width: 75%
@@ -20,12 +20,19 @@ Previewing tools
 .. important::
     If you change a parameter, you have to click on the `preview` button to update the mesh.
 
+
+.. _openfoam-preview-import-settings:
+
 Import settings
 ***************
 
 * **Decompose polyhedra**: indicate whether polyhedra are to be decomposed when read. If True, decompose polyhedra into tetrahedra and pyramids.
+* **Skip zero time**: indicate whether to skip the '/0' time directory or not.
 * **Triangulate**: more complex polygons will be broken down into triangles.
 * **Case**: indicate whether decomposed mesh or reconstructed mesh should be read.
+
+
+.. _openfoam-preview-clip-settings:
 
 Clip
 ****
@@ -38,6 +45,9 @@ Clip
         * **Scalars**: name of scalar to clip on.
         * **Value**: set the clipping value.
         * **Invert**: flag on whether to flip/invert the clip. When True, only the mesh below 'value' will be kept. When False, only values above 'value' will be kept.
+
+
+.. _openfoam-preview-settings:
 
 Preview
 *******

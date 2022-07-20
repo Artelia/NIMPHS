@@ -1,3 +1,5 @@
+.. _user-documentation:
+
 Documentation
 =============
 
@@ -5,6 +7,7 @@ Documentation
     :maxdepth: 2
     :glob:
 
+    getting_started
     installation_guide/index
     openfoam/index
     telemac/index

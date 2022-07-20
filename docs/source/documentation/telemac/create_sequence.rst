@@ -1,9 +1,12 @@
-.. _telemac_create_sequence:
+.. _telemac-create-sequence:
 
 Create a sequence
 =================
 
 | You can create sequences to automatically switch between time steps using the timeline.
+
+
+.. _telemac-create-mesh-sequence:
 
 Mesh sequence
 -------------
@@ -27,11 +30,17 @@ Mesh sequence
 
 |
 
+
+.. _telemac-point-data-properties:
+
 Point data
 **********
 
 * **Method**: remapping method for point data ('LOCAL' or 'GLOBAL').
 * **Add**: select a new point data to import as vertex colors.
+
+
+.. _telemac-mesh-sequence-properties:
 
 Sequence
 ********
@@ -39,6 +48,9 @@ Sequence
 * **Start**: starting point of the sequence (time step).
 * **End**: ending point of the sequence (time step).
 * **Name**: name to give to the sequence object.
+
+
+.. _telemac-mesh-sequence-object-properties:
 
 Mesh sequence object
 ********************
@@ -52,6 +64,9 @@ Mesh sequence object
     :class: rounded-corners
 
 |
+
+
+.. _telemac-create-streaming-sequence:
 
 Streaming sequence
 ------------------
@@ -75,6 +90,9 @@ Streaming sequence
 
 |
 
+
+.. _telemac-streaming-sequence-properties:
+
 Sequence
 ********
 
@@ -82,6 +100,9 @@ Sequence
 * **Length**: length of the animation (time steps).
 * **Shade smooth**: indicate whether to use smooth shading or flat shading.
 * **Name**: name to give to the sequence object.
+
+
+.. _telemac-streaming-sequence-object-properties:
 
 Streaming sequence object
 *************************

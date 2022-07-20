@@ -1,9 +1,12 @@
-.. _openfoam_create_sequence:
+.. _openfoam-create-sequence:
 
 Create a sequence
 =================
 
 | You can create sequences to automatically switch between time steps using the timeline.
+
+
+.. _openfoam-create-mesh-sequence:
 
 Mesh sequence
 -------------
@@ -29,12 +32,19 @@ Mesh sequence
 
 |
 
+
+.. _openfoam-mesh-sequence-import-properties:
+
 Import settings
 ***************
 
 * **Decompose polyhedra**: indicate whether polyhedra are to be decomposed when read. If True, decompose polyhedra into tetrahedra and pyramids.
+* **Skip zero time**: indicate whether to skip the '/0' time directory or not.
 * **Triangulate**: more complex polygons will be broken down into triangles.
 * **Case**: indicate whether decomposed mesh or reconstructed mesh should be read.
+
+
+.. _openfoam-mesh-sequence-clip-properties:
 
 Clip
 ****
@@ -48,11 +58,17 @@ Clip
         * **Value**: set the clipping value.
         * **Invert**: flag on whether to flip/invert the clip. When True, only the mesh below 'value' will be kept. When False, only values above 'value' will be kept.
 
+
+.. _openfoam-mesh-sequence-point-data-properties:
+
 Point data
 **********
 
 * **Method**: remapping method for point data ('LOCAL' or 'GLOBAL').
 * **Add**: select a new point data to import as vertex colors.
+
+
+.. _openfoam-mesh-sequence-properties:
 
 Sequence
 ********
@@ -60,6 +76,9 @@ Sequence
 * **Start**: starting point of the sequence (time step).
 * **End**: ending point of the sequence (time step).
 * **Name**: name to give to the sequence object.
+
+
+.. _openfoam-create-streaming-sequence:
 
 Streaming sequence
 ------------------
@@ -83,6 +102,9 @@ Streaming sequence
 
 |
 
+
+.. _openfoam-streaming-sequence-properties:
+
 Sequence
 ********
 
@@ -90,6 +112,9 @@ Sequence
 * **Length**: length of the animation (time steps).
 * **Shade smooth**: indicate whether to use smooth shading or flat shading.
 * **Name**: name to give to the sequence object.
+
+
+.. _openfoam-streaming-sequence-object-properties:
 
 Streaming sequence object
 *************************

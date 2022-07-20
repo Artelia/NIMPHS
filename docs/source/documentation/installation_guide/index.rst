@@ -1,3 +1,5 @@
+.. _addon-installation:
+
 Installation guide
 ==================
 

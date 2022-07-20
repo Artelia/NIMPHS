@@ -1,7 +1,10 @@
-.. _telemac_interpolation:
+.. _telemac-interpolate:
 
 Interpolation
 =============
+
+
+.. _telemac-interpolate-mesh-sequence:
 
 Mesh sequence
 -------------
@@ -59,7 +62,6 @@ Mesh sequence
             :align: center
             :class: rounded-corners
 
-
     * It's done!
 
         .. image:: /images/telemac/interpolation/tuto_interpolate_6.png
@@ -68,6 +70,8 @@ Mesh sequence
             :align: center
             :class: rounded-corners
 
+
+.. _telemac-interpolate-streaming-sequence:
 
 Streaming sequence
 ------------------

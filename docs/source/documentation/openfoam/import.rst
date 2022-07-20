@@ -1,4 +1,4 @@
-.. _openfoam_import_file:
+.. _openfoam-import-file:
 
 Import a file
 =============

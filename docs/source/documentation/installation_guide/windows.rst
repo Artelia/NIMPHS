@@ -3,25 +3,20 @@
 Windows
 =======
 
-
 #. Install `Blender <https://www.blender.org/download/>`_ (at least version 3.0)
-
 
     .. important::
         If you have **administrator privileges** then you can install Blender globally.
         If not, we recommend you to **install a portable version** otherwise you may not be able
         to install python dependencies correctly.
 
-
 #. Install dependencies:
-    * Blender add-on: `Stop-motion-OBJ <https://github.com/neverhood311/Stop-motion-OBJ/releases>`_ (at least version 2.2.0.alpha.22)
+    * Blender add-on: `Stop-motion-OBJ <https://github.com/neverhood311/Stop-motion-OBJ/releases>`_ (at least version 2.2.0.alpha.23)
     * Python packages:
-
 
         .. important::
             You may have setup a custom python environment for Blender.
             All you have to do is to install the python packages inside your environment.
-
 
         * Go where python is installed in Blender (in ``.../3.X/python/bin/``)
         * Make sure we have pip installed: ``.\python.exe -m ensurepip``
