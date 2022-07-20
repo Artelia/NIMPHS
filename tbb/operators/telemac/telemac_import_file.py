@@ -45,7 +45,7 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
 
     #: bpy.props.StringProperty: Name to give to the imported object.
     name: StringProperty(
-        name="Name",  # noqa F821
+        name="Name",                # noqa F821
         description="Name to give to the imported object",
         default="TELEMAC_preview",  # noqa F821
     )

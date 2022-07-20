@@ -39,13 +39,13 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
 
     #: bpy.props.EnumProperty: Indicate which mode to use for this operator. Enum in ['NORMAL', 'TEST'].
     mode: EnumProperty(
-        name="Mode",  # noqa: F821
+        name="Mode",                                    # noqa: F821
         description="Indicate which mode to use for this operator. Enum in ['NORMAL', 'TEST']",
         items=[
-            ('NORMAL', "Normal", "Run normal"),  # noqa: F821
-            ('TEST', "Test", "Run for unit tests"),  # noqa: F821
+            ('NORMAL', "Normal", "Run normal"),         # noqa: F821
+            ('TEST', "Test", "Run for unit tests"),     # noqa: F821
         ],
-        options={'HIDDEN'},  # noqa F821
+        options={'HIDDEN'},                             # noqa: F821
     )
 
     #: bpy.props.StringProperty: List of allowed file extensions.
@@ -56,9 +56,9 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
 
     #: bpy.props.StringProperty: Name to give to the imported object.
     name: StringProperty(
-        name="Name",  # noqa F821
+        name="Name",                    # noqa F821
         description="Name to give to the imported object",
-        default="OpenFOAM_preview",  # noqa F821
+        default="OpenFOAM_preview",     # noqa F821
     )
 
     #: TBB_OpenfoamImportSettings: Import settings.

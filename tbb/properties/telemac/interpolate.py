@@ -11,11 +11,11 @@ class TBB_TelemacInterpolateProperty(PropertyGroup):
 
     #: bpy.props.EnumProperty: Type of the interpolation. Enum in ['NONE', 'LINEAR']
     type: EnumProperty(
-        name="Type",  # noqa: F821
+        name="Type",                                                # noqa: F821
         description="Type of the interpolation",
         items=[
-            ("NONE", "None", "None"),  # noqa: F821
-            ("LINEAR", "Linear", "Apply a linear interpolation"),  # noqa: F821
+            ("NONE", "None", "None"),                               # noqa: F821
+            ("LINEAR", "Linear", "Apply a linear interpolation"),   # noqa: F821
         ]
     )
 

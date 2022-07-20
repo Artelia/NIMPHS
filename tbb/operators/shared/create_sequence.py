@@ -31,24 +31,24 @@ class TBB_CreateSequence(Operator):
 
     #: bpy.props.EnumProperty: Indicate which mode to use for this operator. Enum in ['MODAL', 'TEST'].
     mode: EnumProperty(
-        name="Mode",  # noqa: F821
+        name="Mode",                                    # noqa: F821
         description="Indicate which mode to use for this operator. Enum in ['MODAL', 'TEST']",
         items=[
-            ('MODAL', "Modal", "Run modal"),  # noqa: F821
-            ('TEST', "Test", "Run for unit tests"),  # noqa: F821
+            ('MODAL', "Modal", "Run modal"),            # noqa: F821
+            ('TEST', "Test", "Run for unit tests"),     # noqa: F821
         ],
-        options={'HIDDEN'},  # noqa F821
+        options={'HIDDEN'},                             # noqa: F821
     )
 
     #: bpy.props.EnumProperty: Indicate which module to use. Enum in ['OpenFOAM', 'TELEMAC'].
     module: EnumProperty(
-        name="Mode",  # noqa: F821
+        name="Mode",                                            # noqa: F821
         description="Indicate which module to use. Enum in ['OpenFOAM', 'TELEMAC']",
         items=[
-            ('OpenFOAM', "OpenFOAM", "Use OpenFOAM module"),  # noqa: F821
-            ('TELEMAC', "TELEMAC", "Use TELEMAC module"),  # noqa: F821
+            ('OpenFOAM', "OpenFOAM", "Use OpenFOAM module"),    # noqa: F821
+            ('TELEMAC', "TELEMAC", "Use TELEMAC module"),       # noqa: F821
         ],
-        options={'HIDDEN'},  # noqa F821
+        options={'HIDDEN'},                                     # noqa: F821
     )
 
     #: bpy.props.IntProperty: Starting point of the sequence.
@@ -63,17 +63,17 @@ class TBB_CreateSequence(Operator):
 
     #: bpy.props.IntProperty: Maximum length of the sequence.
     max: IntProperty(
-        name="Max",  # noqa F821
+        name="Max",             # noqa F821
         description="Maximum length of the sequence",
         default=1,
-        options={'HIDDEN'},  # noqa F821
+        options={'HIDDEN'},     # noqa F821
     )
 
     #: bpy.props.StringProperty: Name to give to the generated sequence object.
     name: StringProperty(
-        name="Name",  # noqa F821
+        name="Name",        # noqa F821
         description="Name to give to the generated sequence object",
-        default="NAME",  # noqa F821
+        default="NAME",     # noqa F821
     )
 
     @classmethod

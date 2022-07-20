@@ -7,16 +7,16 @@ from tbb.properties.utils.point_data import PointDataManager
 
 
 class TBB_Scene(PropertyGroup):
-    """Main property of the add-on. This data structure holds all Scene data for the add-on."""
+    """Data structure which holds all Scene data for the add-on."""
 
     register_cls = True
     is_custom_base_cls = False
 
     #: dict: Dictionary of file data used for all modules and all objects.
-    #        Shape is ```{"uid": file_data, "uid": file_data, ...}```
+    #        Shape is: ```{"ops": file_data for current operator, "uid": obj file_data, "uid": obj file_data, ...}```
     file_data: dict = {"ops": None}
 
-    #: PointDataManager: Place to store temporary variables information for operators.
+    #: PointDataManager: Place to store temporary point data information for operators.
     op_vars: PointDataManager = PointDataManager()
 
     #: bpy.props.PointerPropery: Target object on which extract point data.

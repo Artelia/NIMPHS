@@ -14,11 +14,11 @@ class TBB_Preferences(PropertyGroup):
         name="Log level",
         description="Define the log level. Enum in ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']",
         items=[
-            ('DEBUG', 'Debug', 'Debug level'),  # noqa: F821
-            ('INFO', 'Info', 'Info level'),  # noqa: F821
-            ('WARNING', 'Warning', 'Warning level'),  # noqa: F821
-            ('ERROR', 'Error', 'Error level'),  # noqa: F821
-            ('CRITICAL', 'Critical', 'Critical level'),  # noqa: F821
+            ('DEBUG', 'Debug', 'Debug level'),              # noqa: F821
+            ('INFO', 'Info', 'Info level'),                 # noqa: F821
+            ('WARNING', 'Warning', 'Warning level'),        # noqa: F821
+            ('ERROR', 'Error', 'Error level'),              # noqa: F821
+            ('CRITICAL', 'Critical', 'Critical level'),     # noqa: F821
         ],
     )
 

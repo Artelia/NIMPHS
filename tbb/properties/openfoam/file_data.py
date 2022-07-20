@@ -50,7 +50,7 @@ class TBB_OpenfoamFileData(TBB_FileData):
         # Load data
         self.update_import_settings(settings)
         self.update_data(self.time_point)
-        self.init_variables_information()
+        self.init_point_data_manager()
 
     def copy(self, other: TBB_OpenfoamFileData) -> None:
         """
@@ -124,7 +124,7 @@ class TBB_OpenfoamFileData(TBB_FileData):
         # The skip_zero_time property can change a lot of things, so we have to update the following data too
         if self.skip_zero_has_changed:
             self.nb_time_points = self.file.number_time_points
-            self.init_variables_information()
+            self.init_point_data_manager()
             self.skip_zero_has_changed = False
 
     def update_import_settings(self, settings: Union[TBB_OpenfoamImportSettings, None]) -> None:
@@ -162,8 +162,8 @@ class TBB_OpenfoamFileData(TBB_FileData):
 
         return self.file is not None
 
-    def init_variables_information(self) -> None:
-        """Initialize variables information."""
+    def init_point_data_manager(self) -> None:
+        """Initialize point data manager (contains variables information)."""
 
         if self.raw_mesh is not None:
 

@@ -21,7 +21,7 @@ class TBB_Object(PropertyGroup):
         default="None",
     )
 
-    #: bpy.props.StringProperty: Unique identifier for each 'tbb object'.
+    #: bpy.props.StringProperty: Unique identifier for each object of the add-on to access file_data.
     uid: StringProperty(
         name="UID",  # noqa: F821
         description="Unique identifier",
@@ -30,14 +30,14 @@ class TBB_Object(PropertyGroup):
 
     #: bpy.props.BoolProperty: Indicate if this object is a sequence which updates when the frame changes.
     is_streaming_sequence: BoolProperty(
-        name="Is on frame change sequence",
+        name="Is a streaming sequence",
         description="Indicate if this object is a sequence which updates when the frame changes",
         default=False,
     )
 
-    #: bpy.props.BoolProperty: Indicate whether this object is part of a mesh sequence or not
+    #: bpy.props.BoolProperty: Indicate whether this object is a mesh sequence or not.
     is_mesh_sequence: BoolProperty(
-        name="Is part of a mesh sequence",
-        description="Indicate whether this object is part of a mesh sequence or not",
+        name="Is a mesh sequence",
+        description="Indicate whether this object is a mesh sequence or not",
         default=False
     )

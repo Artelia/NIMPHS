@@ -21,13 +21,13 @@ class TBB_ModalOperator():
 
     #: bpy.props.EnumProperty: Indicate which mode to use for this operator. Enum in ['MODAL', 'TEST'].
     mode: EnumProperty(
-        name="Mode",  # noqa: F821
+        name="Mode",                                    # noqa: F821
         description="Indicate which mode to use for this operator. Enum in ['MODAL', 'TEST']",
         items=[
-            ('MODAL', "Modal", "Run modal"),  # noqa: F821
-            ('TEST', "Test", "Run for unit tests"),  # noqa: F821
+            ('MODAL', "Modal", "Run modal"),            # noqa: F821
+            ('TEST', "Test", "Run for unit tests"),     # noqa: F821
         ],
-        options={'HIDDEN'},  # noqa F821
+        options={'HIDDEN'},                             # noqa: F821
     )
 
     #: bpy.types.Timer: Timer which triggers the 'modal' method of operators

@@ -80,7 +80,7 @@ class TBB_TelemacFileData(TBB_FileData):
         else:
             self.faces = self.file.ikle2d
 
-        self.init_variables_information()
+        self.init_point_data_manager()
 
     def copy(self, other: TBB_TelemacFileData) -> None:
         """
@@ -135,7 +135,11 @@ class TBB_TelemacFileData(TBB_FileData):
             time_point (int): time point to read
         """
 
-        self.data = self.read(time_point)
+        if time_point > self.nb_time_points or time_point < 0:
+            log.error(f"Undefined time point ({time_point})")
+            return
+
+        self.data = self.file.read(self.file.temps[time_point])
 
     def is_ok(self) -> bool:
         """
@@ -147,8 +151,8 @@ class TBB_TelemacFileData(TBB_FileData):
 
         return self.file is not None and self.vertices is not None and self.faces is not None
 
-    def init_variables_information(self) -> None:
-        """Initialize variables information."""
+    def init_point_data_manager(self) -> None:
+        """Initialize point data manager (contains variables information)."""
 
         self.vars.clear()
         for var_name in self.file.nomvar:
@@ -166,23 +170,6 @@ class TBB_TelemacFileData(TBB_FileData):
         """
 
         return self.nb_planes > 1
-
-    def read(self, time_point: int = 0) -> Union[np.ndarray, None]:
-        """
-        Read and return data at the given time point.
-
-        Args:
-            time_point (int, optional): time point from which to read data. Defaults to 0.
-
-        Returns:
-            Union[np.ndarray, None]: data
-        """
-
-        if time_point > self.nb_time_points or time_point < 0:
-            log.error(f"Undefined time point ({time_point})")
-            return None
-
-        return self.file.read(self.file.temps[time_point])
 
     def load_file(self, file_path: str) -> bool:
         """
