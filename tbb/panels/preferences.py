@@ -6,7 +6,7 @@ from tbb.properties.preferences import TBB_Preferences
 
 
 class TBB_Preferences(AddonPreferences):
-    """UI panel to manage addon's preferences."""
+    """UI panel to manage add-on's preferences."""
 
     register_cls = True
     is_custom_base_cls = False

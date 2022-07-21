@@ -60,7 +60,7 @@ check-spelling-doc:
 
   script:
     - cd docs
-    - make spelling SPHINXOPTS="-W --keep-going"
+    - make spelling MODULE=${MODULE_NAME} SPHINXOPTS="-W --keep-going"
 
   artifacts:
     paths:
@@ -90,7 +90,16 @@ build-doc:
 
   script:
     - cd docs
-    - make html
+
+    # Generate code documentation
+    - sphinx-apidoc -t "_templates/" --implicit-namespaces -d 1 -f -M -T -o source/developers/code/ ../${MODULE_NAME} "/*auto_load.py" "/*serafin.py"
+
+    # Rename heading of MODULE_NAME.rst
+    - sed -i "1s/.*/Code documentation/" source/developers_manual/code/${MODULE_NAME}.rst
+    - sed -i "2s/.*/==================/" source/developers_manual/code/${MODULE_NAME}.rst
+
+    # Build doc
+    - make html MODULE=${MODULE_NAME}
     - mv _build/html ../build_docs
 
   artifacts:

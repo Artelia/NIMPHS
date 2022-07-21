@@ -9,6 +9,7 @@ __pycache__
 
 # Docs
 docs/_build/
+docs/source/developers/code/
 *.xml.bkp
 *.xml.dtmp
 *.bkp

@@ -13,7 +13,7 @@ Developers manual
 
     introduction
     development_environment
-    code_documentation/modules
+    code/tbb
 
 
 | Data structure (click on the image)

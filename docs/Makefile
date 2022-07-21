@@ -24,6 +24,8 @@ help:
 %: Makefile
 	mv ../$(MODULE)/__init__.py ../$(MODULE)/___init__.py
 	find ../$(MODULE)/ -type f -name "*.py" -exec sed -i 's/@persistent/#@persistent/g' {} +
+
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
 	find ../$(MODULE)/ -type f -name "*.py" -exec sed -i 's/#@persistent/@persistent/g' {} +
 	mv ../$(MODULE)/___init__.py ../$(MODULE)/__init__.py

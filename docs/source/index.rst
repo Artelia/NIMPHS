@@ -10,5 +10,5 @@ Toolbox blender
    :maxdepth: 2
    :glob:
 
-   documentation/index
-   developers_manual/index
+   users/index
+   developers/index
