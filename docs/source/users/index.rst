@@ -8,7 +8,7 @@ Documentation
     :glob:
 
     getting_started
-    installation_guide/index
+    installation
     openfoam/index
     telemac/index
     preferences
