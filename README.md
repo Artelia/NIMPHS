@@ -1,14 +1,19 @@
 # Toolbox Blender
 
-Import OpenFOAM / TELEMAC files inside Blender and generate astonishing renders!
+Import OpenFOAM (.foam) and TELEMAC (.slf) files inside Blender, and make use of its powerful 3D renderer to generate photorealistic images and animations!
+
+Built with:
+
+* [PyVista](https://github.com/pyvista/pyvista)
+* [Stop-motion-OBJ add-on](https://github.com/neverhood311/Stop-motion-OBJ)
 
 ## OpenFOAM
 
 * Preview the imported file in the viewport
-* Create a sequence (uses the [Stop-motion-OBJ add-on](https://github.com/neverhood311/Stop-motion-OBJ))
-    * Mesh sequence (generates a mesh for each time point in the selected time range, ideal for small meshes)
-    * Streaming sequence (generates a mesh when the frame changes and only keeps one mesh in memory, ideal for large meshes)
-* Import data as vertex colors
+* Create sequences to render animations
+    * Mesh sequence (generates a mesh for each time point in the selected time range)
+    * Streaming sequence (generates a mesh when the frame changes and only keeps one mesh in memory)
+* Import point data as vertex colors (color attributes)
 * Clip by a scalar
 
 ### Screenshots
@@ -23,12 +28,13 @@ Main panel - material preview |  Main panel - wireframe preview
 
 ## TELEMAC
 
-* Preview the imported file in the viewport (works with 2D / 3D simulations)
-* Create a sequence
-    * Mesh sequence (generates a shape key for each time point in the selected time range, ideal short sequences)
-    * Streaming sequence (generates a mesh when the frame changes and only keeps one mesh in memory, ideal for long sequences)
-* Import data as vertex colors
-* Interpolate mesh and vertex colors (for both type of sequences)
+* Works with 2D and 3D files
+* Preview the imported file in the viewport
+* Create sequences to render animations
+    * Mesh sequence (generates a mesh for each time point in the selected time range)
+    * Streaming sequence (generates a mesh when the frame changes and only keeps one mesh in memory)
+* Import point data as vertex colors (color attributes)
+* Linearly interpolate mesh and vertex colors (for both type of sequences) to render smoother animations
 
 ### Screenshots
 
