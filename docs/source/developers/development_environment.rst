@@ -12,10 +12,15 @@ General
 | You will need extra python packages to develop.
   What you can do is to use the python environment which comes with blender and install them there.
 
-| Install using: ``path/to/blender/python -m pip install -r requirements.txt``
+| Install using: ``pip install -r requirements.txt``
 
 | We recommend you to use `Microsoft Visual Studio Code <https://code.visualstudio.com/>`__
 | It offers you the possibility to use the following extensions:
+
+.. note::
+
+  | VSCode also lets you to choose a custom python interpreter, which can be handy.
+  | Thus you can tell VSCode to use the python version which comes with blender for linting, etc.
 
 * `Blender Development <https://marketplace.visualstudio.com/items?itemName=JacquesLucke.blender-development>`__
     | Tools to simplify Blender development
@@ -36,9 +41,6 @@ General
         "--ignore",
         "E402"
     ],
-
-| Using VSCode also let you to choose a custom python interpreter, which can be handy.
-| Thus you can tell VSCode to use the python version which comes with blender for linting, etc.
 
 
 .. _development-environment-unit-testing:
