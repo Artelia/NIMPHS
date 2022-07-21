@@ -19,14 +19,14 @@ MESH_SEQUENCE_OBJ_NAME = "Mesh_sequence"
 STREAMING_SEQUENCE_OBJ_NAME = "Streaming_sequence"
 
 # Files
-FILE_PATH_OPENFOAM = os.path.abspath("./data/openfoam_sample_a/foam.foam")
-FILE_PATH_TELEMAC_2D = os.path.abspath("./data/telemac_2d_sample/telemac_2d.slf")
-FILE_PATH_TELEMAC_3D = os.path.abspath("./data/telemac_3d_sample/telemac_3d.slf")
+FILE_PATH_OPENFOAM = os.path.abspath("./data/openfoam/sample/foam.foam")
+FILE_PATH_TELEMAC_2D = os.path.abspath("./data/telemac_2d/telemac_2d.slf")
+FILE_PATH_TELEMAC_3D = os.path.abspath("./data/telemac_3d/telemac_3d.slf")
 
 # Sample information
-SAMPLE_OPENFOAM = os.path.abspath("./data/openfoam_sample_a/SAMPLE.json")
-SAMPLE_TELEMAC_2D = os.path.abspath("./data/telemac_2d_sample/SAMPLE.json")
-SAMPLE_TELEMAC_3D = os.path.abspath("./data/telemac_3d_sample/SAMPLE.json")
+SAMPLE_OPENFOAM = os.path.abspath("./data/openfoam/SAMPLE.json")
+SAMPLE_TELEMAC_2D = os.path.abspath("./data/telemac_2d/SAMPLE.json")
+SAMPLE_TELEMAC_3D = os.path.abspath("./data/telemac_3d/SAMPLE.json")
 
 
 def compare_point_data_value(subtraction: float, name: str):

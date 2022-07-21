@@ -39,6 +39,12 @@ def main():
     addon = os.path.join(os.path.abspath("."), module)
 
     try:
+        # Prepare testing data
+        data_path = os.path.join(os.path.abspath("."), "data/openfoam/sample.zip")
+        with zipfile.ZipFile(data_path, 'r') as file:
+            print(f"Unzipping {data_path}")
+            file.extractall(os.path.join(os.path.abspath("."), "data/openfoam/sample/"))
+
         # Cleanup '__pychache__' folders in the 'tbb' folder
         remove_folders_matching_pattern(os.path.join(os.path.abspath("."), module))
 

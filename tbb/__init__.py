@@ -15,7 +15,7 @@ bl_info = {
     "description": "Load, visualize and manipulate OpenFOAM/TELEMAC files",
     "author": "Thibault Oudart, Félix Olart",
     "version": (0, 4, 0),
-    "blender": (3, 0, 0),
+    "blender": (3, 2, 1),
     "location": "File > Import",
     "warning": "This version is still in development.",
     "category": "Import",

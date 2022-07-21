@@ -108,7 +108,7 @@ def remove_files_matching_pattern(root_folder: str, exclude_folders: list[str] =
     """
     # Get a list of all files in directory
     for rootDir, subdirs, filenames in os.walk(root_folder):
-        # Find the files that matches the given patterm
+        # Find the files that matches the given pattern
         for filename in fnmatch.filter(filenames, pattern):
             try:
                 if os.path.dirname(os.path.join(rootDir, filename)) not in exclude_folders:
@@ -127,12 +127,10 @@ def remove_folders_matching_pattern(root_folder: str, pattern: str = "__pycache_
     """
     # Get a list of all files in directory
     for rootDir, subdirs, filenames in os.walk(root_folder):
-        # Find the files that matches the given patterm
+        # Find the files that matches the given pattern
         for subdir in subdirs:
             if subdir == pattern:
-                # First, remove all files inside the folder
-                remove_files_matching_pattern(os.path.join(rootDir, subdir), pattern="*.*")
-                os.rmdir(os.path.join(rootDir, subdir))
+                shutil.rmtree(os.path.join(rootDir, subdir), ignore_errors=True)
 
 
 def download_stop_motion_obj_addon(dest: str, version: str = "v2.2.0.alpha.23") -> tuple[str, str]:

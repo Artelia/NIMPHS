@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 
 sys.path.append(os.path.abspath("."))  # Make utils.py functions available in this file
-from scripts.utils import install_requirements, remove_files_matching_pattern, Colors, centered_str
+from scripts.utils import install_requirements, remove_files_matching_pattern, Colors, centered_str, remove_folders_matching_pattern
 
 print(f"{Colors.OKBLUE}{centered_str(' LOAD PYTEST ', '=')}{Colors.ENDC}")
 print("Running file:", __file__, "from Blender")
@@ -87,7 +87,12 @@ class SetupPlugin:
 
         # Cleanup zip files
         print("Cleaning up - zip files")
-        remove_files_matching_pattern(self.root, exclude_folders=[os.path.abspath("./cache")], pattern="*.zip")
+        exlude = [os.path.abspath("./cache"), os.path.abspath("./data/openfoam")]
+        remove_files_matching_pattern(self.root, exclude_folders=exlude, pattern="*.zip")
+
+        # Cleanup testing data
+        print("Cleaning up - testing data")
+        remove_folders_matching_pattern(os.path.abspath("./data"), pattern="sample")
 
         print("PyTest unconfigure successful!")
 
