@@ -7,7 +7,6 @@ Documentation
     :maxdepth: 2
     :glob:
 
-    getting_started
     installation
     openfoam/index
     telemac/index

@@ -5,7 +5,7 @@ Import a file
 
 | Import a file under ``File > Import > OpenFOAM``.
 
-.. important:: 
+.. important::
     For large meshes (> 100k vertices), this operation can take several seconds to complete.
 
 .. image:: /images/openfoam/import.png
