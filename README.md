@@ -1,6 +1,6 @@
 # Toolbox Blender
 
-Import OpenFOAM (.foam) and TELEMAC (.slf) files inside Blender, and make use of its powerful 3D renderer to generate photorealistic images and animations!
+Import OpenFOAM (.foam) and TELEMAC (.slf) files in Blender, and make use of its powerful 3D renderer to generate photorealistic images and animations!
 
 Built with:
 
@@ -14,17 +14,14 @@ Built with:
     * Mesh sequence (generates a mesh for each time point in the selected time range)
     * Streaming sequence (generates a mesh when the frame changes and only keeps one mesh in memory)
 * Import point data as vertex colors (color attributes)
-* Clip by a scalar
+* Clip mesh by a scalar
 
 ### Screenshots
 
-Main panel - material preview |  Main panel - wireframe preview
-:----------------------------:|:-------------------------------:
-![Material preview](https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.3.0/docs/source/images/readme/screenshot_openfoam_a.png)  |  ![Wireframe preview](https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.3.0/docs/source/images/readme/screenshot_openfoam_b.png)
+Material preview  |  Wireframe preview
+:----------------:|:------------------:
+![Material preview](https://bit.ly/3zoV67P)  |  ![Wireframe preview](https://bit.ly/3PsXoIw)
 
-<p align="center">
-  <img alt="Shading preview" width="716" height="460" src="https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.3.0/docs/source/images/readme/screenshot_openfoam_c.png"/>
-</p>
 
 ## TELEMAC
 
@@ -38,10 +35,6 @@ Main panel - material preview |  Main panel - wireframe preview
 
 ### Screenshots
 
-Main panel - material preview |  Main panel - wireframe preview
-:----------------------------:|:-------------------------------:
-![Material preview](https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.3.0/docs/source/images/readme/screenshot_telemac_a.png)  |  ![Wireframe preview](https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.3.0/docs/source/images/readme/screenshot_telemac_b.png)
-
-<p align="center">
-  <img alt="Shading preview" width="694" height="430" src="https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.3.0/docs/source/images/readme/screenshot_telemac_c.png"/>
-</p>
+Material preview |  Wireframe preview
+:---------------:|:------------------:
+![Material preview](https://bit.ly/3PqZ84S)  |  ![Wireframe preview](https://bit.ly/3yWhzYh)

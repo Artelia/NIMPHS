@@ -21,7 +21,17 @@ def get_selected_object(context: Context) -> Union[Object, None]:
     obj = context.active_object
     # Even if no objects are selected, the last selected object remains in the active_objects variable
     if len(context.selected_objects) == 0:
-        obj = None
+        return None
+
+    if obj is None:
+        return obj
+
+    parent = obj.parent
+    if parent is None:
+        return obj
+
+    if parent.type == 'EMPTY' and parent.tbb.module in ['OpenFOAM', 'TELEMAC']:
+        return parent
 
     return obj
 
