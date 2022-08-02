@@ -54,6 +54,10 @@ def draw_point_data(layout: UILayout, point_data: TBB_PointDataSettings, show_re
         row = layout.row()
         row.prop(point_data, "remap_method", text="Method")
 
+        if point_data.remap_method == 'CUSTOM':
+            row = layout.row()
+            row.prop(point_data, "custom_remap_value", text="Value")
+
     # Display selected point data
     data = PointDataManager(point_data.list)
     for name, unit, values in zip(data.names, data.units, data.ranges):

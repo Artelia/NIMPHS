@@ -1,6 +1,6 @@
 # <pep8 compliant>
 from bpy.types import PropertyGroup
-from bpy.props import StringProperty, BoolProperty, EnumProperty
+from bpy.props import StringProperty, BoolProperty, EnumProperty, FloatVectorProperty
 
 from tbb.properties.utils.point_data import PointDataManager
 
@@ -32,7 +32,16 @@ class TBB_PointDataSettings(PropertyGroup):
         items=[
             ("LOCAL", "Local", "Remap point data using a local value range"),  # noqa F821
             ("GLOBAL", "Global", "Remap point data using a global value range"),  # noqa F821
+            ("CUSTOM", "Custom", "Remap point data using a custom value range")  # noqa F821
         ]
+    )
+
+    custom_remap_value: FloatVectorProperty(
+        name="Custom remap value",
+        description="Custom value range to remap point data",
+        size=2,
+        default=(0.0, 1.0),
+        precision=6
     )
 
     #: bpy.props.StringProperty: Save of variables information.
