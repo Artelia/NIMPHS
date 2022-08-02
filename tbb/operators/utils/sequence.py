@@ -92,8 +92,10 @@ def update_telemac_streaming_sequences(scene: Scene) -> None:
                 start = time.time()
 
                 for child, id in zip(obj.children, range(len(obj.children))):
-                    offset = id if file_data.is_3d() else 0
-                    TelemacObjectUtils.update_streaming_sequence(obj, child, file_data, scene.frame_current, offset)
+                    # Do not update a plane when it is hidden in the viewport ("eye closed")
+                    if not child.hide_get():
+                        offset = id if file_data.is_3d() else 0
+                        TelemacObjectUtils.update_streaming_sequence(obj, child, file_data, scene.frame_current, offset)
 
                 log.info(obj.name + ", " + "{:.4f}".format(time.time() - start) + "s")
 
@@ -135,15 +137,17 @@ def update_telemac_mesh_sequences(scene: Scene) -> None:
             cumulated_time = 0.0
 
             for child, id in zip(obj.children, range(len(obj.children))):
-                start = time.time()
+                # Do not update a plane when it is hidden in the viewport ("eye closed")
+                if not child.hide_get():
+                    start = time.time()
 
-                # Get interpolation time information
-                time_info = InterpInfoMeshSequence(child, scene.frame_current)
-                if time_info.has_data:
-                    offset = id if file_data.is_3d() else 0
-                    TelemacObjectUtils.update_mesh_sequence(child.data, file_data, offset, point_data, time_info)
+                    # Get interpolation time information
+                    time_info = InterpInfoMeshSequence(child, scene.frame_current)
+                    if time_info.has_data:
+                        offset = id if file_data.is_3d() else 0
+                        TelemacObjectUtils.update_mesh_sequence(child.data, file_data, offset, point_data, time_info)
 
-                    cumulated_time += time.time() - start
+                        cumulated_time += time.time() - start
 
             if cumulated_time > 0.0:
                 log.info(obj.name + ", " + "{:.4f}".format(cumulated_time) + "s")
