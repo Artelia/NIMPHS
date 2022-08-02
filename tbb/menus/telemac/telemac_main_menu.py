@@ -21,3 +21,4 @@ class TBB_MT_TelemacMainMenu(Menu):
 
         self.layout.menu("TBB_MT_TelemacCreateSequenceMenu")
         self.layout.menu("TBB_MT_TelemacPointDataMenu")
+        self.layout.menu("TBB_MT_TelemacVolumeMenu")
