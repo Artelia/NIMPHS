@@ -11,10 +11,10 @@ import tempfile
 import numpy as np
 from pathlib import Path
 
-from tbb.panels.utils import get_selected_object
 from tbb.operators.shared.utils import update_end
 from tbb.checkdeps import HAS_CUDA, HAS_MULTIPROCESSING
 from tbb.operators.shared.modal_operator import TBB_ModalOperator
+from tbb.panels.utils import get_selected_object, draw_point_data
 from tbb.operators.shared.create_sequence import TBB_CreateSequence
 from tbb.operators.utils.volume import TelemacMeshForVolume, TelemacVolume
 from tbb.properties.telemac.interpolate import TBB_TelemacInterpolateProperty
@@ -233,6 +233,8 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
             context (Context): context
         """
 
+        file_data = context.scene.tbb.file_data["ops"]
+
         # Hardware
         box = self.layout.box()
         row = box.row()
@@ -245,23 +247,39 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
             row = box.row()
             row.prop(self, "nb_threads", text="Number of threads")
 
-        # Point data
-        super().draw(context)
-
         # Volume settings
         box = self.layout.box()
         row = box.row()
         row.label(text="Volume")
 
-        row = box.row()
+        subbox = box.box()
+        row = subbox.row()
+        row.label(text="Size")
+
+        row = subbox.row()
         row.prop(self, "volume_definition", text="Volume definition")
 
         if self.volume_definition == 'VX_SIZE':
-            row = box.row()
+            row = subbox.row()
             row.prop(self, "voxel_size", text="Voxel size")
         elif self.volume_definition == 'DIMENSIONS':
-            row = box.row()
+            row = subbox.row()
             row.prop(self, "dimensions", text="Dimensions")
+
+        subbox = box.box()
+        row = subbox.row()
+        row.label(text="Density")
+
+        # Update list of chosen point data from this operator. Ugly but it works.
+        self.point_data.list = context.scene.tbb.op_vars.dumps()
+        draw_point_data(subbox, self.point_data, show_range=False, edit=True, src='OPERATOR')
+
+        row = subbox.row()
+        row.enabled = context.scene.tbb.op_vars.length() < self.limit_add_point_data
+        op = row.operator("tbb.add_point_data", text="Add", icon='ADD')
+        op.available = file_data.vars.dumps()
+        op.chosen = self.point_data.list
+        op.source = 'OPERATOR'
 
         # Interpolation settings
         box = self.layout.box()

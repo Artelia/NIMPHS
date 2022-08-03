@@ -2,7 +2,8 @@ import logging
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
 
-# Check for Numba / CUDA
+
+# Numba / CUDA
 try:
     from numba import cuda
 except BaseException:
@@ -21,7 +22,7 @@ else:
         log.debug("Numba/CUDA is installed but cannot find any device available")
 
 
-# Check for multiprocessing
+# multiprocessing
 try:
     from multiprocessing import Process, RawArray, Manager
 except BaseException:
@@ -31,7 +32,8 @@ else:
     HAS_MULTIPROCESSING = True
     log.debug("Multiprocessing available")
 
-# Check for OpenVDB
+
+# OpenVDB
 try:
     import pyopenvdb
 except BaseException:
