@@ -11,12 +11,7 @@ DEV_MODE = True
 
 @persistent
 def tbb_on_save_pre(_dummy) -> None:
-    """
-    Save data before the blender file is saved.
-
-    Args:
-        scene (Scene): scene
-    """
+    """Save data before the blender file is saved."""
 
     for obj in bpy.data.objects:
         file_data = bpy.context.scene.tbb.file_data.get(obj.tbb.uid, None)

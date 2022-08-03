@@ -19,10 +19,10 @@ class TBB_TelemacInterpolateProperty(PropertyGroup):
         ]
     )
 
-    #: bpy.props.IntProperty: Number of time steps to add between two time points
-    time_steps: IntProperty(
-        name="Time steps",
-        description="Number of time steps to add between two time points",
+    #: bpy.props.IntProperty: Number of data to generate between two known data points
+    steps: IntProperty(
+        name="Steps",  # noqa: F821
+        description="Number of data to generate between two known data points",
         default=1,
         min=1,
         soft_min=1,

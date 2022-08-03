@@ -306,7 +306,7 @@ class TelemacObjectUtils(ObjectUtils):
 
         # Update mesh
         if interpolate.type == 'LINEAR':
-            time_info = InterpInfoStreamingSequence(frame, sequence.start, interpolate.time_steps)
+            time_info = InterpInfoStreamingSequence(frame, sequence.start, interpolate.steps)
             vertices = TelemacMeshUtils.vertices_LI(child, file_data, time_info, offset)
         elif interpolate.type == 'NONE':
             time_point = frame - sequence.start

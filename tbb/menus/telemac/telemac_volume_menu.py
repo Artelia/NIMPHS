@@ -19,4 +19,5 @@ class TBB_MT_TelemacVolumeMenu(Menu):
             _context (Context): context
         """
 
+        self.layout.operator("tbb.telemac_generate_volume_sequence", text="Generate volume sequence")
         self.layout.operator("tbb.set_volume_origin", text="Set volume origin")

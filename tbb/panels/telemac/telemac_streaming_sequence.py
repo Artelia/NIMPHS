@@ -73,7 +73,7 @@ class TBB_PT_TelemacStreamingSequence(TBB_StreamingSequenceSettingsPanel):
 
             if interpolate.type != 'NONE':
                 row = box.row()
-                row.prop(interpolate, "time_steps", text="Time steps")
+                row.prop(interpolate, "steps", text="Time steps")
 
             # Point data and sequence settings
             super().draw(context, obj, sequence)

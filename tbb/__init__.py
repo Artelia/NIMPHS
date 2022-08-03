@@ -18,7 +18,8 @@ bl_info = {
     "blender": (3, 2, 1),
     "location": "File > Import",
     "warning": "This version is still in development.",
-    "category": "Import",
+    "category": "Import-Export",
+    "support": "COMMUNITY",
     "doc_url": "https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/wikis/home",
     "tracker_url": "https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/issues"
 }
