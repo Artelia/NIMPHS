@@ -70,6 +70,8 @@ class TBB_OT_OpenfoamCreateMeshSequence(TBB_CreateMeshSequence):
             self.report({'ERROR'}, "Reload file data first")
             return {'CANCELLED'}
 
+        # Clear selected point data
+        context.scene.tbb.op_vars.clear()
         # "Copy" file data information
         self.import_settings.skip_zero_time = self.obj.tbb.settings.openfoam.import_settings.skip_zero_time
         context.scene.tbb.file_data["ops"] = context.scene.tbb.file_data[self.obj.tbb.uid]

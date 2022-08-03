@@ -65,6 +65,8 @@ class TBB_OT_TelemacCreateMeshSequence(TBB_CreateMeshSequence):
             self.report({'ERROR'}, "Reload file data first")
             return {'CANCELLED'}
 
+        # Clear selected point data
+        context.scene.tbb.op_vars.clear()
         # "Copy" file data
         context.scene.tbb.file_data["ops"] = context.scene.tbb.file_data[self.obj.tbb.uid]
         self.max = context.scene.tbb.file_data["ops"].nb_time_points - 1

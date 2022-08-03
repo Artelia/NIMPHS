@@ -3,7 +3,6 @@ from bpy.types import Context, Event
 from bpy.props import StringProperty, EnumProperty, IntProperty, IntVectorProperty, FloatVectorProperty, PointerProperty
 
 import logging
-
 log = logging.getLogger(__name__)
 
 import os
@@ -85,27 +84,27 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
         name="Output path",
         description="Path where to save generated .vdb files",
         default="",
-        subtype="DIR_PATH"
+        subtype="DIR_PATH"      # noqa: F821
     )
 
     file_name: StringProperty(
         name="Output path",
         description="Name of the files to generate",
         default="",
-        subtype="FILE_NAME"
+        subtype="FILE_NAME"     # noqa: F821
     )
 
     volume_definition: EnumProperty(
         name="Volume definition",
         description="Define the volume dimensions either by providing dimensions or a voxel size",
         items=[
-            ("VX_SIZE", "Voxel size", "Define the volume using a voxel size"),
-            ("DIMENSIONS", "Dimensions", "Define the volume by giving custom dimensions (L x W x H)")
+            ("VX_SIZE", "Voxel size", "Define the volume using a voxel size"),                          # noqa: F821
+            ("DIMENSIONS", "Dimensions", "Define the volume by giving custom dimensions (L x W x H)")   # noqa: F821
         ]
     )
 
     dimensions: IntVectorProperty(
-        name="Dimensions",
+        name="Dimensions",  # noqa: F821
         description="Dimensions of the volume",
         default=(0, 0, 0),
         min=0,
@@ -176,6 +175,10 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
             self.report({'ERROR'}, "Reload file data first")
             return {'CANCELLED'}
 
+        # Clear selected point data
+        context.scene.tbb.op_vars.clear()
+        # Limit point data import to 1
+        self.limit_add_point_data = 1
         # "Copy" file data
         context.scene.tbb.file_data["ops"] = context.scene.tbb.file_data[self.obj.tbb.uid]
         self.max = context.scene.tbb.file_data["ops"].nb_time_points - 1

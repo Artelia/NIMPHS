@@ -16,6 +16,9 @@ class TBB_CreateSequence(Operator):
     #: TBB_PointDataSettings: Point data settings.
     point_data: PointerProperty(type=TBB_PointDataSettings)
 
+    #: int: Number of maximum point data that the use can import
+    limit_add_point_data: int = 24
+
     #: bpy.types.Object: Selected object
     obj: Object = None
 
@@ -117,8 +120,9 @@ class TBB_CreateSequence(Operator):
             self.point_data.list = context.scene.tbb.op_vars.dumps()
             draw_point_data(box, self.point_data, show_range=False, edit=True, src='OPERATOR')
 
-            row = box.row()
-            op = row.operator("tbb.add_point_data", text="Add", icon='ADD')
-            op.available = file_data.vars.dumps()
-            op.chosen = self.point_data.list
-            op.source = 'OPERATOR'
+            if context.scene.tbb.op_vars.length() < self.limit_add_point_data:
+                row = box.row()
+                op = row.operator("tbb.add_point_data", text="Add", icon='ADD')
+                op.available = file_data.vars.dumps()
+                op.chosen = self.point_data.list
+                op.source = 'OPERATOR'
