@@ -7,6 +7,8 @@ log = logging.getLogger(__name__)
 
 import os
 import time
+import tempfile
+from pathlib import Path
 
 from tbb.panels.utils import get_selected_object
 from tbb.operators.shared.utils import update_end
@@ -204,6 +206,9 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
         # -------------------------------- #
         if self.mode == 'TEST':
             return {'FINISHED'}
+        else:
+            self.file_name = "Volume_sequence"
+            self.output_path = os.path.abspath(tempfile.gettempdir())
 
         return context.window_manager.invoke_props_dialog(self, width=400)
 
@@ -299,11 +304,19 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
             set: state of the operator
         """
 
+        # Check destination path
+        path = Path(self.output_path)
+        if not path.exists():
+            self.report({"Given output path does not exists"})
+            return {'CANCELLED'}
+
         start = time.time()
 
         self.cumulated_time = 0.0
         self.file_counter = self.start
-        self.time_point = self.start
+        self.time_point = self.start - 1
+        # Concatenate output_path and file_name
+        self.file_name = os.path.join(os.path.abspath(self.output_path), self.file_name)
 
         try:
             # Setup mesh information for volume
@@ -352,18 +365,17 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
             return {'CANCELLED'}
 
         if event.type == 'TIMER':
-            print(self.time_point, self.start)
-            if self.time_point == self.start:
+            if self.time_point == self.start - 1:
 
                 start = time.time()
 
-                print("Hey")
                 # Prepare volume
                 self.volume.prepare_voxels(self.mesh)
-                print("Hey 2")
 
                 if self.volume.show_details:
                     print(f"Total: {time.time() - start}s")
+
+                self.time_point += 1
 
                 self.cumulated_time += time.time() - start
 
