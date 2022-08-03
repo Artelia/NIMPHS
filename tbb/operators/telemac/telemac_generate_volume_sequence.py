@@ -7,6 +7,7 @@ log = logging.getLogger(__name__)
 
 import os
 import time
+import json
 import tempfile
 import numpy as np
 from pathlib import Path
@@ -102,8 +103,8 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
         name="Volume definition",
         description="Define the volume dimensions either by providing dimensions or a voxel size",
         items=[
+            ("DIMENSIONS", "Dimensions", "Define the volume by giving custom dimensions (L x W x H)"),  # noqa: F821
             ("VX_SIZE", "Voxel size", "Define the volume using a voxel size"),                          # noqa: F821
-            ("DIMENSIONS", "Dimensions", "Define the volume by giving custom dimensions (L x W x H)")   # noqa: F821
         ]
     )
 
@@ -221,7 +222,7 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
                 dim[2] / pow(10, omz - 2) if omz > 2 else dim[2]
             )
             self.dimensions = (int(np.ceil(raw[0])), int(np.ceil(raw[1])), int(np.ceil(raw[2])))
-            self.voxel_size = (raw[0] / 100.0, raw[1] / 100.0, raw[2] / 100.0)
+            self.voxel_size = raw
 
         return context.window_manager.invoke_props_dialog(self, width=400)
 
@@ -338,7 +339,7 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
         # Check destination path
         path = Path(self.output_path)
         if not path.exists():
-            self.report({"Given output path does not exists"})
+            self.report({'WARNING'}, "Given output path does not exists")
             return {'CANCELLED'}
 
         start = time.time()
@@ -348,6 +349,11 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
         self.time_point = self.start - 1
         # Concatenate output_path and file_name
         self.file_name = os.path.join(os.path.abspath(self.output_path), self.file_name)
+
+        point_data = json.loads(self.point_data.list)
+        if len(point_data["names"]) <= 0:
+            self.report({'WARNING'}, "No point data selected to use as density")
+            return {'CANCELLED'}
 
         try:
             # Setup mesh information for volume
