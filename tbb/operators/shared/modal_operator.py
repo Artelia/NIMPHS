@@ -66,6 +66,28 @@ class TBB_ModalOperator():
 
         context.scene.tbb.m_op_value = (step / end) * 100
 
+    def set_progress(self, context: Context, value: float) -> None:
+        """
+        Set custom value of progress bar.
+
+        Args:
+            context (Context): context
+            value (float): new value to display
+        """
+
+        context.scene.tbb.m_op_value = value
+
+    def update_label(self, context: Context, label: str) -> None:
+        """
+        Update label of progress bar.
+
+        Args:
+            context (Context): context
+            label (str): new label to display
+        """
+
+        context.scene.tbb.m_op_label = label
+
     def stop(self, context: Context, canceled: bool = False) -> None:
         """
         Stop the 'create sequence' process. Used for both modules.

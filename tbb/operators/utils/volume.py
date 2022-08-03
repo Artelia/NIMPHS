@@ -12,16 +12,17 @@ from tbb.operators.utils.others import remap_array
 from tbb.properties.telemac.serafin import Serafin
 
 
-class Mesh():
+class TelemacMeshForVolume():
     """Data structure which holds information on the TELEMAC object."""
 
-    def __init__(self, path: str, plane_interp_steps: int = 0) -> None:
+    def __init__(self, path: str, plane_interp_steps: int, time_interp_steps: int) -> None:
         """
         Init metohd of the class.
 
         Args:
             path (str): path to Serafin file
-            plane_interp_steps (int, optional): interpolation steps for planes. Defaults to 0.
+            plane_interp_steps (int): interpolation steps for planes.
+            time_interp_steps (int): interpolation steps for point data.
         """
 
         # Read file
@@ -32,6 +33,8 @@ class Mesh():
         # Get total number of planes (with interpolation)
         self.plane_interp_steps = plane_interp_steps
         self.nb_planes = (self.file.nplan - 1) * plane_interp_steps + self.file.nplan
+
+        self.time_interp_steps = time_interp_steps
 
         # Get mesh information
         self.nb_vertices = self.file.npoin2d
@@ -47,24 +50,24 @@ class Mesh():
         self.width = np.max(self.y_coords) - self.minimum[1]
         self.height = np.max(self.z_coords) - self.minimum[2]
 
-    def set_time_point(self, time_point: int, time_interp_step: int = 0, time_steps: int = 0) -> None:
+    def set_time_point(self, time_point: int, interp_time_step: int = 0) -> None:
         """
         Update data according to the given time point. Linearly interpolates data in time if needed.
 
         Args:
             time_point (int): time point to read
-            time_interp_step (int, optional): time step of interpolated time point. Defaults to 0.
+            interp_time_step (int, optional): time step of interpolated time point. Defaults to 0.
             time_steps (int, optional): number of time steps between each time point. Defaults to 0.
         """
 
-        if time_interp_step == 0:
+        if interp_time_step == 0:
             self.data = self.file.read(self.file.temps[time_point])
             self.z_coords = self.get_point_data(['ELEVATION Z', 'COTE Z'])
         else:
             # Linearly interpolate point data in time
             current_data = self.file.read(self.file.temps[time_point])
             next_data = self.file.read(self.file.temps[time_point + 1])
-            percentage = time_interp_step / (time_steps + 1)
+            percentage = interp_time_step / (self.time_interp_steps + 1)
             difference = next_data - current_data
             self.data = current_data + percentage * difference
 
@@ -114,7 +117,7 @@ class Mesh():
 
         # Linear iterpolation
         # [x, ., ., ., x, ., ., ., x, ., ., ., x, ., ., ., x]
-        # 'x' is a knwon data, '.' is data to generate
+        # 'x' is a known data, '.' is data to generate
         for id in range(1, self.file.nplan):
             end = id * (self.plane_interp_steps + 1)
             start = end - self.plane_interp_steps
@@ -135,31 +138,32 @@ class Mesh():
             str: output
         """
 
-        output = "MESH:\n"
+        output = "MESH FOR VOLUME:\n"
         output += f"DIMENSIONS: L = {self.length}, W = {self.width}, H = {self.height}\n"
         output += f"MINIMUM   : X = {self.minimum[0]}, Y = {self.minimum[1]}, Z = {self.minimum[2]}\n"
         output += f"VERTICES  : NB = {self.nb_vertices}\n"
-        output += f"PLANES    : NB = {self.file.nplan}, INTERPOLATED = {self.plane_interp_steps}, TOTAL: {self.nb_planes}"
+        output += f"PLANES    : NB = {self.file.nplan}, INTERP = {self.plane_interp_steps}, TOTAL: {self.nb_planes}"
 
         return output
 
 
-class Volume():
+class TelemacVolume():
     """Object which handles the process of generating a volume from a TELEMAC object."""
 
-    def __init__(self, mesh: Mesh, nb_threads: int = 0, use_multproc: bool = False, use_cuda: bool = False, vx_size: float = 0.5,
-                 dimensions: tuple[float] = (0.0, 0.0, 0.0), show_details: bool = False) -> None:
+    def __init__(self, mesh: TelemacMeshForVolume, nb_threads: int, use_multproc: bool,
+                 use_cuda: bool, vx_size: tuple[float, float, float] = (0, 0, 0),
+                 dimensions: tuple[float, float, float] = (0, 0, 0), show_details: bool = False) -> None:
         """
         Init method of the class.
 
         Args:
-            mesh (Mesh): mesh information
-            nb_threads (int, optional): number of threads to use for multiprocessing computation. Defaults to 0.
-            use_multproc (bool, optional): indicate whether to use Multiprocessing or not
-            use_cuda (bool, optional): indicate whether to use CUDA or not
-            vx_size (float, optional): voxel size. Defaults to 0.5.
-            dimensions (tuple[float], optional). Defaults to (0.0, 0.0, 0.0).
-            show_details (bool, optional). print details about computing time of the current time step. Defaults to False.
+            mesh (TelemacMeshForVolume): mesh information
+            nb_threads (int): number of threads to use for multiprocessing computation.
+            use_multproc (bool): indicate whether to use Multiprocessing or not.
+            use_cuda (bool): indicate whether to use CUDA or not.
+            vx_size (tuple[float, float, float], optional): voxel size. Defaults to (0, 0, 0).
+            dimensions (tuple[float, float, float], optional): dimensions. Defaults to (0, 0, 0).
+            show_details (bool, optional): print details on computing time of the current time step. Defaults to False.
         """
 
         # Indicate computation mode
@@ -172,12 +176,12 @@ class Volume():
         if dimensions == (0.0, 0.0, 0.0):
 
             # Set voxel size
-            self.vx_size = (vx_size, vx_size, vx_size)
+            self.vx_size = vx_size
 
             # Compute raw dimensions of the volume
-            self.raw_dim_x = mesh.length / vx_size
-            self.raw_dim_y = mesh.width / vx_size
-            self.raw_dim_z = mesh.height / vx_size
+            self.raw_dim_x = mesh.length / vx_size[0]
+            self.raw_dim_y = mesh.width / vx_size[1]
+            self.raw_dim_z = mesh.height / vx_size[2]
 
             # Save dimensions
             self.dim = (int(np.rint(self.raw_dim_x)), int(np.rint(self.raw_dim_y)), int(np.rint(self.raw_dim_z)))
@@ -216,12 +220,12 @@ class Volume():
             self.vxids = list(it.product(*[range(n) for n in self.dim]))
             self.xyids = np.repeat(np.arange(self.dim[0] * self.dim[1]), self.dim[2])
 
-    def prepare_voxels(self, mesh: Mesh) -> None:
+    def prepare_voxels(self, mesh: TelemacMeshForVolume) -> None:
         """
         Prepare voxels information (compute zcols, zmin, zmax).
 
         Args:
-            mesh (Mesh): mesh information
+            mesh (TelemacMeshForVolume): mesh information
         """
 
         # Compute min/max coordinates
@@ -238,7 +242,7 @@ class Volume():
         plane_indices = np.arange(0, mesh.nb_planes, 1)
 
         if self.show_details:
-            print(f"| Compute min/max coordinates: {time.time() - start}s")
+            log.debug(f"| Compute min/max coordinates: {time.time() - start}s")
 
         start = time.time()
 
@@ -253,9 +257,10 @@ class Volume():
             self.zmax = zmax
 
         if self.show_details:
-            print(f"| Prepare voxels information: {time.time() - start}s")
+            log.debug(f"| Prepare voxels information: {time.time() - start}s")
 
-    def prepare_voxels_for_cpu(self, xmin, xmax, ymin, ymax, plane_indices, mesh: Mesh, mode: str = 'SEQUENTIAL'):
+    def prepare_voxels_for_cpu(self, xmin, xmax, ymin, ymax, plane_indices,
+                               mesh: TelemacMeshForVolume, mode: str = 'SEQUENTIAL'):
         """
         Prepare voxels information to be computed using the CPU.
 
@@ -265,7 +270,7 @@ class Volume():
             ymin (np.ndarray): min y coordinates of voxels
             ymax (np.ndarray): max y coordinates of voxels
             plane_indices (np.ndarray): plane indices
-            mesh (Mesh): mesh
+            mesh (TelemacMeshForVolume): mesh
             mode (str, optional): execution mode, enum in ['SEQUENTIAL', 'PARALLEL_CPU', 'PARALLEL_GPU'].\
                                   Defaults to 'SEQUENTIAL'.
         """
@@ -286,6 +291,8 @@ class Volume():
                     self.zcols.append(np.array(np.tile(mesh_vertices, mesh.nb_planes) + offsets))
 
         elif mode == 'PARALLEL_CPU':
+
+            from multiprocessing import Process, RawArray, Manager
 
             # TODO: /!\ All the zcols are shuffeld
             # Using such a data structure is unefficient.
@@ -320,7 +327,8 @@ class Volume():
         elif mode == 'PARALLEL_GPU':
             pass
 
-    def prepare_voxels_for_gpu(self, xmin, xmax, ymin, ymax, plane_indices, mesh: Mesh, mode: str = 'SEQUENTIAL'):
+    def prepare_voxels_for_gpu(self, xmin, xmax, ymin, ymax, plane_indices,
+                               mesh: TelemacMeshForVolume, mode: str = 'SEQUENTIAL'):
         """
         Prepare voxels information to be computed using the GPU.
 
@@ -330,7 +338,7 @@ class Volume():
             ymin (np.ndarray): min y coordinates of voxels
             ymax (np.ndarray): max y coordinates of voxels
             plane_indices (np.ndarray): plane indices
-            mesh (Mesh): mesh
+            mesh (TelemacMeshForVolume): mesh
             mode (str, optional): execution mode, enum in ['NORMAL', 'PARALLEL_CPU', 'PARALLEL_GPU'].\
                                   Defaults to 'SEQUENTIAL'.
         """
@@ -368,12 +376,12 @@ class Volume():
             # TODO: is it possible to compute it with GPU parallelization?
             pass
 
-    def fill(self, mesh: Mesh, point_data: list[str], remap: tuple[float] = (None, None)) -> None:
+    def fill(self, mesh: TelemacMeshForVolume, point_data: list[str], remap: tuple[float] = (None, None)) -> None:
         """
         Set the density of each voxel using the given data.
 
         Args:
-            mesh (Mesh): mesh data
+            mesh (TelemacMeshForVolume): mesh data
             point_data (list[str]): name of point data to use as density
             remap (tuple[float]): global min, global max to remap data
         """
@@ -387,7 +395,7 @@ class Volume():
             data = remap_array(mesh.get_point_data(point_data), in_min=remap[0], in_max=remap[1])
 
         if self.show_details:
-            print(f"| Get point data: {time.time() - start}s")
+            log.debug(f"| Get point data: {time.time() - start}s")
 
         start = time.time()
 
@@ -397,15 +405,15 @@ class Volume():
             self.fill_with_cpu(data, mesh)
 
         if self.show_details:
-            print(f"| Fill volume: {time.time() - start}s")
+            log.debug(f"| Fill volume: {time.time() - start}s")
 
-    def fill_with_cpu(self, data: np.ndarray, mesh: Mesh):
+    def fill_with_cpu(self, data: np.ndarray, mesh: TelemacMeshForVolume):
         """
         Set density of each voxel using an algorithm with runs on the CPU.
 
         Args:
             data (np.ndarray): point data
-            mesh (Mesh): mesh information
+            mesh (TelemacMeshForVolume): mesh information
         """
 
         if self.use_multproc:
@@ -436,13 +444,13 @@ class Volume():
         else:
             pass
 
-    def fill_with_gpu(self, data: np.ndarray, mesh: Mesh):
+    def fill_with_gpu(self, data: np.ndarray, mesh: TelemacMeshForVolume):
         """
         Set density of each voxel using an algorithm with runs on the GPU.
 
         Args:
             data (np.ndarray): point data
-            mesh (Mesh): mesh information
+            mesh (TelemacMeshForVolume): mesh information
         """
 
         from numba import cuda
@@ -457,7 +465,7 @@ class Volume():
         D_zmin = cuda.to_device(self.zmin)
 
         if self.show_details:
-            print(f"  | Copy to device: {time.time() - start}s")
+            log.debug(f"  | Copy to device: {time.time() - start}s")
 
         start = time.time()
 
@@ -465,7 +473,7 @@ class Volume():
         fill_volume_gpu.forall(self.nb_voxels)(D_volume, D_data, D_z_coords, D_zcols, D_zmin, self.vx_size[2], self.dim)
 
         if self.show_details:
-            print(f"  | Launch threads: {time.time() - start}s")
+            log.debug(f"  | Launch threads: {time.time() - start}s")
 
         start = time.time()
 
@@ -473,15 +481,15 @@ class Volume():
         self.data = D_volume.copy_to_host()
 
         if self.show_details:
-            print(f"  | Copy to host: {time.time() - start}s")
+            log.debug(f"  | Copy to host: {time.time() - start}s")
 
-    def export_time_point(self, mesh: Mesh, point_data: list[str], file_name: str,
+    def export_time_point(self, mesh: TelemacMeshForVolume, point_data: list[str], file_name: str,
                           remap: tuple[float] = (None, None)) -> None:
         """
         Generate and export volume for the current time point.
 
         Args:
-            mesh (Mesh): mesh
+            mesh (TelemacMeshForVolume): mesh
             point_data (list[str]): point data to use as density
             file_name (str): file name
             remap (tuple[float], optional): min / max to remap values. Defaults to (None, None).
@@ -662,22 +670,22 @@ if HAS_CUDA:
         """
 
         # Thread id corresponds to voxel id
-        thid = cuda.grid(1)
+        thread_id = cuda.grid(1)
 
         # Make sure the thread id corresponds to a voxel
-        if thid < dim[0] * dim[1] * dim[2]:
-            xyid = thid // dim[2]
+        if thread_id < dim[0] * dim[1] * dim[2]:
+            xyid = thread_id // dim[2]
             start, end = D_zcols[xyid * 2], D_zcols[xyid * 2] + D_zcols[xyid * 2 + 1]
             zcol = D_zcols[start:end]
 
             value, count = 0.0, 0
             for vtid in zcol:
 
-                plane_id = thid % dim[2]
+                plane_id = thread_id % dim[2]
 
                 z, zmin, zmax = D_z_coords[vtid], D_zmin[plane_id], D_zmin[plane_id] + 2.0 * vx_size_z
                 if zmin <= z and z <= zmax:
                     value += D_data[vtid]
                     count += 1
 
-            D_volume[thid] = value / count if count > 0 else 0.0
+            D_volume[thread_id] = value / count if count > 0 else 0.0

@@ -11,10 +11,11 @@ import time
 from tbb.panels.utils import get_selected_object
 from tbb.operators.shared.utils import update_end
 from tbb.checkdeps import HAS_CUDA, HAS_MULTIPROCESSING
-from tbb.properties.utils.point_data import PointDataManager
 from tbb.operators.shared.modal_operator import TBB_ModalOperator
 from tbb.operators.shared.create_sequence import TBB_CreateSequence
+from tbb.operators.utils.volume import TelemacMeshForVolume, TelemacVolume
 from tbb.properties.telemac.interpolate import TBB_TelemacInterpolateProperty
+from tbb.properties.utils.point_data import PointDataInformation, PointDataManager
 
 
 def get_available_computing_modes(self, _context: Context) -> list:  # noqa: D417
@@ -136,6 +137,21 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
         min=0
     )
 
+    #: int: Currently processed time point
+    time_point: int = 0
+
+    #: int: File counter to give a unique name to generated files
+    file_counter: int = 0
+
+    #: float: Cumulated execution time of the operator
+    cumulated_time: float = 0
+
+    #: TelemacMeshForVolume: Mesh information for the generation of TELEMAC volumes
+    mesh: TelemacMeshForVolume = None
+
+    #: TelemacVolume: Object which will handle the computation of volumes
+    volume: TelemacVolume = None
+
     @classmethod
     def poll(self, context: Context) -> bool:
         """
@@ -189,7 +205,7 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
         if self.mode == 'TEST':
             return {'FINISHED'}
 
-        return context.window_manager.invoke_props_dialog(self)
+        return context.window_manager.invoke_props_dialog(self, width=400)
 
     def draw(self, context: Context) -> None:
         """
@@ -273,7 +289,134 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
         row.prop(self, "end", text="End")
 
     def execute(self, context: Context) -> set:
-        return {'FINISHED'}
+        """
+        Prepare the execution of the 'create mesh sequence' process.
+
+        Args:
+            context (Context): context
+
+        Returns:
+            set: state of the operator
+        """
+
+        start = time.time()
+
+        self.cumulated_time = 0.0
+        self.file_counter = self.start
+        self.time_point = self.start
+
+        try:
+            # Setup mesh information for volume
+            self.mesh = TelemacMeshForVolume(self.obj.tbb.settings.file_path, self.space_interpolation.steps,
+                                             self.time_interpolation.steps)
+
+            # Setup volume information
+            if self.volume_definition == 'VX_SIZE':
+                self.volume = TelemacVolume(self.mesh, self.nb_threads, self.computing_mode == 'MULTIPROCESSING',
+                                            self.computing_mode == 'CUDA', vx_size=self.voxel_size[0:3])
+            else:
+                self.volume = TelemacVolume(self.mesh, self.nb_threads, self.computing_mode == 'MULTIPROCESSING',
+                                            self.computing_mode == 'CUDA', dimensions=self.dimensions[0:3])
+        except BaseException:
+            log.error("Error on generating volume information", exc_info=1)
+            self.report({'ERROR'}, "Error on generating volume information")
+            return {'CANCELLED'}
+
+        # Setup progress bar + force to display (set a new value)
+        super().prepare(context, "Prepare volume...")
+        super().set_progress(context, 0.0)
+
+        self.cumulated_time += time.time() - start
+
+        return {'RUNNING_MODAL'}
 
     def modal(self, context: Context, event: Event) -> set:
+        """
+        Run one step of the 'generate_volume_sequence' process.
+
+        Args:
+            context (Context): context
+            event (Event): event
+
+        Returns:
+            set: state of the operator
+        """
+
+        if event.type == 'ESC':
+
+            # Clear data
+            self.mesh = None
+            self.volume = None
+
+            super().stop(context, canceled=True)
+            return {'CANCELLED'}
+
+        if event.type == 'TIMER':
+            print(self.time_point, self.start)
+            if self.time_point == self.start:
+
+                start = time.time()
+
+                print("Hey")
+                # Prepare volume
+                self.volume.prepare_voxels(self.mesh)
+                print("Hey 2")
+
+                if self.volume.show_details:
+                    print(f"Total: {time.time() - start}s")
+
+                self.cumulated_time += time.time() - start
+
+                return {'PASS_THROUGH'}
+
+            if self.time_point <= self.end:
+
+                start_tp = time.time()
+
+                # Update data
+                start = time.time()
+                self.mesh.set_time_point(self.time_point)
+                if self.volume.show_details:
+                    log.debug(f"Set time point: {time.time() - start}s")
+
+                # Get variable information
+                variable: PointDataInformation = PointDataManager(self.point_data.list).get(0)
+                var_name = variable.name
+
+                if self.point_data.remap_method == 'LOCAL':
+                    value_range = (variable.range.minL, variable.range.maxL)
+                elif self.point_data.remap_method == 'GLOBAL':
+                    value_range = (variable.range.minG, variable.range.maxG)
+                elif self.point_data.remap_method == 'CUSTOM':
+                    value_range = self.point_data.custom_remap_value[0:2]
+
+                # Export volume at current time point
+                self.volume.export_time_point(self.mesh, [var_name], f"{self.file_name}_{self.file_counter}",
+                                              remap=value_range)
+                self.file_counter += 1
+
+                # Generate interpolated time steps
+                if self.time_point < self.end:
+                    for interp_time_point in range(1, self.mesh.time_interp_steps + 1):
+                        self.mesh.set_time_point(self.time_point, interp_time_point)
+                        self.volume.export_time_point(self.mesh, [var_name], f"{self.file_name}_{self.file_counter}",
+                                                      remap=value_range)
+                        self.file_counter += 1
+
+                if self.volume.show_details:
+                    log.debug(f"Total: {time.time() - start_tp}s")
+
+            else:
+                # Clear data
+                self.mesh = None
+                self.volume = None
+
+                super().stop(context)
+                self.report({'INFO'}, "Generate volume sequence finished")
+                return {'FINISHED'}
+
+            # Update the progress bar
+            super().update_progress(context, self.time_point, self.end - self.start)
+            self.time_point += 1
+
         return {'PASS_THROUGH'}
