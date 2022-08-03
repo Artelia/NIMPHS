@@ -75,6 +75,21 @@ class TBB_OT_TelemacSetVolumeOrigin(Operator):
             set: state of the operator
         """
 
+        target = context.scene.tbb.op_target
+
+        if target is None:
+            self.report({'WARNING'}, "Selected target is None")
+            return {'CANCELLED'}
+
+        # Check that the selected target is either a plane or the parent object of a TELEMAC object
+        parent = target.parent
+        is_plane = parent is not None and parent.type == 'EMPTY' and parent.tbb.module == 'TELEMAC'
+        is_parent = target.type == 'EMPTY' and target.tbb.module == 'TELEMAC'
+
+        if not (is_plane or is_parent):
+            self.report({'WARNING'}, "The selected target is not a TELEMAC object")
+            return {'CANCELLED'}
+
         # Set location of selected volume object to computed origin
         self.obj.location = self.origin
 
@@ -100,11 +115,13 @@ class TBB_OT_TelemacSetVolumeOrigin(Operator):
             return
 
         if target.parent is not None and target.parent.type == 'EMPTY' and target.parent.tbb.module == 'TELEMAC':
-            row = box.row()
-            row.label(text="Please select parent object.", icon='ERROR')
+            # If a child object is selected (plane of TELEMAC 3D)
+            file_data = context.scene.tbb.file_data.get(target.parent.tbb.uid, None)
+        elif target.tbb.module == 'TELEMAC':
+            # If the parent object is selected
+            file_data = context.scene.tbb.file_data.get(target.tbb.uid, None)
+        else:
             return
-
-        file_data = context.scene.tbb.file_data.get(target.tbb.uid, None)
 
         if file_data is not None:
             row = box.row()
