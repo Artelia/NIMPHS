@@ -43,6 +43,8 @@ class TBB_TelemacFileData(TBB_FileData):
     nb_triangles: int = 0
     #: np.ndarray: Data
     data: np.ndarray = None
+    #: tuple[float, float, float]: Dimensions
+    dimensions: tuple[float, float, float] = (0.0, 0.0, 0.0)
 
     def __init__(self, file_path: str) -> None:
         """
@@ -81,6 +83,13 @@ class TBB_TelemacFileData(TBB_FileData):
             self.faces = self.file.ikle2d
 
         self.init_point_data_manager()
+
+        # Compute dimensions
+        z, name = self.get_point_data_from_list(['ELEVATION Z', 'COTE Z'])
+        dimx = np.max(self.vertices[:, 0]) - np.min(self.vertices[:, 0])
+        dimy = np.max(self.vertices[:, 1]) - np.min(self.vertices[:, 1])
+        dimz = np.max(z) - np.min(z)
+        self.dimensions = (dimx, dimy, dimz)
 
     def copy(self, other: TBB_TelemacFileData) -> None:
         """

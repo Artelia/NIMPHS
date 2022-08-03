@@ -8,6 +8,7 @@ log = logging.getLogger(__name__)
 import os
 import time
 import tempfile
+import numpy as np
 from pathlib import Path
 
 from tbb.panels.utils import get_selected_object
@@ -210,6 +211,18 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
             self.file_name = "Volume_sequence"
             self.output_path = os.path.abspath(tempfile.gettempdir())
 
+            # Compute default dimensions
+            dim = context.scene.tbb.file_data["ops"].dimensions
+            # om = order of magnitude
+            omx, omy, omz = int(np.log10(dim[0])), int(np.log10(dim[1])), int(np.log10(dim[2]))
+            raw = (
+                dim[0] / pow(10, omx - 2) if omx > 2 else dim[0],
+                dim[1] / pow(10, omy - 2) if omy > 2 else dim[1],
+                dim[2] / pow(10, omz - 2) if omz > 2 else dim[2]
+            )
+            self.dimensions = (int(np.ceil(raw[0])), int(np.ceil(raw[1])), int(np.ceil(raw[2])))
+            self.voxel_size = (raw[0] / 100.0, raw[1] / 100.0, raw[2] / 100.0)
+
         return context.window_manager.invoke_props_dialog(self, width=400)
 
     def draw(self, context: Context) -> None:
@@ -320,19 +333,23 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
 
         try:
             # Setup mesh information for volume
-            self.mesh = TelemacMeshForVolume(self.obj.tbb.settings.file_path, self.space_interpolation.steps,
-                                             self.time_interpolation.steps)
+            self.mesh = TelemacMeshForVolume(
+                self.obj.tbb.settings.file_path,
+                self.space_interpolation.steps if self.space_interpolation.type != 'NONE' else 0,
+                self.time_interpolation.steps if self.time_interpolation.type != 'NONE' else 0
+            )
 
-            # Setup volume information
+            # Setup volume
             if self.volume_definition == 'VX_SIZE':
                 self.volume = TelemacVolume(self.mesh, self.nb_threads, self.computing_mode == 'MULTIPROCESSING',
                                             self.computing_mode == 'CUDA', vx_size=self.voxel_size[0:3])
-            else:
+
+            if self.volume_definition == 'DIMENSIONS':
                 self.volume = TelemacVolume(self.mesh, self.nb_threads, self.computing_mode == 'MULTIPROCESSING',
                                             self.computing_mode == 'CUDA', dimensions=self.dimensions[0:3])
         except BaseException:
-            log.error("Error on generating volume information", exc_info=1)
-            self.report({'ERROR'}, "Error on generating volume information")
+            log.error("Error on generating volume", exc_info=1)
+            self.report({'ERROR'}, "Error on generating volume")
             return {'CANCELLED'}
 
         # Setup progress bar + force to display (set a new value)
@@ -369,14 +386,19 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
 
                 start = time.time()
 
-                # Prepare volume
-                self.volume.prepare_voxels(self.mesh)
+                try:
+                    # Prepare volume
+                    self.volume.prepare_voxels(self.mesh)
+                except BaseException:
+                    super().stop(context)
+                    self.report({'ERROR'}, "Error when preparing voxels")
+                    return {'CANCELLED'}
 
                 if self.volume.show_details:
-                    print(f"Total: {time.time() - start}s")
+                    log.debug(f"Total: {time.time() - start}s")
 
                 self.time_point += 1
-
+                super().update_label(context, "Computing volume...")
                 self.cumulated_time += time.time() - start
 
                 return {'PASS_THROUGH'}
@@ -385,50 +407,55 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
 
                 start_tp = time.time()
 
-                # Update data
-                start = time.time()
-                self.mesh.set_time_point(self.time_point)
-                if self.volume.show_details:
-                    log.debug(f"Set time point: {time.time() - start}s")
+                try:
 
-                # Get variable information
-                variable: PointDataInformation = PointDataManager(self.point_data.list).get(0)
-                var_name = variable.name
+                    # Update data
+                    start = time.time()
+                    self.mesh.set_time_point(self.time_point)
+                    if self.volume.show_details:
+                        log.debug(f"Set time point: {time.time() - start}s")
 
-                if self.point_data.remap_method == 'LOCAL':
-                    value_range = (variable.range.minL, variable.range.maxL)
-                elif self.point_data.remap_method == 'GLOBAL':
-                    value_range = (variable.range.minG, variable.range.maxG)
-                elif self.point_data.remap_method == 'CUSTOM':
-                    value_range = self.point_data.custom_remap_value[0:2]
+                    # Get variable information
+                    variable: PointDataInformation = PointDataManager(self.point_data.list).get(0)
+                    var_name = variable.name
 
-                # Export volume at current time point
-                self.volume.export_time_point(self.mesh, [var_name], f"{self.file_name}_{self.file_counter}",
-                                              remap=value_range)
-                self.file_counter += 1
+                    if self.point_data.remap_method == 'LOCAL':
+                        value_range = (variable.range.minL, variable.range.maxL)
+                    elif self.point_data.remap_method == 'GLOBAL':
+                        value_range = (variable.range.minG, variable.range.maxG)
+                    elif self.point_data.remap_method == 'CUSTOM':
+                        value_range = self.point_data.custom_remap_value[0:2]
 
-                # Generate interpolated time steps
-                if self.time_point < self.end:
-                    for interp_time_point in range(1, self.mesh.time_interp_steps + 1):
-                        self.mesh.set_time_point(self.time_point, interp_time_point)
-                        self.volume.export_time_point(self.mesh, [var_name], f"{self.file_name}_{self.file_counter}",
-                                                      remap=value_range)
-                        self.file_counter += 1
+                    # Export volume at current time point
+                    self.volume.export_time_point(self.mesh, [var_name], f"{self.file_name}_{self.file_counter}",
+                                                  remap=value_range)
+                    self.file_counter += 1
+
+                    # Generate interpolated time steps
+                    if self.time_point < self.end:
+                        for interp_time_point in range(1, self.mesh.time_interp_steps + 1):
+                            self.mesh.set_time_point(self.time_point, interp_time_point)
+                            self.volume.export_time_point(self.mesh, [var_name],
+                                                          f"{self.file_name}_{self.file_counter}", remap=value_range)
+                            self.file_counter += 1
+
+                except BaseException:
+                    super().stop(context)
+                    self.report({'ERROR'}, "Error when updating time point")
+                    return {'CANCELLED'}
 
                 if self.volume.show_details:
                     log.debug(f"Total: {time.time() - start_tp}s")
 
-            else:
-                # Clear data
-                self.mesh = None
-                self.volume = None
+                self.cumulated_time += time.time() - start_tp
 
+            else:
                 super().stop(context)
-                self.report({'INFO'}, "Generate volume sequence finished")
+                self.report({'INFO'}, f"Generate volume sequence finished ({np.ceil(self.cumulated_time)}s)")
                 return {'FINISHED'}
 
             # Update the progress bar
-            super().update_progress(context, self.time_point, self.end - self.start)
+            super().update_progress(context, self.time_point - self.start, (self.end - self.start) + 1)
             self.time_point += 1
 
         return {'PASS_THROUGH'}

@@ -9,6 +9,10 @@ except BaseException:
     HAS_CUDA = False
     log.debug("CUDA unavailable")
 else:
+    # Disable numba info logs
+    numba_logger = logging.getLogger('numba')
+    numba_logger.setLevel(logging.WARNING)
+
     if cuda.is_available():
         HAS_CUDA = True
         log.debug("CUDA available")

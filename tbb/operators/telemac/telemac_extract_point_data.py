@@ -268,7 +268,7 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
                 return {'FINISHED'}
 
             # Update the progress bar
-            super().update_progress(context, self.time_point, self.end)
+            super().update_progress(context, self.time_point, self.end + 1)
             self.time_point += 1
             self.frame += 1
 

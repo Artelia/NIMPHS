@@ -225,7 +225,7 @@ class TBB_OT_ComputeRangesPointDataValues(Operator, TBB_ModalOperator):
                 super().stop(context)
                 return {'FINISHED'}
 
-            self.update_progress(context, self.time_point, self.end)
+            self.update_progress(context, self.time_point, self.end + 1)
             self.time_point += 1
 
         return {'PASS_THROUGH'}
