@@ -214,8 +214,12 @@ class TelemacVolume():
         data = np.zeros(self.dim)
         if self.use_cuda:
             self.data = data.flatten()
-        else:
+        elif self.use_multproc:
             self.data = make_shared_array(data, 'd', self.dim)
+        else:
+            self.data = data
+
+        if not self.use_cuda:
             # Generate voxel indices
             self.vxids = list(it.product(*[range(n) for n in self.dim]))
             self.xyids = np.repeat(np.arange(self.dim[0] * self.dim[1]), self.dim[2])
@@ -442,7 +446,16 @@ class TelemacVolume():
                 process.join()
 
         else:
-            pass
+
+            for vxid, xyid in zip(self.vxids, self.xyids):
+                zcol = self.zcols[xyid]
+                z_coords_col = mesh.z_coords[zcol]
+                z_condition = np.logical_and(self.zmin[vxid[2]] <= z_coords_col, z_coords_col <= self.zmax[vxid[2]])
+                mesh_vertices = list(zcol[z_condition])
+
+                # Set data
+                if len(mesh_vertices) > 0:
+                    self.data[vxid[0], vxid[1], vxid[2]] = np.sum(data[mesh_vertices]) / len(mesh_vertices)
 
     def fill_with_gpu(self, data: np.ndarray, mesh: TelemacMeshForVolume):
         """
@@ -506,10 +519,10 @@ class TelemacVolume():
         """Clear volume data and allocate new memory."""
 
         # Clear volume data (set all cells to 0.0)
-        if self.use_cuda:
-            self.data.fill(0.0)
-        else:
+        if self.use_multproc:
             np.frombuffer(self.data).fill(0.0)
+        else:
+            self.data.fill(0.0)
 
     def save_as_vdb(self, grid_name: str, file_name: str) -> None:
         """
