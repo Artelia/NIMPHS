@@ -1,6 +1,13 @@
 # <pep8 compliant>
 from bpy.types import Context, Event
-from bpy.props import StringProperty, EnumProperty, IntProperty, IntVectorProperty, FloatVectorProperty, PointerProperty
+from bpy.props import (
+    IntProperty,
+    EnumProperty,
+    StringProperty,
+    PointerProperty,
+    IntVectorProperty,
+    FloatVectorProperty,
+)
 
 import logging
 log = logging.getLogger(__name__)
@@ -13,10 +20,10 @@ import numpy as np
 from pathlib import Path
 
 from tbb.operators.shared.utils import update_end
-from tbb.checkdeps import HAS_CUDA, HAS_MULTIPROCESSING
 from tbb.operators.shared.modal_operator import TBB_ModalOperator
 from tbb.panels.utils import get_selected_object, draw_point_data
 from tbb.operators.shared.create_sequence import TBB_CreateSequence
+from tbb.checkdeps import HAS_CUDA, HAS_MULTIPROCESSING, HAS_PYOPENVDB
 from tbb.operators.utils.volume import TelemacMeshForVolume, TelemacVolume
 from tbb.properties.telemac.interpolate import TBB_TelemacInterpolateProperty
 from tbb.properties.utils.point_data import PointDataInformation, PointDataManager
@@ -127,10 +134,6 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
         precision=3
     )
 
-    time_interpolation: PointerProperty(type=TBB_TelemacInterpolateProperty)
-
-    space_interpolation: PointerProperty(type=TBB_TelemacInterpolateProperty)
-
     #: bpy.props.IntProperty: Ending frame / time point of the sequence.
     end: IntProperty(
         name="End",  # noqa F821
@@ -140,6 +143,10 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
         soft_min=0,
         min=0
     )
+
+    time_interpolation: PointerProperty(type=TBB_TelemacInterpolateProperty)
+
+    space_interpolation: PointerProperty(type=TBB_TelemacInterpolateProperty)
 
     #: int: Currently processed time point
     time_point: int = 0
@@ -187,12 +194,21 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
             set: state of the operator
         """
 
+        if not HAS_PYOPENVDB:
+            self.report({'PyOpenVDB unavailable...'})
+            return {'ERROR'}
+
         self.obj = get_selected_object(context)
         if self.obj is None:
             return {'CANCELLED'}
 
-        if context.scene.tbb.file_data.get(self.obj.tbb.uid, None) is None:
+        file_data = context.scene.tbb.file_data.get(self.obj.tbb.uid, None)
+        if file_data is None:
             self.report({'ERROR'}, "Reload file data first")
+            return {'CANCELLED'}
+
+        if not file_data.is_3d():
+            self.report({'WARNING'}, "Selected object is not a TELEMAC 3D model")
             return {'CANCELLED'}
 
         # Clear selected point data
@@ -355,6 +371,8 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
             self.report({'WARNING'}, "No point data selected to use as density")
             return {'CANCELLED'}
 
+        prefs = context.preferences.addons["tbb"].preferences.settings
+
         try:
             # Setup mesh information for volume
             self.mesh = TelemacMeshForVolume(
@@ -366,18 +384,20 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
             # Setup volume
             if self.volume_definition == 'VX_SIZE':
                 self.volume = TelemacVolume(self.mesh, self.nb_threads, self.computing_mode == 'MULTIPROCESSING',
-                                            self.computing_mode == 'CUDA', vx_size=self.voxel_size[0:3])
+                                            self.computing_mode == 'CUDA', vx_size=self.voxel_size[0:3],
+                                            show_details=prefs.log_level == 'DEBUG')
 
             if self.volume_definition == 'DIMENSIONS':
                 self.volume = TelemacVolume(self.mesh, self.nb_threads, self.computing_mode == 'MULTIPROCESSING',
-                                            self.computing_mode == 'CUDA', dimensions=self.dimensions[0:3])
+                                            self.computing_mode == 'CUDA', dimensions=self.dimensions[0:3],
+                                            show_details=prefs.log_level == 'DEBUG')
         except BaseException:
-            log.error("Error on generating volume", exc_info=1)
-            self.report({'ERROR'}, "Error on generating volume")
+            log.error("Error when generating volume", exc_info=1)
+            self.report({'ERROR'}, "Error when generating volume")
             return {'CANCELLED'}
 
         # Setup progress bar + force to display (set a new value)
-        super().prepare(context, "Prepare volume...")
+        super().prepare(context, "Preparing volume...")
         super().set_progress(context, 0.0)
 
         self.cumulated_time += time.time() - start
@@ -397,11 +417,6 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
         """
 
         if event.type == 'ESC':
-
-            # Clear data
-            self.mesh = None
-            self.volume = None
-
             super().stop(context, canceled=True)
             return {'CANCELLED'}
 
@@ -415,6 +430,7 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
                     self.volume.prepare_voxels(self.mesh)
                 except BaseException:
                     super().stop(context)
+                    log.debug(f"Error when preparing voxels", exc_info=1)
                     self.report({'ERROR'}, "Error when preparing voxels")
                     return {'CANCELLED'}
 
@@ -465,16 +481,17 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
 
                 except BaseException:
                     super().stop(context)
-                    self.report({'ERROR'}, "Error when updating time point")
+                    self.report({'ERROR'}, f"Error when processing time point {self.time_point}")
                     return {'CANCELLED'}
 
                 if self.volume.show_details:
-                    log.debug(f"Total: {time.time() - start_tp}s")
+                    log.debug(f"Time point {self.time_point}: {time.time() - start_tp}s")
 
                 self.cumulated_time += time.time() - start_tp
 
             else:
                 super().stop(context)
+                log.debug(f"Cumulated time: {self.cumulated_time}")
                 self.report({'INFO'}, f"Generate volume sequence finished ({np.ceil(self.cumulated_time)}s)")
                 return {'FINISHED'}
 
