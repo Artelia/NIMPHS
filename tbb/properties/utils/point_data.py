@@ -13,12 +13,16 @@ class ValueRange():
 
     #: float: local minimum
     minL: float = np.nan
-    #: float: global minimum
-    minG: float = np.nan
     #: float: local maximum
     maxL: float = np.nan
+    #: float: global minimum
+    minG: float = np.nan
     #: float: global maximum
     maxG: float = np.nan
+    #: float: custom minimum
+    minC: float = np.nan
+    #: float: custom maximum
+    maxC: float = np.nan
 
     def __init__(self, json_string: str = "") -> None:
         """
@@ -29,18 +33,40 @@ class ValueRange():
         """
 
         self.minL = np.nan
-        self.minG = np.nan
         self.maxL = np.nan
+        self.minG = np.nan
         self.maxG = np.nan
+        self.minC = np.nan
+        self.maxC = np.nan
 
         # Read data from given json string
         if json_string:
 
             data = json.loads(json_string)
             self.minL = data.get("minL", np.nan)
-            self.minG = data.get("minG", np.nan)
             self.maxL = data.get("maxL", np.nan)
+            self.minG = data.get("minG", np.nan)
             self.maxG = data.get("maxG", np.nan)
+            self.minC = data.get("minC", np.nan)
+            self.maxC = data.get("maxC", np.nan)
+
+    def get(self, type: str) -> list[float]:
+        """
+        Return a value range in a list of floats.
+
+        Args:
+            type (str): type of the value range, enum in ['LOCAL', 'GLOBAL', 'CUSTOM']
+
+        Returns:
+            list[float]: value range
+        """
+
+        if type == 'LOCAL':
+            return [self.minL, self.maxL]
+        if type == 'GLOBAL':
+            return [self.minG, self.maxG]
+        if type == 'CUSTOM':
+            return [self.minC, self.maxC]
 
     def dumps(self) -> str:
         """
@@ -52,9 +78,11 @@ class ValueRange():
 
         data = {
             "minL": self.minL,
-            "minG": self.minG,
             "maxL": self.maxL,
-            "maxG": self.maxG
+            "minG": self.minG,
+            "maxG": self.maxG,
+            "minC": self.minC,
+            "maxC": self.maxC
         }
 
         return json.dumps(data)
@@ -67,7 +95,12 @@ class ValueRange():
             str: output string
         """
 
-        return "{" + f"minL: {self.minL}, minG: {self.minG}, maxL: {self.maxL}, maxG: {self.maxG}" + "}"
+        output = "{"
+        output += f"minL: {self.minL}, maxL: {self.maxL}"
+        output += f", minG: {self.minG}, maxG: {self.maxG}"
+        output += f", minC: {self.minC}, maxC: {self.maxC}"
+        output += "}"
+        return output
 
 
 class PointDataInformation():
@@ -80,8 +113,8 @@ class PointDataInformation():
     #: ValueRange: Point data value ranges information
     range: ValueRange = ValueRange()
 
-    def __init__(self, name: str = "None", unit: str = "",
-                 range: ValueRange = ValueRange(), json_string: str = "") -> None:
+    def __init__(self, name: str = "None", unit: str = "", range: ValueRange = ValueRange(),
+                 json_string: str = "") -> None:
         """
         Init method of the class.
 
@@ -292,6 +325,27 @@ class PointDataManager():
             self.names.append(name)
             self.units.append(unit)
             self.ranges.append(deepcopy(range))
+
+    def update(self, data: PointDataInformation) -> None:
+        """
+        Update point data information of the given point data if found in the list.
+
+        Args:
+            data (PointDataInformation): _description_
+        """
+
+        try:
+            # Find corresponding point data
+            id = self.names.index(data.name)
+        except ValueError:
+            log.debug("Point data not found", exc_info=1)
+            return
+        except BaseException:
+            log.debug("Error when updating point data", exc_info=1)
+
+        self.names[id] = data.name
+        self.units[id] = data.unit
+        self.ranges[id] = data.range
 
     def __str__(self) -> str:
         """

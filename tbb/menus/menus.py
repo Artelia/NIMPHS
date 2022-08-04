@@ -2,7 +2,7 @@
 from bpy.types import Context
 
 
-def tbb_menus_draw(self, context: Context) -> None:  # noqa D417
+def tbb_menus_draw(self, context: Context) -> None:  # noqa: D417
     """
     Draw function for custom menus.
 

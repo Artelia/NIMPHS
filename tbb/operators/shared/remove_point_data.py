@@ -28,13 +28,13 @@ class TBB_OT_RemovePointData(Operator):
 
     #: bpy.props.EnumProperty: Indicate the activator of this operator. Enum in ['OBJECT', 'OPERATOR'].
     source: EnumProperty(
-        name="Source",  # noqa F821
+        name="Source",  # noqa: F821
         description="Indicate the activator of this operator.",
         items=[
-            ("OBJECT", "Object", "Execute in object mode"),  # noqa F821
-            ("OPERATOR", "Operator", "Execute in operator mode"),  # noqa F821
+            ("OBJECT", "Object", "Execute in object mode"),  # noqa: F821
+            ("OPERATOR", "Operator", "Execute in operator mode"),  # noqa: F821
         ],
-        options={'HIDDEN'},  # noqa F821
+        options={'HIDDEN'},  # noqa: F821
     )
 
     def execute(self, context: Context) -> set:

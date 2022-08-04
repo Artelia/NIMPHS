@@ -136,7 +136,7 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
 
     #: bpy.props.IntProperty: Ending frame / time point of the sequence.
     end: IntProperty(
-        name="End",  # noqa F821
+        name="End",  # noqa: F821
         description="Ending frame / time point of the sequence",
         default=1,
         update=update_end,
@@ -289,7 +289,7 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
 
         # Update list of chosen point data from this operator. Ugly but it works.
         self.point_data.list = context.scene.tbb.op_vars.dumps()
-        draw_point_data(subbox, self.point_data, show_range=False, edit=True, src='OPERATOR')
+        draw_point_data(subbox, self.point_data, show_range=True, edit=True, src='OPERATOR')
 
         row = subbox.row()
         row.enabled = context.scene.tbb.op_vars.length() < self.limit_add_point_data
@@ -430,7 +430,7 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
                     self.volume.prepare_voxels(self.mesh)
                 except BaseException:
                     super().stop(context)
-                    log.debug(f"Error when preparing voxels", exc_info=1)
+                    log.debug("Error when preparing voxels", exc_info=1)
                     self.report({'ERROR'}, "Error when preparing voxels")
                     return {'CANCELLED'}
 
@@ -457,14 +457,8 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
 
                     # Get variable information
                     variable: PointDataInformation = PointDataManager(self.point_data.list).get(0)
+                    value_range = variable.range.get(self.point_data.remap_method)
                     var_name = variable.name
-
-                    if self.point_data.remap_method == 'LOCAL':
-                        value_range = (variable.range.minL, variable.range.maxL)
-                    elif self.point_data.remap_method == 'GLOBAL':
-                        value_range = (variable.range.minG, variable.range.maxG)
-                    elif self.point_data.remap_method == 'CUSTOM':
-                        value_range = self.point_data.custom_remap_value[0:2]
 
                     # Export volume at current time point
                     self.volume.export_time_point(self.mesh, [var_name], f"{self.file_name}_{self.file_counter}",

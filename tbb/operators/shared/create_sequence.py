@@ -56,7 +56,7 @@ class TBB_CreateSequence(Operator):
 
     #: bpy.props.IntProperty: Starting frame / time point of the sequence.
     start: IntProperty(
-        name="Start",  # noqa F821
+        name="Start",  # noqa: F821
         description="Starting frame / time point of the sequence",
         default=0,
         update=update_start,
@@ -66,17 +66,17 @@ class TBB_CreateSequence(Operator):
 
     #: bpy.props.IntProperty: Maximum length / time point of the sequence.
     max: IntProperty(
-        name="Max",             # noqa F821
+        name="Max",             # noqa: F821
         description="Maximum length / time point of the sequence",
         default=1,
-        options={'HIDDEN'},     # noqa F821
+        options={'HIDDEN'},     # noqa: F821
     )
 
     #: bpy.props.StringProperty: Name to give to the generated sequence object.
     name: StringProperty(
-        name="Name",        # noqa F821
+        name="Name",        # noqa: F821
         description="Name to give to the generated sequence object",
-        default="NAME",     # noqa F821
+        default="NAME",     # noqa: F821
     )
 
     @classmethod

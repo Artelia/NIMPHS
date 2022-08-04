@@ -10,14 +10,14 @@ from tbb.properties.utils.point_data import PointDataManager
 
 
 class TBB_OT_AddPointData(Operator):
-    """Add point data to import as vertex colors."""
+    """Add point data."""
 
     register_cls = True
     is_custom_base_cls = False
 
     bl_idname = "tbb.add_point_data"
     bl_label = "Add point data"
-    bl_description = "Add point data to import as vertex colors"
+    bl_description = "Add point data"
 
     def point_data_items(self, _context: Context) -> list:
         """
@@ -43,12 +43,12 @@ class TBB_OT_AddPointData(Operator):
 
         return items
 
-    #: bpy.props.EnumProperty: Point data to import as vertex colors.
+    #: bpy.props.EnumProperty: Point data.
     point_data: EnumProperty(
         name="Point data",
-        description="Point data to import as vertex colors",
+        description="Point data",
         items=point_data_items,
-        options={'HIDDEN'},  # noqa F821
+        options={'HIDDEN'},  # noqa: F821
     )
 
     #: bpy.props.StringProperty: JSON stringified list of available point data.
@@ -56,26 +56,26 @@ class TBB_OT_AddPointData(Operator):
         name="Available point data",
         description="JSON stringified list of available point data",
         default="",
-        options={'HIDDEN'},  # noqa F821
+        options={'HIDDEN'},  # noqa: F821
     )
 
     #: bpy.props.StringProperty: JSON stringified list of chosen point data.
     chosen: StringProperty(
-        name="Available point data",
+        name="Chosen",      # noqa: F821
         description="JSON stringified list of chosen point data",
         default="",
-        options={'HIDDEN'},  # noqa F821
+        options={'HIDDEN'},  # noqa: F821
     )
 
     #: bpy.props.EnumProperty: Indicate the activator of this operator. Enum in ['OBJECT', 'OPERATOR'].
     source: EnumProperty(
-        name="Source",  # noqa F821
+        name="Source",  # noqa: F821
         description="Indicate the activator of this operator.",
         items=[
-            ("OBJECT", "Object", "Execute in object mode"),  # noqa F821
-            ("OPERATOR", "Operator", "Execute in operator mode"),  # noqa F821
+            ("OBJECT", "Object", "Execute in object mode"),  # noqa: F821
+            ("OPERATOR", "Operator", "Execute in operator mode"),  # noqa: F821
         ],
-        options={'HIDDEN'},  # noqa F821
+        options={'HIDDEN'},  # noqa: F821
     )
 
     def invoke(self, context: Context, _event: Event) -> set:
@@ -132,7 +132,8 @@ class TBB_OT_AddPointData(Operator):
         if self.source == 'OBJECT':
             obj = get_selected_object(context)
             if obj is None:
-                log.warning("No selected object.", exc_info=1)
+                self.report({'WARNING'}, "No selected object")
+                log.error("No selected object.", exc_info=1)
                 return {'CANCELLED'}
 
             point_data = obj.tbb.settings.point_data.list

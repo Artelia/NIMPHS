@@ -14,7 +14,7 @@ from tbb.properties.openfoam.file_data import TBB_OpenfoamFileData
 from tbb.properties.openfoam.import_settings import TBB_OpenfoamImportSettings
 
 
-def import_openfoam_menu_draw(self, context: Context) -> None:  # noqa D417
+def import_openfoam_menu_draw(self, context: Context) -> None:  # noqa: D417
     """
     Draw function which displays the import button in File > Import.
 
@@ -56,9 +56,9 @@ class TBB_OT_OpenfoamImportFile(Operator, ImportHelper):
 
     #: bpy.props.StringProperty: Name to give to the imported object.
     name: StringProperty(
-        name="Name",                    # noqa F821
+        name="Name",                    # noqa: F821
         description="Name to give to the imported object",
-        default="OpenFOAM_preview",     # noqa F821
+        default="OpenFOAM_preview",     # noqa: F821
     )
 
     #: TBB_OpenfoamImportSettings: Import settings.

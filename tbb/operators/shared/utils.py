@@ -5,7 +5,7 @@ import logging
 log = logging.getLogger(__name__)
 
 
-def update_start(self, _context: Context) -> None:  # noqa D417
+def update_start(self, _context: Context) -> None:  # noqa: D417
     """
     Update time point (make sure the user can't selected an undefined time point).
 
@@ -19,7 +19,7 @@ def update_start(self, _context: Context) -> None:  # noqa D417
         self.start = 0
 
 
-def update_end(self, _context: Context) -> None:  # noqa D417
+def update_end(self, _context: Context) -> None:  # noqa: D417
     """
     Update time point (make sure the user can't selected an undefined time point).
 
@@ -33,7 +33,7 @@ def update_end(self, _context: Context) -> None:  # noqa D417
         self.end = 0
 
 
-def update_plane_id(self, _context: Context) -> None:  # noqa D417
+def update_plane_id(self, _context: Context) -> None:  # noqa: D417
     """
     Update plane id (for 3D TELEMAC files, make sure the user can't selected an undefined plane id).
 

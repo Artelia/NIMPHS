@@ -126,7 +126,7 @@ def get_sequence_length(self) -> int:
     return self.get("length", 0)
 
 
-def update_preview_time_point(self, context: Context) -> None:  # noqa D417
+def update_preview_time_point(self, context: Context) -> None:  # noqa: D417
     """
     Update selected value of time point (make sure the user can only select available time points).
 

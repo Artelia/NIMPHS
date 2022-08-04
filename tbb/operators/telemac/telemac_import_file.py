@@ -14,7 +14,7 @@ from tbb.properties.telemac.file_data import TBB_TelemacFileData
 from tbb.properties.telemac.import_settings import TBB_TelemacImportSettings
 
 
-def import_telemac_menu_draw(self, context: Context) -> None:  # noqa D417
+def import_telemac_menu_draw(self, context: Context) -> None:  # noqa: D417
     """
     Draw function which displays the import button in File > Import.
 
@@ -45,9 +45,9 @@ class TBB_OT_TelemacImportFile(Operator, ImportHelper):
 
     #: bpy.props.StringProperty: Name to give to the imported object.
     name: StringProperty(
-        name="Name",                # noqa F821
+        name="Name",                # noqa: F821
         description="Name to give to the imported object",
-        default="TELEMAC_preview",  # noqa F821
+        default="TELEMAC_preview",  # noqa: F821
     )
 
     #: TBB_TelemacImportSettings: Import settings.

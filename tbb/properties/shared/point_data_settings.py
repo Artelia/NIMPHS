@@ -22,7 +22,7 @@ class TBB_PointDataSettings(PropertyGroup):
     list: StringProperty(
         name="Point data",
         description="List of point data to import as vertex color.",
-        default=PointDataManager().dumps(),  # noqa F821
+        default=PointDataManager().dumps(),  # noqa: F821
     )
 
     #: bpy.props.EnumProperty: Indicate whether point data should be remapped using local or global value ranges.
@@ -30,23 +30,15 @@ class TBB_PointDataSettings(PropertyGroup):
         name="Remap method",
         description="Remapping method for point data",
         items=[
-            ("LOCAL", "Local", "Remap point data using a local value range"),  # noqa F821
-            ("GLOBAL", "Global", "Remap point data using a global value range"),  # noqa F821
-            ("CUSTOM", "Custom", "Remap point data using a custom value range")  # noqa F821
+            ("LOCAL", "Local", "Remap point data using a local value range"),  # noqa: F821
+            ("GLOBAL", "Global", "Remap point data using a global value range"),  # noqa: F821
+            ("CUSTOM", "Custom", "Remap point data using a custom value range")  # noqa: F821
         ]
-    )
-
-    custom_remap_value: FloatVectorProperty(
-        name="Custom remap value",
-        description="Custom value range to remap point data",
-        size=2,
-        default=(0.0, 1.0),
-        precision=6
     )
 
     #: bpy.props.StringProperty: Save of variables information.
     save: StringProperty(
-        name="Save",  # noqa F821
+        name="Save",  # noqa: F821
         description="Save of variables information",
         default=""
     )

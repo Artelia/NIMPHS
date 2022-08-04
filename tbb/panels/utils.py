@@ -3,8 +3,8 @@ from bpy.types import Context, Object, UILayout
 
 from typing import Union
 
-from tbb.properties.utils.point_data import PointDataManager
 from tbb.properties.shared.point_data_settings import TBB_PointDataSettings
+from tbb.properties.utils.point_data import PointDataInformation, PointDataManager
 
 
 def get_selected_object(context: Context) -> Union[Object, None]:
@@ -54,10 +54,6 @@ def draw_point_data(layout: UILayout, point_data: TBB_PointDataSettings, show_re
         row = layout.row()
         row.prop(point_data, "remap_method", text="Method")
 
-        if point_data.remap_method == 'CUSTOM':
-            row = layout.row()
-            row.prop(point_data, "custom_remap_value", text="Value")
-
     # Display selected point data
     data = PointDataManager(point_data.list)
     for name, unit, values in zip(data.names, data.units, data.ranges):
@@ -66,19 +62,9 @@ def draw_point_data(layout: UILayout, point_data: TBB_PointDataSettings, show_re
             info = "None"
 
         else:
-
-            if point_data.remap_method == 'LOCAL':
-
-                info = "[" + "{:.4f}".format(values.minL) + " ; "
-                info += "{:.4f}".format(values.maxL) + "]"
-
-            elif point_data.remap_method == 'GLOBAL':
-
-                info = "[" + "{:.4f}".format(values.minG) + " ; "
-                info += "{:.4f}".format(values.maxG) + "]"
-
-            else:
-                info = "None"
+            value_range = values.get(point_data.remap_method)
+            info = "[" + "{:.4f}".format(value_range[0]) + " ; "
+            info += "{:.4f}".format(value_range[1]) + "]"
 
         subbox = layout.box()
         row = subbox.row()
@@ -87,5 +73,12 @@ def draw_point_data(layout: UILayout, point_data: TBB_PointDataSettings, show_re
             op = row.operator("tbb.remove_point_data", text="", icon='REMOVE')
             op.var_name = name
             op.source = src
+
+            if point_data.remap_method == 'CUSTOM':
+                op = row.operator("tbb.set_custom_value_range", text="", icon='GREASEPENCIL')
+                op.chosen = PointDataInformation(name, unit, values).dumps()
+                op.source = src
+                # Force to show range
+                show_range = True
 
         row.label(text=((name + ", (" + unit + ")") if unit != "" else name) + ((",  " + info) if show_range else ""))

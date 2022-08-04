@@ -52,12 +52,12 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
         name="Chosen variable",
         description="Name of the chosen variable to extract",
         default="",
-        options={'HIDDEN'}  # noqa F821
+        options={'HIDDEN'}  # noqa: F821
     )
 
     #: bpy.props.IntProperty: Index of the plane on which the vertex is located.
     plane_id: IntProperty(
-        name="Plane",  # noqa F821
+        name="Plane",  # noqa: F821
         description="Index of the plane on which the vertex is located",
         default=0,
         update=update_plane_id,
@@ -67,25 +67,25 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
 
     #: bpy.props.IntProperty: Highest available plane id.
     max_plane_id: IntProperty(
-        name="Plane",  # noqa F821
+        name="Plane",  # noqa: F821
         description="Highest available plane id",
         default=0,
         soft_min=0,
         min=0,
-        options={'HIDDEN'}  # noqa F821
+        options={'HIDDEN'}  # noqa: F821
     )
 
     #: bpy.props.IntProperty: Number of maximum available time points to extract.
     max: IntProperty(
-        name="Max",  # noqa F821
+        name="Max",  # noqa: F821
         description="Number of maximum available time points to extract",
         default=1,
-        options={'HIDDEN'},  # noqa F821
+        options={'HIDDEN'},  # noqa: F821
     )
 
     #: bpy.props.IntProperty: Start time point.
     start: IntProperty(
-        name="Start",  # noqa F821
+        name="Start",  # noqa: F821
         description="Start time point",
         update=update_start,
         default=0,
@@ -95,7 +95,7 @@ class TBB_OT_TelemacExtractPointData(Operator, TBB_ModalOperator):
 
     #: bpy.props.IntProperty: End time point.
     end: IntProperty(
-        name="Start",  # noqa F821
+        name="Start",  # noqa: F821
         description="Start time point",
         update=update_end,
         default=0,

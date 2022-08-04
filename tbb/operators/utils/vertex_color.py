@@ -181,19 +181,12 @@ class TelemacVertexColorUtils(VertexColorUtils):
             if method == 'LOCAL':
                 # Update point data information
                 file_data.update_var_range(name, scope=method)
-                var_range = file_data.vars.get(name, prop='RANGE')
-                min, max = var_range.minL, var_range.maxL
 
-            if method == 'GLOBAL':
-                var_range = file_data.vars.get(name, prop='RANGE')
-                min, max = var_range.minG, var_range.maxG
-
-            if method == 'CUSTOM':
-                min, max = point_data.custom_remap_value[0], point_data.custom_remap_value[1]
+            var_range = file_data.vars.get(name, prop='RANGE').get(method)
 
             # Append point data to output list
             output.names.append(name)
-            output.data.append(remap_array(np.array(data)[vertex_ids], in_min=min, in_max=max))
+            output.data.append(remap_array(np.array(data)[vertex_ids], in_min=var_range[0], in_max=var_range[1]))
 
         return output
 
@@ -286,18 +279,11 @@ class OpenfoamVertexColorUtils(VertexColorUtils):
             if method == 'LOCAL':
                 # Update point data information
                 file_data.update_var_range(name, scope=method)
-                var_range = file_data.vars.get(name, prop='RANGE')
-                min, max = var_range.minL, var_range.maxL
 
-            if method == 'GLOBAL':
-                var_range = file_data.vars.get(name, prop='RANGE')
-                min, max = var_range.minG, var_range.maxG
-
-            if method == 'CUSTOM':
-                min, max = point_data.custom_remap_value[0], point_data.custom_remap_value[1]
+            var_range = file_data.vars.get(name, prop='RANGE').get(method)
 
             # Append point data to output list
             output.names.append(name)
-            output.data.append(remap_array(np.array(data), in_min=min, in_max=max))
+            output.data.append(remap_array(np.array(data), in_min=var_range[0], in_max=var_range[1]))
 
         return output

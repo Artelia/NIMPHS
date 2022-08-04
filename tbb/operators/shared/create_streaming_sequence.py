@@ -14,7 +14,7 @@ class TBB_CreateStreamingSequence(TBB_CreateSequence):
     register_cls = False
     is_custom_base_cls = True
 
-    def update_length(self, _context: Context) -> None:  # noqa D417
+    def update_length(self, _context: Context) -> None:  # noqa: D417
         """
         Make sure the user can't select a wrong value.
 
@@ -29,7 +29,7 @@ class TBB_CreateStreamingSequence(TBB_CreateSequence):
 
     #: bpy.props.IntProperty: Length of the sequence.
     length: IntProperty(
-        name="End",  # noqa F821
+        name="End",  # noqa: F821
         description="Length of the sequence",
         default=1,
         update=update_length,

@@ -24,7 +24,7 @@ class TBB_CreateMeshSequence(TBB_CreateSequence, TBB_ModalOperator):
 
     #: bpy.props.IntProperty: Ending point of the sequence.
     end: IntProperty(
-        name="End",  # noqa F821
+        name="End",  # noqa: F821
         description="Ending point of the sequence",
         default=1,
         update=update_end,
