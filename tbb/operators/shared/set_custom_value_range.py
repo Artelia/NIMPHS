@@ -7,7 +7,7 @@ log = logging.getLogger(__name__)
 
 from tbb.panels.utils import get_selected_object
 from tbb.properties.shared.file_data import TBB_FileData
-from tbb.properties.utils.point_data import PointDataInformation
+from tbb.properties.utils.point_data import PointDataInformation, PointDataManager
 
 
 class TBB_OT_SetCustomValueRange(Operator):
@@ -111,13 +111,16 @@ class TBB_OT_SetCustomValueRange(Operator):
 
             file_data: TBB_FileData = context.scene.tbb.file_data.get("ops", None)
 
-        # Update value range of selected point data
+        # Update value range of selected point data (in file_data)
         chosen = PointDataInformation(json_string=self.chosen)
         chosen.range.minC = self.min
         chosen.range.maxC = self.max
         file_data.vars.update(chosen)
 
-        # Update operator list of chosen point data
+        if self.source == 'OBJECT':
+            manager = PointDataManager(json_string=obj.tbb.settings.point_data.list)
+            manager.update(chosen)
+            obj.tbb.settings.point_data.list = manager.dumps()
         if self.source == 'OPERATOR':
             context.scene.tbb.op_vars.update(chosen)
 
