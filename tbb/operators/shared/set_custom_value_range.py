@@ -33,21 +33,21 @@ class TBB_OT_SetCustomValueRange(Operator):
 
     #: bpy.props.StringProperty: JSON stringified PointDataInformation of the selected point data.
     chosen: StringProperty(
-        name="Chosen",
+        name="Chosen",          # noqa: F821
         description="JSON stringified PointDataInformation of the selected point data",
         default="",
-        options={'HIDDEN'},  # noqa: F821
+        options={'HIDDEN'},     # noqa: F821
     )
 
     min: FloatProperty(
-        name="Minimum",
+        name="Minimum",  # noqa: F821
         description="Set minimum input value",
         default=0.0,
         precision=6
     )
 
     max: FloatProperty(
-        name="Maximum",
+        name="Maximum",  # noqa: F821
         description="Set maximum input value",
         default=1.0,
         precision=6
