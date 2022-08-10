@@ -1,13 +1,6 @@
 # <pep8 compliant>
 from bpy.types import Context, Event
-from bpy.props import (
-    IntProperty,
-    EnumProperty,
-    StringProperty,
-    PointerProperty,
-    IntVectorProperty,
-    FloatVectorProperty,
-)
+from bpy.props import IntProperty, EnumProperty, StringProperty, PointerProperty, FloatProperty
 
 import logging
 log = logging.getLogger(__name__)
@@ -66,6 +59,61 @@ def update_nb_threads(self, _context: Context) -> None:  # noqa: D417
         value = 2
 
 
+def update_dim_x(self, context: Context) -> None:  # noqa: D417
+    """
+    Update volume X dimension accordingly to the model's dimensions.
+
+    Args:
+        _context (Context): context
+    """
+
+    file_data = context.scene.tbb.file_data["ops"]
+    ratio = file_data.dimensions[0] / file_data.dimensions[1]
+
+    # Adjust Y dimension to new X dimension
+    # Also adjust voxel size
+    if ratio > 1.0:
+        self["dim_y"] = int(np.ceil(self.get("dim_x") / ratio))
+        self["vx_size"] = file_data.dimensions[0] / self.get("dim_x")
+    else:
+        self["dim_y"] = int(np.ceil(self.get("dim_x") * ratio))
+        self["vx_size"] = file_data.dimensions[1] / self.get("dim_y")
+
+
+def update_dim_y(self, context: Context) -> None:  # noqa: D417
+    """
+    Update volume Y dimension accordingly to the model's dimensions.
+
+    Args:
+        _context (Context): context
+    """
+
+    file_data = context.scene.tbb.file_data["ops"]
+    ratio = file_data.dimensions[0] / file_data.dimensions[1]
+
+    # Adjust X dimension to new Y dimension
+    # Also adjust voxel size
+    if ratio < 1.0:
+        self["dim_x"] = int(np.ceil(self.get("dim_y") / ratio))
+        self["vx_size"] = file_data.dimensions[1] / self.get("dim_y")
+    else:
+        self["dim_x"] = int(np.ceil(self.get("dim_y") * ratio))
+        self["vx_size"] = file_data.dimensions[0] / self.get("dim_x")
+
+
+def update_vx_size(self, context: Context) -> None:  # noqa: D417
+    """
+    Update dimensions according to new voxel size.
+
+    Args:
+        _context (Context): context
+    """
+
+    file_data = context.scene.tbb.file_data["ops"]
+    self["dim_x"] = int(np.ceil(file_data.dimensions[0] / self.get("vx_size")))
+    self["dim_y"] = int(np.ceil(file_data.dimensions[1] / self.get("vx_size")))
+
+
 class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator):
     """Operator to generate volume sequences from TELEMAC 3D objects."""
 
@@ -115,23 +163,37 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
         ]
     )
 
-    dimensions: IntVectorProperty(
-        name="Dimensions",  # noqa: F821
-        description="Dimensions of the volume",
-        default=(0, 0, 0),
-        min=0,
-        soft_min=0,
-        size=3,
+    dim_x: IntProperty(
+        name="X dimension",
+        default=0,
+        min=1,
+        soft_min=1,
+        update=update_dim_x
     )
 
-    voxel_size: FloatVectorProperty(
+    dim_y: IntProperty(
+        name="Y dimension",
+        default=0,
+        min=1,
+        soft_min=1,
+        update=update_dim_y
+    )
+
+    dim_z: IntProperty(
+        name="Z dimension",
+        default=0,
+        min=1,
+        soft_min=1,
+    )
+
+    vx_size: FloatProperty(
         name="Voxel size",
         description="Size of a voxel",
-        default=(0, 0, 0),
-        min=0,
-        soft_min=0,
-        size=3,
-        precision=3
+        default=0.0,
+        min=1e-6,
+        soft_min=1e-6,
+        precision=6,
+        update=update_vx_size
     )
 
     #: bpy.props.IntProperty: Ending frame / time point of the sequence.
@@ -162,6 +224,9 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
 
     #: TelemacVolume: Object which will handle the computation of volumes
     volume: TelemacVolume = None
+
+    #: float: Z dimension of voxel size
+    vx_size_z: float = 0.0
 
     @classmethod
     def poll(self, context: Context) -> bool:
@@ -237,8 +302,14 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
                 dim[1] / pow(10, omy - 2) if omy > 2 else dim[1],
                 dim[2] / pow(10, omz - 2) if omz > 2 else dim[2]
             )
-            self.dimensions = (int(np.ceil(raw[0])), int(np.ceil(raw[1])), int(np.ceil(raw[2])))
-            self.voxel_size = raw
+            dim_x = int(np.ceil(raw[0]))
+            dim_y = int(np.ceil(raw[1]))
+            self.dim_z = int(np.ceil(raw[2]))
+
+            if self.dim_x > self.dim_z:
+                self.vx_size = dim[0] / dim_x
+            else:
+                self.vx_size = dim[1] / dim_y
 
         return context.window_manager.invoke_props_dialog(self, width=400)
 
@@ -278,10 +349,19 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
 
         if self.volume_definition == 'VX_SIZE':
             row = subbox.row()
-            row.prop(self, "voxel_size", text="Voxel size")
+            row.prop(self, "vx_size", text="Voxel size")
         elif self.volume_definition == 'DIMENSIONS':
             row = subbox.row()
-            row.prop(self, "dimensions", text="Dimensions")
+            row.prop(self, "dim_x", text="")
+            row.prop(self, "dim_y", text="")
+            row.prop(self, "dim_z", text="")
+
+        row = subbox.row()
+        row.label(text=f"Total voxels: {self.dim_x * self.dim_y * self.dim_z}")
+        row = subbox.row()
+        xy = round(self.vx_size, 3)
+        self.vx_size_z = round(file_data.dimensions[2] / self.dim_z, 3)
+        row.label(text=f"Voxel dimensions: {xy} x {xy} x {self.vx_size_z}")
 
         subbox = box.box()
         row = subbox.row()
@@ -384,12 +464,14 @@ class TBB_OT_TelemacGenerateVolumeSequence(TBB_CreateSequence, TBB_ModalOperator
             # Setup volume
             if self.volume_definition == 'VX_SIZE':
                 self.volume = TelemacVolume(self.mesh, self.nb_threads, self.computing_mode == 'MULTIPROCESSING',
-                                            self.computing_mode == 'CUDA', vx_size=self.voxel_size[0:3],
+                                            self.computing_mode == 'CUDA',
+                                            vx_size=(self.vx_size, self.vx_size, self.vx_size_z),
                                             show_details=prefs.log_level == 'DEBUG')
 
             if self.volume_definition == 'DIMENSIONS':
                 self.volume = TelemacVolume(self.mesh, self.nb_threads, self.computing_mode == 'MULTIPROCESSING',
-                                            self.computing_mode == 'CUDA', dimensions=self.dimensions[0:3],
+                                            self.computing_mode == 'CUDA',
+                                            dimensions=(self.dim_x, self.dim_y, self.dim_z),
                                             show_details=prefs.log_level == 'DEBUG')
         except BaseException:
             log.error("Error when generating volume", exc_info=1)
