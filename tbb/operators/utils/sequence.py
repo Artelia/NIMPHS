@@ -86,7 +86,7 @@ def update_telemac_streaming_sequences(scene: Scene) -> None:
             # Compute limit (last time point to compute, takes interpolation into account)
             limit = sequence.start + sequence.length
             if interpolate.type != 'NONE':
-                limit += (sequence.length - 1) * interpolate.time_steps
+                limit += (sequence.length - 1) * interpolate.steps
 
             if scene.frame_current >= sequence.start and scene.frame_current < limit:
                 start = time.time()

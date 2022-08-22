@@ -93,6 +93,12 @@ class TBB_OT_TelemacSetVolumeOrigin(Operator):
         # Set location of selected volume object to computed origin
         self.obj.location = self.origin
 
+        model = parent if is_plane else target
+        file_data = context.scene.tbb.file_data.get(model.tbb.uid, None)
+
+        # Resize volume to fit model's dimensions
+        self.obj.dimensions = file_data.dimensions
+
         return {'FINISHED'}
 
     def draw(self, context: Context) -> None:
