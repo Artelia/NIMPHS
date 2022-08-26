@@ -1,0 +1,28 @@
+name: Maintenance request
+description: Request general maintenance to code, CI, deployment, or otherwise
+labels: ["maintenance"]
+
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe what maintenance you would like to be added
+    validations:
+      required: true
+
+  - type: textarea
+    id: links
+    attributes:
+      label: Links to source code
+      description: If you are requesting maintenance for a specific line of source code, please include the permanent link for that line
+    validations:
+      required: false
+
+  - type: textarea
+    id: pseudocode-or-screenshots
+    attributes:
+      label: Pseudocode or screenshots
+      description: Feel free to include pseudocode or screenshots of the requested outcome
+    validations:
+      required: false

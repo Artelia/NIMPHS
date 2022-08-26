@@ -1,0 +1,57 @@
+name: Bug report
+description: Create a report to help us fix broken features
+labels: ["bug"]
+
+body:
+  - type: textarea
+    id: short-description
+    attributes:
+      label: Short description
+      description: Provide a short overview of the problem
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-bahvior
+    attributes:
+      label: Current behavior
+      description: Provide an explanation of what is happening
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-bahvior
+    attributes:
+      label: Expected behavior
+      description: Explain what was the expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Please provide detailed information on how to reproduce the bug
+    validations:
+      required: true
+
+  - type: textarea
+    id: system-information
+    attributes:
+      label: System information
+      description: Please provide versions information
+      value: |
+        Add-on:
+        Blender:
+        Python:
+        OS:
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs-screenshots
+    attributes:
+      label: Logs and screenshots
+      description: Add here any information which might be helpful to understand the problem
+    validations:
+      required: false

@@ -1,0 +1,28 @@
+name: Feature request
+description: Request for a new feature to be added
+labels: ["feature-request"]
+
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Provide an overview of the feature you would like to be added
+    validations:
+      required: true
+
+  - type: textarea
+    id: links-and-docs
+    attributes:
+      label: Links to documentation, examples or class definitions
+      description: Add here any information which could help us understand the feature request
+    validations:
+      required: false
+
+  - type: textarea
+    id: pseudocode-or-screenshots
+    attributes:
+      label: Pseudocode or screenshots
+      description: You can add here screenshots or pseudocode of the requested outcome
+    validations:
+      required: false
