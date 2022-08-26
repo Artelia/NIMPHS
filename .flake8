@@ -7,8 +7,8 @@ exclude =
     cache,
     docs,
     __pycache__,
-    tbb/**/__init__.py,
-    tbb/properties/telemac/serafin.py,
+    nimphs/**/__init__.py,
+    nimphs/properties/telemac/serafin.py,
 ignore =
     # Imported but unused
     F401,

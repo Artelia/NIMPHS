@@ -1,0 +1,75 @@
+{
+    "nb_vars": 4,
+    "is_3d": true,
+    "nb_planes": 3,
+    "nb_time_points": 11,
+    "preview": {
+        "name": "VELOCITY U",
+        "time_point": 5
+    },
+    "mesh": {
+        "edges": 13601,
+        "faces": 8978,
+        "vertices": 4624,
+        "triangles": 8978
+    },
+    "values": {
+        "time_point": 5,
+        "ELEVATION Z": {
+            "spmv": 1.3966979898702376,
+            "min": 0.0,
+            "max": 4.773152828216553,
+            "unit": "M"
+        },
+        "VELOCITY U": {
+            "spmv": 1.499999413975607,
+            "min": -1.342079997062683,
+            "max": 1.3420789241790771,
+            "unit": "M/S"
+        },
+        "VELOCITY V": {
+            "spmv": 1.499999413975607,
+            "min": -1.342079997062683,
+            "max": 1.3420789241790771,
+            "unit": "M/S"
+        },
+        "VELOCITY W": {
+            "spmv": 0.818980118090674,
+            "min": -2.5540032386779785,
+            "max": 1.2829135656356812,
+            "unit": "M/S"
+        }
+    },
+    "extracted_value": {
+        "name": "VELOCITY V",
+        "vertex_id": 3007,
+        "plane_id": 1,
+        "values": [
+            0,
+            0.5215196,
+            0.79040968,
+            0.37951174,
+            -0.23558921,
+            -0.46445897,
+            -0.35079029,
+            -0.15735637,
+            -0.02495225,
+            -0.0069266767,
+            -0.041871022
+        ]
+    },
+    "point_data": {
+        "names": [
+            "ELEVATION Z",
+            "VELOCITY U",
+            "VELOCITY V",
+            "VELOCITY W"
+        ],
+        "units": [
+            "M",
+            "M/S",
+            "M/S",
+            "M/S"
+        ]
+    }
+}

@@ -1,5 +1,4 @@
 # <pep8 compliant>
-from ast import arg
 import os
 import sys
 import shutil
@@ -10,7 +9,7 @@ import argparse
 import subprocess
 
 
-class bcolors:
+class Colors:
     """List of color which can be used to color texts in the terminal."""
 
     HEADER = '\033[95m'
@@ -24,7 +23,7 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
-def get_centered_message(message: str, char: str = "-") -> str:
+def centered_str(message: str, char: str = "-") -> str:
     """
     Generate a line full of 'char' with the given message at the center.
 
@@ -53,14 +52,18 @@ def install(package: str, force: bool = False) -> None:
     subprocess.check_call(args)
 
 
-def install_requirements(requirements: str) -> None:
+def install_requirements(requirements: str, force: bool = False) -> None:
     """
     Install python packages from the given requirements file.
 
     Args:
         requirements (str): path to the requirements file.
+        force (bool, optional): force reinstall. Defaults to False.
     """
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", requirements])
+    args = [sys.executable, "-m", "pip", "install", "-r", requirements, "-U"]
+    if force:
+        args.append("--force-reinstall")
+    subprocess.check_call(args)
 
 
 def install_local_package(path: str, force: bool = False) -> None:
@@ -85,14 +88,14 @@ def zipdir(path: str, ziph: zipfile.ZipFile) -> None:
         path (str): path to the folder.
         ziph (zipfile.ZipFile): zip file.
     """
-    # Per https://www.tutorialspoint.com/How-to-zip-a-folder-recursively-using-Python
+    # Inspired from: https://www.tutorialspoint.com/How-to-zip-a-folder-recursively-using-Python
     # ziph is zipfile handle
     for root, dirs, files in os.walk(path):
         for file in files:
             ziph.write(os.path.join(root, file))
 
 
-# Code taken here:
+# Inspired from:
 # https://thispointer.com/python-how-to-remove-files-by-matching-pattern-wildcards-certain-extensions-only/
 def remove_files_matching_pattern(root_folder: str, exclude_folders: list[str] = [], pattern: str = "*.zip") -> None:
     """
@@ -105,7 +108,7 @@ def remove_files_matching_pattern(root_folder: str, exclude_folders: list[str] =
     """
     # Get a list of all files in directory
     for rootDir, subdirs, filenames in os.walk(root_folder):
-        # Find the files that matches the given patterm
+        # Find the files that matches the given pattern
         for filename in fnmatch.filter(filenames, pattern):
             try:
                 if os.path.dirname(os.path.join(rootDir, filename)) not in exclude_folders:
@@ -124,42 +127,40 @@ def remove_folders_matching_pattern(root_folder: str, pattern: str = "__pycache_
     """
     # Get a list of all files in directory
     for rootDir, subdirs, filenames in os.walk(root_folder):
-        # Find the files that matches the given patterm
+        # Find the files that matches the given pattern
         for subdir in subdirs:
             if subdir == pattern:
-                # First, remove all files inside the folder
-                remove_files_matching_pattern(os.path.join(rootDir, subdir), pattern="*.*")
-                os.rmdir(os.path.join(rootDir, subdir))
+                shutil.rmtree(os.path.join(rootDir, subdir), ignore_errors=True)
 
 
-def download_stop_motion_obj_addon(dest: str, version: str = "v2.2.0.alpha.21") -> tuple[str, str]:
+def download_stop_motion_obj_addon(dest: str, version: str = "v2.2.0.alpha.23") -> tuple[str, str]:
     """
     Download the Stop-Motion-OBJ addon.
 
     Args:
         dest (str): destination of the downloaded file.
-        version (str, optional): version to download. Defaults to "v2.2.0.alpha.21".
-
-    Raises:
-        AttributeError: if the given destination does not exist.
+        version (str, optional): version to download. Defaults to "v2.2.0.alpha.23".
 
     Returns:
         tuple[str, str]: path to the zip file, name of the module.
     """
+
     module_name = "Stop-motion-OBJ"
-    filename = module_name + "-" + version + ".zip"
+    filename = f"{module_name}-{version}.zip"
     path = os.path.abspath(os.path.join(dest, filename))
 
     if (not os.path.exists(dest)):
-        raise AttributeError("The given path does not exist:", dest)
+        print(f"The given path does not exist: {dest}")
+        os.mkdir(dest)
+        print(f"Created destination folder: {dest}")
 
     if (os.path.exists(os.path.join(dest, filename))):
-        print("Stop-Motion-OBJ - found:", path)
+        print(f"Stop-Motion-OBJ - found: {path}")
         return path, module_name
 
     # Else, download it and save it at the given destination
-    print("Downloading:", filename)
-    url = "https://github.com/neverhood311/Stop-motion-OBJ/releases/download/" + version + "/"
+    print(f"Downloading: {filename}")
+    url = f"https://github.com/neverhood311/Stop-motion-OBJ/releases/download/{version}/"
     response = requests.get(url + filename)
     open(os.path.join(dest, filename), "wb").write(response.content)
 
@@ -168,25 +169,6 @@ def download_stop_motion_obj_addon(dest: str, version: str = "v2.2.0.alpha.21") 
 
 # Parser for run_tests.py
 parser = argparse.ArgumentParser(description="Test addon")
-parser.add_argument(
-    "-n",
-    metavar="Name",
-    type=str,
-    nargs='?',
-    default="tbb",
-    help="Name to give to the zip file"
-)
-parser.add_argument(
-    "-a",
-    metavar="Addon path",
-    type=str,
-    nargs='?',
-    default=os.path.join(os.path.abspath("."), "tbb"),
-    help="Addon path to test, can be a path to a directory (will be zipped for you) or to a .zip file.\
-        The Python module name will be that of the (directory or) zip file without extension,\
-        try to make it as pythonic as possible for Blender's Python importer to work properly\
-        with it: letters, digits, underscores."
-)
 parser.add_argument(
     "-b",
     metavar="Blender version",

@@ -1,41 +1,66 @@
 # NIMPHS
 
-Import OpenFOAM / TELEMAC files inside Blender and generate astonishing renders!
+**N**umerous **I**nstruments to **M**anipulate and **P**ost-process **H**ydraulic **S**imulations.
+
+### Short description
+
+Import OpenFOAM (.foam) and TELEMAC (.slf) files in Blender, and make use of its powerful 3D renderer to generate photorealistic images and animations!
+
+Built with:
+
+* [PyVista](https://github.com/pyvista/pyvista)
+* [Stop-motion-OBJ add-on](https://github.com/neverhood311/Stop-motion-OBJ)
 
 ## OpenFOAM
 
 * Preview the imported file in the viewport
-* Create a sequence (uses the [Stop-motion-OBJ add-on](https://github.com/neverhood311/Stop-motion-OBJ))
-    * Mesh sequence (generates a mesh for each time point in the selected time range, ideal for small meshes)
-    * Streaming sequence (generates a mesh when the frame changes and only keeps one mesh in memory, ideal for large meshes)
-* Import data as vertex colors
-* Clip by a scalar
+* Create sequences to render animations
+    * Mesh sequence (generates a mesh for each time point in the selected time range)
+    * Streaming sequence (generates a mesh when the frame changes and only keeps one mesh in memory)
+* Import point data as vertex colors (color attributes)
+* Clip mesh by a scalar
 
 ### Screenshots
 
-Main panel - material preview |  Main panel - wireframe preview
-:----------------------------:|:-------------------------------:
-![Material preview](https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.3.0/docs/source/images/readme/screenshot_openfoam_a.png)  |  ![Wireframe preview](https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.3.0/docs/source/images/readme/screenshot_openfoam_b.png)
+Wireframe preview                     |  Material preview
+:------------------------------------:|:-----------------------------------:
+![Wireframe](https://bit.ly/3APEsPi)  |  ![Material](https://bit.ly/3pOWB9u)
 
-<p align="center">
-  <img alt="Shading preview" width="716" height="460" src="https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.3.0/docs/source/images/readme/screenshot_openfoam_c.png"/>
-</p>
 
 ## TELEMAC
 
-* Preview the imported file in the viewport (works with 2D / 3D simulations)
-* Create a sequence
-    * Mesh sequence (generates a shape key for each time point in the selected time range, ideal short sequences)
-    * Streaming sequence (generates a mesh when the frame changes and only keeps one mesh in memory, ideal for long sequences)
-* Import data as vertex colors
-* Interpolate mesh and vertex colors (for both type of sequences)
+* Works with 2D and 3D files
+* Preview the imported file in the viewport
+* Create sequences to render animations
+    * Mesh sequence (generates a mesh for each time point in the selected time range)
+    * Streaming sequence (generates a mesh when the frame changes and only keeps one mesh in memory)
+* Import point data as vertex colors (color attributes)
+* Linearly interpolate mesh and vertex colors (for both type of sequences) to render smoother animations
+* Extract point data from one vertex as time series
+* Generate volumes from TELEMAC-3D simulations
 
 ### Screenshots
 
-Main panel - material preview |  Main panel - wireframe preview
-:----------------------------:|:-------------------------------:
-![Material preview](https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.3.0/docs/source/images/readme/screenshot_telemac_a.png)  |  ![Wireframe preview](https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.3.0/docs/source/images/readme/screenshot_telemac_b.png)
+Wireframe preview                     |  Material preview
+:------------------------------------:|:-----------------------------------:
+![Wireframe](https://bit.ly/3QLQXRv)  |  ![Material](https://bit.ly/3RflFCa)
 
-<p align="center">
-  <img alt="Shading preview" width="694" height="430" src="https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/raw/release/0.3.0/docs/source/images/readme/screenshot_telemac_c.png"/>
-</p>
+## Gallery
+
+Here are some creations made with NIMPHS.
+
+### OpenFOAM
+
+Model A                                             | Model B
+:--------------------------------------------------:|:--------------------------------------------------:
+![TELEMAC gallery, model A](https://bit.ly/3RfjvT4) | ![TELEMAC gallery, model B](https://bit.ly/3AJNIDx)
+
+Model C                                              | Model D
+:---------------------------------------------------:|:------------------------------:
+![OpenFOAM gallery, model C](https://bit.ly/3ApCGTJ) | ![None](https://bit.ly/3TnnKOG)
+
+### TELEMAC
+
+Model A                                              | Model B
+:---------------------------------------------------:|:----------------------------------------------:
+![OpenFOAM gallery, model A](https://bit.ly/3pLn4om) | ![OpenFOAM gallery, model B](https://bit.ly/3clNytA)

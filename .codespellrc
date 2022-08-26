@@ -1,3 +1,3 @@
 [codespell]
-skip = *.xml,*.pyc,*.txt,*.gif,*.png,*.jpg,*.js,*.html,*.doctree,*.ipynb,.git/*,*.yml,docs/_build/*,tbb/properties/telemac/serafin.py
-ignore-words-list = Toolsbox,toolsbox,tbb
+skip = *.xml,*.pyc,*.txt,*.gif,*.png,*.jpg,*.js,*.html,*.doctree,*.ipynb,.git/*,*.yml,docs/_build/*,nimphs/properties/telemac/serafin.py
+ignore-words-list = nimphs,Toolsbox,toolsbox

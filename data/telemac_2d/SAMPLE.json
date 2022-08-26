@@ -1,0 +1,91 @@
+{
+    "nb_vars": 6,
+    "is_3d": false,
+    "nb_planes": 0,
+    "nb_time_points": 11,
+    "preview": {
+        "name": "VELOCITY U",
+        "time_point": 5
+    },
+    "mesh": {
+        "edges": 8941,
+        "faces": 5742,
+        "vertices": 3200,
+        "triangles": 5742
+    },
+    "values": {
+        "time_point": 5,
+        "VELOCITY U": {
+            "mean": 0.2148579548180691,
+            "min": 0.0,
+            "max": 2.7853646278381348,
+            "unit": "M/S"
+        },
+        "VELOCITY V": {
+            "mean": 0.4044774340143149,
+            "min": -0.40747132897377014,
+            "max": 0.5237767696380615,
+            "unit": "M/S"
+        },
+        "WATER DEPTH": {
+            "mean": 0.5031066531588434,
+            "min": 0.0,
+            "max": 1.0,
+            "unit": "M"
+        },
+        "ANALYTIC SOL H": {
+            "mean": 0.5015619112950673,
+            "min": 0.0,
+            "max": 1.0,
+            "unit": "NONE"
+        },
+        "ANALYTIC SOL U": {
+            "mean": 0.36766125498385516,
+            "min": 0.0,
+            "max": 6.254727840423584,
+            "unit": "NONE"
+        },
+        "ANALYTIC SOL V": {
+            "mean": 1.0,
+            "min": 0.0,
+            "max": 0.0,
+            "unit": "NONE"
+        }
+    },
+    "extracted_value": {
+        "name": "VELOCITY U",
+        "vertex_id": 125,
+        "plane_id": 0,
+        "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.4413011914560512e-38,
+            1.7443883641138018e-20,
+            3.5289954292139214e-10,
+            1.6883359421626665e-05,
+            0.010913471691310406,
+            0.12885670363903046
+        ]
+    },
+    "point_data": {
+        "names": [
+            "VELOCITY U",
+            "VELOCITY V",
+            "WATER DEPTH",
+            "ANALYTIC SOL H",
+            "ANALYTIC SOL U",
+            "ANALYTIC SOL V"
+        ],
+        "units": [
+            "M/S",
+            "M/S",
+            "M",
+            "NONE",
+            "NONE",
+            "NONE"
+        ]
+    }
+}

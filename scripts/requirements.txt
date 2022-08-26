@@ -1,4 +1,4 @@
-# pyvista >= 0.35.0
-numpy
+pyvista >= 0.35.0
 matplotlib
 pytest
+blender-addon-tester

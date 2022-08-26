@@ -5,14 +5,15 @@ import zipfile
 from pathlib import Path
 
 from scripts.utils import (
-    zipdir,
-    parser,
-    bcolors,
     remove_folders_matching_pattern,
     download_stop_motion_obj_addon,
-    get_centered_message)
+    centered_str,
+    zipdir,
+    parser,
+    Colors,
+)
 
-print(f"{bcolors.OKBLUE}{get_centered_message(' RUN TESTS START ', '=')}{bcolors.ENDC}")
+print(f"{Colors.OKBLUE}{centered_str(' RUN TESTS START ', '=')}{Colors.ENDC}")
 
 try:
     import blender_addon_tester as BAT
@@ -25,19 +26,6 @@ def main():
     """Execute the tests suite."""
 
     arguments = parser.parse_args()
-    # Get addon path
-
-    if arguments.n is None:
-        print("ERROR: -n option is None.")
-        parser.parse_args(['-h'])
-
-    name = arguments.n
-
-    if arguments.a is None:
-        print("ERROR: -a option is None.")
-        parser.parse_args(['-h'])
-
-    addon = arguments.a
 
     # Get blender version(s) to test the addon
     if arguments.b is None:
@@ -46,11 +34,19 @@ def main():
 
     blender_rev = arguments.b
 
+    module = "nimphs"
     here = Path(__file__).parent
+    addon = os.path.join(os.path.abspath("."), module)
 
     try:
-        # Cleanup '__pychache__' folders in the 'tbb' folder
-        remove_folders_matching_pattern(os.path.join(os.path.abspath("."), "tbb"))
+        # Prepare testing data
+        data_path = os.path.join(os.path.abspath("."), "data/openfoam/sample.zip")
+        with zipfile.ZipFile(data_path, 'r') as file:
+            print(f"Unzipping {data_path}")
+            file.extractall(os.path.join(os.path.abspath("."), "data/openfoam/sample/"))
+
+        # Cleanup '__pychache__' folders in the 'nimphs' folder
+        remove_folders_matching_pattern(os.path.join(os.path.abspath("."), module))
 
         # Download addons on which this addon depends
         smo_addon_dest = os.path.abspath(here.joinpath("../cache").as_posix())
@@ -59,12 +55,11 @@ def main():
         os.environ["STOP_MOTION_OBJ_MODULE"] = smo_module_name
 
         # Zip addon
-        if not addon.endswith(".zip"):
-            print("Zipping addon - path: " + os.path.abspath(addon))
-            zipf = zipfile.ZipFile(name + ".zip", 'w', zipfile.ZIP_DEFLATED)
-            zipdir("./" + name, zipf)
-            zipf.close()
-            addon = os.path.join(os.path.abspath("."), name + ".zip")
+        print("Zipping addon - path: " + os.path.abspath(addon))
+        zipf = zipfile.ZipFile(module + ".zip", 'w', zipfile.ZIP_DEFLATED)
+        zipdir("./" + module, zipf)
+        zipf.close()
+        addon = os.path.join(os.path.abspath("."), module + ".zip")
 
     except Exception as e:
         print(e)
@@ -90,7 +85,7 @@ def main():
         print(e)
         exit_val = 1
 
-    print(f"{bcolors.OKBLUE}{get_centered_message(' RUN TESTS END ', '=')}{bcolors.ENDC}")
+    print(f"{Colors.OKBLUE}{centered_str(' RUN TESTS END ', '=')}{Colors.ENDC}")
     sys.exit(exit_val)
 
 
