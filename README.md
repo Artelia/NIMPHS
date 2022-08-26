@@ -1,4 +1,8 @@
-# Toolbox Blender
+# NIMPHS
+
+**N**umerous **I**nstruments to **M**anipulate and **P**ost-process **H**ydraulic **S**imulations.
+
+### Short description
 
 Import OpenFOAM (.foam) and TELEMAC (.slf) files in Blender, and make use of its powerful 3D renderer to generate photorealistic images and animations!
 
@@ -32,6 +36,8 @@ Material preview  |  Wireframe preview
     * Streaming sequence (generates a mesh when the frame changes and only keeps one mesh in memory)
 * Import point data as vertex colors (color attributes)
 * Linearly interpolate mesh and vertex colors (for both type of sequences) to render smoother animations
+* Extract point data from one vertex as time series
+* Generate volumes from TELEMAC-3D simulations
 
 ### Screenshots
 
