@@ -19,22 +19,22 @@ from helpers.utils import clean_all_objects
 
 def test_normal_preview_object_openfoam():
     # Import OpenFOAM sample object
-    op = bpy.ops.tbb.import_openfoam_file
+    op = bpy.ops.nimphs.import_openfoam_file
     assert op('EXEC_DEFAULT', mode='TEST', filepath=utils.FILE_PATH_OPENFOAM, name=utils.PRW_OBJ_NAME) == {'FINISHED'}
 
     obj = utils.get_preview_object()
     assert obj is not None
 
     # Set preview settings
-    io_settings = obj.tbb.settings.openfoam.import_settings
+    io_settings = obj.nimphs.settings.openfoam.import_settings
     io_settings.triangulate = False
     io_settings.skip_zero_time = False
     io_settings.case_type = 'reconstructed'
     io_settings.decompose_polyhedra = False
 
-    assert obj.tbb.settings.openfoam.import_settings.triangulate is False
+    assert obj.nimphs.settings.openfoam.import_settings.triangulate is False
 
-    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT', mode='TEST') == {'FINISHED'}
+    assert bpy.ops.nimphs.openfoam_preview('EXEC_DEFAULT', mode='TEST') == {'FINISHED'}
 
 
 def test_geometry_normal_preview_object():
@@ -55,13 +55,13 @@ def test_normal_decompose_polyhedra_preview_object_openfoam():
     assert obj is not None
 
     # Set preview settings
-    io_settings = obj.tbb.settings.openfoam.import_settings
+    io_settings = obj.nimphs.settings.openfoam.import_settings
     io_settings.triangulate = False
     io_settings.skip_zero_time = False
     io_settings.case_type = 'reconstructed'
     io_settings.decompose_polyhedra = True
 
-    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT', mode='TEST') == {'FINISHED'}
+    assert bpy.ops.nimphs.openfoam_preview('EXEC_DEFAULT', mode='TEST') == {'FINISHED'}
 
 
 def test_geometry_normal_decompose_polyhedra_preview_object_openfoam():
@@ -82,13 +82,13 @@ def test_triangulated_preview_object_openfoam():
     assert obj is not None
 
     # Set preview settings
-    io_settings = obj.tbb.settings.openfoam.import_settings
+    io_settings = obj.nimphs.settings.openfoam.import_settings
     io_settings.triangulate = True
     io_settings.skip_zero_time = False
     io_settings.case_type = 'reconstructed'
     io_settings.decompose_polyhedra = False
 
-    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT', mode='TEST') == {'FINISHED'}
+    assert bpy.ops.nimphs.openfoam_preview('EXEC_DEFAULT', mode='TEST') == {'FINISHED'}
 
 
 def test_geometry_triangulated_preview_object_openfoam():
@@ -109,13 +109,13 @@ def test_triangulated_decompose_polyhedra_preview_object_openfoam():
     assert obj is not None
 
     # Set preview settings
-    io_settings = obj.tbb.settings.openfoam.import_settings
+    io_settings = obj.nimphs.settings.openfoam.import_settings
     io_settings.triangulate = True
     io_settings.skip_zero_time = False
     io_settings.case_type = 'reconstructed'
     io_settings.decompose_polyhedra = True
 
-    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT', mode='TEST') == {'FINISHED'}
+    assert bpy.ops.nimphs.openfoam_preview('EXEC_DEFAULT', mode='TEST') == {'FINISHED'}
 
 
 def test_geometry_triangulated_decompose_polyhedra_preview_object_openfoam():
@@ -137,10 +137,10 @@ def test_preview_point_data_openfoam():
     var_name = sample["preview"]["name"]
 
     # Set point data to preview
-    obj.tbb.settings.preview_time_point = sample["preview"]["time_point"]
-    obj.tbb.settings.preview_point_data = utils.get_point_data_openfoam(False).get(var_name).dumps()
+    obj.nimphs.settings.preview_time_point = sample["preview"]["time_point"]
+    obj.nimphs.settings.preview_point_data = utils.get_point_data_openfoam(False).get(var_name).dumps()
 
-    assert bpy.ops.tbb.openfoam_preview('EXEC_DEFAULT', mode='TEST') == {'FINISHED'}
+    assert bpy.ops.nimphs.openfoam_preview('EXEC_DEFAULT', mode='TEST') == {'FINISHED'}
 
 
 def test_point_data_preview_object_openfoam():
@@ -209,7 +209,7 @@ def test_preview_material_openfoam():
 
 def test_preview_telemac_2d():
     # Import TELEMAC 2D sample object
-    op = bpy.ops.tbb.import_telemac_file
+    op = bpy.ops.nimphs.import_telemac_file
     assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_2D, name=utils.PRW_OBJ_NAME) == {'FINISHED'}
 
     obj = utils.get_preview_object()
@@ -218,10 +218,10 @@ def test_preview_telemac_2d():
     assert obj is not None
 
     # Set preview settings
-    obj.tbb.settings.preview_time_point = sample["preview"]["time_point"]
-    obj.tbb.settings.preview_point_data = utils.get_point_data_telemac('2D').get(var_name).dumps()
+    obj.nimphs.settings.preview_time_point = sample["preview"]["time_point"]
+    obj.nimphs.settings.preview_point_data = utils.get_point_data_telemac('2D').get(var_name).dumps()
 
-    assert bpy.ops.tbb.telemac_preview('EXEC_DEFAULT') == {'FINISHED'}
+    assert bpy.ops.nimphs.telemac_preview('EXEC_DEFAULT') == {'FINISHED'}
 
 
 def test_geometry_preview_object_telemac_2d():
@@ -261,7 +261,7 @@ def test_point_data_preview_object_telemac_2d():
 
 def test_preview_telemac_3d():
     # Import TELEMAC 3D sample object
-    op = bpy.ops.tbb.import_telemac_file
+    op = bpy.ops.nimphs.import_telemac_file
     assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_3D, name=utils.PRW_OBJ_NAME) == {'FINISHED'}
 
     obj = utils.get_preview_object()
@@ -270,10 +270,10 @@ def test_preview_telemac_3d():
     assert obj is not None
 
     # Set preview settings
-    obj.tbb.settings.preview_time_point = sample["preview"]["time_point"]
-    obj.tbb.settings.preview_point_data = utils.get_point_data_telemac('3D').get(var_name).dumps()
+    obj.nimphs.settings.preview_time_point = sample["preview"]["time_point"]
+    obj.nimphs.settings.preview_point_data = utils.get_point_data_telemac('3D').get(var_name).dumps()
 
-    assert bpy.ops.tbb.telemac_preview('EXEC_DEFAULT') == {'FINISHED'}
+    assert bpy.ops.nimphs.telemac_preview('EXEC_DEFAULT') == {'FINISHED'}
 
 
 def test_geometry_preview_object_telemac_3d():

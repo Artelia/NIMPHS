@@ -18,9 +18,9 @@ sys.path.insert(0, os.path.abspath('.'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'Toolbox blender'
+project = 'NIMPHS'
 copyright = '2022, ARTELIAGROUP'
-author = 'Thibault Oudart, Félix Olart'
+author = 'Félix Olart, Thibault Oudart'
 
 # The full version, including alpha/beta/rc tags
 release = '0.4.0'

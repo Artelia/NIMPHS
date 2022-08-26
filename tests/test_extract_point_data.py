@@ -25,7 +25,7 @@ from helpers.utils import clean_all_objects
 @pytest.mark.usefixtures("clean_all_objects")
 def test_extract_point_data_telemac_2d():
     # Import TELEMAC 2D sample object
-    op = bpy.ops.tbb.import_telemac_file
+    op = bpy.ops.nimphs.import_telemac_file
     assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_2D, name=utils.PRW_OBJ_NAME) == {'FINISHED'}
 
     # Select preview object
@@ -38,7 +38,7 @@ def test_extract_point_data_telemac_2d():
     data = utils.get_point_data_telemac('2D').get(var_name).dumps()
 
     # Note: Fudaa count indices from 1 to xxx. Here we count indices from 0 to xxx.
-    op = bpy.ops.tbb.telemac_extract_point_data
+    op = bpy.ops.nimphs.telemac_extract_point_data
     state = op('EXEC_DEFAULT', mode='TEST', vertex_id=vertex_id - 1, max=10, start=0, end=10, test_data=data)
     assert state == {'FINISHED'}
 
@@ -71,7 +71,7 @@ def test_extract_point_data_telemac_2d():
 @pytest.mark.usefixtures("clean_all_objects")
 def test_extract_point_data_telemac_3d():
     # Import TELEMAC 3D sample object
-    op = bpy.ops.tbb.import_telemac_file
+    op = bpy.ops.nimphs.import_telemac_file
     assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_3D, name=utils.PRW_OBJ_NAME) == {'FINISHED'}
 
     # Select preview object
@@ -85,7 +85,7 @@ def test_extract_point_data_telemac_3d():
     data = utils.get_point_data_telemac('3D').get(var_name).dumps()
 
     # Note: Fudaa count indices from 1 to xxx. Here we count indices from 0 to xxx.
-    op = bpy.ops.tbb.telemac_extract_point_data
+    op = bpy.ops.nimphs.telemac_extract_point_data
     state = op('EXEC_DEFAULT', mode='TEST', vertex_id=vertex_id - 1, max=10, start=0, end=10,
                test_data=data, plane_id=plane_id)
     assert state == {'FINISHED'}

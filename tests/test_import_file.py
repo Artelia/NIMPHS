@@ -18,7 +18,7 @@ from helpers.utils import clean_all_objects
 
 
 def test_import_openfoam():
-    op = bpy.ops.tbb.import_openfoam_file
+    op = bpy.ops.nimphs.import_openfoam_file
 
     # Test with wrong filepath
     assert op('EXEC_DEFAULT', filepath="test.foam", name=utils.PRW_OBJ_NAME) == {'CANCELLED'}
@@ -39,11 +39,11 @@ def test_imported_object_openfoam():
     assert len(obj.data.polygons) == mesh["triangles"]
 
     # Test object properties
-    assert obj.tbb.uid != ""
-    assert obj.tbb.module == 'OpenFOAM'
-    assert obj.tbb.is_mesh_sequence is False
-    assert obj.tbb.is_streaming_sequence is False
-    assert obj.tbb.settings.file_path == utils.FILE_PATH_OPENFOAM
+    assert obj.nimphs.uid != ""
+    assert obj.nimphs.module == 'OpenFOAM'
+    assert obj.nimphs.is_mesh_sequence is False
+    assert obj.nimphs.is_streaming_sequence is False
+    assert obj.nimphs.settings.file_path == utils.FILE_PATH_OPENFOAM
 
 
 @pytest.mark.usefixtures("clean_all_objects")
@@ -53,7 +53,7 @@ def test_file_data_imported_object_openfoam():
     point_data = utils.get_point_data_openfoam(True)
 
     # Get file_data
-    file_data = bpy.context.scene.tbb.file_data.get(obj.tbb.uid, None)
+    file_data = bpy.context.scene.nimphs.file_data.get(obj.nimphs.uid, None)
     assert file_data is not None
 
     # Test file data
@@ -73,7 +73,7 @@ def test_file_data_imported_object_openfoam():
 
 
 def test_import_telemac_2d():
-    op = bpy.ops.tbb.import_telemac_file
+    op = bpy.ops.nimphs.import_telemac_file
 
     # Test with wrong filepath
     assert op('EXEC_DEFAULT', filepath="test.slf", name=utils.PRW_OBJ_NAME) == {'CANCELLED'}
@@ -100,10 +100,10 @@ def test_imported_object_telemac_2d():
         assert len(child.data.polygons) == sample["mesh"]["triangles"]
 
     # Test object properties
-    assert obj.tbb.uid != ""
-    assert obj.tbb.module == 'TELEMAC'
-    assert obj.tbb.is_mesh_sequence is False
-    assert obj.tbb.is_streaming_sequence is False
+    assert obj.nimphs.uid != ""
+    assert obj.nimphs.module == 'TELEMAC'
+    assert obj.nimphs.is_mesh_sequence is False
+    assert obj.nimphs.is_streaming_sequence is False
 
 
 # -------------------------- #
@@ -112,7 +112,7 @@ def test_imported_object_telemac_2d():
 
 
 def test_import_telemac_3d():
-    op = bpy.ops.tbb.import_telemac_file
+    op = bpy.ops.nimphs.import_telemac_file
 
     # Test with wrong filepath
     assert op('EXEC_DEFAULT', filepath="test.slf", name=utils.PRW_OBJ_NAME) == {'CANCELLED'}
@@ -139,7 +139,7 @@ def test_imported_object_telemac_3d():
         assert len(child.data.polygons) == sample["mesh"]["triangles"]
 
     # Test object properties
-    assert obj.tbb.uid != ""
-    assert obj.tbb.module == 'TELEMAC'
-    assert obj.tbb.is_mesh_sequence is False
-    assert obj.tbb.is_streaming_sequence is False
+    assert obj.nimphs.uid != ""
+    assert obj.nimphs.module == 'TELEMAC'
+    assert obj.nimphs.is_mesh_sequence is False
+    assert obj.nimphs.is_streaming_sequence is False

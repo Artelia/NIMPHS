@@ -34,7 +34,7 @@ def main():
 
     blender_rev = arguments.b
 
-    module = "tbb"
+    module = "nimphs"
     here = Path(__file__).parent
     addon = os.path.join(os.path.abspath("."), module)
 
@@ -45,7 +45,7 @@ def main():
             print(f"Unzipping {data_path}")
             file.extractall(os.path.join(os.path.abspath("."), "data/openfoam/sample/"))
 
-        # Cleanup '__pychache__' folders in the 'tbb' folder
+        # Cleanup '__pychache__' folders in the 'nimphs' folder
         remove_folders_matching_pattern(os.path.join(os.path.abspath("."), module))
 
         # Download addons on which this addon depends

@@ -16,5 +16,5 @@ repos:
     rev: 6.1.1
     hooks:
       - id: pydocstyle
-        exclude: tbb/properties/telemac/serafin.py|tbb/auto_load.py|tests/|data/
+        exclude: nimphs/properties/telemac/serafin.py|nimphs/auto_load.py|tests/|data/
         args: ["-e"]

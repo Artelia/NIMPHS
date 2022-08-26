@@ -19,7 +19,7 @@ from helpers.utils import clean_all_objects
 
 def test_create_mesh_sequence_openfoam():
     # Import OpenFOAM sample object
-    op = bpy.ops.tbb.import_openfoam_file
+    op = bpy.ops.nimphs.import_openfoam_file
     assert op('EXEC_DEFAULT', mode='TEST', filepath=utils.FILE_PATH_OPENFOAM, name=utils.PRW_OBJ_NAME) == {'FINISHED'}
 
     # Select preview object
@@ -30,7 +30,7 @@ def test_create_mesh_sequence_openfoam():
     # Get test data (WARNING: this operator changes the current frame)
     data = json.dumps({"vars": utils.get_point_data_openfoam(True).dumps(), "start": 1, "end": vars["time_point"] + 1})
 
-    op = bpy.ops.tbb.openfoam_create_mesh_sequence
+    op = bpy.ops.nimphs.openfoam_create_mesh_sequence
     assert op('EXEC_DEFAULT', mode='TEST', name=utils.MESH_SEQUENCE_OBJ_NAME, test_data=data) == {'FINISHED'}
 
     # ------------------------------------------------------------ #
@@ -115,7 +115,7 @@ def test_point_data_mesh_sequence_openfoam():
 
 def test_create_mesh_sequence_telemac_2d():
     # Import TELEMAC 2D sample object
-    op = bpy.ops.tbb.import_telemac_file
+    op = bpy.ops.nimphs.import_telemac_file
     assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_2D, name=utils.PRW_OBJ_NAME) == {'FINISHED'}
 
     # Select preview object
@@ -132,7 +132,7 @@ def test_create_mesh_sequence_telemac_2d():
     # Change frame to start mesh sequence at frame n°1
     bpy.context.scene.frame_set(1)
 
-    op = bpy.ops.tbb.telemac_create_mesh_sequence
+    op = bpy.ops.nimphs.telemac_create_mesh_sequence
     assert op('EXEC_DEFAULT', name=utils.MESH_SEQUENCE_OBJ_NAME, mode='TEST', test_data=data) == {'FINISHED'}
 
 
@@ -146,12 +146,12 @@ def test_mesh_sequence_telemac_2d():
     vars = sample["values"]
 
     # Get file_data
-    file_data = bpy.context.scene.tbb.file_data[obj.tbb.uid]
+    file_data = bpy.context.scene.nimphs.file_data[obj.nimphs.uid]
     assert file_data is not None
 
     # Add point data settings
-    obj.tbb.settings.point_data.import_data = True
-    obj.tbb.settings.point_data.list = utils.get_point_data_telemac('2D').dumps()
+    obj.nimphs.settings.point_data.import_data = True
+    obj.nimphs.settings.point_data.list = utils.get_point_data_telemac('2D').dumps()
 
     # Force update telemac mesh sequences
     handler = utils.get_frame_change_post_app_handler("update_telemac_mesh_sequences")
@@ -159,11 +159,11 @@ def test_mesh_sequence_telemac_2d():
     handler(bpy.context.scene)
 
     # Test object settings
-    assert obj.tbb.uid != ""
-    assert obj.tbb.module == 'TELEMAC'
-    assert obj.tbb.is_mesh_sequence is True
-    assert obj.tbb.is_streaming_sequence is False
-    assert obj.tbb.settings.file_path == utils.FILE_PATH_TELEMAC_2D
+    assert obj.nimphs.uid != ""
+    assert obj.nimphs.module == 'TELEMAC'
+    assert obj.nimphs.is_mesh_sequence is True
+    assert obj.nimphs.is_streaming_sequence is False
+    assert obj.nimphs.settings.file_path == utils.FILE_PATH_TELEMAC_2D
 
     # Test sequence data (shape_keys)
     for child in obj.children:
@@ -213,7 +213,7 @@ def test_point_data_mesh_sequence_telemac_2d():
 
 def test_create_mesh_sequence_telemac_3d():
     # Import TELEMAC 3D sample object
-    op = bpy.ops.tbb.import_telemac_file
+    op = bpy.ops.nimphs.import_telemac_file
     assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_3D, name=utils.PRW_OBJ_NAME) == {'FINISHED'}
 
     # Select preview object
@@ -230,7 +230,7 @@ def test_create_mesh_sequence_telemac_3d():
     # Change frame to start mesh sequence at frame n°1
     bpy.context.scene.frame_set(1)
 
-    op = bpy.ops.tbb.telemac_create_mesh_sequence
+    op = bpy.ops.nimphs.telemac_create_mesh_sequence
     assert op('EXEC_DEFAULT', name=utils.MESH_SEQUENCE_OBJ_NAME, mode='TEST', test_data=data) == {'FINISHED'}
 
 
@@ -243,12 +243,12 @@ def test_mesh_sequence_telemac_3d():
     assert len(obj.children) == sample["nb_planes"]
 
     # Get file_data
-    file_data = bpy.context.scene.tbb.file_data[obj.tbb.uid]
+    file_data = bpy.context.scene.nimphs.file_data[obj.nimphs.uid]
     assert file_data is not None
 
     # Add point data settings
-    obj.tbb.settings.point_data.import_data = True
-    obj.tbb.settings.point_data.list = utils.get_point_data_telemac('3D').dumps()
+    obj.nimphs.settings.point_data.import_data = True
+    obj.nimphs.settings.point_data.list = utils.get_point_data_telemac('3D').dumps()
 
     # Force update telemac mesh sequences
     handler = utils.get_frame_change_post_app_handler("update_telemac_mesh_sequences")
@@ -256,11 +256,11 @@ def test_mesh_sequence_telemac_3d():
     handler(bpy.context.scene)
 
     # Test object settings
-    assert obj.tbb.uid != ""
-    assert obj.tbb.module == 'TELEMAC'
-    assert obj.tbb.is_mesh_sequence is True
-    assert obj.tbb.is_streaming_sequence is False
-    assert obj.tbb.settings.file_path == utils.FILE_PATH_TELEMAC_3D
+    assert obj.nimphs.uid != ""
+    assert obj.nimphs.module == 'TELEMAC'
+    assert obj.nimphs.is_mesh_sequence is True
+    assert obj.nimphs.is_streaming_sequence is False
+    assert obj.nimphs.settings.file_path == utils.FILE_PATH_TELEMAC_3D
 
     # Test sequence data (shape_keys)
     for child in obj.children:

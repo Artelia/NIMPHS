@@ -8,7 +8,7 @@ import pytest
 import warnings
 import numpy as np
 
-from tbb.properties.utils.point_data import PointDataManager
+from nimphs.properties.utils.point_data import PointDataManager
 
 # Point data value threshold for tests
 PDV_THRESHOLD = 0.01

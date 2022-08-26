@@ -19,7 +19,7 @@ from helpers.utils import clean_all_objects
 
 def test_create_streaming_sequence_openfoam():
     # Import OpenFOAM sample object
-    op = bpy.ops.tbb.import_openfoam_file
+    op = bpy.ops.nimphs.import_openfoam_file
     assert op('EXEC_DEFAULT', mode='TEST', filepath=utils.FILE_PATH_OPENFOAM, name=utils.PRW_OBJ_NAME) == {'FINISHED'}
 
     # Select preview object
@@ -36,32 +36,32 @@ def test_create_streaming_sequence_openfoam():
     # Set test data
     data = json.dumps({"start": 1, "length": sample["values"]["skip_zero_true"]["nb_time_points"]})
 
-    op = bpy.ops.tbb.openfoam_create_streaming_sequence
+    op = bpy.ops.nimphs.openfoam_create_streaming_sequence
     state = op('EXEC_DEFAULT', mode='TEST', name=utils.STREAMING_SEQUENCE_OBJ_NAME, shade_smooth=True, test_data=data)
     assert state == {'FINISHED'}
 
     # Get and check sequence
     obj = bpy.data.objects.get(utils.STREAMING_SEQUENCE_OBJ_NAME, None)
     assert obj is not None
-    assert obj.tbb.is_streaming_sequence is True
+    assert obj.nimphs.is_streaming_sequence is True
 
     # Set import settings
-    obj.tbb.settings.openfoam.import_settings.triangulate = True
-    obj.tbb.settings.openfoam.import_settings.skip_zero_time = True
-    obj.tbb.settings.openfoam.import_settings.decompose_polyhedra = True
-    obj.tbb.settings.openfoam.import_settings.case_type = 'reconstructed'
+    obj.nimphs.settings.openfoam.import_settings.triangulate = True
+    obj.nimphs.settings.openfoam.import_settings.skip_zero_time = True
+    obj.nimphs.settings.openfoam.import_settings.decompose_polyhedra = True
+    obj.nimphs.settings.openfoam.import_settings.case_type = 'reconstructed'
 
     # Set clip settings
-    file_data = bpy.context.scene.tbb.file_data.get(obj.tbb.uid, None)
+    file_data = bpy.context.scene.nimphs.file_data.get(obj.nimphs.uid, None)
     assert file_data is not None
 
-    obj.tbb.settings.openfoam.clip.type = 'SCALAR'
-    obj.tbb.settings.openfoam.clip.scalar.value = clip["value"]
-    obj.tbb.settings.openfoam.clip.scalar.name = file_data.vars.get(clip["name"]).dumps()
+    obj.nimphs.settings.openfoam.clip.type = 'SCALAR'
+    obj.nimphs.settings.openfoam.clip.scalar.value = clip["value"]
+    obj.nimphs.settings.openfoam.clip.scalar.name = file_data.vars.get(clip["name"]).dumps()
 
     # Set point data
-    obj.tbb.settings.point_data.import_data = True
-    obj.tbb.settings.point_data.list = utils.get_point_data_openfoam(True).dumps()
+    obj.nimphs.settings.point_data.import_data = True
+    obj.nimphs.settings.point_data.list = utils.get_point_data_openfoam(True).dumps()
 
 
 def test_streaming_sequence_openfoam():
@@ -75,27 +75,27 @@ def test_streaming_sequence_openfoam():
     clip = sample["mesh"]["clipped"]
 
     # Test object settings
-    obj.tbb.settings.file_path == utils.FILE_PATH_OPENFOAM
+    obj.nimphs.settings.file_path == utils.FILE_PATH_OPENFOAM
 
     # Test sequence settings
-    assert obj.tbb.settings.openfoam.s_sequence.start == 1
-    assert obj.tbb.settings.openfoam.s_sequence.update is True
-    assert obj.tbb.settings.openfoam.s_sequence.max == sample["values"]["skip_zero_true"]["nb_time_points"]
-    assert obj.tbb.settings.openfoam.s_sequence.length == sample["values"]["skip_zero_true"]["nb_time_points"]
+    assert obj.nimphs.settings.openfoam.s_sequence.start == 1
+    assert obj.nimphs.settings.openfoam.s_sequence.update is True
+    assert obj.nimphs.settings.openfoam.s_sequence.max == sample["values"]["skip_zero_true"]["nb_time_points"]
+    assert obj.nimphs.settings.openfoam.s_sequence.length == sample["values"]["skip_zero_true"]["nb_time_points"]
 
     # Test import settings
-    assert obj.tbb.settings.openfoam.import_settings.triangulate is True
-    assert obj.tbb.settings.openfoam.import_settings.skip_zero_time is True
-    assert obj.tbb.settings.openfoam.import_settings.decompose_polyhedra is True
-    assert obj.tbb.settings.openfoam.import_settings.case_type == 'reconstructed'
+    assert obj.nimphs.settings.openfoam.import_settings.triangulate is True
+    assert obj.nimphs.settings.openfoam.import_settings.skip_zero_time is True
+    assert obj.nimphs.settings.openfoam.import_settings.decompose_polyhedra is True
+    assert obj.nimphs.settings.openfoam.import_settings.case_type == 'reconstructed'
 
     # Test clip settings
-    file_data = bpy.context.scene.tbb.file_data.get(obj.tbb.uid, None)
+    file_data = bpy.context.scene.nimphs.file_data.get(obj.nimphs.uid, None)
     assert file_data is not None
 
-    assert obj.tbb.settings.openfoam.clip.type == 'SCALAR'
-    assert obj.tbb.settings.openfoam.clip.scalar.value == clip["value"]
-    assert obj.tbb.settings.openfoam.clip.scalar.name == file_data.vars.get(clip["name"]).dumps()
+    assert obj.nimphs.settings.openfoam.clip.type == 'SCALAR'
+    assert obj.nimphs.settings.openfoam.clip.scalar.value == clip["value"]
+    assert obj.nimphs.settings.openfoam.clip.scalar.name == file_data.vars.get(clip["name"]).dumps()
 
 
 def test_geometry_streaming_sequence_openfoam():
@@ -116,7 +116,7 @@ def test_point_data_streaming_sequence_openfoam():
     vars = sample["values"]["skip_zero_true"]
 
     # Remove clip settings to test point data values
-    obj.tbb.settings.openfoam.clip.type = 'NONE'
+    obj.nimphs.settings.openfoam.clip.type = 'NONE'
 
     # ------------------------------------------------------------ #
     # /!\ WARNING: next tests are based on the following frame /!\ #
@@ -156,7 +156,7 @@ def test_point_data_streaming_sequence_openfoam():
 
 def test_create_streaming_sequence_telemac_2d():
     # Import TELEMAC 2D sample object
-    op = bpy.ops.tbb.import_telemac_file
+    op = bpy.ops.nimphs.import_telemac_file
     assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_2D, name=utils.PRW_OBJ_NAME) == {'FINISHED'}
 
     # Select preview object
@@ -166,7 +166,7 @@ def test_create_streaming_sequence_telemac_2d():
     # Set test data
     data = json.dumps({"start": 1, "length": sample["nb_time_points"]})
 
-    op = bpy.ops.tbb.telemac_create_streaming_sequence
+    op = bpy.ops.nimphs.telemac_create_streaming_sequence
     state = op('EXEC_DEFAULT', mode='TEST', name=utils.STREAMING_SEQUENCE_OBJ_NAME, module='TELEMAC',
                shade_smooth=True, test_data=data)
     assert state == {'FINISHED'}
@@ -177,8 +177,8 @@ def test_create_streaming_sequence_telemac_2d():
     assert len(obj.children) == 2
 
     # Set point data
-    obj.tbb.settings.point_data.import_data = True
-    obj.tbb.settings.point_data.list = utils.get_point_data_telemac('2D').dumps()
+    obj.nimphs.settings.point_data.import_data = True
+    obj.nimphs.settings.point_data.list = utils.get_point_data_telemac('2D').dumps()
 
 
 def test_streaming_sequence_telemac_2d():
@@ -191,17 +191,17 @@ def test_streaming_sequence_telemac_2d():
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_2D)
 
     # Test object settings
-    assert obj.tbb.uid != ""
-    assert obj.tbb.module == 'TELEMAC'
-    assert obj.tbb.is_mesh_sequence is False
-    assert obj.tbb.is_streaming_sequence is True
-    assert obj.tbb.settings.file_path == utils.FILE_PATH_TELEMAC_2D
+    assert obj.nimphs.uid != ""
+    assert obj.nimphs.module == 'TELEMAC'
+    assert obj.nimphs.is_mesh_sequence is False
+    assert obj.nimphs.is_streaming_sequence is True
+    assert obj.nimphs.settings.file_path == utils.FILE_PATH_TELEMAC_2D
 
     # Test streaming sequence settings
-    assert obj.tbb.settings.telemac.s_sequence.start == 1
-    assert obj.tbb.settings.telemac.s_sequence.update is True
-    assert obj.tbb.settings.telemac.s_sequence.max == sample["nb_time_points"]
-    assert obj.tbb.settings.telemac.s_sequence.length == sample["nb_time_points"]
+    assert obj.nimphs.settings.telemac.s_sequence.start == 1
+    assert obj.nimphs.settings.telemac.s_sequence.update is True
+    assert obj.nimphs.settings.telemac.s_sequence.max == sample["nb_time_points"]
+    assert obj.nimphs.settings.telemac.s_sequence.length == sample["nb_time_points"]
 
 
 def test_geometry_streaming_sequence_telemac_2d():
@@ -247,7 +247,7 @@ def test_point_data_streaming_sequence_telemac_2d():
 
 def test_create_streaming_sequence_telemac_3d():
     # Import TELEMAC 3D sample object
-    op = bpy.ops.tbb.import_telemac_file
+    op = bpy.ops.nimphs.import_telemac_file
     assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_3D, name=utils.PRW_OBJ_NAME) == {'FINISHED'}
 
     # Select preview object
@@ -257,7 +257,7 @@ def test_create_streaming_sequence_telemac_3d():
     # Set test data
     data = json.dumps({"start": 1, "length": sample["nb_time_points"]})
 
-    op = bpy.ops.tbb.telemac_create_streaming_sequence
+    op = bpy.ops.nimphs.telemac_create_streaming_sequence
     state = op('EXEC_DEFAULT', mode='TEST', name=utils.STREAMING_SEQUENCE_OBJ_NAME, module='TELEMAC',
                shade_smooth=True, test_data=data)
     assert state == {'FINISHED'}
@@ -268,8 +268,8 @@ def test_create_streaming_sequence_telemac_3d():
     assert len(obj.children) == sample["nb_planes"]
 
     # Set point data
-    obj.tbb.settings.point_data.import_data = True
-    obj.tbb.settings.point_data.list = utils.get_point_data_telemac('3D').dumps()
+    obj.nimphs.settings.point_data.import_data = True
+    obj.nimphs.settings.point_data.list = utils.get_point_data_telemac('3D').dumps()
 
 
 def test_streaming_sequence_telemac_3d():
@@ -282,17 +282,17 @@ def test_streaming_sequence_telemac_3d():
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_3D)
 
     # Test object settings
-    assert obj.tbb.uid != ""
-    assert obj.tbb.module == 'TELEMAC'
-    assert obj.tbb.is_mesh_sequence is False
-    assert obj.tbb.is_streaming_sequence is True
-    assert obj.tbb.settings.file_path == utils.FILE_PATH_TELEMAC_3D
+    assert obj.nimphs.uid != ""
+    assert obj.nimphs.module == 'TELEMAC'
+    assert obj.nimphs.is_mesh_sequence is False
+    assert obj.nimphs.is_streaming_sequence is True
+    assert obj.nimphs.settings.file_path == utils.FILE_PATH_TELEMAC_3D
 
     # Test streaming sequence settings
-    assert obj.tbb.settings.telemac.s_sequence.start == 1
-    assert obj.tbb.settings.telemac.s_sequence.update is True
-    assert obj.tbb.settings.telemac.s_sequence.max == sample["nb_time_points"]
-    assert obj.tbb.settings.telemac.s_sequence.length == sample["nb_time_points"]
+    assert obj.nimphs.settings.telemac.s_sequence.start == 1
+    assert obj.nimphs.settings.telemac.s_sequence.update is True
+    assert obj.nimphs.settings.telemac.s_sequence.max == sample["nb_time_points"]
+    assert obj.nimphs.settings.telemac.s_sequence.length == sample["nb_time_points"]
 
 
 def test_geometry_streaming_sequence_telemac_3d():

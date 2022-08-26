@@ -1,5 +1,7 @@
-Toolbox blender
-===============
+NIMPHS
+======
+
+| **N**umerous **I**nstruments to **M**anipulate and **P**ost-process **H**ydraulic **S**imulations
 
 |  This add-on makes possible to **import computational fluid dynamics files** (OpenFOAM and TELEMAC) in Blender.
 

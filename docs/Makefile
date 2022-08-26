@@ -7,7 +7,7 @@ SPHINXOPTS    ?=
 SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = source
 BUILDDIR      = _build
-MODULE        = tbb
+MODULE        = nimphs
 
 
 # Put it first so that "make" without argument is like "make help".
@@ -19,7 +19,7 @@ help:
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 
-# Rename tbb/__init__.py to avoid problems if a python module is not found
+# Rename nimphs/__init__.py to avoid problems if a python module is not found
 # Comment '@persistent' decorator because fake-bpy-module defines it at 'None', which is not callable and causes errors during 'sphinx-build'
 %: Makefile
 	mv ../$(MODULE)/__init__.py ../$(MODULE)/___init__.py

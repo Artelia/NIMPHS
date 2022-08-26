@@ -20,18 +20,18 @@ from helpers.utils import clean_all_objects
 @pytest.mark.usefixtures("clean_all_objects")
 def test_reload_file_data_openfoam():
     # Import OpenFOAM sample object
-    op = bpy.ops.tbb.import_openfoam_file
+    op = bpy.ops.nimphs.import_openfoam_file
     assert op('EXEC_DEFAULT', mode='TEST', filepath=utils.FILE_PATH_OPENFOAM, name=utils.PRW_OBJ_NAME) == {'FINISHED'}
 
     # Get and select preview object
     obj = utils.get_preview_object()
     sample = utils.get_sample_data(utils.SAMPLE_OPENFOAM)
 
-    op = bpy.ops.tbb.reload_openfoam_file
+    op = bpy.ops.nimphs.reload_openfoam_file
     assert op('EXEC_DEFAULT', mode='TEST') == {'FINISHED'}
 
     # Get file_data
-    file_data = bpy.context.scene.tbb.file_data.get(obj.tbb.uid, None)
+    file_data = bpy.context.scene.nimphs.file_data.get(obj.nimphs.uid, None)
     assert file_data is not None
 
     # Test file_data
@@ -52,18 +52,18 @@ def test_reload_file_data_openfoam():
 @pytest.mark.usefixtures("clean_all_objects")
 def test_reload_file_data_telemac_2d():
     # Import TELEMAC 2D sample object
-    op = bpy.ops.tbb.import_telemac_file
+    op = bpy.ops.nimphs.import_telemac_file
     assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_2D, name=utils.PRW_OBJ_NAME) == {'FINISHED'}
 
     # Get and select preview object
     obj = utils.get_preview_object()
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_2D)
 
-    op = bpy.ops.tbb.reload_telemac_file
+    op = bpy.ops.nimphs.reload_telemac_file
     assert op('EXEC_DEFAULT') == {'FINISHED'}
 
     # Get file_data
-    file_data = bpy.context.scene.tbb.file_data.get(obj.tbb.uid, None)
+    file_data = bpy.context.scene.nimphs.file_data.get(obj.nimphs.uid, None)
     assert file_data is not None
 
     # Test file data
@@ -87,18 +87,18 @@ def test_reload_file_data_telemac_2d():
 @pytest.mark.usefixtures("clean_all_objects")
 def test_reload_file_data_telemac_3d():
     # Import TELEMAC 3D sample object
-    op = bpy.ops.tbb.import_telemac_file
+    op = bpy.ops.nimphs.import_telemac_file
     assert op('EXEC_DEFAULT', filepath=utils.FILE_PATH_TELEMAC_3D, name=utils.PRW_OBJ_NAME) == {'FINISHED'}
 
     # Get and select preview object
     obj = utils.get_preview_object()
     sample = utils.get_sample_data(utils.SAMPLE_TELEMAC_3D)
 
-    op = bpy.ops.tbb.reload_telemac_file
+    op = bpy.ops.nimphs.reload_telemac_file
     assert op('EXEC_DEFAULT') == {'FINISHED'}
 
     # Get file_data
-    file_data = bpy.context.scene.tbb.file_data.get(obj.tbb.uid, None)
+    file_data = bpy.context.scene.nimphs.file_data.get(obj.nimphs.uid, None)
     assert file_data is not None
 
     # Test file data
