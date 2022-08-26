@@ -59,7 +59,10 @@ jobs:
       - name: Build documentation
         run: |
           cd docs
-          make html
+          sphinx-apidoc -t "_templates/" --implicit-namespaces -d 1 -f -M -T -o source/developers/code/ ../nimphs "/*auto_load.py" "/*serafin.py" "/*checkdeps.py"
+          sed -i "1s/.*/Code documentation/" source/developers_manual/code/nimphs.rst
+          sed -i "2s/.*/==================/" source/developers_manual/code/nimphs.rst
+          make html MODULE=nimphs
 
       - name: Zip build
         if: env.DEPLOY == 'true'

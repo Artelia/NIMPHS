@@ -145,3 +145,4 @@ docs/source/developers/code/
 # Tests
 cache/
 local_addon/
+data/openfoam/sample/*
