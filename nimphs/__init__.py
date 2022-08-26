@@ -20,7 +20,7 @@ bl_info = {
     "warning": "This version is still in development.",
     "category": "Import-Export",
     "support": "COMMUNITY",
-    "doc_url": "",
+    "doc_url": "https://Artelia.github.io/NIMPHS/",
     "tracker_url": "https://github.com/Artelia/NIMPHS/issues"
 }
 
