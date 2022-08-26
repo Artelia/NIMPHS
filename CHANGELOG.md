@@ -4,6 +4,7 @@
 
 Numerous optimizations and bug fixes.
 Implemented generation of volume sequences for TELEMAC-3D simulations.
+Renamed module from 'tbb' to 'nimphs'.
 
 <details><summary>Details</summary>
 
