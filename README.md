@@ -1,4 +1,4 @@
-# Toolsbox Blender
+# NIMPHS
 
 Import OpenFOAM / TELEMAC files inside Blender and generate astonishing renders!
 
