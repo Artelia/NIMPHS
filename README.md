@@ -64,4 +64,3 @@ Model C                                              | Model D
 Model A                                              | Model B
 :---------------------------------------------------:|:----------------------------------------------:
 ![OpenFOAM gallery, model A](https://bit.ly/3pLn4om) | ![OpenFOAM gallery, model B](https://bit.ly/3clNytA)
-
