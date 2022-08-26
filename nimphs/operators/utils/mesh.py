@@ -110,7 +110,8 @@ class OpenfoamMeshUtils():
 
     @classmethod
     def vertices(cls, file_data: OpenfoamFileData,
-                 clip: NIMPHS_OpenfoamClipProperty = None) -> tuple[Union[np.ndarray, None], Union[PolyData, np.ndarray]]:
+                 clip: NIMPHS_OpenfoamClipProperty = None) -> tuple[Union[np.ndarray, None],
+                                                                    Union[PolyData, np.ndarray]]:
         """
         Generate vertices and extracted surface of the given OpenFOAM file.
 
