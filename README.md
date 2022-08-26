@@ -22,9 +22,9 @@ Built with:
 
 ### Screenshots
 
-Material preview  |  Wireframe preview
-:----------------:|:------------------:
-![Material preview](https://bit.ly/3zoV67P)  |  ![Wireframe preview](https://bit.ly/3PsXoIw)
+Wireframe preview                     |  Material preview
+:------------------------------------:|:-----------------------------------:
+![Wireframe](https://bit.ly/3APEsPi)  |  ![Material](https://bit.ly/3pOWB9u)
 
 
 ## TELEMAC
@@ -41,6 +41,27 @@ Material preview  |  Wireframe preview
 
 ### Screenshots
 
-Material preview |  Wireframe preview
-:---------------:|:------------------:
-![Material preview](https://bit.ly/3PqZ84S)  |  ![Wireframe preview](https://bit.ly/3yWhzYh)
+Wireframe preview                     |  Material preview
+:------------------------------------:|:-----------------------------------:
+![Wireframe](https://bit.ly/3QLQXRv)  |  ![Material](https://bit.ly/3RflFCa)
+
+## Gallery
+
+Here are some creations made with NIMPHS.
+
+### OpenFOAM
+
+Model A                                             | Model B
+:--------------------------------------------------:|:--------------------------------------------------:
+![TELEMAC gallery, model A](https://bit.ly/3RfjvT4) | ![TELEMAC gallery, model B](https://bit.ly/3AJNIDx)
+
+Model C                                              | Model D
+:---------------------------------------------------:|:------------------------------:
+![OpenFOAM gallery, model C](https://bit.ly/3ApCGTJ) | ![None](https://bit.ly/3TnnKOG)
+
+### TELEMAC
+
+Model A                                              | Model B
+:---------------------------------------------------:|:----------------------------------------------:
+![OpenFOAM gallery, model A](https://bit.ly/3pLn4om) | ![OpenFOAM gallery, model B](https://bit.ly/3clNytA)
+
