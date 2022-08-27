@@ -1,6 +1,6 @@
 # Change log
 
-## [0.4.0] - 2022-08-26
+## [0.4.0] - 2022-08-27
 
 Numerous optimizations and bug fixes.
 Implemented generation of volume sequences for TELEMAC-3D simulations.
