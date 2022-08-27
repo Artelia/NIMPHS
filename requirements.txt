@@ -1,4 +1,5 @@
 pyvista >= 0.35.1
+numba
 pytest
 blender-addon-tester
 matplotlib
