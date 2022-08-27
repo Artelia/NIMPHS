@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nimphs.operators.openfoam &mdash; NIMPHS 0.4.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/global.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="nimphs.operators.shared" href="nimphs.operators.shared.html" />
+    <link rel="prev" title="nimphs.operators" href="nimphs.operators.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> NIMPHS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../users/index.html">Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developers manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../development_environment.html">Development environment</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="nimphs.html">Code documentation</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="nimphs.html#packages">Packages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="nimphs.menus.html">nimphs.menus</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="nimphs.operators.html">nimphs.operators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nimphs.panels.html">nimphs.panels</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nimphs.properties.html">nimphs.properties</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NIMPHS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Developers manual</a> &raquo;</li>
+          <li><a href="nimphs.html">Code documentation</a> &raquo;</li>
+          <li><a href="nimphs.operators.html">nimphs.operators</a> &raquo;</li>
+      <li>nimphs.operators.openfoam</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-nimphs.operators.openfoam">
+<span id="nimphs-operators-openfoam"></span><h1>nimphs.operators.openfoam<a class="headerlink" href="#module-nimphs.operators.openfoam" title="Permalink to this heading"></a></h1>
+<section id="modules">
+<h2>Modules<a class="headerlink" href="#modules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-nimphs.operators.openfoam.openfoam_create_mesh_sequence">
+<span id="nimphs-operators-openfoam-openfoam-create-mesh-sequence"></span><h2>nimphs.operators.openfoam.openfoam_create_mesh_sequence<a class="headerlink" href="#module-nimphs.operators.openfoam.openfoam_create_mesh_sequence" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_OT_OpenfoamCreateMeshSequence</span></span><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="nimphs.operators.shared.html#nimphs.operators.shared.create_mesh_sequence.NIMPHS_CreateMeshSequence" title="nimphs.operators.shared.create_mesh_sequence.NIMPHS_CreateMeshSequence"><code class="xref py py-class docutils literal notranslate"><span class="pre">NIMPHS_CreateMeshSequence</span></code></a></p>
+<p>Create an OpenFOAM 'mesh sequence'.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.bl_description">
+<span class="sig-name descname"><span class="pre">bl_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&quot;Create</span> <span class="pre">mesh</span> <span class="pre">a</span> <span class="pre">sequence.</span> <span class="pre">Press</span> <span class="pre">'esc'</span> <span class="pre">to</span> <span class="pre">cancel.&quot;</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.bl_description" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nimphs.openfoam_create_mesh_sequence'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.bl_idname" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Mesh</span> <span class="pre">sequence'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.bl_label" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.clip">
+<span class="sig-name descname"><span class="pre">clip</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.clip" title="Permalink to this definition"></a></dt>
+<dd><p>clip settings</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="nimphs.properties.openfoam.html#nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings" title="nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings">NIMPHS_OpenfoamImportSettings</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.draw" title="Permalink to this definition"></a></dt>
+<dd><p>UI layout of the popup window.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.import_settings">
+<span class="sig-name descname"><span class="pre">import_settings</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.import_settings" title="Permalink to this definition"></a></dt>
+<dd><p>import settings</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="nimphs.properties.openfoam.html#nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings" title="nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings">NIMPHS_OpenfoamImportSettings</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.invoke">
+<span class="sig-name descname"><span class="pre">invoke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Event</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.invoke" title="Permalink to this definition"></a></dt>
+<dd><p>Prepare operator settings. Function triggered before the user can edit settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> (<em>Context</em>) -- context</p></li>
+<li><p><strong>_event</strong> (<em>Event</em>) -- event</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.poll">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.poll" title="Permalink to this definition"></a></dt>
+<dd><p>If false, locks the button of the operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.run_one_step">
+<span class="sig-name descname"><span class="pre">run_one_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.run_one_step" title="Permalink to this definition"></a></dt>
+<dd><p>Run one step of the 'create mesh sequence' process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator. Enum in ['PASS_THROUGH', 'CANCELLED'].</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.operators.openfoam.openfoam_create_streaming_sequence">
+<span id="nimphs-operators-openfoam-openfoam-create-streaming-sequence"></span><h2>nimphs.operators.openfoam.openfoam_create_streaming_sequence<a class="headerlink" href="#module-nimphs.operators.openfoam.openfoam_create_streaming_sequence" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_OT_OpenfoamCreateStreamingSequence</span></span><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="nimphs.operators.shared.html#nimphs.operators.shared.create_streaming_sequence.NIMPHS_CreateStreamingSequence" title="nimphs.operators.shared.create_streaming_sequence.NIMPHS_CreateStreamingSequence"><code class="xref py py-class docutils literal notranslate"><span class="pre">NIMPHS_CreateStreamingSequence</span></code></a></p>
+<p>Create an OpenFOAM 'streaming sequence'.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.bl_description">
+<span class="sig-name descname"><span class="pre">bl_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&quot;Create</span> <span class="pre">a</span> <span class="pre">'streaming</span> <span class="pre">sequence'.&quot;</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.bl_description" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nimphs.openfoam_create_streaming_sequence'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.bl_idname" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Streaming</span> <span class="pre">sequence'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.bl_label" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.draw" title="Permalink to this definition"></a></dt>
+<dd><p>UI layout of the popup window.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.execute" title="Permalink to this definition"></a></dt>
+<dd><p>Generate the 'streaming sequence' object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.invoke">
+<span class="sig-name descname"><span class="pre">invoke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Event</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.invoke" title="Permalink to this definition"></a></dt>
+<dd><p>Prepare operator settings. Function triggered before the user can edit settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> (<em>Context</em>) -- context</p></li>
+<li><p><strong>_event</strong> (<em>Event</em>) -- event</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.poll">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.poll" title="Permalink to this definition"></a></dt>
+<dd><p>If false, locks the button of the operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.operators.openfoam.openfoam_import_file">
+<span id="nimphs-operators-openfoam-openfoam-import-file"></span><h2>nimphs.operators.openfoam.openfoam_import_file<a class="headerlink" href="#module-nimphs.operators.openfoam.openfoam_import_file" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_OT_OpenfoamImportFile</span></span><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Operator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ImportHelper</span></code></p>
+<p>Import an OpenFOAM file.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.bl_description">
+<span class="sig-name descname"><span class="pre">bl_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Import</span> <span class="pre">an</span> <span class="pre">OpenFOAM</span> <span class="pre">file'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.bl_description" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nimphs.import_openfoam_file'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.bl_idname" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Import'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.bl_label" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.draw" title="Permalink to this definition"></a></dt>
+<dd><p>UI layout of the operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>_context</strong> (<em>Context</em>) -- context</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.execute" title="Permalink to this definition"></a></dt>
+<dd><p>Import the selected file. Generates a preview object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.filter_glob">
+<span class="sig-name descname"><span class="pre">filter_glob</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.filter_glob" title="Permalink to this definition"></a></dt>
+<dd><p>List of allowed file extensions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.StringProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.import_settings">
+<span class="sig-name descname"><span class="pre">import_settings</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.import_settings" title="Permalink to this definition"></a></dt>
+<dd><p>Import settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="nimphs.properties.openfoam.html#nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings" title="nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings">NIMPHS_OpenfoamImportSettings</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.mode">
+<span class="sig-name descname"><span class="pre">mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.mode" title="Permalink to this definition"></a></dt>
+<dd><p>Indicate which mode to use for this operator. Enum in ['NORMAL', 'TEST'].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.EnumProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.setup_generated_obj">
+<span class="sig-name descname"><span class="pre">setup_generated_obj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nimphs.properties.openfoam.html#nimphs.properties.openfoam.file_data.OpenfoamFileData" title="nimphs.properties.openfoam.file_data.OpenfoamFileData"><span class="pre">OpenfoamFileData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.setup_generated_obj" title="Permalink to this definition"></a></dt>
+<dd><p>Copy import settings and setup needed 'nimphs' data for the generated object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> (<em>Context</em>) -- context</p></li>
+<li><p><strong>obj</strong> (<em>Object</em>) -- generated object</p></li>
+<li><p><strong>file_data</strong> (<em>NIMPHS_OpenfoamFileData</em>) -- OpenFOAM file data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_import_file.import_openfoam_menu_draw">
+<span class="sig-name descname"><span class="pre">import_openfoam_menu_draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_import_file.import_openfoam_menu_draw" title="Permalink to this definition"></a></dt>
+<dd><p>Draw function which displays the import button in File &gt; Import.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-nimphs.operators.openfoam.openfoam_preview">
+<span id="nimphs-operators-openfoam-openfoam-preview"></span><h2>nimphs.operators.openfoam.openfoam_preview<a class="headerlink" href="#module-nimphs.operators.openfoam.openfoam_preview" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_OT_OpenfoamPreview</span></span><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Operator</span></code></p>
+<p>Operator to generate a preview of an OpenFOAM object.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.bl_description">
+<span class="sig-name descname"><span class="pre">bl_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Preview</span> <span class="pre">the</span> <span class="pre">selected</span> <span class="pre">object'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.bl_description" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nimphs.openfoam_preview'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.bl_idname" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Preview'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.bl_label" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.execute" title="Permalink to this definition"></a></dt>
+<dd><p>Generate a preview of the selected object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.mode">
+<span class="sig-name descname"><span class="pre">mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.mode" title="Permalink to this definition"></a></dt>
+<dd><p>Indicate which mode to use for this operator. Enum in ['NORMAL', 'TEST'].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.EnumProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.poll">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.poll" title="Permalink to this definition"></a></dt>
+<dd><p>Check if the operator can run.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.operators.openfoam.openfoam_reload_file">
+<span id="nimphs-operators-openfoam-openfoam-reload-file"></span><h2>nimphs.operators.openfoam.openfoam_reload_file<a class="headerlink" href="#module-nimphs.operators.openfoam.openfoam_reload_file" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_OT_OpenfoamReloadFile</span></span><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Operator</span></code></p>
+<p>Operator to reload file data of the selected OpenFOAM object.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile.bl_description">
+<span class="sig-name descname"><span class="pre">bl_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Reload</span> <span class="pre">file</span> <span class="pre">data</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">selected</span> <span class="pre">OpenFOAM</span> <span class="pre">object'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile.bl_description" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nimphs.reload_openfoam_file'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile.bl_idname" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Reload'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile.bl_label" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile.execute" title="Permalink to this definition"></a></dt>
+<dd><p>Reload file data of the selected OpenFOAM object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile.mode">
+<span class="sig-name descname"><span class="pre">mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile.mode" title="Permalink to this definition"></a></dt>
+<dd><p>Indicate which mode to use for this operator. Enum in ['NORMAL', 'TEST'].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.EnumProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="nimphs.operators.html" class="btn btn-neutral float-left" title="nimphs.operators" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nimphs.operators.shared.html" class="btn btn-neutral float-right" title="nimphs.operators.shared" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ARTELIAGROUP.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

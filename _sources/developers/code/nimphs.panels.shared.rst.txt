@@ -1,0 +1,26 @@
+nimphs.panels.shared
+====================
+
+.. automodule:: nimphs.panels.shared
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Modules
+-------
+
+nimphs.panels.shared.module\_panel
+----------------------------------
+
+.. automodule:: nimphs.panels.shared.module_panel
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.panels.shared.streaming\_sequence\_settings
+--------------------------------------------------
+
+.. automodule:: nimphs.panels.shared.streaming_sequence_settings
+   :members:
+   :undoc-members:
+   :show-inheritance:

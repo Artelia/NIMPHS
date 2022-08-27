@@ -1,0 +1,66 @@
+nimphs.operators.utils
+======================
+
+.. automodule:: nimphs.operators.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Modules
+-------
+
+nimphs.operators.utils.material
+-------------------------------
+
+.. automodule:: nimphs.operators.utils.material
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.utils.mesh
+---------------------------
+
+.. automodule:: nimphs.operators.utils.mesh
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.utils.object
+-----------------------------
+
+.. automodule:: nimphs.operators.utils.object
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.utils.others
+-----------------------------
+
+.. automodule:: nimphs.operators.utils.others
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.utils.sequence
+-------------------------------
+
+.. automodule:: nimphs.operators.utils.sequence
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.utils.vertex\_color
+------------------------------------
+
+.. automodule:: nimphs.operators.utils.vertex_color
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.utils.volume
+-----------------------------
+
+.. automodule:: nimphs.operators.utils.volume
+   :members:
+   :undoc-members:
+   :show-inheritance:

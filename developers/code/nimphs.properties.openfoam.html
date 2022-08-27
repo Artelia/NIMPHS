@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nimphs.properties.openfoam &mdash; NIMPHS 0.4.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/global.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="nimphs.properties.shared" href="nimphs.properties.shared.html" />
+    <link rel="prev" title="nimphs.properties" href="nimphs.properties.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> NIMPHS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../users/index.html">Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developers manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../development_environment.html">Development environment</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="nimphs.html">Code documentation</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="nimphs.html#packages">Packages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="nimphs.menus.html">nimphs.menus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nimphs.operators.html">nimphs.operators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nimphs.panels.html">nimphs.panels</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="nimphs.properties.html">nimphs.properties</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NIMPHS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Developers manual</a> &raquo;</li>
+          <li><a href="nimphs.html">Code documentation</a> &raquo;</li>
+          <li><a href="nimphs.properties.html">nimphs.properties</a> &raquo;</li>
+      <li>nimphs.properties.openfoam</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-nimphs.properties.openfoam">
+<span id="nimphs-properties-openfoam"></span><h1>nimphs.properties.openfoam<a class="headerlink" href="#module-nimphs.properties.openfoam" title="Permalink to this heading"></a></h1>
+<section id="modules">
+<h2>Modules<a class="headerlink" href="#modules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-nimphs.properties.openfoam.clip">
+<span id="nimphs-properties-openfoam-clip"></span><h2>nimphs.properties.openfoam.clip<a class="headerlink" href="#module-nimphs.properties.openfoam.clip" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipProperty">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_OpenfoamClipProperty</span></span><a class="headerlink" href="#nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipProperty" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PropertyGroup</span></code></p>
+<p>Clip settings.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipProperty.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipProperty.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipProperty.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipProperty.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipProperty.scalar">
+<span class="sig-name descname"><span class="pre">scalar</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipProperty.scalar" title="Permalink to this definition"></a></dt>
+<dd><p>Clip scalar settings</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipScalarProperty" title="nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipScalarProperty">NIMPHS_OpenfoamClipScalarProperty</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipProperty.type">
+<span class="sig-name descname"><span class="pre">type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipProperty.type" title="Permalink to this definition"></a></dt>
+<dd><p>Clipping method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.EnumProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipScalarProperty">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_OpenfoamClipScalarProperty</span></span><a class="headerlink" href="#nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipScalarProperty" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PropertyGroup</span></code></p>
+<p>Clip scalar settings.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipScalarProperty.invert">
+<span class="sig-name descname"><span class="pre">invert</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipScalarProperty.invert" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipScalarProperty.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipScalarProperty.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipScalarProperty.list">
+<span class="sig-name descname"><span class="pre">list</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipScalarProperty.list" title="Permalink to this definition"></a></dt>
+<dd><p>Save the list of available scalars</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.StringProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipScalarProperty.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipScalarProperty.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipScalarProperty.value">
+<span class="sig-name descname"><span class="pre">value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipScalarProperty.value" title="Permalink to this definition"></a></dt>
+<dd><p>Set the clipping value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.FloatProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.properties.openfoam.file_data">
+<span id="nimphs-properties-openfoam-file-data"></span><h2>nimphs.properties.openfoam.file_data<a class="headerlink" href="#module-nimphs.properties.openfoam.file_data" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.file_data.OpenfoamFileData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">OpenfoamFileData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings" title="nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings"><span class="pre">NIMPHS_OpenfoamImportSettings</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nimphs.properties.openfoam.file_data.OpenfoamFileData" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="nimphs.properties.shared.html#nimphs.properties.shared.file_data.FileData" title="nimphs.properties.shared.file_data.FileData"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileData</span></code></a></p>
+<p>Hold file data for the OpenFOAM module.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.file_data.OpenfoamFileData.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nimphs.properties.openfoam.file_data.OpenfoamFileData" title="nimphs.properties.openfoam.file_data.OpenfoamFileData"><span class="pre">OpenfoamFileData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.properties.openfoam.file_data.OpenfoamFileData.copy" title="Permalink to this definition"></a></dt>
+<dd><p>Copy important information from the given instance of file data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other</strong> (<em>NIMPHS_OpenfoamFileData</em>) -- OpenFOAM file data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.file_data.OpenfoamFileData.get_point_data">
+<span class="sig-name descname"><span class="pre">get_point_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#nimphs.properties.openfoam.file_data.OpenfoamFileData.get_point_data" title="Permalink to this definition"></a></dt>
+<dd><p>Get point data from the given id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em>) -- identifier of the variable from which to get data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.file_data.OpenfoamFileData.get_point_data_from_raw">
+<span class="sig-name descname"><span class="pre">get_point_data_from_raw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#nimphs.properties.openfoam.file_data.OpenfoamFileData.get_point_data_from_raw" title="Permalink to this definition"></a></dt>
+<dd><p>Force to get point data from the raw mesh.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em>) -- identifier of the variable from which to get data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.file_data.OpenfoamFileData.init_point_data_manager">
+<span class="sig-name descname"><span class="pre">init_point_data_manager</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.properties.openfoam.file_data.OpenfoamFileData.init_point_data_manager" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize point data manager (contains variables information).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.file_data.OpenfoamFileData.is_ok">
+<span class="sig-name descname"><span class="pre">is_ok</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#nimphs.properties.openfoam.file_data.OpenfoamFileData.is_ok" title="Permalink to this definition"></a></dt>
+<dd><p>Check if file data is up (data are not None or empty).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if ok</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.file_data.OpenfoamFileData.load_file">
+<span class="sig-name descname"><span class="pre">load_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#nimphs.properties.openfoam.file_data.OpenfoamFileData.load_file" title="Permalink to this definition"></a></dt>
+<dd><p>Load an OpenFOAM file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) -- path to the file to load</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>success</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.file_data.OpenfoamFileData.mesh">
+<span class="sig-name descname"><span class="pre">mesh</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">PolyData</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.openfoam.file_data.OpenfoamFileData.mesh" title="Permalink to this definition"></a></dt>
+<dd><p>lest generated mesh</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>PolyData</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.file_data.OpenfoamFileData.raw_mesh">
+<span class="sig-name descname"><span class="pre">raw_mesh</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">UnstructuredGrid</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.openfoam.file_data.OpenfoamFileData.raw_mesh" title="Permalink to this definition"></a></dt>
+<dd><p>'internalMesh' from data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>UnstructuredGrid</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.file_data.OpenfoamFileData.skip_zero_has_changed">
+<span class="sig-name descname"><span class="pre">skip_zero_has_changed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.properties.openfoam.file_data.OpenfoamFileData.skip_zero_has_changed" title="Permalink to this definition"></a></dt>
+<dd><p>indicate if the skip_zero_time property has changed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.file_data.OpenfoamFileData.tiangulate">
+<span class="sig-name descname"><span class="pre">tiangulate</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.properties.openfoam.file_data.OpenfoamFileData.tiangulate" title="Permalink to this definition"></a></dt>
+<dd><p>Indicate whether triangulation should be applied or not</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.file_data.OpenfoamFileData.time_point">
+<span class="sig-name descname"><span class="pre">time_point</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#nimphs.properties.openfoam.file_data.OpenfoamFileData.time_point" title="Permalink to this definition"></a></dt>
+<dd><p>current time point</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.file_data.OpenfoamFileData.update_data">
+<span class="sig-name descname"><span class="pre">update_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.properties.openfoam.file_data.OpenfoamFileData.update_data" title="Permalink to this definition"></a></dt>
+<dd><p>Update file data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time_point</strong> (<em>int</em>) -- time point to read</p></li>
+<li><p><strong>io_settings</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings" title="nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings"><em>NIMPHS_OpenfoamImportSettings</em></a><em>, </em><em>None</em><em>]</em><em>, </em><em>optional</em>) -- import settings. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.file_data.OpenfoamFileData.update_import_settings">
+<span class="sig-name descname"><span class="pre">update_import_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings" title="nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings"><span class="pre">NIMPHS_OpenfoamImportSettings</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.properties.openfoam.file_data.OpenfoamFileData.update_import_settings" title="Permalink to this definition"></a></dt>
+<dd><p>Update import settings. If none provided, set default settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>settings</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings" title="nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings"><em>NIMPHS_OpenfoamImportSettings</em></a><em>, </em><em>None</em><em>]</em>) -- OpenFOAM import settings</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.properties.openfoam.import_settings">
+<span id="nimphs-properties-openfoam-import-settings"></span><h2>nimphs.properties.openfoam.import_settings<a class="headerlink" href="#module-nimphs.properties.openfoam.import_settings" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_OpenfoamImportSettings</span></span><a class="headerlink" href="#nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PropertyGroup</span></code></p>
+<p>Import settings for the OpenFOAM module.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings.case_type">
+<span class="sig-name descname"><span class="pre">case_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings.case_type" title="Permalink to this definition"></a></dt>
+<dd><p>Indicate whether decomposed mesh or reconstructed mesh should be read</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.EnumProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings.decompose_polyhedra">
+<span class="sig-name descname"><span class="pre">decompose_polyhedra</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings.decompose_polyhedra" title="Permalink to this definition"></a></dt>
+<dd><p>If <cite>True</cite>, decompose polyhedra into tetrahedra and pyramids</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.BoolProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings.skip_zero_time">
+<span class="sig-name descname"><span class="pre">skip_zero_time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings.skip_zero_time" title="Permalink to this definition"></a></dt>
+<dd><p>If <cite>True</cite>, skip the '/0' time folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.BoolProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings.triangulate">
+<span class="sig-name descname"><span class="pre">triangulate</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings.triangulate" title="Permalink to this definition"></a></dt>
+<dd><p>If <cite>True</cite>, more complex polygons will be broken down into triangles</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.BoolProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.properties.openfoam.openfoam_object_settings">
+<span id="nimphs-properties-openfoam-openfoam-object-settings"></span><h2>nimphs.properties.openfoam.openfoam_object_settings<a class="headerlink" href="#module-nimphs.properties.openfoam.openfoam_object_settings" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.openfoam_object_settings.NIMPHS_OpenfoamObjectSettings">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_OpenfoamObjectSettings</span></span><a class="headerlink" href="#nimphs.properties.openfoam.openfoam_object_settings.NIMPHS_OpenfoamObjectSettings" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PropertyGroup</span></code></p>
+<p>Data structure which holds object related settings for the OpenFOAM module.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.openfoam_object_settings.NIMPHS_OpenfoamObjectSettings.clip">
+<span class="sig-name descname"><span class="pre">clip</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.openfoam.openfoam_object_settings.NIMPHS_OpenfoamObjectSettings.clip" title="Permalink to this definition"></a></dt>
+<dd><p>Clip settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipProperty" title="nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipProperty">NIMPHS_OpenfoamClipProperty</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.openfoam_object_settings.NIMPHS_OpenfoamObjectSettings.import_settings">
+<span class="sig-name descname"><span class="pre">import_settings</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.openfoam.openfoam_object_settings.NIMPHS_OpenfoamObjectSettings.import_settings" title="Permalink to this definition"></a></dt>
+<dd><p>Import settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings" title="nimphs.properties.openfoam.import_settings.NIMPHS_OpenfoamImportSettings">NIMPHS_OpenfoamImportSettings</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.openfoam_object_settings.NIMPHS_OpenfoamObjectSettings.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.properties.openfoam.openfoam_object_settings.NIMPHS_OpenfoamObjectSettings.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.openfoam_object_settings.NIMPHS_OpenfoamObjectSettings.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.properties.openfoam.openfoam_object_settings.NIMPHS_OpenfoamObjectSettings.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.openfoam_object_settings.NIMPHS_OpenfoamObjectSettings.s_sequence">
+<span class="sig-name descname"><span class="pre">s_sequence</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.openfoam.openfoam_object_settings.NIMPHS_OpenfoamObjectSettings.s_sequence" title="Permalink to this definition"></a></dt>
+<dd><p>OpenFOAM streaming sequence properties.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#nimphs.properties.openfoam.openfoam_streaming_sequence.NIMPHS_OpenfoamStreamingSequenceProperty" title="nimphs.properties.openfoam.openfoam_streaming_sequence.NIMPHS_OpenfoamStreamingSequenceProperty">NIMPHS_OpenfoamStreamingSequenceProperty</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.properties.openfoam.openfoam_streaming_sequence">
+<span id="nimphs-properties-openfoam-openfoam-streaming-sequence"></span><h2>nimphs.properties.openfoam.openfoam_streaming_sequence<a class="headerlink" href="#module-nimphs.properties.openfoam.openfoam_streaming_sequence" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.openfoam_streaming_sequence.NIMPHS_OpenfoamStreamingSequenceProperty">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_OpenfoamStreamingSequenceProperty</span></span><a class="headerlink" href="#nimphs.properties.openfoam.openfoam_streaming_sequence.NIMPHS_OpenfoamStreamingSequenceProperty" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="nimphs.properties.shared.html#nimphs.properties.shared.module_streaming_sequence_settings.NIMPHS_ModuleStreamingSequenceSettings" title="nimphs.properties.shared.module_streaming_sequence_settings.NIMPHS_ModuleStreamingSequenceSettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">NIMPHS_ModuleStreamingSequenceSettings</span></code></a></p>
+<p>'streaming sequence' settings for the OpenFOAM module.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.openfoam_streaming_sequence.NIMPHS_OpenfoamStreamingSequenceProperty.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.properties.openfoam.openfoam_streaming_sequence.NIMPHS_OpenfoamStreamingSequenceProperty.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.openfoam.openfoam_streaming_sequence.NIMPHS_OpenfoamStreamingSequenceProperty.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.properties.openfoam.openfoam_streaming_sequence.NIMPHS_OpenfoamStreamingSequenceProperty.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="nimphs.properties.html" class="btn btn-neutral float-left" title="nimphs.properties" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nimphs.properties.shared.html" class="btn btn-neutral float-right" title="nimphs.properties.shared" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ARTELIAGROUP.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

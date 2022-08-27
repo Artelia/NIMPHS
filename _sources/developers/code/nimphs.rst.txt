@@ -1,0 +1,18 @@
+Code documentation
+==================
+
+.. automodule:: nimphs
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Packages
+--------
+
+.. toctree::
+   :maxdepth: 1
+
+   nimphs.menus
+   nimphs.operators
+   nimphs.panels
+   nimphs.properties

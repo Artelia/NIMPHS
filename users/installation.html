@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installation guide &mdash; NIMPHS 0.4.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/global.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="OpenFOAM" href="openfoam/index.html" />
+    <link rel="prev" title="Documentation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> NIMPHS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Installation guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#linux">Linux</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#windows">Windows</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="openfoam/index.html">OpenFOAM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="telemac/index.html">TELEMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preferences.html">Add-on preferences</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developers/index.html">Developers manual</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">NIMPHS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Documentation</a> &raquo;</li>
+      <li>Installation guide</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="installation-guide">
+<span id="addon-installation"></span><h1>Installation guide<a class="headerlink" href="#installation-guide" title="Permalink to this heading"></a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="#install-addon-linux"><span class="std std-ref">Linux</span></a></p></li>
+<li><p><a class="reference internal" href="#install-addon-windows"><span class="std std-ref">Windows</span></a></p></li>
+</ul>
+<section id="linux">
+<span id="install-addon-linux"></span><h2>Linux<a class="headerlink" href="#linux" title="Permalink to this heading"></a></h2>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This tutorial is written for Ubuntu</p>
+</div>
+<ol class="arabic">
+<li><p>Install <a class="reference external" href="https://www.blender.org/download/">Blender</a> (at least version 3.0)</p></li>
+<li><dl>
+<dt>Install dependencies:</dt><dd><ul>
+<li><p>Blender add-on: <a class="reference external" href="https://github.com/neverhood311/Stop-motion-OBJ/releases">Stop-motion-OBJ</a> (at least version 2.2.0.alpha.23)</p></li>
+<li><p>Python packages:</p>
+<blockquote>
+<div><div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>You may have setup a custom python environment for Blender.
+All you have to do is to install the python packages inside your environment.</p>
+</div>
+<ul class="simple">
+<li><p>Go where python is installed in Blender (in <code class="docutils literal notranslate"><span class="pre">.../3.X/python/bin/</span></code>)</p></li>
+<li><p>Make sure we have pip installed: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">python3.X</span> <span class="pre">-m</span> <span class="pre">ensurepip</span></code></p></li>
+<li><p>Update pip: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">python3.X</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-U</span> <span class="pre">pip</span></code></p></li>
+<li><p>Install <a class="reference external" href="https://docs.pyvista.org/#">PyVista</a> <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">python3.X</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-U</span> <span class="pre">pyvista&gt;=0.35.0</span> <span class="pre">-t</span> <span class="pre">../lib/site-packages/</span></code></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Install the add-on:</dt><dd><ul class="simple">
+<li><p>Download a version from the <a class="reference external" href="https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/releases">releases page</a> (latest recommended)</p></li>
+<li><p>In Blender, go to <code class="docutils literal notranslate"><span class="pre">Edit</span> <span class="pre">&gt;</span> <span class="pre">Preferences</span> <span class="pre">&gt;</span> <span class="pre">Add-on</span> <span class="pre">&gt;</span> <span class="pre">Install</span></code> and select the downloaded file</p></li>
+<li><p>Do not forget to activate it (<cite>tick the checkbox</cite>)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+</section>
+<section id="windows">
+<span id="install-addon-windows"></span><h2>Windows<a class="headerlink" href="#windows" title="Permalink to this heading"></a></h2>
+<ol class="arabic">
+<li><p>Install <a class="reference external" href="https://www.blender.org/download/">Blender</a> (at least version 3.0)</p>
+<blockquote>
+<div><div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If you have <strong>administrator privileges</strong> then you can install Blender globally.
+If not, we recommend you to <strong>install a portable version</strong> otherwise you may not be able
+to install python dependencies correctly.</p>
+</div>
+</div></blockquote>
+</li>
+<li><dl>
+<dt>Install dependencies:</dt><dd><ul>
+<li><p>Blender add-on: <a class="reference external" href="https://github.com/neverhood311/Stop-motion-OBJ/releases">Stop-motion-OBJ</a> (at least version 2.2.0.alpha.23)</p></li>
+<li><p>Python packages:</p>
+<blockquote>
+<div><div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>You may have setup a custom python environment for Blender.
+All you have to do is to install the python packages inside your environment.</p>
+</div>
+<ul class="simple">
+<li><p>Go where python is installed in Blender (in <code class="docutils literal notranslate"><span class="pre">.../3.X/python/bin/</span></code>)</p></li>
+<li><p>Make sure we have pip installed: <code class="docutils literal notranslate"><span class="pre">.\python.exe</span> <span class="pre">-m</span> <span class="pre">ensurepip</span></code></p></li>
+<li><p>Update pip: <code class="docutils literal notranslate"><span class="pre">.\python.exe</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-U</span> <span class="pre">pip</span></code></p></li>
+<li><p>Install <a class="reference external" href="https://docs.pyvista.org/#">PyVista</a> <code class="docutils literal notranslate"><span class="pre">.\python.exe</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-U</span> <span class="pre">pyvista&gt;=0.35.0</span> <span class="pre">-t</span> <span class="pre">../lib/site-packages/</span></code></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Install the add-on:</dt><dd><ul class="simple">
+<li><p>Download a version from the <a class="reference external" href="https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/releases">releases page</a> (latest recommended)</p></li>
+<li><p>In Blender, go to <code class="docutils literal notranslate"><span class="pre">Edit</span> <span class="pre">&gt;</span> <span class="pre">Preferences</span> <span class="pre">&gt;</span> <span class="pre">Add-on</span> <span class="pre">&gt;</span> <span class="pre">Install</span></code> and select the downloaded file</p></li>
+<li><p>Do not forget to activate it (<cite>tick the checkbox</cite>)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="openfoam/index.html" class="btn btn-neutral float-right" title="OpenFOAM" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ARTELIAGROUP.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

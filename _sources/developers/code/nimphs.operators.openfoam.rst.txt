@@ -1,0 +1,50 @@
+nimphs.operators.openfoam
+=========================
+
+.. automodule:: nimphs.operators.openfoam
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Modules
+-------
+
+nimphs.operators.openfoam.openfoam\_create\_mesh\_sequence
+----------------------------------------------------------
+
+.. automodule:: nimphs.operators.openfoam.openfoam_create_mesh_sequence
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.openfoam.openfoam\_create\_streaming\_sequence
+---------------------------------------------------------------
+
+.. automodule:: nimphs.operators.openfoam.openfoam_create_streaming_sequence
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.openfoam.openfoam\_import\_file
+------------------------------------------------
+
+.. automodule:: nimphs.operators.openfoam.openfoam_import_file
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.openfoam.openfoam\_preview
+-------------------------------------------
+
+.. automodule:: nimphs.operators.openfoam.openfoam_preview
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.openfoam.openfoam\_reload\_file
+------------------------------------------------
+
+.. automodule:: nimphs.operators.openfoam.openfoam_reload_file
+   :members:
+   :undoc-members:
+   :show-inheritance:

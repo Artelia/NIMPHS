@@ -1,0 +1,27 @@
+nimphs.menus
+============
+
+.. automodule:: nimphs.menus
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Packages
+--------
+
+.. toctree::
+   :maxdepth: 1
+
+   nimphs.menus.openfoam
+   nimphs.menus.telemac
+
+Modules
+-------
+
+nimphs.menus.menus
+------------------
+
+.. automodule:: nimphs.menus.menus
+   :members:
+   :undoc-members:
+   :show-inheritance:

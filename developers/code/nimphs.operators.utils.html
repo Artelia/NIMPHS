@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nimphs.operators.utils &mdash; NIMPHS 0.4.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/global.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="nimphs.panels" href="nimphs.panels.html" />
+    <link rel="prev" title="nimphs.operators.telemac" href="nimphs.operators.telemac.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> NIMPHS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../users/index.html">Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developers manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../development_environment.html">Development environment</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="nimphs.html">Code documentation</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="nimphs.html#packages">Packages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="nimphs.menus.html">nimphs.menus</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="nimphs.operators.html">nimphs.operators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nimphs.panels.html">nimphs.panels</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nimphs.properties.html">nimphs.properties</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NIMPHS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Developers manual</a> &raquo;</li>
+          <li><a href="nimphs.html">Code documentation</a> &raquo;</li>
+          <li><a href="nimphs.operators.html">nimphs.operators</a> &raquo;</li>
+      <li>nimphs.operators.utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-nimphs.operators.utils">
+<span id="nimphs-operators-utils"></span><h1>nimphs.operators.utils<a class="headerlink" href="#module-nimphs.operators.utils" title="Permalink to this heading"></a></h1>
+<section id="modules">
+<h2>Modules<a class="headerlink" href="#modules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-nimphs.operators.utils.material">
+<span id="nimphs-operators-utils-material"></span><h2>nimphs.operators.utils.material<a class="headerlink" href="#module-nimphs.operators.utils.material" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.utils.material.MaterialUtils">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MaterialUtils</span></span><a class="headerlink" href="#nimphs.operators.utils.material.MaterialUtils" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Utility functions to generate materials for the both modules.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.material.MaterialUtils.generate_preview">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_preview</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'NIMPHS_preview_material'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.utils.material.MaterialUtils.generate_preview" title="Permalink to this definition"></a></dt>
+<dd><p>Generate or update the preview material.</p>
+<p>This generates the following node tree:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{Vertex color}[color] &gt;&gt;&gt; [image]{Separate RBG}[R, G, B] &gt;&gt;&gt; [color]{Principled BSDF}
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> (<em>Object</em>) -- object on which to apply the material</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) -- name of the material. Defaults to &quot;NIMPHS_preview_material&quot;.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.utils.material.OpenfoamMaterialUtils">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">OpenfoamMaterialUtils</span></span><a class="headerlink" href="#nimphs.operators.utils.material.OpenfoamMaterialUtils" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nimphs.operators.utils.material.MaterialUtils" title="nimphs.operators.utils.material.MaterialUtils"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialUtils</span></code></a></p>
+<p>Utility functions to generate materials for the OpenFOAM module.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.utils.material.TelemacMaterialUtils">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TelemacMaterialUtils</span></span><a class="headerlink" href="#nimphs.operators.utils.material.TelemacMaterialUtils" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nimphs.operators.utils.material.MaterialUtils" title="nimphs.operators.utils.material.MaterialUtils"><code class="xref py py-class docutils literal notranslate"><span class="pre">MaterialUtils</span></code></a></p>
+<p>Utility functions to generate materials for the TELEMAC module.</p>
+</dd></dl>
+
+</section>
+<section id="module-nimphs.operators.utils.mesh">
+<span id="nimphs-operators-utils-mesh"></span><h2>nimphs.operators.utils.mesh<a class="headerlink" href="#module-nimphs.operators.utils.mesh" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.utils.mesh.OpenfoamMeshUtils">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">OpenfoamMeshUtils</span></span><a class="headerlink" href="#nimphs.operators.utils.mesh.OpenfoamMeshUtils" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Utility functions for generating meshes for the OpenFOAM module.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.mesh.OpenfoamMeshUtils.clip">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">UnstructuredGrid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nimphs.properties.openfoam.html#nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipProperty" title="nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipProperty"><span class="pre">NIMPHS_OpenfoamClipProperty</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">PolyData</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nimphs.operators.utils.mesh.OpenfoamMeshUtils.clip" title="Permalink to this definition"></a></dt>
+<dd><p>Generate clipped surface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesh</strong> (<em>UnstructuredGrid</em>) -- mesh</p></li>
+<li><p><strong>clip</strong> (<a class="reference internal" href="nimphs.properties.openfoam.html#nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipProperty" title="nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipProperty"><em>NIMPHS_OpenfoamClipProperty</em></a>) -- clip settings</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>PolyData</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Union[PolyData, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.mesh.OpenfoamMeshUtils.faces">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">faces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surface</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PolyData</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nimphs.operators.utils.mesh.OpenfoamMeshUtils.faces" title="Permalink to this definition"></a></dt>
+<dd><p>Get faces array of an extracted surface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>surface</strong> (<em>PolyData</em>) -- extracted surface</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>faces array</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.mesh.OpenfoamMeshUtils.vertices">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vertices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nimphs.properties.openfoam.html#nimphs.properties.openfoam.file_data.OpenfoamFileData" title="nimphs.properties.openfoam.file_data.OpenfoamFileData"><span class="pre">OpenfoamFileData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="nimphs.properties.openfoam.html#nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipProperty" title="nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipProperty"><span class="pre">NIMPHS_OpenfoamClipProperty</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">pyvista.core.pointset.PolyData</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nimphs.operators.utils.mesh.OpenfoamMeshUtils.vertices" title="Permalink to this definition"></a></dt>
+<dd><p>Generate vertices and extracted surface of the given OpenFOAM file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_data</strong> (<em>NIMPHS_OpenfoamFileData</em>) -- file data</p></li>
+<li><p><strong>clip</strong> (<a class="reference internal" href="nimphs.properties.openfoam.html#nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipProperty" title="nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipProperty"><em>NIMPHS_OpenfoamClipProperty</em></a><em>, </em><em>optional</em>) -- clip settings. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>vertices, extracted surface</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple[Union[np.ndarray, None], Union[PolyData, np.ndarray]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.utils.mesh.TelemacMeshUtils">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TelemacMeshUtils</span></span><a class="headerlink" href="#nimphs.operators.utils.mesh.TelemacMeshUtils" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Utility functions for generating meshes for the TELEMAC module.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.mesh.TelemacMeshUtils.vertices">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vertices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nimphs.properties.telemac.html#nimphs.properties.telemac.file_data.TelemacFileData" title="nimphs.properties.telemac.file_data.TelemacFileData"><span class="pre">TelemacFileData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'BOTTOM'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nimphs.operators.utils.mesh.TelemacMeshUtils.vertices" title="Permalink to this definition"></a></dt>
+<dd><p>Generate vertices of the mesh.</p>
+<p>If the selected file is a 2D simulation, you can precise which part of the mesh        you want ('BOTTOM' or 'WATER_DEPTH').
+If the file is a 3D simulation, you can precise an offset for data        reading (this offsets is somehow the id of the plane to generate).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_data</strong> (<em>NIMPHS_TelemacFileData</em>) -- file data</p></li>
+<li><p><strong>offset</strong> (<em>int</em><em>, </em><em>optional</em>) -- offset for data reading (id of the plane for 3D simulations). Defaults to 0.</p></li>
+<li><p><strong>type</strong> (<em>str</em><em>, </em><em>optional</em>) -- name of the variable to use as z-values. Defaults to 'BOTTOM'.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>vertices</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Union[np.ndarray, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.mesh.TelemacMeshUtils.vertices_LI">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">vertices_LI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nimphs.properties.telemac.html#nimphs.properties.telemac.file_data.TelemacFileData" title="nimphs.properties.telemac.file_data.TelemacFileData"><span class="pre">TelemacFileData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nimphs.properties.utils.html#nimphs.properties.utils.interpolation.InterpInfo" title="nimphs.properties.utils.interpolation.InterpInfo"><span class="pre">InterpInfo</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#nimphs.operators.utils.mesh.TelemacMeshUtils.vertices_LI" title="Permalink to this definition"></a></dt>
+<dd><p>Generate linearly interpolated vertices of the mesh.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> (<em>Object</em>) -- object</p></li>
+<li><p><strong>file_data</strong> (<em>NIMPHS_TelemacFileData</em>) -- file data</p></li>
+<li><p><strong>time_info</strong> (<a class="reference internal" href="nimphs.properties.utils.html#nimphs.properties.utils.interpolation.InterpInfo" title="nimphs.properties.utils.interpolation.InterpInfo"><em>InterpInfo</em></a>) -- time information</p></li>
+<li><p><strong>offset</strong> (<em>int</em><em>, </em><em>optional</em>) -- offset for data reading (id of the plane for 3D simulations). Defaults to 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>vertices</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.operators.utils.object">
+<span id="nimphs-operators-utils-object"></span><h2>nimphs.operators.utils.object<a class="headerlink" href="#module-nimphs.operators.utils.object" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.utils.object.ObjectUtils">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ObjectUtils</span></span><a class="headerlink" href="#nimphs.operators.utils.object.ObjectUtils" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Utility functions for generating objects for both modules.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.object.ObjectUtils.generate">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">faces</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Object</span></span></span><a class="headerlink" href="#nimphs.operators.utils.object.ObjectUtils.generate" title="Permalink to this definition"></a></dt>
+<dd><p>Generate an object and its mesh using the given vertices and faces.</p>
+<p>If it already exists, clear object data and use the given data as new data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vertices</strong> (<em>np.ndarray</em>) -- vertices, must have the following shape: (n, 3)</p></li>
+<li><p><strong>faces</strong> (<em>np.ndarray</em>) -- faces, must have the following shape: (n, 3)</p></li>
+<li><p><strong>name</strong> (<em>str</em>) -- name of the object</p></li>
+<li><p><strong>new</strong> (<em>bool</em>) -- force to generate a new object</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>generated object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.object.ObjectUtils.setup_streaming_sequence">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setup_streaming_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nimphs.operators.shared.html#nimphs.operators.shared.create_streaming_sequence.NIMPHS_CreateStreamingSequence" title="nimphs.operators.shared.create_streaming_sequence.NIMPHS_CreateStreamingSequence"><span class="pre">NIMPHS_CreateStreamingSequence</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.utils.object.ObjectUtils.setup_streaming_sequence" title="Permalink to this definition"></a></dt>
+<dd><p>Generate streaming sequence settings for all modules.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> (<em>Object</em>) -- sequence object</p></li>
+<li><p><strong>op</strong> (<a class="reference internal" href="nimphs.operators.shared.html#nimphs.operators.shared.create_streaming_sequence.NIMPHS_CreateStreamingSequence" title="nimphs.operators.shared.create_streaming_sequence.NIMPHS_CreateStreamingSequence"><em>NIMPHS_CreateStreamingSequence</em></a>) -- operator</p></li>
+<li><p><strong>file_path</strong> (<em>str</em>) -- file path</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.utils.object.OpenfoamObjectUtils">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">OpenfoamObjectUtils</span></span><a class="headerlink" href="#nimphs.operators.utils.object.OpenfoamObjectUtils" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nimphs.operators.utils.object.ObjectUtils" title="nimphs.operators.utils.object.ObjectUtils"><code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectUtils</span></code></a></p>
+<p>Utility functions for generating/updating meshes for the OpenFOAM module.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.object.OpenfoamObjectUtils.add_mesh_to_sequence">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_mesh_to_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bmesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mesh</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#nimphs.operators.utils.object.OpenfoamObjectUtils.add_mesh_to_sequence" title="Permalink to this definition"></a></dt>
+<dd><p>Add a mesh to an OpenFOAM 'mesh sequence'.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> (<em>Object</em>) -- sequence object</p></li>
+<li><p><strong>bmesh</strong> (<em>Mesh</em>) -- mesh to add to the sequence</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>mesh id in the sequence</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.object.OpenfoamObjectUtils.mesh_for_sequence">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mesh_for_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nimphs.properties.openfoam.html#nimphs.properties.openfoam.file_data.OpenfoamFileData" title="nimphs.properties.openfoam.file_data.OpenfoamFileData"><span class="pre">OpenfoamFileData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">op</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nimphs.operators.openfoam.html#nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence" title="nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence"><span class="pre">NIMPHS_OT_OpenfoamCreateMeshSequence</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Mesh</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nimphs.operators.utils.object.OpenfoamObjectUtils.mesh_for_sequence" title="Permalink to this definition"></a></dt>
+<dd><p>Generate mesh data for the 'create mesh sequence' process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_data</strong> (<em>NIMPHS_OpenfoamFileData</em>) -- file data</p></li>
+<li><p><strong>op</strong> (<a class="reference internal" href="nimphs.operators.openfoam.html#nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence" title="nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence"><em>NIMPHS_OT_OpenfoamCreateMeshSequence</em></a>) -- operator</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>generated mesh</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Union[Mesh, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.object.OpenfoamObjectUtils.step_create_mesh_sequence">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">step_create_mesh_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nimphs.operators.openfoam.html#nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence" title="nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence"><span class="pre">NIMPHS_OT_OpenfoamCreateMeshSequence</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.utils.object.OpenfoamObjectUtils.step_create_mesh_sequence" title="Permalink to this definition"></a></dt>
+<dd><p>Run one step of 'create mesh sequence' for the OpenFOAM module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> (<em>Context</em>) -- context</p></li>
+<li><p><strong>op</strong> (<a class="reference internal" href="nimphs.operators.openfoam.html#nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence" title="nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence"><em>NIMPHS_OT_OpenfoamCreateMeshSequence</em></a>) -- operator</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>error</strong> -- error on generating mesh for sequence</p></li>
+<li><p><strong>ValueError</strong> -- generated mesh is None</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.object.OpenfoamObjectUtils.streaming_sequence_obj">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">streaming_sequence_obj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Object</span></span></span><a class="headerlink" href="#nimphs.operators.utils.object.OpenfoamObjectUtils.streaming_sequence_obj" title="Permalink to this definition"></a></dt>
+<dd><p>Generate the base object for an OpenFOAM 'streaming sequence'.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> (<em>Object</em>) -- selected object</p></li>
+<li><p><strong>name</strong> (<em>str</em>) -- name of the sequence</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>generated object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.object.OpenfoamObjectUtils.update_streaming_sequence">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_streaming_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scene</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Scene</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.utils.object.OpenfoamObjectUtils.update_streaming_sequence" title="Permalink to this definition"></a></dt>
+<dd><p>Update the given OpenFOAM sequence object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scene</strong> (<em>Scene</em>) -- scene</p></li>
+<li><p><strong>obj</strong> (<em>Object</em>) -- sequence object</p></li>
+<li><p><strong>time_point</strong> (<em>int</em>) -- time point</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.utils.object.TelemacObjectUtils">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TelemacObjectUtils</span></span><a class="headerlink" href="#nimphs.operators.utils.object.TelemacObjectUtils" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nimphs.operators.utils.object.ObjectUtils" title="nimphs.operators.utils.object.ObjectUtils"><code class="xref py py-class docutils literal notranslate"><span class="pre">ObjectUtils</span></code></a></p>
+<p>Utility functions for generating/updating objects for the TELEMAC module.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.object.TelemacObjectUtils.add_shape_key">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_shape_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.utils.object.TelemacObjectUtils.add_shape_key" title="Permalink to this definition"></a></dt>
+<dd><p>Add a shape key to the object using the given vertices. It also set a keyframe with value = 1.0 at        the given frame and add keyframes at value = 0.0 around the frame (-1 and +1).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> (<em>Object</em>) -- object to receive the new shape key</p></li>
+<li><p><strong>vertices</strong> (<em>np.ndarray</em>) -- new vertices values</p></li>
+<li><p><strong>name</strong> (<em>str</em>) -- name of the shape key</p></li>
+<li><p><strong>frame</strong> (<em>int</em>) -- the frame on which the keyframe is inserted</p></li>
+<li><p><strong>end</strong> (<em>bool</em>) -- indicate if this the shape key to add is the last one. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.object.TelemacObjectUtils.base">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nimphs.properties.telemac.html#nimphs.properties.telemac.file_data.TelemacFileData" title="nimphs.properties.telemac.file_data.TelemacFileData"><span class="pre">TelemacFileData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="nimphs.properties.shared.html#nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings" title="nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings"><span class="pre">NIMPHS_PointDataSettings</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">bpy.types.Object</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nimphs.operators.utils.object.TelemacObjectUtils.base" title="Permalink to this definition"></a></dt>
+<dd><p>Generate objects using settings defined by the user. This function generates objects and vertex colors.</p>
+<p>If the file is a 2D simulation, this will generate two objects (&quot;Bottom&quot; and &quot;Water depth&quot;).
+If the file is a 3D simulation, this will generate one object per plane.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_data</strong> (<em>NIMPHS_TelemacFileData</em>) -- file data</p></li>
+<li><p><strong>name</strong> (<em>str</em>) -- name to give to the objects</p></li>
+<li><p><strong>point_data</strong> (<em>Union</em><em>[</em><a class="reference internal" href="nimphs.properties.shared.html#nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings" title="nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings"><em>NIMPHS_PointDataSettings</em></a><em>, </em><em>str</em><em>]</em><em>, </em><em>optional</em>) -- point data settings. Defaults to &quot;&quot;.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>generated objects</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[Object]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.object.TelemacObjectUtils.sequence">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape_keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Object</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nimphs.operators.utils.object.TelemacObjectUtils.sequence" title="Permalink to this definition"></a></dt>
+<dd><p>Generate base object for a TELEMAC sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> (<em>Context</em>) -- context</p></li>
+<li><p><strong>obj</strong> (<em>Object</em>) -- source object to copy data</p></li>
+<li><p><strong>name</strong> (<em>str</em>) -- name to give to the sequence</p></li>
+<li><p><strong>shape_keys</strong> (<em>bool</em><em>, </em><em>optional</em>) -- indicate whether to generate the 'Basis' shape key. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>generated sequence object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Union[Object, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.object.TelemacObjectUtils.step_create_mesh_sequence">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">step_create_mesh_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nimphs.operators.telemac.html#nimphs.operators.telemac.telemac_create_mesh_sequence.NIMPHS_OT_TelemacCreateMeshSequence" title="nimphs.operators.telemac.telemac_create_mesh_sequence.NIMPHS_OT_TelemacCreateMeshSequence"><span class="pre">NIMPHS_OT_TelemacCreateMeshSequence</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.utils.object.TelemacObjectUtils.step_create_mesh_sequence" title="Permalink to this definition"></a></dt>
+<dd><p>Run one step of 'create mesh sequence' for the TELEMAC module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> (<em>Context</em>) -- context</p></li>
+<li><p><strong>op</strong> (<a class="reference internal" href="nimphs.operators.telemac.html#nimphs.operators.telemac.telemac_create_mesh_sequence.NIMPHS_OT_TelemacCreateMeshSequence" title="nimphs.operators.telemac.telemac_create_mesh_sequence.NIMPHS_OT_TelemacCreateMeshSequence"><em>NIMPHS_OT_TelemacCreateMeshSequence</em></a>) -- operator</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.object.TelemacObjectUtils.update_mesh_sequence">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_mesh_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bmesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nimphs.properties.telemac.html#nimphs.properties.telemac.file_data.TelemacFileData" title="nimphs.properties.telemac.file_data.TelemacFileData"><span class="pre">TelemacFileData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nimphs.properties.shared.html#nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings" title="nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings"><span class="pre">NIMPHS_PointDataSettings</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nimphs.properties.utils.html#nimphs.properties.utils.interpolation.InterpInfo" title="nimphs.properties.utils.interpolation.InterpInfo"><span class="pre">InterpInfo</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.utils.object.TelemacObjectUtils.update_mesh_sequence" title="Permalink to this definition"></a></dt>
+<dd><p>Update the given TELEMAC 'mesh sequence' child object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bmesh</strong> (<em>Mesh</em>) -- blender mesh</p></li>
+<li><p><strong>file_data</strong> (<em>NIMPHS_TelemacFileData</em>) -- file data</p></li>
+<li><p><strong>offset</strong> (<em>int</em><em>, </em><em>optional</em>) -- offset for data reading (id of the plane for 3D simulations). Defaults to 0.</p></li>
+<li><p><strong>point_data</strong> (<a class="reference internal" href="nimphs.properties.shared.html#nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings" title="nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings"><em>NIMPHS_PointDataSettings</em></a>) -- point data</p></li>
+<li><p><strong>time_info</strong> (<a class="reference internal" href="nimphs.properties.utils.html#nimphs.properties.utils.interpolation.InterpInfo" title="nimphs.properties.utils.interpolation.InterpInfo"><em>InterpInfo</em></a>) -- time information</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.object.TelemacObjectUtils.update_streaming_sequence">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_streaming_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">child</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nimphs.properties.telemac.html#nimphs.properties.telemac.file_data.TelemacFileData" title="nimphs.properties.telemac.file_data.TelemacFileData"><span class="pre">TelemacFileData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.utils.object.TelemacObjectUtils.update_streaming_sequence" title="Permalink to this definition"></a></dt>
+<dd><p>Update the mesh of the given 'child' object from a TELEMAC 'streaming sequence' object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> (<em>Object</em>) -- sequence object</p></li>
+<li><p><strong>child</strong> (<em>Object</em>) -- child object of the sequence</p></li>
+<li><p><strong>file_data</strong> (<em>NIMPHS_TelemacFileData</em>) -- file data</p></li>
+<li><p><strong>frame</strong> (<em>int</em>) -- frame</p></li>
+<li><p><strong>offset</strong> (<em>int</em>) -- offset for data reading (id of the plane for 3D simulations).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.operators.utils.others">
+<span id="nimphs-operators-utils-others"></span><h2>nimphs.operators.utils.others<a class="headerlink" href="#module-nimphs.operators.utils.others" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="nimphs.operators.utils.others.remap_array">
+<span class="sig-name descname"><span class="pre">remap_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">inf</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#nimphs.operators.utils.others.remap_array" title="Permalink to this definition"></a></dt>
+<dd><p>Remap values of the given array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input</strong> (<em>np.ndarray</em>) -- input array to remap</p></li>
+<li><p><strong>out_min</strong> (<em>float</em><em>, </em><em>optional</em>) -- minimum value to output. Defaults to 0.0.</p></li>
+<li><p><strong>out_max</strong> (<em>float</em><em>, </em><em>optional</em>) -- maximum value to output. Defaults to 1.0.</p></li>
+<li><p><strong>in_min</strong> (<em>float</em><em>, </em><em>optional</em>) -- minimum value of the input. Defaults to -np.inf.</p></li>
+<li><p><strong>in_max</strong> (<em>float</em><em>, </em><em>optional</em>) -- maximum value of the input. Defaults to np.inf.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>output array</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-nimphs.operators.utils.sequence">
+<span id="nimphs-operators-utils-sequence"></span><h2>nimphs.operators.utils.sequence<a class="headerlink" href="#module-nimphs.operators.utils.sequence" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="nimphs.operators.utils.sequence.update_openfoam_streaming_sequences">
+<span class="sig-name descname"><span class="pre">update_openfoam_streaming_sequences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scene</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Scene</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.utils.sequence.update_openfoam_streaming_sequences" title="Permalink to this definition"></a></dt>
+<dd><p>Update all OpenFOAM 'streaming sequence' objects of the scene.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>scene</strong> (<em>Scene</em>) -- scene</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nimphs.operators.utils.sequence.update_telemac_mesh_sequences">
+<span class="sig-name descname"><span class="pre">update_telemac_mesh_sequences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scene</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Scene</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.utils.sequence.update_telemac_mesh_sequences" title="Permalink to this definition"></a></dt>
+<dd><p>Update all TELEMAC 'mesh sequence' objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>scene</strong> (<em>Scene</em>) -- scene</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nimphs.operators.utils.sequence.update_telemac_streaming_sequences">
+<span class="sig-name descname"><span class="pre">update_telemac_streaming_sequences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scene</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Scene</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.utils.sequence.update_telemac_streaming_sequences" title="Permalink to this definition"></a></dt>
+<dd><p>Update all TELEMAC 'streaming sequence' objects of the scene.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>scene</strong> (<em>Scene</em>) -- scene</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-nimphs.operators.utils.vertex_color">
+<span id="nimphs-operators-utils-vertex-color"></span><h2>nimphs.operators.utils.vertex_color<a class="headerlink" href="#module-nimphs.operators.utils.vertex_color" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.utils.vertex_color.OpenfoamVertexColorUtils">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">OpenfoamVertexColorUtils</span></span><a class="headerlink" href="#nimphs.operators.utils.vertex_color.OpenfoamVertexColorUtils" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nimphs.operators.utils.vertex_color.VertexColorUtils" title="nimphs.operators.utils.vertex_color.VertexColorUtils"><code class="xref py py-class docutils literal notranslate"><span class="pre">VertexColorUtils</span></code></a></p>
+<p>Utility functions for generating vertex colors for the OpenFOAM module.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.vertex_color.OpenfoamVertexColorUtils.prepare">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prepare</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bmesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="nimphs.properties.shared.html#nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings" title="nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings"><span class="pre">NIMPHS_PointDataSettings</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nimphs.properties.openfoam.html#nimphs.properties.openfoam.file_data.OpenfoamFileData" title="nimphs.properties.openfoam.file_data.OpenfoamFileData"><span class="pre">OpenfoamFileData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#nimphs.operators.utils.vertex_color.VertexColorInformation" title="nimphs.operators.utils.vertex_color.VertexColorInformation"><span class="pre">VertexColorInformation</span></a></span></span><a class="headerlink" href="#nimphs.operators.utils.vertex_color.OpenfoamVertexColorUtils.prepare" title="Permalink to this definition"></a></dt>
+<dd><p>Prepare point data to generate vertex colors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bmesh</strong> (<em>Mesh</em>) -- blender mesh</p></li>
+<li><p><strong>point_data</strong> (<em>Union</em><em>[</em><a class="reference internal" href="nimphs.properties.shared.html#nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings" title="nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings"><em>NIMPHS_PointDataSettings</em></a><em>, </em><em>str</em><em>]</em>) -- point data settings</p></li>
+<li><p><strong>file_data</strong> (<em>NIMPHS_OpenfoamFileData</em>) -- file data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>vertex colors groups, color data, number of vertices</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#nimphs.operators.utils.vertex_color.VertexColorInformation" title="nimphs.operators.utils.vertex_color.VertexColorInformation">VertexColorInformation</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.utils.vertex_color.TelemacVertexColorUtils">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TelemacVertexColorUtils</span></span><a class="headerlink" href="#nimphs.operators.utils.vertex_color.TelemacVertexColorUtils" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nimphs.operators.utils.vertex_color.VertexColorUtils" title="nimphs.operators.utils.vertex_color.VertexColorUtils"><code class="xref py py-class docutils literal notranslate"><span class="pre">VertexColorUtils</span></code></a></p>
+<p>Utility functions for generating vertex colors for the TELEMAC module.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.vertex_color.TelemacVertexColorUtils.prepare">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prepare</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bmesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="nimphs.properties.shared.html#nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings" title="nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings"><span class="pre">NIMPHS_PointDataSettings</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nimphs.properties.telemac.html#nimphs.properties.telemac.file_data.TelemacFileData" title="nimphs.properties.telemac.file_data.TelemacFileData"><span class="pre">TelemacFileData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#nimphs.operators.utils.vertex_color.VertexColorInformation" title="nimphs.operators.utils.vertex_color.VertexColorInformation"><span class="pre">VertexColorInformation</span></a></span></span><a class="headerlink" href="#nimphs.operators.utils.vertex_color.TelemacVertexColorUtils.prepare" title="Permalink to this definition"></a></dt>
+<dd><p>Prepare point data to generate vertex colors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bmesh</strong> (<em>Mesh</em>) -- blender mesh</p></li>
+<li><p><strong>point_data</strong> (<em>Union</em><em>[</em><a class="reference internal" href="nimphs.properties.shared.html#nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings" title="nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings"><em>NIMPHS_PointDataSettings</em></a><em>, </em><em>str</em><em>]</em>) -- point data settings</p></li>
+<li><p><strong>file_data</strong> (<em>NIMPHS_TelemacFileData</em>) -- file data</p></li>
+<li><p><strong>offset</strong> (<em>int</em><em>, </em><em>optional</em>) -- offset for data reading (id of the plane for 3D simulations). Defaults to 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>point data information to generate vertex colors</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#nimphs.operators.utils.vertex_color.VertexColorInformation" title="nimphs.operators.utils.vertex_color.VertexColorInformation">VertexColorInformation</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.vertex_color.TelemacVertexColorUtils.prepare_LI">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prepare_LI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bmesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nimphs.properties.shared.html#nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings" title="nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings"><span class="pre">NIMPHS_PointDataSettings</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nimphs.properties.telemac.html#nimphs.properties.telemac.file_data.TelemacFileData" title="nimphs.properties.telemac.file_data.TelemacFileData"><span class="pre">TelemacFileData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nimphs.properties.utils.html#nimphs.properties.utils.interpolation.InterpInfo" title="nimphs.properties.utils.interpolation.InterpInfo"><span class="pre">InterpInfo</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#nimphs.operators.utils.vertex_color.VertexColorInformation" title="nimphs.operators.utils.vertex_color.VertexColorInformation"><span class="pre">VertexColorInformation</span></a></span></span><a class="headerlink" href="#nimphs.operators.utils.vertex_color.TelemacVertexColorUtils.prepare_LI" title="Permalink to this definition"></a></dt>
+<dd><p>Prepare point data for linear interpolation of TELEMAC sequences.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bmesh</strong> (<em>Mesh</em>) -- blender mesh</p></li>
+<li><p><strong>point_data</strong> (<a class="reference internal" href="nimphs.properties.shared.html#nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings" title="nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings"><em>NIMPHS_PointDataSettings</em></a>) -- point data settings</p></li>
+<li><p><strong>file_data</strong> (<em>NIMPHS_TelemacFileData</em>) -- file data</p></li>
+<li><p><strong>time_info</strong> (<a class="reference internal" href="nimphs.properties.utils.html#nimphs.properties.utils.interpolation.InterpInfo" title="nimphs.properties.utils.interpolation.InterpInfo"><em>InterpInfo</em></a>) -- time information</p></li>
+<li><p><strong>offset</strong> (<em>int</em><em>, </em><em>optional</em>) -- offset for data reading (id of the plane for 3D simulations). Defaults to 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>point data information to generate vertex colors</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#nimphs.operators.utils.vertex_color.VertexColorInformation" title="nimphs.operators.utils.vertex_color.VertexColorInformation">VertexColorInformation</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.utils.vertex_color.VertexColorInformation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">VertexColorInformation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nb_vertex_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nimphs.operators.utils.vertex_color.VertexColorInformation" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Utility class which hold information on vertex colors to generate.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.vertex_color.VertexColorInformation.groups">
+<span class="sig-name descname"><span class="pre">groups</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nimphs.operators.utils.vertex_color.VertexColorInformation.groups" title="Permalink to this definition"></a></dt>
+<dd><p>Generate vertex colors groups.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>name of the group, indices of point data</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple[list[str], list[list[int]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.vertex_color.VertexColorInformation.is_empty">
+<span class="sig-name descname"><span class="pre">is_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#nimphs.operators.utils.vertex_color.VertexColorInformation.is_empty" title="Permalink to this definition"></a></dt>
+<dd><p>Indicate whether 'names' array is empty.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>state</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.utils.vertex_color.VertexColorUtils">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">VertexColorUtils</span></span><a class="headerlink" href="#nimphs.operators.utils.vertex_color.VertexColorUtils" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Utility functions for generating vertex colors for both modules.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.vertex_color.VertexColorUtils.generate">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bmesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nimphs.operators.utils.vertex_color.VertexColorInformation" title="nimphs.operators.utils.vertex_color.VertexColorInformation"><span class="pre">VertexColorInformation</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.utils.vertex_color.VertexColorUtils.generate" title="Permalink to this definition"></a></dt>
+<dd><p>Generate vertex colors for the given mesh.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bmesh</strong> (<em>Mesh</em>) -- mesh on which to add vertex colors</p></li>
+<li><p><strong>data</strong> (<a class="reference internal" href="#nimphs.operators.utils.vertex_color.VertexColorInformation" title="nimphs.operators.utils.vertex_color.VertexColorInformation"><em>VertexColorInformation</em></a>) -- point data information to generate vertex colors</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.operators.utils.volume">
+<span id="nimphs-operators-utils-volume"></span><h2>nimphs.operators.utils.volume<a class="headerlink" href="#module-nimphs.operators.utils.volume" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.utils.volume.TelemacMeshForVolume">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TelemacMeshForVolume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane_interp_steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_interp_steps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nimphs.operators.utils.volume.TelemacMeshForVolume" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Data structure which holds information on the TELEMAC object.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.volume.TelemacMeshForVolume.get_point_data">
+<span class="sig-name descname"><span class="pre">get_point_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#nimphs.operators.utils.volume.TelemacMeshForVolume.get_point_data" title="Permalink to this definition"></a></dt>
+<dd><p>Get point data if variable found in the given list of names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>names</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) -- list of possible names</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>NameError</strong> -- if names not found in variables list</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>point data</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.volume.TelemacMeshForVolume.interpolate_plane_data">
+<span class="sig-name descname"><span class="pre">interpolate_plane_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#nimphs.operators.utils.volume.TelemacMeshForVolume.interpolate_plane_data" title="Permalink to this definition"></a></dt>
+<dd><p>Linearly interpolates given data to generate 'fake' planes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>np.ndarray</em>) -- point data to interpolate.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>interpolated data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.volume.TelemacMeshForVolume.set_time_point">
+<span class="sig-name descname"><span class="pre">set_time_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interp_time_step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.utils.volume.TelemacMeshForVolume.set_time_point" title="Permalink to this definition"></a></dt>
+<dd><p>Update data according to the given time point. Linearly interpolates data in time if needed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time_point</strong> (<em>int</em>) -- time point to read</p></li>
+<li><p><strong>interp_time_step</strong> (<em>int</em><em>, </em><em>optional</em>) -- time step of interpolated time point. Defaults to 0.</p></li>
+<li><p><strong>time_steps</strong> (<em>int</em><em>, </em><em>optional</em>) -- number of time steps between each time point. Defaults to 0.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.utils.volume.TelemacVolume">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TelemacVolume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nimphs.operators.utils.volume.TelemacMeshForVolume" title="nimphs.operators.utils.volume.TelemacMeshForVolume"><span class="pre">TelemacMeshForVolume</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">nb_threads</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_multproc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cuda</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vx_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nimphs.operators.utils.volume.TelemacVolume" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Object which handles the process of generating a volume from a TELEMAC object.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.volume.TelemacVolume.clear_data">
+<span class="sig-name descname"><span class="pre">clear_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.utils.volume.TelemacVolume.clear_data" title="Permalink to this definition"></a></dt>
+<dd><p>Clear volume data and allocate new memory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.volume.TelemacVolume.export_time_point">
+<span class="sig-name descname"><span class="pre">export_time_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nimphs.operators.utils.volume.TelemacMeshForVolume" title="nimphs.operators.utils.volume.TelemacMeshForVolume"><span class="pre">TelemacMeshForVolume</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(None,</span> <span class="pre">None)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.utils.volume.TelemacVolume.export_time_point" title="Permalink to this definition"></a></dt>
+<dd><p>Generate and export volume for the current time point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesh</strong> (<a class="reference internal" href="#nimphs.operators.utils.volume.TelemacMeshForVolume" title="nimphs.operators.utils.volume.TelemacMeshForVolume"><em>TelemacMeshForVolume</em></a>) -- mesh</p></li>
+<li><p><strong>point_data</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) -- point data to use as density</p></li>
+<li><p><strong>file_name</strong> (<em>str</em>) -- file name</p></li>
+<li><p><strong>remap</strong> (<em>tuple</em><em>[</em><em>float</em><em>]</em><em>, </em><em>optional</em>) -- min / max to remap values. Defaults to (None, None).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.volume.TelemacVolume.fill">
+<span class="sig-name descname"><span class="pre">fill</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nimphs.operators.utils.volume.TelemacMeshForVolume" title="nimphs.operators.utils.volume.TelemacMeshForVolume"><span class="pre">TelemacMeshForVolume</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(None,</span> <span class="pre">None)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.utils.volume.TelemacVolume.fill" title="Permalink to this definition"></a></dt>
+<dd><p>Set the density of each voxel using the given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesh</strong> (<a class="reference internal" href="#nimphs.operators.utils.volume.TelemacMeshForVolume" title="nimphs.operators.utils.volume.TelemacMeshForVolume"><em>TelemacMeshForVolume</em></a>) -- mesh data</p></li>
+<li><p><strong>point_data</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) -- name of point data to use as density</p></li>
+<li><p><strong>remap</strong> (<em>tuple</em><em>[</em><em>float</em><em>]</em>) -- global min, global max to remap data</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.volume.TelemacVolume.fill_with_cpu">
+<span class="sig-name descname"><span class="pre">fill_with_cpu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nimphs.operators.utils.volume.TelemacMeshForVolume" title="nimphs.operators.utils.volume.TelemacMeshForVolume"><span class="pre">TelemacMeshForVolume</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nimphs.operators.utils.volume.TelemacVolume.fill_with_cpu" title="Permalink to this definition"></a></dt>
+<dd><p>Set density of each voxel using an algorithm with runs on the CPU.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>np.ndarray</em>) -- point data</p></li>
+<li><p><strong>mesh</strong> (<a class="reference internal" href="#nimphs.operators.utils.volume.TelemacMeshForVolume" title="nimphs.operators.utils.volume.TelemacMeshForVolume"><em>TelemacMeshForVolume</em></a>) -- mesh information</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.volume.TelemacVolume.fill_with_gpu">
+<span class="sig-name descname"><span class="pre">fill_with_gpu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nimphs.operators.utils.volume.TelemacMeshForVolume" title="nimphs.operators.utils.volume.TelemacMeshForVolume"><span class="pre">TelemacMeshForVolume</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nimphs.operators.utils.volume.TelemacVolume.fill_with_gpu" title="Permalink to this definition"></a></dt>
+<dd><p>Set density of each voxel using an algorithm with runs on the GPU.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>np.ndarray</em>) -- point data</p></li>
+<li><p><strong>mesh</strong> (<a class="reference internal" href="#nimphs.operators.utils.volume.TelemacMeshForVolume" title="nimphs.operators.utils.volume.TelemacMeshForVolume"><em>TelemacMeshForVolume</em></a>) -- mesh information</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.volume.TelemacVolume.prepare_voxels">
+<span class="sig-name descname"><span class="pre">prepare_voxels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nimphs.operators.utils.volume.TelemacMeshForVolume" title="nimphs.operators.utils.volume.TelemacMeshForVolume"><span class="pre">TelemacMeshForVolume</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.utils.volume.TelemacVolume.prepare_voxels" title="Permalink to this definition"></a></dt>
+<dd><p>Prepare voxels information (compute zcols, zmin, zmax).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mesh</strong> (<a class="reference internal" href="#nimphs.operators.utils.volume.TelemacMeshForVolume" title="nimphs.operators.utils.volume.TelemacMeshForVolume"><em>TelemacMeshForVolume</em></a>) -- mesh information</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.volume.TelemacVolume.prepare_voxels_for_cpu">
+<span class="sig-name descname"><span class="pre">prepare_voxels_for_cpu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nimphs.operators.utils.volume.TelemacMeshForVolume" title="nimphs.operators.utils.volume.TelemacMeshForVolume"><span class="pre">TelemacMeshForVolume</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'SEQUENTIAL'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nimphs.operators.utils.volume.TelemacVolume.prepare_voxels_for_cpu" title="Permalink to this definition"></a></dt>
+<dd><p>Prepare voxels information to be computed using the CPU.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xmin</strong> (<em>np.ndarray</em>) -- min x coordinates of voxels</p></li>
+<li><p><strong>xmax</strong> (<em>np.ndarray</em>) -- max x coordinates of voxels</p></li>
+<li><p><strong>ymin</strong> (<em>np.ndarray</em>) -- min y coordinates of voxels</p></li>
+<li><p><strong>ymax</strong> (<em>np.ndarray</em>) -- max y coordinates of voxels</p></li>
+<li><p><strong>plane_indices</strong> (<em>np.ndarray</em>) -- plane indices</p></li>
+<li><p><strong>mesh</strong> (<a class="reference internal" href="#nimphs.operators.utils.volume.TelemacMeshForVolume" title="nimphs.operators.utils.volume.TelemacMeshForVolume"><em>TelemacMeshForVolume</em></a>) -- mesh</p></li>
+<li><p><strong>mode</strong> (<em>str</em><em>, </em><em>optional</em>) -- execution mode, enum in ['SEQUENTIAL', 'PARALLEL_CPU', 'PARALLEL_GPU'].                                  Defaults to 'SEQUENTIAL'.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.volume.TelemacVolume.prepare_voxels_for_gpu">
+<span class="sig-name descname"><span class="pre">prepare_voxels_for_gpu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane_indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nimphs.operators.utils.volume.TelemacMeshForVolume" title="nimphs.operators.utils.volume.TelemacMeshForVolume"><span class="pre">TelemacMeshForVolume</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'SEQUENTIAL'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nimphs.operators.utils.volume.TelemacVolume.prepare_voxels_for_gpu" title="Permalink to this definition"></a></dt>
+<dd><p>Prepare voxels information to be computed using the GPU.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xmin</strong> (<em>np.ndarray</em>) -- min x coordinates of voxels</p></li>
+<li><p><strong>xmax</strong> (<em>np.ndarray</em>) -- max x coordinates of voxels</p></li>
+<li><p><strong>ymin</strong> (<em>np.ndarray</em>) -- min y coordinates of voxels</p></li>
+<li><p><strong>ymax</strong> (<em>np.ndarray</em>) -- max y coordinates of voxels</p></li>
+<li><p><strong>plane_indices</strong> (<em>np.ndarray</em>) -- plane indices</p></li>
+<li><p><strong>mesh</strong> (<a class="reference internal" href="#nimphs.operators.utils.volume.TelemacMeshForVolume" title="nimphs.operators.utils.volume.TelemacMeshForVolume"><em>TelemacMeshForVolume</em></a>) -- mesh</p></li>
+<li><p><strong>mode</strong> (<em>str</em><em>, </em><em>optional</em>) -- execution mode, enum in ['NORMAL', 'PARALLEL_CPU', 'PARALLEL_GPU'].                                  Defaults to 'SEQUENTIAL'.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.utils.volume.TelemacVolume.save_as_vdb">
+<span class="sig-name descname"><span class="pre">save_as_vdb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.utils.volume.TelemacVolume.save_as_vdb" title="Permalink to this definition"></a></dt>
+<dd><p>Save volume data as .vdb file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grid_name</strong> (<em>str</em>) -- name of density variable</p></li>
+<li><p><strong>file_name</strong> (<em>str</em>) -- file name</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nimphs.operators.utils.volume.fill_volume_cpu">
+<span class="sig-name descname"><span class="pre">fill_volume_cpu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">volume</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vxids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xyids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_coords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zcols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zmin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zmax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.utils.volume.fill_volume_cpu" title="Permalink to this definition"></a></dt>
+<dd><p>Fill volume density using given data (runs for one CPU thread).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>volume</strong> (<em>np.ndarray</em>) -- volume (destination array)</p></li>
+<li><p><strong>data</strong> (<em>np.ndarray</em>) -- point data to use as density</p></li>
+<li><p><strong>vxids</strong> (<em>np.ndarray</em>) -- voxel '(x, y, z)' indices</p></li>
+<li><p><strong>xyids</strong> (<em>np.ndarray</em>) -- voxel 'xy' indices</p></li>
+<li><p><strong>z_coords</strong> (<em>np.ndarray</em>) -- z vertices coordinates</p></li>
+<li><p><strong>zcols</strong> (<em>np.ndarray</em>) -- z columns</p></li>
+<li><p><strong>zmin</strong> (<em>np.ndarray</em>) -- min z coordinates of voxels</p></li>
+<li><p><strong>zmax</strong> (<em>np.ndarray</em>) -- max z coordinates of voxels</p></li>
+<li><p><strong>start</strong> (<em>int</em>) -- start index</p></li>
+<li><p><strong>end</strong> (<em>int</em>) -- end index</p></li>
+<li><p><strong>dim</strong> (<em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>, </em><em>float</em><em>]</em>) -- volume dimensions</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nimphs.operators.utils.volume.make_shared_array">
+<span class="sig-name descname"><span class="pre">make_shared_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nimphs.operators.utils.volume.make_shared_array" title="Permalink to this definition"></a></dt>
+<dd><p>Make raw shared array from given data and information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>np.ndarray</em>) -- data to put in the array</p></li>
+<li><p><strong>ctype</strong> (<em>str</em>) -- ctype. Enum in ['i', 'd'].</p></li>
+<li><p><strong>shape</strong> (<em>int</em>) -- shape of the array</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>shared array</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>RawArray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nimphs.operators.utils.volume.prepare_voxels_cpu">
+<span class="sig-name descname"><span class="pre">prepare_voxels_cpu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zcols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymax</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_coords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_coords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plane_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.utils.volume.prepare_voxels_cpu" title="Permalink to this definition"></a></dt>
+<dd><p>Prepare voxels information (runs for one thread).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>zcols</strong> (<em>list</em>) -- z columns (destination array)</p></li>
+<li><p><strong>xmin</strong> (<em>np.ndarray</em>) -- min x coordinates of voxels</p></li>
+<li><p><strong>xmax</strong> (<em>np.ndarray</em>) -- max x coordinates of voxels</p></li>
+<li><p><strong>ymin</strong> (<em>np.ndarray</em>) -- min y coordinates of voxels</p></li>
+<li><p><strong>ymax</strong> (<em>np.ndarray</em>) -- max y coordinates of voxels</p></li>
+<li><p><strong>x_coords</strong> (<em>np.ndarray</em>) -- x vertices coordinates</p></li>
+<li><p><strong>y_coords</strong> (<em>np.ndarray</em>) -- y vertices coordinates</p></li>
+<li><p><strong>plane_indices</strong> (<em>np.ndarray</em>) -- indices of all available planes</p></li>
+<li><p><strong>start</strong> (<em>int</em>) -- start index</p></li>
+<li><p><strong>end</strong> (<em>int</em>) -- end index</p></li>
+<li><p><strong>dim</strong> (<em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>, </em><em>float</em><em>]</em>) -- volume dimensions</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="nimphs.operators.telemac.html" class="btn btn-neutral float-left" title="nimphs.operators.telemac" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nimphs.panels.html" class="btn btn-neutral float-right" title="nimphs.panels" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ARTELIAGROUP.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

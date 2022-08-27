@@ -1,0 +1,58 @@
+nimphs.properties.telemac
+=========================
+
+.. automodule:: nimphs.properties.telemac
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Modules
+-------
+
+nimphs.properties.telemac.file\_data
+------------------------------------
+
+.. automodule:: nimphs.properties.telemac.file_data
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.properties.telemac.import\_settings
+------------------------------------------
+
+.. automodule:: nimphs.properties.telemac.import_settings
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.properties.telemac.interpolate
+-------------------------------------
+
+.. automodule:: nimphs.properties.telemac.interpolate
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.properties.telemac.telemac\_mesh\_sequence
+-------------------------------------------------
+
+.. automodule:: nimphs.properties.telemac.telemac_mesh_sequence
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.properties.telemac.telemac\_object\_settings
+---------------------------------------------------
+
+.. automodule:: nimphs.properties.telemac.telemac_object_settings
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.properties.telemac.telemac\_streaming\_sequence
+------------------------------------------------------
+
+.. automodule:: nimphs.properties.telemac.telemac_streaming_sequence
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,74 @@
+nimphs.operators.telemac
+========================
+
+.. automodule:: nimphs.operators.telemac
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Modules
+-------
+
+nimphs.operators.telemac.telemac\_create\_mesh\_sequence
+--------------------------------------------------------
+
+.. automodule:: nimphs.operators.telemac.telemac_create_mesh_sequence
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.telemac.telemac\_create\_streaming\_sequence
+-------------------------------------------------------------
+
+.. automodule:: nimphs.operators.telemac.telemac_create_streaming_sequence
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.telemac.telemac\_extract\_point\_data
+------------------------------------------------------
+
+.. automodule:: nimphs.operators.telemac.telemac_extract_point_data
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.telemac.telemac\_generate\_volume\_sequence
+------------------------------------------------------------
+
+.. automodule:: nimphs.operators.telemac.telemac_generate_volume_sequence
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.telemac.telemac\_import\_file
+----------------------------------------------
+
+.. automodule:: nimphs.operators.telemac.telemac_import_file
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.telemac.telemac\_preview
+-----------------------------------------
+
+.. automodule:: nimphs.operators.telemac.telemac_preview
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.telemac.telemac\_reload\_file
+----------------------------------------------
+
+.. automodule:: nimphs.operators.telemac.telemac_reload_file
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.telemac.telemac\_set\_volume\_origin
+-----------------------------------------------------
+
+.. automodule:: nimphs.operators.telemac.telemac_set_volume_origin
+   :members:
+   :undoc-members:
+   :show-inheritance:

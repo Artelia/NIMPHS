@@ -1,0 +1,18 @@
+nimphs.operators
+================
+
+.. automodule:: nimphs.operators
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Packages
+--------
+
+.. toctree::
+   :maxdepth: 1
+
+   nimphs.operators.openfoam
+   nimphs.operators.shared
+   nimphs.operators.telemac
+   nimphs.operators.utils

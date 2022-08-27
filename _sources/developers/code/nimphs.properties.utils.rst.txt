@@ -1,0 +1,42 @@
+nimphs.properties.utils
+=======================
+
+.. automodule:: nimphs.properties.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Modules
+-------
+
+nimphs.properties.utils.interpolation
+-------------------------------------
+
+.. automodule:: nimphs.properties.utils.interpolation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.properties.utils.others
+------------------------------
+
+.. automodule:: nimphs.properties.utils.others
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.properties.utils.point\_data
+-----------------------------------
+
+.. automodule:: nimphs.properties.utils.point_data
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.properties.utils.properties
+----------------------------------
+
+.. automodule:: nimphs.properties.utils.properties
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,90 @@
+nimphs.operators.shared
+=======================
+
+.. automodule:: nimphs.operators.shared
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Modules
+-------
+
+nimphs.operators.shared.add\_point\_data
+----------------------------------------
+
+.. automodule:: nimphs.operators.shared.add_point_data
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.shared.compute\_ranges\_point\_data\_values
+------------------------------------------------------------
+
+.. automodule:: nimphs.operators.shared.compute_ranges_point_data_values
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.shared.create\_mesh\_sequence
+----------------------------------------------
+
+.. automodule:: nimphs.operators.shared.create_mesh_sequence
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.shared.create\_sequence
+----------------------------------------
+
+.. automodule:: nimphs.operators.shared.create_sequence
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.shared.create\_streaming\_sequence
+---------------------------------------------------
+
+.. automodule:: nimphs.operators.shared.create_streaming_sequence
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.shared.edit\_file\_path
+----------------------------------------
+
+.. automodule:: nimphs.operators.shared.edit_file_path
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.shared.modal\_operator
+---------------------------------------
+
+.. automodule:: nimphs.operators.shared.modal_operator
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.shared.remove\_point\_data
+-------------------------------------------
+
+.. automodule:: nimphs.operators.shared.remove_point_data
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.shared.set\_custom\_value\_range
+-------------------------------------------------
+
+.. automodule:: nimphs.operators.shared.set_custom_value_range
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.operators.shared.utils
+-----------------------------
+
+.. automodule:: nimphs.operators.shared.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:

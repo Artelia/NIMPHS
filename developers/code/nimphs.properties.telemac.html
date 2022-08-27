@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nimphs.properties.telemac &mdash; NIMPHS 0.4.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/global.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="nimphs.properties.utils" href="nimphs.properties.utils.html" />
+    <link rel="prev" title="nimphs.properties.shared" href="nimphs.properties.shared.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> NIMPHS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../users/index.html">Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developers manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../development_environment.html">Development environment</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="nimphs.html">Code documentation</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="nimphs.html#packages">Packages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="nimphs.menus.html">nimphs.menus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nimphs.operators.html">nimphs.operators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nimphs.panels.html">nimphs.panels</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="nimphs.properties.html">nimphs.properties</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NIMPHS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Developers manual</a> &raquo;</li>
+          <li><a href="nimphs.html">Code documentation</a> &raquo;</li>
+          <li><a href="nimphs.properties.html">nimphs.properties</a> &raquo;</li>
+      <li>nimphs.properties.telemac</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-nimphs.properties.telemac">
+<span id="nimphs-properties-telemac"></span><h1>nimphs.properties.telemac<a class="headerlink" href="#module-nimphs.properties.telemac" title="Permalink to this heading"></a></h1>
+<section id="modules">
+<h2>Modules<a class="headerlink" href="#modules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-nimphs.properties.telemac.file_data">
+<span id="nimphs-properties-telemac-file-data"></span><h2>nimphs.properties.telemac.file_data<a class="headerlink" href="#module-nimphs.properties.telemac.file_data" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.file_data.TelemacFileData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">TelemacFileData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nimphs.properties.telemac.file_data.TelemacFileData" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="nimphs.properties.shared.html#nimphs.properties.shared.file_data.FileData" title="nimphs.properties.shared.file_data.FileData"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileData</span></code></a></p>
+<p>Hold file data for the TELEMAC module.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.file_data.TelemacFileData.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nimphs.properties.telemac.file_data.TelemacFileData" title="nimphs.properties.telemac.file_data.TelemacFileData"><span class="pre">TelemacFileData</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.properties.telemac.file_data.TelemacFileData.copy" title="Permalink to this definition"></a></dt>
+<dd><p>Copy important information from the given instance of file data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other</strong> (<em>NIMPHS_TelemacFileData</em>) -- TELEMAC file data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.file_data.TelemacFileData.data">
+<span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">np.ndarray</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.telemac.file_data.TelemacFileData.data" title="Permalink to this definition"></a></dt>
+<dd><p>Data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.file_data.TelemacFileData.dimensions">
+<span class="sig-name descname"><span class="pre">dimensions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">(0.0,</span> <span class="pre">0.0,</span> <span class="pre">0.0)</span></em><a class="headerlink" href="#nimphs.properties.telemac.file_data.TelemacFileData.dimensions" title="Permalink to this definition"></a></dt>
+<dd><p>Dimensions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>tuple[float, float, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.file_data.TelemacFileData.faces">
+<span class="sig-name descname"><span class="pre">faces</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">np.ndarray</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.telemac.file_data.TelemacFileData.faces" title="Permalink to this definition"></a></dt>
+<dd><p>Faces of the mesh</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.file_data.TelemacFileData.get_point_data">
+<span class="sig-name descname"><span class="pre">get_point_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#nimphs.properties.telemac.file_data.TelemacFileData.get_point_data" title="Permalink to this definition"></a></dt>
+<dd><p>Get point data from the given id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em>) -- identifier of the variable from which to get data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.file_data.TelemacFileData.get_point_data_from_list">
+<span class="sig-name descname"><span class="pre">get_point_data_from_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#nimphs.properties.telemac.file_data.TelemacFileData.get_point_data_from_list" title="Permalink to this definition"></a></dt>
+<dd><p>Check for every variable name and return data associated to the first occurrence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>names</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) -- list of possible variables</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>data, name of the variable</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple[np.ndarray, str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.file_data.TelemacFileData.init_point_data_manager">
+<span class="sig-name descname"><span class="pre">init_point_data_manager</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.properties.telemac.file_data.TelemacFileData.init_point_data_manager" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize point data manager (contains variables information).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.file_data.TelemacFileData.is_3d">
+<span class="sig-name descname"><span class="pre">is_3d</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#nimphs.properties.telemac.file_data.TelemacFileData.is_3d" title="Permalink to this definition"></a></dt>
+<dd><p>Indicate if the file is from a 3D simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>state</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.file_data.TelemacFileData.is_ok">
+<span class="sig-name descname"><span class="pre">is_ok</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#nimphs.properties.telemac.file_data.TelemacFileData.is_ok" title="Permalink to this definition"></a></dt>
+<dd><p>Check if file data is up (data are not None or empty).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if ok</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.file_data.TelemacFileData.load_file">
+<span class="sig-name descname"><span class="pre">load_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#nimphs.properties.telemac.file_data.TelemacFileData.load_file" title="Permalink to this definition"></a></dt>
+<dd><p>Load TELEMAC (Serafin) file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) -- path to the file to load</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>success</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.file_data.TelemacFileData.nb_planes">
+<span class="sig-name descname"><span class="pre">nb_planes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#nimphs.properties.telemac.file_data.TelemacFileData.nb_planes" title="Permalink to this definition"></a></dt>
+<dd><p>Number of planes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.file_data.TelemacFileData.nb_triangles">
+<span class="sig-name descname"><span class="pre">nb_triangles</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#nimphs.properties.telemac.file_data.TelemacFileData.nb_triangles" title="Permalink to this definition"></a></dt>
+<dd><p>Number of triangles</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.file_data.TelemacFileData.nb_vertices">
+<span class="sig-name descname"><span class="pre">nb_vertices</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#nimphs.properties.telemac.file_data.TelemacFileData.nb_vertices" title="Permalink to this definition"></a></dt>
+<dd><p>Number of vertices</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.file_data.TelemacFileData.update_data">
+<span class="sig-name descname"><span class="pre">update_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_point</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.properties.telemac.file_data.TelemacFileData.update_data" title="Permalink to this definition"></a></dt>
+<dd><p>Update file data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>time_point</strong> (<em>int</em>) -- time point to read</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.file_data.TelemacFileData.vertices">
+<span class="sig-name descname"><span class="pre">vertices</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">np.ndarray</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.telemac.file_data.TelemacFileData.vertices" title="Permalink to this definition"></a></dt>
+<dd><p>Vertices of the mesh</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.file_data.remove_spaces">
+<span class="sig-name descname"><span class="pre">remove_spaces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#nimphs.properties.telemac.file_data.remove_spaces" title="Permalink to this definition"></a></dt>
+<dd><p>Remove spaces at the end of the variable name (if the 16 characters are not used).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>string</strong> (<em>str</em>) -- input string</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>name</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-nimphs.properties.telemac.import_settings">
+<span id="nimphs-properties-telemac-import-settings"></span><h2>nimphs.properties.telemac.import_settings<a class="headerlink" href="#module-nimphs.properties.telemac.import_settings" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.import_settings.NIMPHS_TelemacImportSettings">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_TelemacImportSettings</span></span><a class="headerlink" href="#nimphs.properties.telemac.import_settings.NIMPHS_TelemacImportSettings" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PropertyGroup</span></code></p>
+<p>Import settings for the TELEMAC module.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.import_settings.NIMPHS_TelemacImportSettings.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.properties.telemac.import_settings.NIMPHS_TelemacImportSettings.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.import_settings.NIMPHS_TelemacImportSettings.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.properties.telemac.import_settings.NIMPHS_TelemacImportSettings.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.properties.telemac.interpolate">
+<span id="nimphs-properties-telemac-interpolate"></span><h2>nimphs.properties.telemac.interpolate<a class="headerlink" href="#module-nimphs.properties.telemac.interpolate" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.interpolate.NIMPHS_TelemacInterpolateProperty">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_TelemacInterpolateProperty</span></span><a class="headerlink" href="#nimphs.properties.telemac.interpolate.NIMPHS_TelemacInterpolateProperty" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PropertyGroup</span></code></p>
+<p>Interpolation settings for the TELEMAC module.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.interpolate.NIMPHS_TelemacInterpolateProperty.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.properties.telemac.interpolate.NIMPHS_TelemacInterpolateProperty.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.interpolate.NIMPHS_TelemacInterpolateProperty.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.properties.telemac.interpolate.NIMPHS_TelemacInterpolateProperty.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.interpolate.NIMPHS_TelemacInterpolateProperty.steps">
+<span class="sig-name descname"><span class="pre">steps</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.telemac.interpolate.NIMPHS_TelemacInterpolateProperty.steps" title="Permalink to this definition"></a></dt>
+<dd><p>Number of data to generate between two known data points</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.IntProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.interpolate.NIMPHS_TelemacInterpolateProperty.type">
+<span class="sig-name descname"><span class="pre">type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.telemac.interpolate.NIMPHS_TelemacInterpolateProperty.type" title="Permalink to this definition"></a></dt>
+<dd><p>Type of the interpolation. Enum in ['NONE', 'LINEAR']</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.EnumProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.properties.telemac.telemac_mesh_sequence">
+<span id="nimphs-properties-telemac-telemac-mesh-sequence"></span><h2>nimphs.properties.telemac.telemac_mesh_sequence<a class="headerlink" href="#module-nimphs.properties.telemac.telemac_mesh_sequence" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.telemac_mesh_sequence.NIMPHS_TelemacMeshSequenceProperty">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_TelemacMeshSequenceProperty</span></span><a class="headerlink" href="#nimphs.properties.telemac.telemac_mesh_sequence.NIMPHS_TelemacMeshSequenceProperty" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PropertyGroup</span></code></p>
+<p>'mesh sequence' settings for the TELEMAC module.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.telemac_mesh_sequence.NIMPHS_TelemacMeshSequenceProperty.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.properties.telemac.telemac_mesh_sequence.NIMPHS_TelemacMeshSequenceProperty.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.telemac_mesh_sequence.NIMPHS_TelemacMeshSequenceProperty.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.properties.telemac.telemac_mesh_sequence.NIMPHS_TelemacMeshSequenceProperty.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.properties.telemac.telemac_object_settings">
+<span id="nimphs-properties-telemac-telemac-object-settings"></span><h2>nimphs.properties.telemac.telemac_object_settings<a class="headerlink" href="#module-nimphs.properties.telemac.telemac_object_settings" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.telemac_object_settings.NIMPHS_TelemacObjectSettings">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_TelemacObjectSettings</span></span><a class="headerlink" href="#nimphs.properties.telemac.telemac_object_settings.NIMPHS_TelemacObjectSettings" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PropertyGroup</span></code></p>
+<p>Data structure which holds object related settings for the TELEMAC module.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.telemac_object_settings.NIMPHS_TelemacObjectSettings.interpolate">
+<span class="sig-name descname"><span class="pre">interpolate</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.telemac.telemac_object_settings.NIMPHS_TelemacObjectSettings.interpolate" title="Permalink to this definition"></a></dt>
+<dd><p>Interpolation settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.NIMPHS_TelemacInterpolateProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.telemac_object_settings.NIMPHS_TelemacObjectSettings.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.properties.telemac.telemac_object_settings.NIMPHS_TelemacObjectSettings.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.telemac_object_settings.NIMPHS_TelemacObjectSettings.m_sequence">
+<span class="sig-name descname"><span class="pre">m_sequence</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.telemac.telemac_object_settings.NIMPHS_TelemacObjectSettings.m_sequence" title="Permalink to this definition"></a></dt>
+<dd><p>TELEMAC 'mesh sequence' properties.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#nimphs.properties.telemac.telemac_mesh_sequence.NIMPHS_TelemacMeshSequenceProperty" title="nimphs.properties.telemac.telemac_mesh_sequence.NIMPHS_TelemacMeshSequenceProperty">NIMPHS_TelemacMeshSequenceProperty</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.telemac_object_settings.NIMPHS_TelemacObjectSettings.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.properties.telemac.telemac_object_settings.NIMPHS_TelemacObjectSettings.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.telemac_object_settings.NIMPHS_TelemacObjectSettings.s_sequence">
+<span class="sig-name descname"><span class="pre">s_sequence</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.telemac.telemac_object_settings.NIMPHS_TelemacObjectSettings.s_sequence" title="Permalink to this definition"></a></dt>
+<dd><p>TELEMAC 'streaming sequence' properties.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#nimphs.properties.telemac.telemac_streaming_sequence.NIMPHS_TelemacStreamingSequenceProperty" title="nimphs.properties.telemac.telemac_streaming_sequence.NIMPHS_TelemacStreamingSequenceProperty">NIMPHS_TelemacStreamingSequenceProperty</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.telemac_object_settings.NIMPHS_TelemacObjectSettings.z_name">
+<span class="sig-name descname"><span class="pre">z_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.telemac.telemac_object_settings.NIMPHS_TelemacObjectSettings.z_name" title="Permalink to this definition"></a></dt>
+<dd><p>Name of the variable used for the 'z-values' of the vertices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.StringProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.properties.telemac.telemac_streaming_sequence">
+<span id="nimphs-properties-telemac-telemac-streaming-sequence"></span><h2>nimphs.properties.telemac.telemac_streaming_sequence<a class="headerlink" href="#module-nimphs.properties.telemac.telemac_streaming_sequence" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.telemac_streaming_sequence.NIMPHS_TelemacStreamingSequenceProperty">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_TelemacStreamingSequenceProperty</span></span><a class="headerlink" href="#nimphs.properties.telemac.telemac_streaming_sequence.NIMPHS_TelemacStreamingSequenceProperty" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="nimphs.properties.shared.html#nimphs.properties.shared.module_streaming_sequence_settings.NIMPHS_ModuleStreamingSequenceSettings" title="nimphs.properties.shared.module_streaming_sequence_settings.NIMPHS_ModuleStreamingSequenceSettings"><code class="xref py py-class docutils literal notranslate"><span class="pre">NIMPHS_ModuleStreamingSequenceSettings</span></code></a></p>
+<p>'streaming sequence' settings for the TELEMAC module.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.telemac_streaming_sequence.NIMPHS_TelemacStreamingSequenceProperty.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.properties.telemac.telemac_streaming_sequence.NIMPHS_TelemacStreamingSequenceProperty.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.telemac.telemac_streaming_sequence.NIMPHS_TelemacStreamingSequenceProperty.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.properties.telemac.telemac_streaming_sequence.NIMPHS_TelemacStreamingSequenceProperty.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="nimphs.properties.shared.html" class="btn btn-neutral float-left" title="nimphs.properties.shared" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nimphs.properties.utils.html" class="btn btn-neutral float-right" title="nimphs.properties.utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ARTELIAGROUP.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+nimphs.properties
+=================
+
+.. automodule:: nimphs.properties
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Packages
+--------
+
+.. toctree::
+   :maxdepth: 1
+
+   nimphs.properties.openfoam
+   nimphs.properties.shared
+   nimphs.properties.telemac
+   nimphs.properties.utils
+
+Modules
+-------
+
+nimphs.properties.preferences
+-----------------------------
+
+.. automodule:: nimphs.properties.preferences
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create a sequence &mdash; NIMPHS 0.4.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/global.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="TELEMAC" href="../telemac/index.html" />
+    <link rel="prev" title="Previewing tools" href="preview.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> NIMPHS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Documentation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../installation.html">Installation guide</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">OpenFOAM</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="import.html">Import a file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="preview.html">Previewing tools</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Create a sequence</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#mesh-sequence">Mesh sequence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#streaming-sequence">Streaming sequence</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../telemac/index.html">TELEMAC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../preferences.html">Add-on preferences</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers/index.html">Developers manual</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NIMPHS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Documentation</a> &raquo;</li>
+          <li><a href="index.html">OpenFOAM</a> &raquo;</li>
+      <li>Create a sequence</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="create-a-sequence">
+<span id="openfoam-create-sequence"></span><h1>Create a sequence<a class="headerlink" href="#create-a-sequence" title="Permalink to this heading"></a></h1>
+<div class="line-block">
+<div class="line">You can create sequences to automatically switch between time steps using the timeline.</div>
+</div>
+<section id="mesh-sequence">
+<span id="openfoam-create-mesh-sequence"></span><h2>Mesh sequence<a class="headerlink" href="#mesh-sequence" title="Permalink to this heading"></a></h2>
+<div class="line-block">
+<div class="line">This type of sequence holds every time step in memory (a mesh is built for each time step).</div>
+<div class="line">That is why it is not recommended to use this sequence for large meshes.</div>
+<div class="line">It is built using the <a class="reference external" href="https://github.com/neverhood311/Stop-motion-OBJ/wiki">Stop-motion-OBJ</a>.
+Thus you can use the features associated for this sequence.</div>
+</div>
+<a class="rounded-corners reference internal image-reference" href="../../_images/create_mesh_sequence.png"><img alt="Create mesh sequence button" class="rounded-corners align-center" src="../../_images/create_mesh_sequence.png" style="width: 60%;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<a class="rounded-corners reference internal image-reference" href="../../_images/create_mesh_sequence_operator.png"><img alt="Create mesh sequence operator" class="rounded-corners align-center" src="../../_images/create_mesh_sequence_operator.png" style="width: 60%;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<section id="import-settings">
+<span id="openfoam-mesh-sequence-import-properties"></span><h3>Import settings<a class="headerlink" href="#import-settings" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Decompose polyhedra</strong>: indicate whether polyhedra are to be decomposed when read. If True, decompose polyhedra into tetrahedra and pyramids.</p></li>
+<li><p><strong>Skip zero time</strong>: indicate whether to skip the '/0' time directory or not.</p></li>
+<li><p><strong>Triangulate</strong>: more complex polygons will be broken down into triangles.</p></li>
+<li><p><strong>Case</strong>: indicate whether decomposed mesh or reconstructed mesh should be read.</p></li>
+</ul>
+</section>
+<section id="clip">
+<span id="openfoam-mesh-sequence-clip-properties"></span><h3>Clip<a class="headerlink" href="#clip" title="Permalink to this heading"></a></h3>
+<div class="line-block">
+<div class="line">You can clip a mesh as you would do in ParaView.</div>
+</div>
+<ul>
+<li><p><strong>Type</strong>: clipping method (Scalars, box, etc)</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt><strong>Scalars clipping method</strong></dt><dd><ul>
+<li><p><strong>Scalars</strong>: name of scalar to clip on.</p></li>
+<li><p><strong>Value</strong>: set the clipping value.</p></li>
+<li><p><strong>Invert</strong>: flag on whether to flip/invert the clip. When True, only the mesh below 'value' will be kept. When False, only values above 'value' will be kept.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="point-data">
+<span id="openfoam-mesh-sequence-point-data-properties"></span><h3>Point data<a class="headerlink" href="#point-data" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Method</strong>: remapping method for point data ('LOCAL' or 'GLOBAL').</p></li>
+<li><p><strong>Add</strong>: select a new point data to import as vertex colors.</p></li>
+</ul>
+</section>
+<section id="sequence">
+<span id="openfoam-mesh-sequence-properties"></span><h3>Sequence<a class="headerlink" href="#sequence" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Start</strong>: starting point of the sequence (time step).</p></li>
+<li><p><strong>End</strong>: ending point of the sequence (time step).</p></li>
+<li><p><strong>Name</strong>: name to give to the sequence object.</p></li>
+</ul>
+</section>
+</section>
+<section id="streaming-sequence">
+<span id="openfoam-create-streaming-sequence"></span><h2>Streaming sequence<a class="headerlink" href="#streaming-sequence" title="Permalink to this heading"></a></h2>
+<div class="line-block">
+<div class="line">This type of sequence holds only one mesh in memory. It is recommended to use for large meshes.</div>
+<div class="line">The mesh automatically updates when the frame changes.</div>
+</div>
+<a class="rounded-corners reference internal image-reference" href="../../_images/create_streaming_sequence.png"><img alt="Create streaming sequence button" class="rounded-corners align-center" src="../../_images/create_streaming_sequence.png" style="width: 60%;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<a class="rounded-corners reference internal image-reference" href="../../_images/create_streaming_sequence_operator.png"><img alt="Create streaming sequence operator" class="rounded-corners align-center" src="../../_images/create_streaming_sequence_operator.png" style="width: 60%;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<section id="openfoam-streaming-sequence-properties">
+<span id="id1"></span><h3>Sequence<a class="headerlink" href="#openfoam-streaming-sequence-properties" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Start</strong>: starting point of the sequence (time step).</p></li>
+<li><p><strong>Length</strong>: length of the animation (time steps).</p></li>
+<li><p><strong>Shade smooth</strong>: indicate whether to use smooth shading or flat shading.</p></li>
+<li><p><strong>Name</strong>: name to give to the sequence object.</p></li>
+</ul>
+</section>
+<section id="streaming-sequence-object">
+<span id="openfoam-streaming-sequence-object-properties"></span><h3>Streaming sequence object<a class="headerlink" href="#streaming-sequence-object" title="Permalink to this heading"></a></h3>
+<div class="line-block">
+<div class="line">You can edit streaming sequence settings in the <cite>Object properties</cite> panel.</div>
+</div>
+<a class="rounded-corners reference internal image-reference" href="../../_images/streaming_sequence_properties.png"><img alt="Streaming sequence properties panel" class="rounded-corners align-center" src="../../_images/streaming_sequence_properties.png" style="width: 60%;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="preview.html" class="btn btn-neutral float-left" title="Previewing tools" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../telemac/index.html" class="btn btn-neutral float-right" title="TELEMAC" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ARTELIAGROUP.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

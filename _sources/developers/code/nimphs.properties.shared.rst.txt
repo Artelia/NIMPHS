@@ -1,0 +1,58 @@
+nimphs.properties.shared
+========================
+
+.. automodule:: nimphs.properties.shared
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Modules
+-------
+
+nimphs.properties.shared.file\_data
+-----------------------------------
+
+.. automodule:: nimphs.properties.shared.file_data
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.properties.shared.module\_streaming\_sequence\_settings
+--------------------------------------------------------------
+
+.. automodule:: nimphs.properties.shared.module_streaming_sequence_settings
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.properties.shared.nimphs\_object
+---------------------------------------
+
+.. automodule:: nimphs.properties.shared.nimphs_object
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.properties.shared.nimphs\_object\_settings
+-------------------------------------------------
+
+.. automodule:: nimphs.properties.shared.nimphs_object_settings
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.properties.shared.nimphs\_scene
+--------------------------------------
+
+.. automodule:: nimphs.properties.shared.nimphs_scene
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.properties.shared.point\_data\_settings
+----------------------------------------------
+
+.. automodule:: nimphs.properties.shared.point_data_settings
+   :members:
+   :undoc-members:
+   :show-inheritance:

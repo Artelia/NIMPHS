@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nimphs.properties.shared &mdash; NIMPHS 0.4.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/global.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="nimphs.properties.telemac" href="nimphs.properties.telemac.html" />
+    <link rel="prev" title="nimphs.properties.openfoam" href="nimphs.properties.openfoam.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> NIMPHS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../users/index.html">Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developers manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../development_environment.html">Development environment</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="nimphs.html">Code documentation</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="nimphs.html#packages">Packages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="nimphs.menus.html">nimphs.menus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nimphs.operators.html">nimphs.operators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nimphs.panels.html">nimphs.panels</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="nimphs.properties.html">nimphs.properties</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NIMPHS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Developers manual</a> &raquo;</li>
+          <li><a href="nimphs.html">Code documentation</a> &raquo;</li>
+          <li><a href="nimphs.properties.html">nimphs.properties</a> &raquo;</li>
+      <li>nimphs.properties.shared</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-nimphs.properties.shared">
+<span id="nimphs-properties-shared"></span><h1>nimphs.properties.shared<a class="headerlink" href="#module-nimphs.properties.shared" title="Permalink to this heading"></a></h1>
+<section id="modules">
+<h2>Modules<a class="headerlink" href="#modules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-nimphs.properties.shared.file_data">
+<span id="nimphs-properties-shared-file-data"></span><h2>nimphs.properties.shared.file_data<a class="headerlink" href="#module-nimphs.properties.shared.file_data" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.properties.shared.file_data.FileData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FileData</span></span><a class="headerlink" href="#nimphs.properties.shared.file_data.FileData" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class to manage file data for all modules.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.file_data.FileData.file">
+<span class="sig-name descname"><span class="pre">file</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Serafin</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">POpenFOAMReader</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.file_data.FileData.file" title="Permalink to this definition"></a></dt>
+<dd><p>File reader</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Union[Serafin, POpenFOAMReader]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.properties.shared.file_data.FileData.get_point_data">
+<span class="sig-name descname"><span class="pre">get_point_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="headerlink" href="#nimphs.properties.shared.file_data.FileData.get_point_data" title="Permalink to this definition"></a></dt>
+<dd><p>Get point data from the given id. Overridden id derived classes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>_id</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em>) -- identifier of the variable from which to get data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.file_data.FileData.module">
+<span class="sig-name descname"><span class="pre">module</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#nimphs.properties.shared.file_data.FileData.module" title="Permalink to this definition"></a></dt>
+<dd><p>Name of the module</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.file_data.FileData.nb_time_points">
+<span class="sig-name descname"><span class="pre">nb_time_points</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#nimphs.properties.shared.file_data.FileData.nb_time_points" title="Permalink to this definition"></a></dt>
+<dd><p>Number of readable time points</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.properties.shared.file_data.FileData.update_var_range">
+<span class="sig-name descname"><span class="pre">update_var_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'LOCAL'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.properties.shared.file_data.FileData.update_var_range" title="Permalink to this definition"></a></dt>
+<dd><p>Update point data information (value ranges).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) -- name of the variable to update</p></li>
+<li><p><strong>scope</strong> (<em>str</em><em>, </em><em>optional</em>) -- indicate which information to update. Enum in ['LOCAL', 'GLOBAL'].                                   Defaults to 'LOCAL'.</p></li>
+<li><p><strong>data</strong> (<em>Union</em><em>[</em><em>np.ndarray</em><em>, </em><em>tuple</em><em>, </em><em>None</em><em>]</em><em>, </em><em>optional</em>) -- data corresponding to the given variable                                                             or min / max values. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.file_data.FileData.vars">
+<span class="sig-name descname"><span class="pre">vars</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="nimphs.properties.utils.html#nimphs.properties.utils.point_data.PointDataManager" title="nimphs.properties.utils.point_data.PointDataManager"><span class="pre">PointDataManager</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.file_data.FileData.vars" title="Permalink to this definition"></a></dt>
+<dd><p>Information on variables</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="nimphs.properties.utils.html#nimphs.properties.utils.point_data.PointDataManager" title="nimphs.properties.utils.point_data.PointDataManager">PointDataManager</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.properties.shared.module_streaming_sequence_settings">
+<span id="nimphs-properties-shared-module-streaming-sequence-settings"></span><h2>nimphs.properties.shared.module_streaming_sequence_settings<a class="headerlink" href="#module-nimphs.properties.shared.module_streaming_sequence_settings" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.properties.shared.module_streaming_sequence_settings.NIMPHS_ModuleStreamingSequenceSettings">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_ModuleStreamingSequenceSettings</span></span><a class="headerlink" href="#nimphs.properties.shared.module_streaming_sequence_settings.NIMPHS_ModuleStreamingSequenceSettings" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PropertyGroup</span></code></p>
+<p>Module 'streaming sequence' properties.</p>
+<p>This data structure holds common data used in all modules.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.module_streaming_sequence_settings.NIMPHS_ModuleStreamingSequenceSettings.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.properties.shared.module_streaming_sequence_settings.NIMPHS_ModuleStreamingSequenceSettings.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.module_streaming_sequence_settings.NIMPHS_ModuleStreamingSequenceSettings.length">
+<span class="sig-name descname"><span class="pre">length</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.module_streaming_sequence_settings.NIMPHS_ModuleStreamingSequenceSettings.length" title="Permalink to this definition"></a></dt>
+<dd><p>Length of the animation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.IntProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.module_streaming_sequence_settings.NIMPHS_ModuleStreamingSequenceSettings.max">
+<span class="sig-name descname"><span class="pre">max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.module_streaming_sequence_settings.NIMPHS_ModuleStreamingSequenceSettings.max" title="Permalink to this definition"></a></dt>
+<dd><p>Maximum length of the sequence (available time steps).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.IntProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.module_streaming_sequence_settings.NIMPHS_ModuleStreamingSequenceSettings.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.properties.shared.module_streaming_sequence_settings.NIMPHS_ModuleStreamingSequenceSettings.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.module_streaming_sequence_settings.NIMPHS_ModuleStreamingSequenceSettings.shade_smooth">
+<span class="sig-name descname"><span class="pre">shade_smooth</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.module_streaming_sequence_settings.NIMPHS_ModuleStreamingSequenceSettings.shade_smooth" title="Permalink to this definition"></a></dt>
+<dd><p>Indicate whether to use smooth shading or flat shading</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.BoolProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.module_streaming_sequence_settings.NIMPHS_ModuleStreamingSequenceSettings.start">
+<span class="sig-name descname"><span class="pre">start</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.module_streaming_sequence_settings.NIMPHS_ModuleStreamingSequenceSettings.start" title="Permalink to this definition"></a></dt>
+<dd><p>Starting frame of the sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.IntProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.module_streaming_sequence_settings.NIMPHS_ModuleStreamingSequenceSettings.update">
+<span class="sig-name descname"><span class="pre">update</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.module_streaming_sequence_settings.NIMPHS_ModuleStreamingSequenceSettings.update" title="Permalink to this definition"></a></dt>
+<dd><p>Update this sequence whenever the frame changes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.BoolProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.properties.shared.nimphs_object">
+<span id="nimphs-properties-shared-nimphs-object"></span><h2>nimphs.properties.shared.nimphs_object<a class="headerlink" href="#module-nimphs.properties.shared.nimphs_object" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_object.NIMPHS_Object">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_Object</span></span><a class="headerlink" href="#nimphs.properties.shared.nimphs_object.NIMPHS_Object" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PropertyGroup</span></code></p>
+<p>Main property of the add-on for objects. This holds all Object data for the add-on.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_object.NIMPHS_Object.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.properties.shared.nimphs_object.NIMPHS_Object.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_object.NIMPHS_Object.is_mesh_sequence">
+<span class="sig-name descname"><span class="pre">is_mesh_sequence</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.nimphs_object.NIMPHS_Object.is_mesh_sequence" title="Permalink to this definition"></a></dt>
+<dd><p>Indicate whether this object is a mesh sequence or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.BoolProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_object.NIMPHS_Object.is_streaming_sequence">
+<span class="sig-name descname"><span class="pre">is_streaming_sequence</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.nimphs_object.NIMPHS_Object.is_streaming_sequence" title="Permalink to this definition"></a></dt>
+<dd><p>Indicate if this object is a sequence which updates when the frame changes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.BoolProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_object.NIMPHS_Object.module">
+<span class="sig-name descname"><span class="pre">module</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.nimphs_object.NIMPHS_Object.module" title="Permalink to this definition"></a></dt>
+<dd><p>Module name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.StringProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_object.NIMPHS_Object.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.properties.shared.nimphs_object.NIMPHS_Object.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_object.NIMPHS_Object.settings">
+<span class="sig-name descname"><span class="pre">settings</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.nimphs_object.NIMPHS_Object.settings" title="Permalink to this definition"></a></dt>
+<dd><p>Holds object settings for all modules.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#nimphs.properties.shared.nimphs_object_settings.NIMPHS_ObjectSettings" title="nimphs.properties.shared.nimphs_object_settings.NIMPHS_ObjectSettings">NIMPHS_ObjectSettings</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_object.NIMPHS_Object.uid">
+<span class="sig-name descname"><span class="pre">uid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.nimphs_object.NIMPHS_Object.uid" title="Permalink to this definition"></a></dt>
+<dd><p>Unique identifier for each object of the add-on to access file_data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.StringProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.properties.shared.nimphs_object_settings">
+<span id="nimphs-properties-shared-nimphs-object-settings"></span><h2>nimphs.properties.shared.nimphs_object_settings<a class="headerlink" href="#module-nimphs.properties.shared.nimphs_object_settings" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_object_settings.NIMPHS_ObjectSettings">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_ObjectSettings</span></span><a class="headerlink" href="#nimphs.properties.shared.nimphs_object_settings.NIMPHS_ObjectSettings" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PropertyGroup</span></code></p>
+<p>Data structure which holds object related settings for all the modules.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_object_settings.NIMPHS_ObjectSettings.file_path">
+<span class="sig-name descname"><span class="pre">file_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.nimphs_object_settings.NIMPHS_ObjectSettings.file_path" title="Permalink to this definition"></a></dt>
+<dd><p>File to read to access data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.StringProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_object_settings.NIMPHS_ObjectSettings.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.properties.shared.nimphs_object_settings.NIMPHS_ObjectSettings.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_object_settings.NIMPHS_ObjectSettings.openfoam">
+<span class="sig-name descname"><span class="pre">openfoam</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.nimphs_object_settings.NIMPHS_ObjectSettings.openfoam" title="Permalink to this definition"></a></dt>
+<dd><p>OpenFOAM object properties</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="nimphs.properties.openfoam.html#nimphs.properties.openfoam.openfoam_object_settings.NIMPHS_OpenfoamObjectSettings" title="nimphs.properties.openfoam.openfoam_object_settings.NIMPHS_OpenfoamObjectSettings">NIMPHS_OpenfoamObjectSettings</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_object_settings.NIMPHS_ObjectSettings.point_data">
+<span class="sig-name descname"><span class="pre">point_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.nimphs_object_settings.NIMPHS_ObjectSettings.point_data" title="Permalink to this definition"></a></dt>
+<dd><p>Point data settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings" title="nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings">NIMPHS_PointDataSettings</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_object_settings.NIMPHS_ObjectSettings.preview_point_data">
+<span class="sig-name descname"><span class="pre">preview_point_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.nimphs_object_settings.NIMPHS_ObjectSettings.preview_point_data" title="Permalink to this definition"></a></dt>
+<dd><p>Name of point data to preview.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.EnumProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_object_settings.NIMPHS_ObjectSettings.preview_time_point">
+<span class="sig-name descname"><span class="pre">preview_time_point</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.nimphs_object_settings.NIMPHS_ObjectSettings.preview_time_point" title="Permalink to this definition"></a></dt>
+<dd><p>Time step to preview.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.EnumProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_object_settings.NIMPHS_ObjectSettings.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.properties.shared.nimphs_object_settings.NIMPHS_ObjectSettings.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_object_settings.NIMPHS_ObjectSettings.telemac">
+<span class="sig-name descname"><span class="pre">telemac</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.nimphs_object_settings.NIMPHS_ObjectSettings.telemac" title="Permalink to this definition"></a></dt>
+<dd><p>TELEMAC object properties</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="nimphs.properties.telemac.html#nimphs.properties.telemac.telemac_object_settings.NIMPHS_TelemacObjectSettings" title="nimphs.properties.telemac.telemac_object_settings.NIMPHS_TelemacObjectSettings">NIMPHS_TelemacObjectSettings</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.properties.shared.nimphs_scene">
+<span id="nimphs-properties-shared-nimphs-scene"></span><h2>nimphs.properties.shared.nimphs_scene<a class="headerlink" href="#module-nimphs.properties.shared.nimphs_scene" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_scene.NIMPHS_Scene">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_Scene</span></span><a class="headerlink" href="#nimphs.properties.shared.nimphs_scene.NIMPHS_Scene" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PropertyGroup</span></code></p>
+<p>Data structure which holds all Scene data for the add-on.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_scene.NIMPHS_Scene.file_data">
+<span class="sig-name descname"><span class="pre">file_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ops':</span> <span class="pre">None}</span></em><a class="headerlink" href="#nimphs.properties.shared.nimphs_scene.NIMPHS_Scene.file_data" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_scene.NIMPHS_Scene.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.properties.shared.nimphs_scene.NIMPHS_Scene.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_scene.NIMPHS_Scene.m_op_label">
+<span class="sig-name descname"><span class="pre">m_op_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.nimphs_scene.NIMPHS_Scene.m_op_label" title="Permalink to this definition"></a></dt>
+<dd><p>Label displayed on the progress bar</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.StringProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_scene.NIMPHS_Scene.m_op_running">
+<span class="sig-name descname"><span class="pre">m_op_running</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.nimphs_scene.NIMPHS_Scene.m_op_running" title="Permalink to this definition"></a></dt>
+<dd><p>Indicate if a modal operator is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.BoolProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_scene.NIMPHS_Scene.m_op_value">
+<span class="sig-name descname"><span class="pre">m_op_value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.nimphs_scene.NIMPHS_Scene.m_op_value" title="Permalink to this definition"></a></dt>
+<dd><p>Value used by the progress bar when modal operators are running</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.FloatProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_scene.NIMPHS_Scene.op_target">
+<span class="sig-name descname"><span class="pre">op_target</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.nimphs_scene.NIMPHS_Scene.op_target" title="Permalink to this definition"></a></dt>
+<dd><p>Target object on which extract point data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.PointerPropery</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_scene.NIMPHS_Scene.op_vars">
+<span class="sig-name descname"><span class="pre">op_vars</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="nimphs.properties.utils.html#nimphs.properties.utils.point_data.PointDataManager" title="nimphs.properties.utils.point_data.PointDataManager"><span class="pre">PointDataManager</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;nimphs.properties.utils.point_data.PointDataManager</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#nimphs.properties.shared.nimphs_scene.NIMPHS_Scene.op_vars" title="Permalink to this definition"></a></dt>
+<dd><p>Place to store temporary point data information for operators.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="nimphs.properties.utils.html#nimphs.properties.utils.point_data.PointDataManager" title="nimphs.properties.utils.point_data.PointDataManager">PointDataManager</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.nimphs_scene.NIMPHS_Scene.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.properties.shared.nimphs_scene.NIMPHS_Scene.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.properties.shared.point_data_settings">
+<span id="nimphs-properties-shared-point-data-settings"></span><h2>nimphs.properties.shared.point_data_settings<a class="headerlink" href="#module-nimphs.properties.shared.point_data_settings" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_PointDataSettings</span></span><a class="headerlink" href="#nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PropertyGroup</span></code></p>
+<p>Holds data for point data management in all modules.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings.import_data">
+<span class="sig-name descname"><span class="pre">import_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings.import_data" title="Permalink to this definition"></a></dt>
+<dd><p>Import point data as vertex color.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.BoolProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings.list">
+<span class="sig-name descname"><span class="pre">list</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings.list" title="Permalink to this definition"></a></dt>
+<dd><p>List of point data to import as vertex color.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.StringProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings.remap_method">
+<span class="sig-name descname"><span class="pre">remap_method</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings.remap_method" title="Permalink to this definition"></a></dt>
+<dd><p>Indicate whether point data should be remapped using local or global value ranges.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.EnumProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings.save">
+<span class="sig-name descname"><span class="pre">save</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings.save" title="Permalink to this definition"></a></dt>
+<dd><p>Save of variables information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.StringProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="nimphs.properties.openfoam.html" class="btn btn-neutral float-left" title="nimphs.properties.openfoam" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nimphs.properties.telemac.html" class="btn btn-neutral float-right" title="nimphs.properties.telemac" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ARTELIAGROUP.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

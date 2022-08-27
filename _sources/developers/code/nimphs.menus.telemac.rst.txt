@@ -1,0 +1,42 @@
+nimphs.menus.telemac
+====================
+
+.. automodule:: nimphs.menus.telemac
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Modules
+-------
+
+nimphs.menus.telemac.telemac\_create\_sequence\_menu
+----------------------------------------------------
+
+.. automodule:: nimphs.menus.telemac.telemac_create_sequence_menu
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.menus.telemac.telemac\_main\_menu
+----------------------------------------
+
+.. automodule:: nimphs.menus.telemac.telemac_main_menu
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.menus.telemac.telemac\_point\_data\_menu
+-----------------------------------------------
+
+.. automodule:: nimphs.menus.telemac.telemac_point_data_menu
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.menus.telemac.telemac\_volume\_menu
+------------------------------------------
+
+.. automodule:: nimphs.menus.telemac.telemac_volume_menu
+   :members:
+   :undoc-members:
+   :show-inheritance:

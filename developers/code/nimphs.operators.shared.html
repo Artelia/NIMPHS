@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nimphs.operators.shared &mdash; NIMPHS 0.4.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/global.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="nimphs.operators.telemac" href="nimphs.operators.telemac.html" />
+    <link rel="prev" title="nimphs.operators.openfoam" href="nimphs.operators.openfoam.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> NIMPHS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../users/index.html">Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developers manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../development_environment.html">Development environment</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="nimphs.html">Code documentation</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="nimphs.html#packages">Packages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="nimphs.menus.html">nimphs.menus</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="nimphs.operators.html">nimphs.operators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nimphs.panels.html">nimphs.panels</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nimphs.properties.html">nimphs.properties</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NIMPHS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Developers manual</a> &raquo;</li>
+          <li><a href="nimphs.html">Code documentation</a> &raquo;</li>
+          <li><a href="nimphs.operators.html">nimphs.operators</a> &raquo;</li>
+      <li>nimphs.operators.shared</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-nimphs.operators.shared">
+<span id="nimphs-operators-shared"></span><h1>nimphs.operators.shared<a class="headerlink" href="#module-nimphs.operators.shared" title="Permalink to this heading"></a></h1>
+<section id="modules">
+<h2>Modules<a class="headerlink" href="#modules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-nimphs.operators.shared.add_point_data">
+<span id="nimphs-operators-shared-add-point-data"></span><h2>nimphs.operators.shared.add_point_data<a class="headerlink" href="#module-nimphs.operators.shared.add_point_data" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_OT_AddPointData</span></span><a class="headerlink" href="#nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Operator</span></code></p>
+<p>Add point data.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.available">
+<span class="sig-name descname"><span class="pre">available</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.available" title="Permalink to this definition"></a></dt>
+<dd><p>JSON stringified list of available point data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.StringProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.bl_description">
+<span class="sig-name descname"><span class="pre">bl_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Add</span> <span class="pre">point</span> <span class="pre">data'</span></em><a class="headerlink" href="#nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.bl_description" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nimphs.add_point_data'</span></em><a class="headerlink" href="#nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.bl_idname" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Add</span> <span class="pre">point</span> <span class="pre">data'</span></em><a class="headerlink" href="#nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.bl_label" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.chosen">
+<span class="sig-name descname"><span class="pre">chosen</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.chosen" title="Permalink to this definition"></a></dt>
+<dd><p>JSON stringified list of chosen point data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.StringProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.draw" title="Permalink to this definition"></a></dt>
+<dd><p>Layout of the popup window.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>_context</strong> (<em>Context</em>) -- context</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.execute" title="Permalink to this definition"></a></dt>
+<dd><p>Add chosen point data to the list of point data to import.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.invoke">
+<span class="sig-name descname"><span class="pre">invoke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Event</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.invoke" title="Permalink to this definition"></a></dt>
+<dd><p>Let the user choose point data to add.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> (<em>Context</em>) -- context</p></li>
+<li><p><strong>_event</strong> (<em>Event</em>) -- event</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.point_data">
+<span class="sig-name descname"><span class="pre">point_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.point_data" title="Permalink to this definition"></a></dt>
+<dd><p>Point data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.EnumProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.point_data_items">
+<span class="sig-name descname"><span class="pre">point_data_items</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.point_data_items" title="Permalink to this definition"></a></dt>
+<dd><p>Format point data to present to the user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>_context</strong> (<em>Context</em>) -- context</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>point data</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.source">
+<span class="sig-name descname"><span class="pre">source</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.add_point_data.NIMPHS_OT_AddPointData.source" title="Permalink to this definition"></a></dt>
+<dd><p>Indicate the activator of this operator. Enum in ['OBJECT', 'OPERATOR'].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.EnumProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.operators.shared.compute_ranges_point_data_values">
+<span id="nimphs-operators-shared-compute-ranges-point-data-values"></span><h2>nimphs.operators.shared.compute_ranges_point_data_values<a class="headerlink" href="#module-nimphs.operators.shared.compute_ranges_point_data_values" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_OT_ComputeRangesPointDataValues</span></span><a class="headerlink" href="#nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Operator</span></code>, <a class="reference internal" href="#nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator" title="nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator"><code class="xref py py-class docutils literal notranslate"><span class="pre">NIMPHS_ModalOperator</span></code></a></p>
+<p>Operator to compute ranges of point data values.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.bl_description">
+<span class="sig-name descname"><span class="pre">bl_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Compute</span> <span class="pre">ranges</span> <span class="pre">of</span> <span class="pre">point</span> <span class="pre">data</span> <span class="pre">values'</span></em><a class="headerlink" href="#nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.bl_description" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nimphs.compute_ranges_point_data_values'</span></em><a class="headerlink" href="#nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.bl_idname" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Compute</span> <span class="pre">ranges</span> <span class="pre">of</span> <span class="pre">point</span> <span class="pre">data</span> <span class="pre">values'</span></em><a class="headerlink" href="#nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.bl_label" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.draw" title="Permalink to this definition"></a></dt>
+<dd><p>Layout of the popup window.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.end">
+<span class="sig-name descname"><span class="pre">end</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.end" title="Permalink to this definition"></a></dt>
+<dd><p>Identifier of the last time point</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.execute" title="Permalink to this definition"></a></dt>
+<dd><p>Compute ranges of point data values ('GLOBAL' scope).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.invoke">
+<span class="sig-name descname"><span class="pre">invoke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Event</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.invoke" title="Permalink to this definition"></a></dt>
+<dd><p>Prepare operator settings. Function triggered before the user can edit settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> (<em>Context</em>) -- context</p></li>
+<li><p><strong>_event</strong> (<em>Event</em>) -- event</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.maxima">
+<span class="sig-name descname"><span class="pre">maxima</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.maxima" title="Permalink to this definition"></a></dt>
+<dd><p>List of maxima for each selected variable</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.minima">
+<span class="sig-name descname"><span class="pre">minima</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.minima" title="Permalink to this definition"></a></dt>
+<dd><p>List of minima for each selected variable</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.modal">
+<span class="sig-name descname"><span class="pre">modal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Event</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.modal" title="Permalink to this definition"></a></dt>
+<dd><p>Run one step of the 'compute ranges point data values' process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> (<em>Context</em>) -- context</p></li>
+<li><p><strong>event</strong> (<em>Event</em>) -- event</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.obj">
+<span class="sig-name descname"><span class="pre">obj</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Object</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.obj" title="Permalink to this definition"></a></dt>
+<dd><p>Selected object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.point_data">
+<span class="sig-name descname"><span class="pre">point_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.point_data" title="Permalink to this definition"></a></dt>
+<dd><p>Point data settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="nimphs.properties.shared.html#nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings" title="nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings">NIMPHS_PointDataSettings</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.poll">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.poll" title="Permalink to this definition"></a></dt>
+<dd><p>If false, locks the button of the operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.time_point">
+<span class="sig-name descname"><span class="pre">time_point</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#nimphs.operators.shared.compute_ranges_point_data_values.NIMPHS_OT_ComputeRangesPointDataValues.time_point" title="Permalink to this definition"></a></dt>
+<dd><p>Current time point</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.operators.shared.create_mesh_sequence">
+<span id="nimphs-operators-shared-create-mesh-sequence"></span><h2>nimphs.operators.shared.create_mesh_sequence<a class="headerlink" href="#module-nimphs.operators.shared.create_mesh_sequence" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_mesh_sequence.NIMPHS_CreateMeshSequence">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_CreateMeshSequence</span></span><a class="headerlink" href="#nimphs.operators.shared.create_mesh_sequence.NIMPHS_CreateMeshSequence" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence" title="nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence"><code class="xref py py-class docutils literal notranslate"><span class="pre">NIMPHS_CreateSequence</span></code></a>, <a class="reference internal" href="#nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator" title="nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator"><code class="xref py py-class docutils literal notranslate"><span class="pre">NIMPHS_ModalOperator</span></code></a></p>
+<p>Operator to create mesh sequences used in both modules.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_mesh_sequence.NIMPHS_CreateMeshSequence.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.shared.create_mesh_sequence.NIMPHS_CreateMeshSequence.draw" title="Permalink to this definition"></a></dt>
+<dd><p>UI layout of the operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_mesh_sequence.NIMPHS_CreateMeshSequence.end">
+<span class="sig-name descname"><span class="pre">end</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.create_mesh_sequence.NIMPHS_CreateMeshSequence.end" title="Permalink to this definition"></a></dt>
+<dd><p>Ending point of the sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.IntProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_mesh_sequence.NIMPHS_CreateMeshSequence.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.shared.create_mesh_sequence.NIMPHS_CreateMeshSequence.execute" title="Permalink to this definition"></a></dt>
+<dd><p>Prepare the execution of the 'create mesh sequence' process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_mesh_sequence.NIMPHS_CreateMeshSequence.frame">
+<span class="sig-name descname"><span class="pre">frame</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#nimphs.operators.shared.create_mesh_sequence.NIMPHS_CreateMeshSequence.frame" title="Permalink to this definition"></a></dt>
+<dd><p>Current frame during the 'create sequence' process (different from time point)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_mesh_sequence.NIMPHS_CreateMeshSequence.invoke">
+<span class="sig-name descname"><span class="pre">invoke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Event</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.shared.create_mesh_sequence.NIMPHS_CreateMeshSequence.invoke" title="Permalink to this definition"></a></dt>
+<dd><p>Prepare operators settings. Function triggered before the user can edit settings.        This method has to be overloaded in derived classes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>_context</strong> (<em>Context</em>) -- context</p></li>
+<li><p><strong>_event</strong> (<em>Event</em>) -- event</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_mesh_sequence.NIMPHS_CreateMeshSequence.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.operators.shared.create_mesh_sequence.NIMPHS_CreateMeshSequence.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_mesh_sequence.NIMPHS_CreateMeshSequence.modal">
+<span class="sig-name descname"><span class="pre">modal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Event</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.shared.create_mesh_sequence.NIMPHS_CreateMeshSequence.modal" title="Permalink to this definition"></a></dt>
+<dd><p>Run one step of the 'create_mesh_sequence' process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> (<em>Context</em>) -- context</p></li>
+<li><p><strong>event</strong> (<em>Event</em>) -- event</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_mesh_sequence.NIMPHS_CreateMeshSequence.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.operators.shared.create_mesh_sequence.NIMPHS_CreateMeshSequence.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_mesh_sequence.NIMPHS_CreateMeshSequence.run_one_step">
+<span class="sig-name descname"><span class="pre">run_one_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.shared.create_mesh_sequence.NIMPHS_CreateMeshSequence.run_one_step" title="Permalink to this definition"></a></dt>
+<dd><p>Run one step of the 'create mesh sequence' process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>_context</strong> (<em>Context</em>) -- context</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operation. Enum in ['PASS_THROUGH', 'CANCELLED'].</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_mesh_sequence.NIMPHS_CreateMeshSequence.time_point">
+<span class="sig-name descname"><span class="pre">time_point</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#nimphs.operators.shared.create_mesh_sequence.NIMPHS_CreateMeshSequence.time_point" title="Permalink to this definition"></a></dt>
+<dd><p>Time point currently processed when creating a sequence</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.operators.shared.create_sequence">
+<span id="nimphs-operators-shared-create-sequence"></span><h2>nimphs.operators.shared.create_sequence<a class="headerlink" href="#module-nimphs.operators.shared.create_sequence" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_CreateSequence</span></span><a class="headerlink" href="#nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Operator</span></code></p>
+<p>Base class of 'CreateSequence' operators.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence.draw" title="Permalink to this definition"></a></dt>
+<dd><p>UI layout of the operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence.limit_add_point_data">
+<span class="sig-name descname"><span class="pre">limit_add_point_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">24</span></em><a class="headerlink" href="#nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence.limit_add_point_data" title="Permalink to this definition"></a></dt>
+<dd><p>Number of maximum point data that the use can import</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence.max">
+<span class="sig-name descname"><span class="pre">max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence.max" title="Permalink to this definition"></a></dt>
+<dd><p>Maximum length / time point of the sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.IntProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence.mode">
+<span class="sig-name descname"><span class="pre">mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence.mode" title="Permalink to this definition"></a></dt>
+<dd><p>Indicate which mode to use for this operator. Enum in ['MODAL', 'TEST'].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.EnumProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence.module">
+<span class="sig-name descname"><span class="pre">module</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence.module" title="Permalink to this definition"></a></dt>
+<dd><p>Indicate which module to use. Enum in ['OpenFOAM', 'TELEMAC'].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.EnumProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence.obj">
+<span class="sig-name descname"><span class="pre">obj</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Object</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence.obj" title="Permalink to this definition"></a></dt>
+<dd><p>Selected object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.types.Object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence.point_data">
+<span class="sig-name descname"><span class="pre">point_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence.point_data" title="Permalink to this definition"></a></dt>
+<dd><p>Point data settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="nimphs.properties.shared.html#nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings" title="nimphs.properties.shared.point_data_settings.NIMPHS_PointDataSettings">NIMPHS_PointDataSettings</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence.poll">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence.poll" title="Permalink to this definition"></a></dt>
+<dd><p>If false, locks the button of the operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence.start">
+<span class="sig-name descname"><span class="pre">start</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence.start" title="Permalink to this definition"></a></dt>
+<dd><p>Starting frame / time point of the sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.IntProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence.test_data">
+<span class="sig-name descname"><span class="pre">test_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence.test_data" title="Permalink to this definition"></a></dt>
+<dd><p>Use this property to pass data as a JSON stringified block of data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.StringProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.operators.shared.create_streaming_sequence">
+<span id="nimphs-operators-shared-create-streaming-sequence"></span><h2>nimphs.operators.shared.create_streaming_sequence<a class="headerlink" href="#module-nimphs.operators.shared.create_streaming_sequence" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_streaming_sequence.NIMPHS_CreateStreamingSequence">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_CreateStreamingSequence</span></span><a class="headerlink" href="#nimphs.operators.shared.create_streaming_sequence.NIMPHS_CreateStreamingSequence" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence" title="nimphs.operators.shared.create_sequence.NIMPHS_CreateSequence"><code class="xref py py-class docutils literal notranslate"><span class="pre">NIMPHS_CreateSequence</span></code></a></p>
+<p>Operator to create 'streaming sequence' objects.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_streaming_sequence.NIMPHS_CreateStreamingSequence.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.shared.create_streaming_sequence.NIMPHS_CreateStreamingSequence.draw" title="Permalink to this definition"></a></dt>
+<dd><p>UI layout of the operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>_context</strong> (<em>Context</em>) -- context</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_streaming_sequence.NIMPHS_CreateStreamingSequence.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Object</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.shared.create_streaming_sequence.NIMPHS_CreateStreamingSequence.execute" title="Permalink to this definition"></a></dt>
+<dd><p>Create the 'streaming sequence' object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> (<em>Context</em>) -- context</p></li>
+<li><p><strong>obj</strong> (<em>Object</em>) -- sequence object</p></li>
+<li><p><strong>selected</strong> (<em>Object</em>) -- selected object</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_streaming_sequence.NIMPHS_CreateStreamingSequence.invoke">
+<span class="sig-name descname"><span class="pre">invoke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Event</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.shared.create_streaming_sequence.NIMPHS_CreateStreamingSequence.invoke" title="Permalink to this definition"></a></dt>
+<dd><p>Prepare operators settings. Function triggered before the user can edit settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>_context</strong> (<em>Context</em>) -- context</p></li>
+<li><p><strong>_event</strong> (<em>Event</em>) -- event</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_streaming_sequence.NIMPHS_CreateStreamingSequence.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.operators.shared.create_streaming_sequence.NIMPHS_CreateStreamingSequence.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_streaming_sequence.NIMPHS_CreateStreamingSequence.length">
+<span class="sig-name descname"><span class="pre">length</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.create_streaming_sequence.NIMPHS_CreateStreamingSequence.length" title="Permalink to this definition"></a></dt>
+<dd><p>Length of the sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.IntProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_streaming_sequence.NIMPHS_CreateStreamingSequence.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.operators.shared.create_streaming_sequence.NIMPHS_CreateStreamingSequence.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_streaming_sequence.NIMPHS_CreateStreamingSequence.shade_smooth">
+<span class="sig-name descname"><span class="pre">shade_smooth</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.create_streaming_sequence.NIMPHS_CreateStreamingSequence.shade_smooth" title="Permalink to this definition"></a></dt>
+<dd><p>Whether to use smooth shading or flat shading</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.BoolProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.create_streaming_sequence.NIMPHS_CreateStreamingSequence.update_length">
+<span class="sig-name descname"><span class="pre">update_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.shared.create_streaming_sequence.NIMPHS_CreateStreamingSequence.update_length" title="Permalink to this definition"></a></dt>
+<dd><p>Make sure the user can't select a wrong value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>_context</strong> (<em>Context</em>) -- context</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.operators.shared.edit_file_path">
+<span id="nimphs-operators-shared-edit-file-path"></span><h2>nimphs.operators.shared.edit_file_path<a class="headerlink" href="#module-nimphs.operators.shared.edit_file_path" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.shared.edit_file_path.NIMPHS_OT_EditFilePath">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_OT_EditFilePath</span></span><a class="headerlink" href="#nimphs.operators.shared.edit_file_path.NIMPHS_OT_EditFilePath" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Operator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ImportHelper</span></code></p>
+<p>Operator to edit the file path of the selected object.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.edit_file_path.NIMPHS_OT_EditFilePath.bl_description">
+<span class="sig-name descname"><span class="pre">bl_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Edit</span> <span class="pre">file</span> <span class="pre">path</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">selected</span> <span class="pre">object'</span></em><a class="headerlink" href="#nimphs.operators.shared.edit_file_path.NIMPHS_OT_EditFilePath.bl_description" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.edit_file_path.NIMPHS_OT_EditFilePath.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nimphs.edit_file_path'</span></em><a class="headerlink" href="#nimphs.operators.shared.edit_file_path.NIMPHS_OT_EditFilePath.bl_idname" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.edit_file_path.NIMPHS_OT_EditFilePath.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Edit'</span></em><a class="headerlink" href="#nimphs.operators.shared.edit_file_path.NIMPHS_OT_EditFilePath.bl_label" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.edit_file_path.NIMPHS_OT_EditFilePath.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.shared.edit_file_path.NIMPHS_OT_EditFilePath.execute" title="Permalink to this definition"></a></dt>
+<dd><p>Update file path property.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.edit_file_path.NIMPHS_OT_EditFilePath.filter_glob">
+<span class="sig-name descname"><span class="pre">filter_glob</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.edit_file_path.NIMPHS_OT_EditFilePath.filter_glob" title="Permalink to this definition"></a></dt>
+<dd><p>List of allowed file extensions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.StringProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.edit_file_path.NIMPHS_OT_EditFilePath.invoke">
+<span class="sig-name descname"><span class="pre">invoke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Event</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.shared.edit_file_path.NIMPHS_OT_EditFilePath.invoke" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize the operator (update the list of allowed extensions).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> (<em>Context</em>) -- context</p></li>
+<li><p><strong>_event</strong> (<em>Event</em>) -- event</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.edit_file_path.NIMPHS_OT_EditFilePath.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.operators.shared.edit_file_path.NIMPHS_OT_EditFilePath.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.edit_file_path.NIMPHS_OT_EditFilePath.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.operators.shared.edit_file_path.NIMPHS_OT_EditFilePath.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.operators.shared.modal_operator">
+<span id="nimphs-operators-shared-modal-operator"></span><h2>nimphs.operators.shared.modal_operator<a class="headerlink" href="#module-nimphs.operators.shared.modal_operator" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_ModalOperator</span></span><a class="headerlink" href="#nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class of NIMPHS modal operators.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator.mode">
+<span class="sig-name descname"><span class="pre">mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator.mode" title="Permalink to this definition"></a></dt>
+<dd><p>Indicate which mode to use for this operator. Enum in ['MODAL', 'TEST'].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.EnumProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator.prepare">
+<span class="sig-name descname"><span class="pre">prepare</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-06</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator.prepare" title="Permalink to this definition"></a></dt>
+<dd><p>Prepare the execution of the modal operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> (<em>Context</em>) -- context</p></li>
+<li><p><strong>label</strong> (<em>str</em>) -- label to display on the progress bar</p></li>
+<li><p><strong>step</strong> (<em>float</em><em>, </em><em>optional</em>) -- time_step value for the timer. Defaults to 1e-6.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator.set_progress">
+<span class="sig-name descname"><span class="pre">set_progress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator.set_progress" title="Permalink to this definition"></a></dt>
+<dd><p>Set custom value of progress bar.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> (<em>Context</em>) -- context</p></li>
+<li><p><strong>value</strong> (<em>float</em>) -- new value to display</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">canceled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator.stop" title="Permalink to this definition"></a></dt>
+<dd><p>Stop the 'create sequence' process. Used for both modules.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> (<em>Context</em>) -- context</p></li>
+<li><p><strong>canceled</strong> (<em>bool</em><em>, </em><em>optional</em>) -- ask to report 'create sequence canceled'. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator.test_data">
+<span class="sig-name descname"><span class="pre">test_data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator.test_data" title="Permalink to this definition"></a></dt>
+<dd><p>Use this property to pass data as a JSON stringified block of data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.StringProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator.timer">
+<span class="sig-name descname"><span class="pre">timer</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Timer</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator.timer" title="Permalink to this definition"></a></dt>
+<dd><p>Timer which triggers the 'modal' method of operators</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.types.Timer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator.update_label">
+<span class="sig-name descname"><span class="pre">update_label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator.update_label" title="Permalink to this definition"></a></dt>
+<dd><p>Update label of progress bar.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> (<em>Context</em>) -- context</p></li>
+<li><p><strong>label</strong> (<em>str</em>) -- new label to display</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator.update_progress">
+<span class="sig-name descname"><span class="pre">update_progress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.shared.modal_operator.NIMPHS_ModalOperator.update_progress" title="Permalink to this definition"></a></dt>
+<dd><p>Update progress bar value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> (<em>Context</em>) -- context</p></li>
+<li><p><strong>step</strong> (<em>int</em>) -- current step in the process</p></li>
+<li><p><strong>end</strong> (<em>int</em>) -- ending point of the process</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.operators.shared.remove_point_data">
+<span id="nimphs-operators-shared-remove-point-data"></span><h2>nimphs.operators.shared.remove_point_data<a class="headerlink" href="#module-nimphs.operators.shared.remove_point_data" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.shared.remove_point_data.NIMPHS_OT_RemovePointData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_OT_RemovePointData</span></span><a class="headerlink" href="#nimphs.operators.shared.remove_point_data.NIMPHS_OT_RemovePointData" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Operator</span></code></p>
+<p>Remove point data from the list to import as vertex colors.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.remove_point_data.NIMPHS_OT_RemovePointData.bl_description">
+<span class="sig-name descname"><span class="pre">bl_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Remove</span> <span class="pre">point</span> <span class="pre">data</span> <span class="pre">from</span> <span class="pre">the</span> <span class="pre">list</span> <span class="pre">to</span> <span class="pre">import</span> <span class="pre">as</span> <span class="pre">vertex</span> <span class="pre">colors'</span></em><a class="headerlink" href="#nimphs.operators.shared.remove_point_data.NIMPHS_OT_RemovePointData.bl_description" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.remove_point_data.NIMPHS_OT_RemovePointData.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nimphs.remove_point_data'</span></em><a class="headerlink" href="#nimphs.operators.shared.remove_point_data.NIMPHS_OT_RemovePointData.bl_idname" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.remove_point_data.NIMPHS_OT_RemovePointData.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Remove</span> <span class="pre">point</span> <span class="pre">data'</span></em><a class="headerlink" href="#nimphs.operators.shared.remove_point_data.NIMPHS_OT_RemovePointData.bl_label" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.remove_point_data.NIMPHS_OT_RemovePointData.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.shared.remove_point_data.NIMPHS_OT_RemovePointData.execute" title="Permalink to this definition"></a></dt>
+<dd><p>Remove point data from the list using the given name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> (<em>Context</em>) -- context</p></li>
+<li><p><strong>name</strong> (<em>str</em>) -- name of point data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.remove_point_data.NIMPHS_OT_RemovePointData.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.operators.shared.remove_point_data.NIMPHS_OT_RemovePointData.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.remove_point_data.NIMPHS_OT_RemovePointData.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.operators.shared.remove_point_data.NIMPHS_OT_RemovePointData.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.remove_point_data.NIMPHS_OT_RemovePointData.source">
+<span class="sig-name descname"><span class="pre">source</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.remove_point_data.NIMPHS_OT_RemovePointData.source" title="Permalink to this definition"></a></dt>
+<dd><p>Indicate the activator of this operator. Enum in ['OBJECT', 'OPERATOR'].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.EnumProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.remove_point_data.NIMPHS_OT_RemovePointData.var_name">
+<span class="sig-name descname"><span class="pre">var_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.remove_point_data.NIMPHS_OT_RemovePointData.var_name" title="Permalink to this definition"></a></dt>
+<dd><p>Name of the variable to remove.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.StringProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.operators.shared.set_custom_value_range">
+<span id="nimphs-operators-shared-set-custom-value-range"></span><h2>nimphs.operators.shared.set_custom_value_range<a class="headerlink" href="#module-nimphs.operators.shared.set_custom_value_range" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_OT_SetCustomValueRange</span></span><a class="headerlink" href="#nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Operator</span></code></p>
+<p>Set custom point data value range.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange.bl_description">
+<span class="sig-name descname"><span class="pre">bl_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Set</span> <span class="pre">custom</span> <span class="pre">point</span> <span class="pre">data</span> <span class="pre">value</span> <span class="pre">range'</span></em><a class="headerlink" href="#nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange.bl_description" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nimphs.set_custom_value_range'</span></em><a class="headerlink" href="#nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange.bl_idname" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Set</span> <span class="pre">custom</span> <span class="pre">value</span> <span class="pre">range'</span></em><a class="headerlink" href="#nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange.bl_label" title="Permalink to this definition"></a></dt>
+<dd><p>str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange.chosen">
+<span class="sig-name descname"><span class="pre">chosen</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange.chosen" title="Permalink to this definition"></a></dt>
+<dd><p>JSON stringified PointDataInformation of the selected point data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.StringProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange.draw" title="Permalink to this definition"></a></dt>
+<dd><p>Layout of the popup window.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>_context</strong> (<em>Context</em>) -- context</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange.execute" title="Permalink to this definition"></a></dt>
+<dd><p>Edit new selected values for the chosen point data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange.invoke">
+<span class="sig-name descname"><span class="pre">invoke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Event</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange.invoke" title="Permalink to this definition"></a></dt>
+<dd><p>Popup window to let the user edit the value range of the selected point data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>context</strong> (<em>Context</em>) -- context</p></li>
+<li><p><strong>_event</strong> (<em>Event</em>) -- event</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange.max">
+<span class="sig-name descname"><span class="pre">max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange.max" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange.min">
+<span class="sig-name descname"><span class="pre">min</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange.min" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange.source">
+<span class="sig-name descname"><span class="pre">source</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.shared.set_custom_value_range.NIMPHS_OT_SetCustomValueRange.source" title="Permalink to this definition"></a></dt>
+<dd><p>Indicate the activator of this operator. Enum in ['OBJECT', 'OPERATOR'].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.EnumProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.operators.shared.utils">
+<span id="nimphs-operators-shared-utils"></span><h2>nimphs.operators.shared.utils<a class="headerlink" href="#module-nimphs.operators.shared.utils" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="nimphs.operators.shared.utils.update_end">
+<span class="sig-name descname"><span class="pre">update_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.shared.utils.update_end" title="Permalink to this definition"></a></dt>
+<dd><p>Update time point (make sure the user can't selected an undefined time point).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>_context</strong> (<em>Context</em>) -- </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nimphs.operators.shared.utils.update_plane_id">
+<span class="sig-name descname"><span class="pre">update_plane_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.shared.utils.update_plane_id" title="Permalink to this definition"></a></dt>
+<dd><p>Update plane id (for 3D TELEMAC files, make sure the user can't selected an undefined plane id).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>_context</strong> (<em>Context</em>) -- context</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nimphs.operators.shared.utils.update_start">
+<span class="sig-name descname"><span class="pre">update_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.shared.utils.update_start" title="Permalink to this definition"></a></dt>
+<dd><p>Update time point (make sure the user can't selected an undefined time point).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>_context</strong> (<em>Context</em>) -- </p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="nimphs.operators.openfoam.html" class="btn btn-neutral float-left" title="nimphs.operators.openfoam" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nimphs.operators.telemac.html" class="btn btn-neutral float-right" title="nimphs.operators.telemac" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ARTELIAGROUP.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

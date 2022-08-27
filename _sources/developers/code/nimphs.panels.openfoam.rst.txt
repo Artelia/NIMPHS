@@ -1,0 +1,34 @@
+nimphs.panels.openfoam
+======================
+
+.. automodule:: nimphs.panels.openfoam
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Modules
+-------
+
+nimphs.panels.openfoam.openfoam\_main\_panel
+--------------------------------------------
+
+.. automodule:: nimphs.panels.openfoam.openfoam_main_panel
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.panels.openfoam.openfoam\_streaming\_sequence
+----------------------------------------------------
+
+.. automodule:: nimphs.panels.openfoam.openfoam_streaming_sequence
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.panels.openfoam.utils
+----------------------------
+
+.. automodule:: nimphs.panels.openfoam.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,36 @@
+nimphs.panels
+=============
+
+.. automodule:: nimphs.panels
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Packages
+--------
+
+.. toctree::
+   :maxdepth: 1
+
+   nimphs.panels.openfoam
+   nimphs.panels.shared
+   nimphs.panels.telemac
+
+Modules
+-------
+
+nimphs.panels.preferences
+-------------------------
+
+.. automodule:: nimphs.panels.preferences
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.panels.utils
+-------------------
+
+.. automodule:: nimphs.panels.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:

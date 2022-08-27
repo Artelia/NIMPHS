@@ -1,0 +1,34 @@
+nimphs.menus.openfoam
+=====================
+
+.. automodule:: nimphs.menus.openfoam
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Modules
+-------
+
+nimphs.menus.openfoam.openfoam\_create\_sequence\_menu
+------------------------------------------------------
+
+.. automodule:: nimphs.menus.openfoam.openfoam_create_sequence_menu
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.menus.openfoam.openfoam\_main\_menu
+------------------------------------------
+
+.. automodule:: nimphs.menus.openfoam.openfoam_main_menu
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.menus.openfoam.openfoam\_point\_data\_menu
+-------------------------------------------------
+
+.. automodule:: nimphs.menus.openfoam.openfoam_point_data_menu
+   :members:
+   :undoc-members:
+   :show-inheritance:

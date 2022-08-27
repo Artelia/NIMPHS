@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nimphs.panels.openfoam &mdash; NIMPHS 0.4.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/global.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="nimphs.panels.shared" href="nimphs.panels.shared.html" />
+    <link rel="prev" title="nimphs.panels" href="nimphs.panels.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> NIMPHS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../users/index.html">Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developers manual</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../development_environment.html">Development environment</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="nimphs.html">Code documentation</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="nimphs.html#packages">Packages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="nimphs.menus.html">nimphs.menus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nimphs.operators.html">nimphs.operators</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="nimphs.panels.html">nimphs.panels</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nimphs.properties.html">nimphs.properties</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NIMPHS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Developers manual</a> &raquo;</li>
+          <li><a href="nimphs.html">Code documentation</a> &raquo;</li>
+          <li><a href="nimphs.panels.html">nimphs.panels</a> &raquo;</li>
+      <li>nimphs.panels.openfoam</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-nimphs.panels.openfoam">
+<span id="nimphs-panels-openfoam"></span><h1>nimphs.panels.openfoam<a class="headerlink" href="#module-nimphs.panels.openfoam" title="Permalink to this heading"></a></h1>
+<section id="modules">
+<h2>Modules<a class="headerlink" href="#modules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-nimphs.panels.openfoam.openfoam_main_panel">
+<span id="nimphs-panels-openfoam-openfoam-main-panel"></span><h2>nimphs.panels.openfoam.openfoam_main_panel<a class="headerlink" href="#module-nimphs.panels.openfoam.openfoam_main_panel" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.panels.openfoam.openfoam_main_panel.NIMPHS_PT_OpenfoamMainPanel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_PT_OpenfoamMainPanel</span></span><a class="headerlink" href="#nimphs.panels.openfoam.openfoam_main_panel.NIMPHS_PT_OpenfoamMainPanel" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="nimphs.panels.shared.html#nimphs.panels.shared.module_panel.NIMPHS_ModulePanel" title="nimphs.panels.shared.module_panel.NIMPHS_ModulePanel"><code class="xref py py-class docutils literal notranslate"><span class="pre">NIMPHS_ModulePanel</span></code></a></p>
+<p>Main panel of the OpenFOAM module.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.panels.openfoam.openfoam_main_panel.NIMPHS_PT_OpenfoamMainPanel.bl_category">
+<span class="sig-name descname"><span class="pre">bl_category</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'OpenFOAM'</span></em><a class="headerlink" href="#nimphs.panels.openfoam.openfoam_main_panel.NIMPHS_PT_OpenfoamMainPanel.bl_category" title="Permalink to this definition"></a></dt>
+<dd><p>The category (tab) in which the panel will be displayed, when applicable</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.panels.openfoam.openfoam_main_panel.NIMPHS_PT_OpenfoamMainPanel.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'NIMPHS_PT_OpenfoamMainPanel'</span></em><a class="headerlink" href="#nimphs.panels.openfoam.openfoam_main_panel.NIMPHS_PT_OpenfoamMainPanel.bl_idname" title="Permalink to this definition"></a></dt>
+<dd><p>If this is set, the panel gets a custom ID, otherwise it takes the name of the class used to define the panel. For example, if the class name is &quot;OBJECT_PT_hello&quot;, and bl_idname is not set by the script, then bl_idname = &quot;OBJECT_PT_hello&quot;</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.panels.openfoam.openfoam_main_panel.NIMPHS_PT_OpenfoamMainPanel.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'OpenFOAM'</span></em><a class="headerlink" href="#nimphs.panels.openfoam.openfoam_main_panel.NIMPHS_PT_OpenfoamMainPanel.bl_label" title="Permalink to this definition"></a></dt>
+<dd><p>The panel label, shows up in the panel header at the right of the triangle used to collapse the panel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.panels.openfoam.openfoam_main_panel.NIMPHS_PT_OpenfoamMainPanel.bl_options">
+<span class="sig-name descname"><span class="pre">bl_options</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'HEADER_LAYOUT_EXPAND'}</span></em><a class="headerlink" href="#nimphs.panels.openfoam.openfoam_main_panel.NIMPHS_PT_OpenfoamMainPanel.bl_options" title="Permalink to this definition"></a></dt>
+<dd><p>Options for this panel type * DEFAULT_CLOSED Default Closed -- Defines if the panel has to be open or collapsed at the time of its creation. * HIDE_HEADER Hide Header -- If set to False, the panel shows a header, which contains a clickable arrow to collapse the panel and the label (see bl_label). * INSTANCED Instanced Panel -- Multiple panels with this type can be used as part of a list depending on data external to the UI. Used to create panels for the modifiers and other stacks. * HEADER_LAYOUT_EXPAND Expand Header Layout -- Allow buttons in the header to stretch and shrink to fill the entire layout width.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><em>Union</em>[<em>Set</em>[str], <em>Set</em>[int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.panels.openfoam.openfoam_main_panel.NIMPHS_PT_OpenfoamMainPanel.bl_region_type">
+<span class="sig-name descname"><span class="pre">bl_region_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'UI'</span></em><a class="headerlink" href="#nimphs.panels.openfoam.openfoam_main_panel.NIMPHS_PT_OpenfoamMainPanel.bl_region_type" title="Permalink to this definition"></a></dt>
+<dd><p>The region where the panel is going to be used in</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><em>Union</em>[str, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.panels.openfoam.openfoam_main_panel.NIMPHS_PT_OpenfoamMainPanel.bl_space_type">
+<span class="sig-name descname"><span class="pre">bl_space_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'VIEW_3D'</span></em><a class="headerlink" href="#nimphs.panels.openfoam.openfoam_main_panel.NIMPHS_PT_OpenfoamMainPanel.bl_space_type" title="Permalink to this definition"></a></dt>
+<dd><p>The space where the panel is going to be used in</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><em>Union</em>[str, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.panels.openfoam.openfoam_main_panel.NIMPHS_PT_OpenfoamMainPanel.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.panels.openfoam.openfoam_main_panel.NIMPHS_PT_OpenfoamMainPanel.draw" title="Permalink to this definition"></a></dt>
+<dd><p>Layout of the panel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.panels.openfoam.openfoam_main_panel.NIMPHS_PT_OpenfoamMainPanel.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.panels.openfoam.openfoam_main_panel.NIMPHS_PT_OpenfoamMainPanel.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.panels.openfoam.openfoam_main_panel.NIMPHS_PT_OpenfoamMainPanel.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.panels.openfoam.openfoam_main_panel.NIMPHS_PT_OpenfoamMainPanel.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.panels.openfoam.openfoam_streaming_sequence">
+<span id="nimphs-panels-openfoam-openfoam-streaming-sequence"></span><h2>nimphs.panels.openfoam.openfoam_streaming_sequence<a class="headerlink" href="#module-nimphs.panels.openfoam.openfoam_streaming_sequence" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.panels.openfoam.openfoam_streaming_sequence.NIMPHS_PT_OpenfoamStreamingSequence">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_PT_OpenfoamStreamingSequence</span></span><a class="headerlink" href="#nimphs.panels.openfoam.openfoam_streaming_sequence.NIMPHS_PT_OpenfoamStreamingSequence" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="nimphs.panels.shared.html#nimphs.panels.shared.streaming_sequence_settings.NIMPHS_StreamingSequenceSettingsPanel" title="nimphs.panels.shared.streaming_sequence_settings.NIMPHS_StreamingSequenceSettingsPanel"><code class="xref py py-class docutils literal notranslate"><span class="pre">NIMPHS_StreamingSequenceSettingsPanel</span></code></a></p>
+<p>Main panel of the OpenFOAM 'streaming sequence' settings.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.panels.openfoam.openfoam_streaming_sequence.NIMPHS_PT_OpenfoamStreamingSequence.bl_context">
+<span class="sig-name descname"><span class="pre">bl_context</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'object'</span></em><a class="headerlink" href="#nimphs.panels.openfoam.openfoam_streaming_sequence.NIMPHS_PT_OpenfoamStreamingSequence.bl_context" title="Permalink to this definition"></a></dt>
+<dd><p>explain the possible combinations bl_context/bl_region_type/bl_space_type)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p>The context in which the panel belongs to. (TODO</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.panels.openfoam.openfoam_streaming_sequence.NIMPHS_PT_OpenfoamStreamingSequence.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'NIMPHS_PT_OpenfoamStreamingSequence'</span></em><a class="headerlink" href="#nimphs.panels.openfoam.openfoam_streaming_sequence.NIMPHS_PT_OpenfoamStreamingSequence.bl_idname" title="Permalink to this definition"></a></dt>
+<dd><p>If this is set, the panel gets a custom ID, otherwise it takes the name of the class used to define the panel. For example, if the class name is &quot;OBJECT_PT_hello&quot;, and bl_idname is not set by the script, then bl_idname = &quot;OBJECT_PT_hello&quot;</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.panels.openfoam.openfoam_streaming_sequence.NIMPHS_PT_OpenfoamStreamingSequence.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'OpenFOAM</span> <span class="pre">Streaming</span> <span class="pre">sequence'</span></em><a class="headerlink" href="#nimphs.panels.openfoam.openfoam_streaming_sequence.NIMPHS_PT_OpenfoamStreamingSequence.bl_label" title="Permalink to this definition"></a></dt>
+<dd><p>The panel label, shows up in the panel header at the right of the triangle used to collapse the panel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.panels.openfoam.openfoam_streaming_sequence.NIMPHS_PT_OpenfoamStreamingSequence.bl_region_type">
+<span class="sig-name descname"><span class="pre">bl_region_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'WINDOW'</span></em><a class="headerlink" href="#nimphs.panels.openfoam.openfoam_streaming_sequence.NIMPHS_PT_OpenfoamStreamingSequence.bl_region_type" title="Permalink to this definition"></a></dt>
+<dd><p>The region where the panel is going to be used in</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><em>Union</em>[str, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.panels.openfoam.openfoam_streaming_sequence.NIMPHS_PT_OpenfoamStreamingSequence.bl_space_type">
+<span class="sig-name descname"><span class="pre">bl_space_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'PROPERTIES'</span></em><a class="headerlink" href="#nimphs.panels.openfoam.openfoam_streaming_sequence.NIMPHS_PT_OpenfoamStreamingSequence.bl_space_type" title="Permalink to this definition"></a></dt>
+<dd><p>The space where the panel is going to be used in</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><em>Union</em>[str, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.panels.openfoam.openfoam_streaming_sequence.NIMPHS_PT_OpenfoamStreamingSequence.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.panels.openfoam.openfoam_streaming_sequence.NIMPHS_PT_OpenfoamStreamingSequence.draw" title="Permalink to this definition"></a></dt>
+<dd><p>Layout of the panel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.panels.openfoam.openfoam_streaming_sequence.NIMPHS_PT_OpenfoamStreamingSequence.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.panels.openfoam.openfoam_streaming_sequence.NIMPHS_PT_OpenfoamStreamingSequence.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.panels.openfoam.openfoam_streaming_sequence.NIMPHS_PT_OpenfoamStreamingSequence.poll">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#nimphs.panels.openfoam.openfoam_streaming_sequence.NIMPHS_PT_OpenfoamStreamingSequence.poll" title="Permalink to this definition"></a></dt>
+<dd><p>If false, hides the panel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.panels.openfoam.openfoam_streaming_sequence.NIMPHS_PT_OpenfoamStreamingSequence.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.panels.openfoam.openfoam_streaming_sequence.NIMPHS_PT_OpenfoamStreamingSequence.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nimphs.panels.openfoam.utils">
+<span id="nimphs-panels-openfoam-utils"></span><h2>nimphs.panels.openfoam.utils<a class="headerlink" href="#module-nimphs.panels.openfoam.utils" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="nimphs.panels.openfoam.utils.draw_clip_settings">
+<span class="sig-name descname"><span class="pre">draw_clip_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">UILayout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nimphs.properties.openfoam.html#nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipProperty" title="nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipProperty"><span class="pre">NIMPHS_OpenfoamClipProperty</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.panels.openfoam.utils.draw_clip_settings" title="Permalink to this definition"></a></dt>
+<dd><p>Draw OpenFOAM clip settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>layout</strong> (<em>UILayout</em>) -- layout</p></li>
+<li><p><strong>clip</strong> (<a class="reference internal" href="nimphs.properties.openfoam.html#nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipProperty" title="nimphs.properties.openfoam.clip.NIMPHS_OpenfoamClipProperty"><em>NIMPHS_OpenfoamClipProperty</em></a>) -- clip settings</p></li>
+<li><p><strong>enable</strong> (<em>bool</em>) -- enable rows</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="nimphs.panels.html" class="btn btn-neutral float-left" title="nimphs.panels" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nimphs.panels.shared.html" class="btn btn-neutral float-right" title="nimphs.panels.shared" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ARTELIAGROUP.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

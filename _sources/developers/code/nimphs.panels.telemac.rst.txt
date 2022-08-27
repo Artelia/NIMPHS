@@ -1,0 +1,34 @@
+nimphs.panels.telemac
+=====================
+
+.. automodule:: nimphs.panels.telemac
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Modules
+-------
+
+nimphs.panels.telemac.telemac\_main\_panel
+------------------------------------------
+
+.. automodule:: nimphs.panels.telemac.telemac_main_panel
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.panels.telemac.telemac\_mesh\_sequence
+---------------------------------------------
+
+.. automodule:: nimphs.panels.telemac.telemac_mesh_sequence
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.panels.telemac.telemac\_streaming\_sequence
+--------------------------------------------------
+
+.. automodule:: nimphs.panels.telemac.telemac_streaming_sequence
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,50 @@
+nimphs.properties.openfoam
+==========================
+
+.. automodule:: nimphs.properties.openfoam
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Modules
+-------
+
+nimphs.properties.openfoam.clip
+-------------------------------
+
+.. automodule:: nimphs.properties.openfoam.clip
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.properties.openfoam.file\_data
+-------------------------------------
+
+.. automodule:: nimphs.properties.openfoam.file_data
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.properties.openfoam.import\_settings
+-------------------------------------------
+
+.. automodule:: nimphs.properties.openfoam.import_settings
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.properties.openfoam.openfoam\_object\_settings
+-----------------------------------------------------
+
+.. automodule:: nimphs.properties.openfoam.openfoam_object_settings
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nimphs.properties.openfoam.openfoam\_streaming\_sequence
+--------------------------------------------------------
+
+.. automodule:: nimphs.properties.openfoam.openfoam_streaming_sequence
+   :members:
+   :undoc-members:
+   :show-inheritance:
