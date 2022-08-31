@@ -298,6 +298,33 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
         # /!\ For testing purpose only /!\ #
         # -------------------------------- #
         if self.mode == 'TEST':
+            # Read test data
+            data = json.loads(self.test_data)
+
+            point_data: PointDataManager = PointDataManager().append(name=data.get("point_data", None))
+            self.point_data = point_data.dumps()
+
+            self.max = data.get("max", 0)
+            self.start = data.get("start", 0)
+            self.end = data.get("end", 0)
+
+            self.output_path = os.path.abspath(data.get("output_path", "/tmp"))
+            self.file_name = data.get("file_name", "DEFAULT_FILE_NAME_VOLUME")
+
+            self.computing_mode = data.get("computing_mode", "DEFAULT")
+            self.nb_threads = data.get("nb_threads", 4)
+
+            self.volume_definition = 'DIMENSIONS'
+            self.dim_x = data.get("dim_x", 0)
+            self.dim_y = data.get("dim_y", 0)
+            self.dim_z = data.get("dim_z", 0)
+
+            self.time_interpolation.type = 'LINEAR'
+            self.time_interpolation.steps = data.get("time_interpolation", 1)
+
+            self.space_interpolation.type = 'LINEAR'
+            self.space_interpolation.steps = data.get("space_interpolation", 1)
+
             return {'FINISHED'}
         else:
             self.file_name = "Volume_sequence"
