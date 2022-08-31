@@ -379,7 +379,7 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
 
         # Update list of chosen point data from this operator. Ugly but it works.
         self.point_data.list = context.scene.nimphs.op_vars.dumps()
-        draw_point_data(subbox, self.point_data, show_range=True, edit=True, src='OPERATOR')
+        draw_point_data(subbox, self.point_data, show_remap=False, edit=True, src='OPERATOR')
 
         row = subbox.row()
         row.enabled = context.scene.nimphs.op_vars.length() < self.limit_add_point_data
@@ -549,12 +549,10 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
 
                     # Get variable information
                     variable: PointDataInformation = PointDataManager(self.point_data.list).get(0)
-                    value_range = variable.range.get(self.point_data.remap_method)
                     var_name = variable.name
 
                     # Export volume at current time point
-                    self.volume.export_time_point(self.mesh, [var_name], f"{self.file_name}_{self.file_counter}",
-                                                  remap=value_range)
+                    self.volume.export_time_point(self.mesh, [var_name], f"{self.file_name}_{self.file_counter}")
                     self.file_counter += 1
 
                     # Generate interpolated time steps
@@ -562,7 +560,7 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
                         for interp_time_point in range(1, self.mesh.time_interp_steps + 1):
                             self.mesh.set_time_point(self.time_point, interp_time_point)
                             self.volume.export_time_point(self.mesh, [var_name],
-                                                          f"{self.file_name}_{self.file_counter}", remap=value_range)
+                                                          f"{self.file_name}_{self.file_counter}")
                             self.file_counter += 1
 
                 except BaseException:
