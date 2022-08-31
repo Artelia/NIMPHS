@@ -1,7 +1,7 @@
 """
-Copyright (C) 2022 ARTELIAGROUP
+Copyright (C) 2022 ARTELIAGROUP.
 
-    Created by Félix Olart (felix.olart56@gmail.com)
+    Created by Félix Olart (felix.olart56@gmail.com).
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -39,6 +39,7 @@ from serafin import Serafin
 
 
 class Mesh():
+    """Contains mesh data (vertices, dimensions of the mesh, etc..)."""
 
     def __init__(self, path: str, plane_interp_steps: int = 0) -> None:
         """
@@ -139,7 +140,7 @@ class Mesh():
 
         # Linear iterpolation
         # [x, ., ., ., x, ., ., ., x, ., ., ., x, ., ., ., x]
-        # 'x' is a knwon data, '.' is data to generate
+        # 'x' is a known data, '.' is data to generate
         for id in range(1, self.file.nplan):
             end = id * (self.plane_interp_steps + 1)
             start = end - self.plane_interp_steps
@@ -161,15 +162,16 @@ class Mesh():
         """
 
         output = "MESH:\n"
-        output += f"DIMENSIONS: L = {self.length}, W = {self.width}, H = {self.height}\n"
-        output += f"MINIMUM   : X = {self.minimum[0]}, Y = {self.minimum[1]}, Z = {self.minimum[2]}\n"
-        output += f"VERTICES  : NB = {self.nb_vertices}\n"
-        output += f"PLANES    : NB = {self.file.nplan}, INTERPOLATED = {self.plane_interp_steps}, TOTAL: {self.nb_planes}"
+        output += f"DIM     : L = {self.length}, W = {self.width}, H = {self.height}\n"
+        output += f"MINIMUM : X = {self.minimum[0]}, Y = {self.minimum[1]}, Z = {self.minimum[2]}\n"
+        output += f"VERTICES: NB = {self.nb_vertices}\n"
+        output += f"PLANES  : NB = {self.file.nplan}, INTERPOLATED = {self.plane_interp_steps}, TOTAL: {self.nb_planes}"
 
         return output
 
 
 class Volume():
+    """Contains information on the volume and also has algorithms to compute it."""
 
     def __init__(self, mesh: Mesh, nb_threads: int, use_cuda: bool = False, vx_size: float = 0.5,
                  dimensions: tuple[float] = (0.0, 0.0, 0.0)) -> None:
@@ -179,9 +181,9 @@ class Volume():
         Args:
             mesh (Mesh): mesh information
             nb_threads (int): number of threads to use for parallel computation
-            use_cude (boo, option): indicate whether to use CUDA
+            use_cuda (boo, option): indicate whether to use CUDA
             vx_size (float, optional): voxel size. Defaults to 0.5.
-            dimensions (tuple[float], optional). Defaults to (0.0, 0.0, 0.0).
+            dimensions (tuple[float], optional): dimensions. Defaults to (0.0, 0.0, 0.0).
         """
 
         # Indicate use of CUDA for volume computation
@@ -649,25 +651,25 @@ def fill_volume_gpu(D_volume: np.ndarray, D_data: np.ndarray, D_z_coords: np.nda
     """
 
     # Thread id corresponds to voxel id
-    thid = cuda.grid(1)
+    thread_id = cuda.grid(1)
 
     # Make sure the thread id corresponds to a voxel
-    if thid < dim[0] * dim[1] * dim[2]:
-        xyid = thid // dim[2]
+    if thread_id < dim[0] * dim[1] * dim[2]:
+        xyid = thread_id // dim[2]
         start, end = D_zcols[xyid * 2], D_zcols[xyid * 2] + D_zcols[xyid * 2 + 1]
         zcol = D_zcols[start:end]
 
         value, count = 0.0, 0
         for vtid in zcol:
 
-            plane_id = thid % dim[2]
+            plane_id = thread_id % dim[2]
 
             z, zmin, zmax = D_z_coords[vtid], D_zmin[plane_id], D_zmin[plane_id] + 2.0 * vx_size_z
             if zmin <= z and z <= zmax:
                 value += D_data[vtid]
                 count += 1
 
-        D_volume[thid] = value / count if count > 0 else 0.0
+        D_volume[thread_id] = value / count if count > 0 else 0.0
 
 
 if __name__ == '__main__':
