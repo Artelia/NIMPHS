@@ -270,8 +270,8 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
         """
 
         if not HAS_PYOPENVDB:
-            self.report({'PyOpenVDB unavailable...'})
-            return {'ERROR'}
+            self.report({'WARNING'}, "Python package unavailable: pyopenvdb")
+            return {'CANCELLED'}
 
         self.obj = get_selected_object(context)
         if self.obj is None:
@@ -301,8 +301,9 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
             # Read test data
             data = json.loads(self.test_data)
 
-            point_data: PointDataManager = PointDataManager().append(name=data.get("point_data", None))
-            self.point_data = point_data.dumps()
+            point_data = PointDataManager()
+            point_data.append(name=data.get("point_data", None))
+            self.point_data.list = point_data.dumps()
 
             self.max = data.get("max", 0)
             self.start = data.get("start", 0)
@@ -469,6 +470,12 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
             set: state of the operator
         """
 
+        # -------------------------------- #
+        # /!\ For testing purpose only /!\ #
+        # -------------------------------- #
+        if self.mode == 'TEST':
+            self.invoke(context, None)
+
         # Check destination path
         path = Path(self.output_path)
         if not path.exists():
@@ -479,13 +486,13 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
 
         self.cumulated_time = 0.0
         self.file_counter = self.start
-        self.time_point = self.start - 1
+        self.time_point = self.start
         # Concatenate output_path and file_name
         self.file_name = os.path.join(os.path.abspath(self.output_path), self.file_name)
 
         point_data = json.loads(self.point_data.list)
         if len(point_data["names"]) <= 0:
-            self.report({'WARNING'}, "No point data selected to use as density")
+            self.report({'WARNING'}, "No point data selected")
             return {'CANCELLED'}
 
         prefs = context.preferences.addons["nimphs"].preferences.settings
@@ -515,13 +522,45 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
             self.report({'ERROR'}, "Error when generating volume")
             return {'CANCELLED'}
 
-        # Setup progress bar + force to display (set a new value)
-        super().prepare(context, "Preparing volume...")
-        super().set_progress(context, 0.0)
+        # -------------------------------- #
+        # /!\ For testing purpose only /!\ #
+        # -------------------------------- #
+        if self.mode == 'TEST':
+            # Prepare volume ------
+            self.volume.prepare_voxels(self.mesh)
 
-        self.cumulated_time += time.time() - start
+            # Generate volume -----
+            while self.time_point <= self.end:
+                # Update data
+                self.mesh.set_time_point(self.time_point)
 
-        return {'RUNNING_MODAL'}
+                # Get variable information
+                variable: PointDataInformation = PointDataManager(self.point_data.list).get(0)
+                var_name = variable.name
+
+                # Export volume at current time point
+                self.volume.export_time_point(self.mesh, [var_name], f"{self.file_name}_{self.file_counter}")
+                self.file_counter += 1
+
+                # Generate interpolated time steps
+                if self.time_point < self.end:
+                    for interp_time_point in range(1, self.mesh.time_interp_steps + 1):
+                        self.mesh.set_time_point(self.time_point, interp_time_point)
+                        self.volume.export_time_point(self.mesh, [var_name],
+                                                      f"{self.file_name}_{self.file_counter}")
+                        self.file_counter += 1
+
+                self.time_point += 1
+
+            return {'FINISHED'}
+        else:
+            # Setup progress bar + force to display (set a new value)
+            super().prepare(context, "Preparing volume...")
+            super().set_progress(context, 0.0)
+
+            self.cumulated_time += time.time() - start
+
+            return {'RUNNING_MODAL'}
 
     def modal(self, context: Context, event: Event) -> set:
         """
