@@ -34,9 +34,7 @@ from copy import deepcopy
 from multiprocessing import Process, Manager, RawArray
 
 # Custom imports
-sys.path.insert(0, os.path.abspath("../nimphs/operators/utils/"))
 sys.path.insert(0, os.path.abspath("../nimphs/properties/telemac/"))
-from others import remap_array
 from serafin import Serafin
 
 
@@ -387,28 +385,17 @@ class Volume():
             # TODO: is it possible to compute it with GPU parallelization?
             pass
 
-    def fill(self, mesh: Mesh, point_data: list[str], remap: tuple[float] = (None, None)) -> None:
+    def fill(self, mesh: Mesh, point_data: list[str]) -> None:
         """
         Set the density of each voxel using the given data.
 
         Args:
             mesh (Mesh): mesh data
             point_data (list[str]): name of point data to use as density
-            remap (tuple[float]): global min, global max to remap data
         """
 
         start = time.time()
-
-        # Get point data and remap data
-        if remap[0] is None or remap[1] is None:
-            data = remap_array(mesh.get_point_data(point_data))
-        else:
-            data = remap_array(mesh.get_point_data(point_data), in_min=remap[0], in_max=remap[1])
-
-        if SHOW_DETAILS:
-            print(f"| Get point data: {time.time() - start}s")
-
-        start = time.time()
+        data = mesh.get_point_data(point_data)
 
         if self.use_cuda:
             self.fill_with_gpu(data, mesh)
@@ -485,8 +472,7 @@ class Volume():
         if SHOW_DETAILS:
             print(f"  | Copy to host: {time.time() - start}s")
 
-    def export_time_point(self, mesh: Mesh, point_data: list[str], file_name: str,
-                          remap: tuple[float] = (None, None)) -> None:
+    def export_time_point(self, mesh: Mesh, point_data: list[str], file_name: str) -> None:
         """
         Generate and export volume for the current time point.
 
@@ -494,11 +480,10 @@ class Volume():
             mesh (Mesh): mesh
             point_data (list[str]): point data to use as density
             file_name (str): file name
-            remap (tuple[float], optional): min / max to remap values. Defaults to (None, None).
         """
 
         # Fill volume
-        self.fill(mesh, point_data, remap=remap)
+        self.fill(mesh, point_data)
 
         # Save volume
         self.save_as_vdb(point_data[0], file_name)
@@ -518,7 +503,7 @@ class Volume():
         Save volume data as .vdb file.
 
         Args:
-            grid_name (str): name of density variable
+            grid_name (str): name of variable to export
             file_name (str): file name
         """
 
@@ -689,10 +674,9 @@ if __name__ == '__main__':
 
     SHOW_DETAILS = True
     OUTPUT_PATH = "/tmp"
-    DIMENSIONS = (400, 400, 40)
+    DIMENSIONS = (100, 100, 40)
     VOXEL_SIZE = .1
     VAR = 'ELEVATION Z'
-    MAPPING = (0.0, 4.773)
     TIME_INTERP_STEPS = 0
     PLANE_INTERP_STEPS = 5
     NB_THREADS = 12
@@ -738,14 +722,14 @@ if __name__ == '__main__':
             print(f"Set time point: {time.time() - start}s")
 
         # Export volume at current time point
-        volume.export_time_point(mesh, [VAR], f"{FILE_NAME}_{counter}", remap=MAPPING)
+        volume.export_time_point(mesh, [VAR], f"{FILE_NAME}_{counter}")
         counter += 1
 
         # Generate interpolated time steps
         if time_point != NB_TIME_POINTS - 1:
             for interp_time_point in range(1, TIME_INTERP_STEPS + 1):
                 mesh.set_time_point(time_point, interp_time_point, TIME_INTERP_STEPS)
-                volume.export_time_point(mesh, [VAR], f"{FILE_NAME}_{counter}", remap=MAPPING)
+                volume.export_time_point(mesh, [VAR], f"{FILE_NAME}_{counter}")
                 counter += 1
 
         if SHOW_DETAILS:
