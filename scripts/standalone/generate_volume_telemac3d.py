@@ -34,7 +34,7 @@ from copy import deepcopy
 from multiprocessing import Process, Manager, RawArray
 
 # Custom imports
-sys.path.insert(0, os.path.abspath("../nimphs/properties/telemac/"))
+sys.path.insert(0, os.path.abspath("../../nimphs/properties/telemac/"))
 from serafin import Serafin
 
 
@@ -689,7 +689,7 @@ if __name__ == '__main__':
     start_global = time.time()
 
     # ELEVATION Z: 0.0, 4.773
-    mesh = Mesh("../data/telemac_3d/telemac_3d.slf", plane_interp_steps=PLANE_INTERP_STEPS)
+    mesh = Mesh("../../data/telemac_3d/telemac_3d.slf", plane_interp_steps=PLANE_INTERP_STEPS)
 
     NB_TIME_POINTS = mesh.file.nb_pdt
     # NB_TIME_POINTS = 10

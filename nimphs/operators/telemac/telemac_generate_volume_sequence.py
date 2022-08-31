@@ -13,8 +13,8 @@ import numpy as np
 from pathlib import Path
 
 from nimphs.operators.shared.utils import update_end
-from nimphs.operators.shared.modal_operator import NIMPHS_ModalOperator
 from nimphs.panels.utils import get_selected_object, draw_point_data
+from nimphs.operators.shared.modal_operator import NIMPHS_ModalOperator
 from nimphs.operators.shared.create_sequence import NIMPHS_CreateSequence
 from nimphs.checkdeps import HAS_CUDA, HAS_MULTIPROCESSING, HAS_PYOPENVDB
 from nimphs.operators.utils.volume import TelemacMeshForVolume, TelemacVolume
@@ -124,13 +124,14 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
     bl_label = "Volume sequence"
     bl_description = "Generate a volume sequence from a TELEMAC 3D file. Press 'esc' to cancel"
 
-    #: bpy.props.EnumProperty: Computing mode. Enum in ['DEFAULT', 'MULTIPROCESSING', 'CUDA']
+    #: bpy.props.EnumProperty: Computing mode. Enum in ['DEFAULT', 'MULTIPROCESSING', 'CUDA'].
     computing_mode: EnumProperty(
         name="Computing mode",
         description="Select a computing method from a list of available computing modes",
         items=get_available_computing_modes
     )
 
+    #: bpy.props.IntProperty: Number of threads to use when multiprocessing mode is chosen.
     nb_threads: IntProperty(
         name="Number of threads",
         description="Number of threads to use in case the multiprocessing computing method is chosen",
@@ -140,6 +141,7 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
         update=update_nb_threads
     )
 
+    #: bpy.props.StringProperty: Output path for generated .vdb files.
     output_path: StringProperty(
         name="Output path",
         description="Path where to save generated .vdb files",
@@ -147,6 +149,7 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
         subtype="DIR_PATH"      # noqa: F821
     )
 
+    #: bpy.props.StringProperty: File name of generated .vdb files.
     file_name: StringProperty(
         name="Output path",
         description="Name of the files to generate",
@@ -154,6 +157,7 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
         subtype="FILE_NAME"     # noqa: F821
     )
 
+    #: bpy.props.EnumProperty: Indicate how the volume is defined.
     volume_definition: EnumProperty(
         name="Volume definition",
         description="Define the volume dimensions either by providing dimensions or a voxel size",
@@ -163,6 +167,7 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
         ]
     )
 
+    #: bpy.props.IntProperty: Volume dimension along the 'X' axis.
     dim_x: IntProperty(
         name="X dimension",
         default=0,
@@ -171,6 +176,7 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
         update=update_dim_x
     )
 
+    #: bpy.props.IntProperty: Volume dimension along the 'Y' axis.
     dim_y: IntProperty(
         name="Y dimension",
         default=0,
@@ -179,6 +185,7 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
         update=update_dim_y
     )
 
+    #: bpy.props.IntProperty: Volume dimension along the 'Z' axis.
     dim_z: IntProperty(
         name="Z dimension",
         default=0,
@@ -186,6 +193,7 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
         soft_min=1,
     )
 
+    #: bpy.props.IntProperty: Voxel size.
     vx_size: FloatProperty(
         name="Voxel size",
         description="Size of a voxel",
@@ -206,8 +214,10 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
         min=0
     )
 
+    #: NIMPHS_TelemacInterpolateProperty: Time interpolation settings.
     time_interpolation: PointerProperty(type=NIMPHS_TelemacInterpolateProperty)
 
+    #: NIMPHS_TelemacInterpolateProperty: Space interpolation settings.
     space_interpolation: PointerProperty(type=NIMPHS_TelemacInterpolateProperty)
 
     #: int: Currently processed time point
