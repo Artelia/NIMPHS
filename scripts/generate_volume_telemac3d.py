@@ -23,8 +23,6 @@ Copyright (C) 2022 ARTELIAGROUP
 
 import os
 import sys
-sys.path.insert(0, os.path.abspath("."))
-sys.path.insert(0, os.path.abspath("../"))
 
 import time
 import numpy as np
@@ -33,9 +31,13 @@ import itertools as it
 from numba import cuda
 import pyopenvdb as vdb
 from copy import deepcopy
-from nimphs.properties.telemac.serafin import Serafin
-from nimphs.operators.utils.others import remap_array
 from multiprocessing import Process, Manager, RawArray
+
+# Custom imports
+sys.path.insert(0, os.path.abspath("../nimphs/operators/utils/"))
+sys.path.insert(0, os.path.abspath("../nimphs/properties/telemac/"))
+from others import remap_array
+from serafin import Serafin
 
 
 class Mesh():
