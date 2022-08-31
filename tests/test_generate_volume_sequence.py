@@ -55,7 +55,7 @@ def test_generate_volume_sequence_telemac_3d_default():
     # TODO: when pyopenvdb installation is fixed, change 'CANCELLED' to 'FINISH' to run the test
     op = bpy.ops.nimphs.telemac_generate_volume_sequence
     assert op('EXEC_DEFAULT', mode='TEST', test_data=data) == {'CANCELLED'}
-    warnings.warn(UserWarning(f"Test is not fully implemented yet"))
+    warnings.warn(UserWarning("Test is not fully implemented yet"))
 
 
 def test_generate_volume_sequence_telemac_3d_multiprocessing():
@@ -83,7 +83,7 @@ def test_generate_volume_sequence_telemac_3d_multiprocessing():
     # TODO: when pyopenvdb installation is fixed, change 'CANCELLED' to 'FINISH' to run the test
     op = bpy.ops.nimphs.telemac_generate_volume_sequence
     assert op('EXEC_DEFAULT', mode='TEST', test_data=data) == {'CANCELLED'}
-    warnings.warn(UserWarning(f"Test is not fully implemented yet"))
+    warnings.warn(UserWarning("Test is not fully implemented yet"))
 
 
 @pytest.mark.usefixtures("clean_all_objects")
@@ -112,4 +112,4 @@ def test_generate_volume_sequence_telemac_3d_cuda():
     # TODO: when pyopenvdb installation is fixed, change 'CANCELLED' to 'FINISH' to run the test
     op = bpy.ops.nimphs.telemac_generate_volume_sequence
     assert op('EXEC_DEFAULT', mode='TEST', test_data=data) == {'CANCELLED'}
-    warnings.warn(UserWarning(f"Test is not fully implemented yet"))
+    warnings.warn(UserWarning("Test is not fully implemented yet"))

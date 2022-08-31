@@ -486,7 +486,7 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
 
         self.cumulated_time = 0.0
         self.file_counter = self.start
-        self.time_point = self.start
+        self.time_point = self.start - 1 if self.mode != 'TEST' else self.start
         # Concatenate output_path and file_name
         self.file_name = os.path.join(os.path.abspath(self.output_path), self.file_name)
 
