@@ -13,8 +13,8 @@ import numpy as np
 from pathlib import Path
 
 from nimphs.operators.shared.utils import update_end
-from nimphs.operators.shared.modal_operator import NIMPHS_ModalOperator
 from nimphs.panels.utils import get_selected_object, draw_point_data
+from nimphs.operators.shared.modal_operator import NIMPHS_ModalOperator
 from nimphs.operators.shared.create_sequence import NIMPHS_CreateSequence
 from nimphs.checkdeps import HAS_CUDA, HAS_MULTIPROCESSING, HAS_PYOPENVDB
 from nimphs.operators.utils.volume import TelemacMeshForVolume, TelemacVolume
@@ -124,13 +124,14 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
     bl_label = "Volume sequence"
     bl_description = "Generate a volume sequence from a TELEMAC 3D file. Press 'esc' to cancel"
 
-    #: bpy.props.EnumProperty: Computing mode. Enum in ['DEFAULT', 'MULTIPROCESSING', 'CUDA']
+    #: bpy.props.EnumProperty: Computing mode. Enum in ['DEFAULT', 'MULTIPROCESSING', 'CUDA'].
     computing_mode: EnumProperty(
         name="Computing mode",
         description="Select a computing method from a list of available computing modes",
         items=get_available_computing_modes
     )
 
+    #: bpy.props.IntProperty: Number of threads to use when multiprocessing mode is chosen.
     nb_threads: IntProperty(
         name="Number of threads",
         description="Number of threads to use in case the multiprocessing computing method is chosen",
@@ -140,6 +141,7 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
         update=update_nb_threads
     )
 
+    #: bpy.props.StringProperty: Output path for generated .vdb files.
     output_path: StringProperty(
         name="Output path",
         description="Path where to save generated .vdb files",
@@ -147,6 +149,7 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
         subtype="DIR_PATH"      # noqa: F821
     )
 
+    #: bpy.props.StringProperty: File name of generated .vdb files.
     file_name: StringProperty(
         name="Output path",
         description="Name of the files to generate",
@@ -154,6 +157,7 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
         subtype="FILE_NAME"     # noqa: F821
     )
 
+    #: bpy.props.EnumProperty: Indicate how the volume is defined.
     volume_definition: EnumProperty(
         name="Volume definition",
         description="Define the volume dimensions either by providing dimensions or a voxel size",
@@ -163,6 +167,7 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
         ]
     )
 
+    #: bpy.props.IntProperty: Volume dimension along the 'X' axis.
     dim_x: IntProperty(
         name="X dimension",
         default=0,
@@ -171,6 +176,7 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
         update=update_dim_x
     )
 
+    #: bpy.props.IntProperty: Volume dimension along the 'Y' axis.
     dim_y: IntProperty(
         name="Y dimension",
         default=0,
@@ -179,6 +185,7 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
         update=update_dim_y
     )
 
+    #: bpy.props.IntProperty: Volume dimension along the 'Z' axis.
     dim_z: IntProperty(
         name="Z dimension",
         default=0,
@@ -186,6 +193,7 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
         soft_min=1,
     )
 
+    #: bpy.props.IntProperty: Voxel size.
     vx_size: FloatProperty(
         name="Voxel size",
         description="Size of a voxel",
@@ -206,8 +214,10 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
         min=0
     )
 
+    #: NIMPHS_TelemacInterpolateProperty: Time interpolation settings.
     time_interpolation: PointerProperty(type=NIMPHS_TelemacInterpolateProperty)
 
+    #: NIMPHS_TelemacInterpolateProperty: Space interpolation settings.
     space_interpolation: PointerProperty(type=NIMPHS_TelemacInterpolateProperty)
 
     #: int: Currently processed time point
@@ -260,8 +270,8 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
         """
 
         if not HAS_PYOPENVDB:
-            self.report({'PyOpenVDB unavailable...'})
-            return {'ERROR'}
+            self.report({'WARNING'}, "Python package unavailable: pyopenvdb")
+            return {'CANCELLED'}
 
         self.obj = get_selected_object(context)
         if self.obj is None:
@@ -288,6 +298,34 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
         # /!\ For testing purpose only /!\ #
         # -------------------------------- #
         if self.mode == 'TEST':
+            # Read test data
+            data = json.loads(self.test_data)
+
+            point_data = PointDataManager()
+            point_data.append(name=data.get("point_data", None))
+            self.point_data.list = point_data.dumps()
+
+            self.max = data.get("max", 0)
+            self.start = data.get("start", 0)
+            self.end = data.get("end", 0)
+
+            self.output_path = os.path.abspath(data.get("output_path", "/tmp"))
+            self.file_name = data.get("file_name", "DEFAULT_FILE_NAME_VOLUME")
+
+            self.computing_mode = data.get("computing_mode", "DEFAULT")
+            self.nb_threads = data.get("nb_threads", 4)
+
+            self.volume_definition = 'DIMENSIONS'
+            self.dim_x = data.get("dim_x", 0)
+            self.dim_y = data.get("dim_y", 0)
+            self.dim_z = data.get("dim_z", 0)
+
+            self.time_interpolation.type = 'LINEAR'
+            self.time_interpolation.steps = data.get("time_interpolation", 1)
+
+            self.space_interpolation.type = 'LINEAR'
+            self.space_interpolation.steps = data.get("space_interpolation", 1)
+
             return {'FINISHED'}
         else:
             self.file_name = "Volume_sequence"
@@ -369,7 +407,7 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
 
         # Update list of chosen point data from this operator. Ugly but it works.
         self.point_data.list = context.scene.nimphs.op_vars.dumps()
-        draw_point_data(subbox, self.point_data, show_range=True, edit=True, src='OPERATOR')
+        draw_point_data(subbox, self.point_data, show_remap=False, edit=True, src='OPERATOR')
 
         row = subbox.row()
         row.enabled = context.scene.nimphs.op_vars.length() < self.limit_add_point_data
@@ -432,6 +470,12 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
             set: state of the operator
         """
 
+        # -------------------------------- #
+        # /!\ For testing purpose only /!\ #
+        # -------------------------------- #
+        if self.mode == 'TEST':
+            self.invoke(context, None)
+
         # Check destination path
         path = Path(self.output_path)
         if not path.exists():
@@ -442,13 +486,13 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
 
         self.cumulated_time = 0.0
         self.file_counter = self.start
-        self.time_point = self.start - 1
+        self.time_point = self.start - 1 if self.mode != 'TEST' else self.start
         # Concatenate output_path and file_name
         self.file_name = os.path.join(os.path.abspath(self.output_path), self.file_name)
 
         point_data = json.loads(self.point_data.list)
         if len(point_data["names"]) <= 0:
-            self.report({'WARNING'}, "No point data selected to use as density")
+            self.report({'WARNING'}, "No point data selected")
             return {'CANCELLED'}
 
         prefs = context.preferences.addons["nimphs"].preferences.settings
@@ -478,13 +522,45 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
             self.report({'ERROR'}, "Error when generating volume")
             return {'CANCELLED'}
 
-        # Setup progress bar + force to display (set a new value)
-        super().prepare(context, "Preparing volume...")
-        super().set_progress(context, 0.0)
+        # -------------------------------- #
+        # /!\ For testing purpose only /!\ #
+        # -------------------------------- #
+        if self.mode == 'TEST':
+            # Prepare volume ------
+            self.volume.prepare_voxels(self.mesh)
 
-        self.cumulated_time += time.time() - start
+            # Generate volume -----
+            while self.time_point <= self.end:
+                # Update data
+                self.mesh.set_time_point(self.time_point)
 
-        return {'RUNNING_MODAL'}
+                # Get variable information
+                variable: PointDataInformation = PointDataManager(self.point_data.list).get(0)
+                var_name = variable.name
+
+                # Export volume at current time point
+                self.volume.export_time_point(self.mesh, [var_name], f"{self.file_name}_{self.file_counter}")
+                self.file_counter += 1
+
+                # Generate interpolated time steps
+                if self.time_point < self.end:
+                    for interp_time_point in range(1, self.mesh.time_interp_steps + 1):
+                        self.mesh.set_time_point(self.time_point, interp_time_point)
+                        self.volume.export_time_point(self.mesh, [var_name],
+                                                      f"{self.file_name}_{self.file_counter}")
+                        self.file_counter += 1
+
+                self.time_point += 1
+
+            return {'FINISHED'}
+        else:
+            # Setup progress bar + force to display (set a new value)
+            super().prepare(context, "Preparing volume...")
+            super().set_progress(context, 0.0)
+
+            self.cumulated_time += time.time() - start
+
+            return {'RUNNING_MODAL'}
 
     def modal(self, context: Context, event: Event) -> set:
         """
@@ -539,12 +615,10 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
 
                     # Get variable information
                     variable: PointDataInformation = PointDataManager(self.point_data.list).get(0)
-                    value_range = variable.range.get(self.point_data.remap_method)
                     var_name = variable.name
 
                     # Export volume at current time point
-                    self.volume.export_time_point(self.mesh, [var_name], f"{self.file_name}_{self.file_counter}",
-                                                  remap=value_range)
+                    self.volume.export_time_point(self.mesh, [var_name], f"{self.file_name}_{self.file_counter}")
                     self.file_counter += 1
 
                     # Generate interpolated time steps
@@ -552,7 +626,7 @@ class NIMPHS_OT_TelemacGenerateVolumeSequence(NIMPHS_CreateSequence, NIMPHS_Moda
                         for interp_time_point in range(1, self.mesh.time_interp_steps + 1):
                             self.mesh.set_time_point(self.time_point, interp_time_point)
                             self.volume.export_time_point(self.mesh, [var_name],
-                                                          f"{self.file_name}_{self.file_counter}", remap=value_range)
+                                                          f"{self.file_name}_{self.file_counter}")
                             self.file_counter += 1
 
                 except BaseException:

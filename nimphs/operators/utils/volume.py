@@ -8,7 +8,6 @@ from math import ceil
 import itertools as it
 from copy import deepcopy
 from nimphs.checkdeps import HAS_CUDA
-from nimphs.operators.utils.others import remap_array
 from nimphs.properties.telemac.serafin import Serafin
 
 
@@ -380,28 +379,18 @@ class TelemacVolume():
             # TODO: is it possible to compute it with GPU parallelization?
             pass
 
-    def fill(self, mesh: TelemacMeshForVolume, point_data: list[str], remap: tuple[float] = (None, None)) -> None:
+    def fill(self, mesh: TelemacMeshForVolume, point_data: list[str]) -> None:
         """
         Set the density of each voxel using the given data.
 
         Args:
             mesh (TelemacMeshForVolume): mesh data
             point_data (list[str]): name of point data to use as density
-            remap (tuple[float]): global min, global max to remap data
         """
 
         start = time.time()
 
-        # Get point data and remap data
-        if remap[0] is None or remap[1] is None:
-            data = remap_array(mesh.get_point_data(point_data))
-        else:
-            data = remap_array(mesh.get_point_data(point_data), in_min=remap[0], in_max=remap[1])
-
-        if self.show_details:
-            log.debug(f"| Get point data: {time.time() - start}s")
-
-        start = time.time()
+        data = mesh.get_point_data(point_data)
 
         if self.use_cuda:
             self.fill_with_gpu(data, mesh)
@@ -496,8 +485,7 @@ class TelemacVolume():
         if self.show_details:
             log.debug(f"  | Copy to host: {time.time() - start}s")
 
-    def export_time_point(self, mesh: TelemacMeshForVolume, point_data: list[str], file_name: str,
-                          remap: tuple[float] = (None, None)) -> None:
+    def export_time_point(self, mesh: TelemacMeshForVolume, point_data: list[str], file_name: str) -> None:
         """
         Generate and export volume for the current time point.
 
@@ -505,11 +493,10 @@ class TelemacVolume():
             mesh (TelemacMeshForVolume): mesh
             point_data (list[str]): point data to use as density
             file_name (str): file name
-            remap (tuple[float], optional): min / max to remap values. Defaults to (None, None).
         """
 
         # Fill volume
-        self.fill(mesh, point_data, remap=remap)
+        self.fill(mesh, point_data)
 
         # Save volume
         self.save_as_vdb(point_data[0], file_name)

@@ -96,6 +96,10 @@ class SetupPlugin:
         exclude = [os.path.abspath("./cache"), os.path.abspath("./data/openfoam")]
         remove_files_matching_pattern(self.root, exclude_folders=exclude, pattern="*.zip")
 
+        # Cleanup generated vdb files
+        print("Cleaning up - vdb files")
+        remove_files_matching_pattern(os.path.abspath("./cache"), pattern="*.vdb")
+
         # Cleanup testing data
         print("Cleaning up - testing data")
         remove_folders_matching_pattern(os.path.abspath("./data"), pattern="sample")
