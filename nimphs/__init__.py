@@ -4,7 +4,7 @@ from bpy.utils import previews
 from bpy.props import PointerProperty
 from bpy.app import version as bl_version
 from bpy.app.handlers import frame_change_pre, frame_change_post, save_pre
-from bpy.types import Scene, Object, TOPBAR_MT_file_import, VIEW3D_MT_editor_menus
+from bpy.types import Scene, Object, TOPBAR_MT_file_import, VIEW3D_MT_editor_menus, VIEW3D_HT_tool_header
 
 import os
 
@@ -109,6 +109,15 @@ def register() -> None:  # noqa: D103
 
 
 def unregister() -> None:  # noqa: D103
+
+    # Reset default values (in case of unregister/register during execution of a modal operator)
+    bpy.context.scene.nimphs.m_op_running = False
+    bpy.context.scene.nimphs.m_op_value = -1.0
+    bpy.context.scene.nimphs.m_op_label = ""
+
+    # Reset draw function of VIEW3D_HT_tool_header
+    VIEW3D_HT_tool_header.draw = NIMPHS_Scene.view_3d_ht_tool_header_draw
+
     auto_load.unregister()
 
     # Remove icons
