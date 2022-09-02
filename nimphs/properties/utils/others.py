@@ -1,12 +1,12 @@
 # <pep8 compliant>
 import bpy
 from bpy.app.handlers import persistent
-from bpy.types import Context, VIEW3D_HT_tool_header
+from bpy.types import VIEW3D_HT_tool_header
 
 import logging
 log = logging.getLogger(__name__)
 
-from copy import deepcopy
+from nimphs.properties.shared.nimphs_scene import NIMPHS_Scene
 
 
 @persistent
@@ -19,48 +19,19 @@ def nimphs_on_save_pre(_dummy) -> None:
             obj.nimphs.settings.point_data.save = file_data.vars.dumps()
 
 
-def update_progress_bar(_self, context: Context) -> None:
-    """
-    Update function for the custom progress bar. Tag all info areas for redraw.
-
-    Args:
-        context (Context): context
-    """
-
-    areas = context.window.screen.areas
-    for area in areas:
-        if area.type == 'INFO':
-            area.tag_redraw()
-
-
-# A variable where we can store the original draw function
-def info_header_draw(s, c) -> None:  # noqa: D103
-    return None
-
-
-# State variable to prevent saving multiple times original VIEW_3D header draw function
-global info_header_draw_saved
-info_header_draw_saved = False
-
-
 # Inspired by: https://blog.michelanders.nl/2017/04/how-to-add-progress-indicator-to-the-info-header-in-blender.html
 def register_custom_progress_bar() -> None:
     """Register the custom progress bar."""
 
-    global info_header_draw
-    global info_header_draw_saved
-
     # Save the original draw method of Info header
-    if not info_header_draw_saved:
-        print("SAVED:", VIEW3D_HT_tool_header.draw)
-        info_header_draw = deepcopy(VIEW3D_HT_tool_header.draw)
-        info_header_draw_saved = True
+    if not NIMPHS_Scene.view_3d_ht_tool_header_draw_saved:
+        NIMPHS_Scene.view_3d_ht_tool_header_draw = VIEW3D_HT_tool_header.draw
+        NIMPHS_Scene.view_3d_ht_tool_header_draw_saved = True
 
     # Create a new draw function
     def new_info_header_draw(self, context):
-        global info_header_draw
         # First call to the original function
-        info_header_draw(self, context)
+        NIMPHS_Scene.view_3d_ht_tool_header_draw(self, context)
 
         # Then add the prop that acts as a progress bar
         scene_prop = context.scene.get("nimphs", None)
@@ -74,5 +45,4 @@ def register_custom_progress_bar() -> None:
             self.layout.prop(context.scene.nimphs, "m_op_value", text=text, slider=True)
 
     # Replace the draw function by our new function
-    print("CURRENT:", VIEW3D_HT_tool_header.draw)
     VIEW3D_HT_tool_header.draw = new_info_header_draw

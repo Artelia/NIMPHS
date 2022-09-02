@@ -55,7 +55,7 @@ from nimphs.properties.shared.nimphs_scene import NIMPHS_Scene
 from nimphs.properties.shared.nimphs_object import NIMPHS_Object
 from nimphs.operators.telemac.telemac_import_file import import_telemac_menu_draw
 from nimphs.operators.openfoam.openfoam_import_file import import_openfoam_menu_draw
-from nimphs.properties.utils.others import register_custom_progress_bar, nimphs_on_save_pre, info_header_draw
+from nimphs.properties.utils.others import register_custom_progress_bar, nimphs_on_save_pre
 from nimphs.operators.utils.sequence import (
     update_openfoam_streaming_sequences,
     update_telemac_streaming_sequences,
@@ -109,6 +109,15 @@ def register() -> None:  # noqa: D103
 
 
 def unregister() -> None:  # noqa: D103
+
+    # Reset default values (in case of unregister/register during execution of a modal operator)
+    bpy.context.scene.nimphs.m_op_running = False
+    bpy.context.scene.nimphs.m_op_value = -1.0
+    bpy.context.scene.nimphs.m_op_label = ""
+
+    # Reset draw function of VIEW3D_HT_tool_header
+    VIEW3D_HT_tool_header.draw = NIMPHS_Scene.view_3d_ht_tool_header_draw
+
     auto_load.unregister()
 
     # Remove icons
@@ -127,8 +136,5 @@ def unregister() -> None:  # noqa: D103
     TOPBAR_MT_file_import.remove(import_telemac_menu_draw)
     # Remove custom menus
     VIEW3D_MT_editor_menus.remove(nimphs_menus_draw)
-    # Reset draw function of VIEW_3D header
-    global info_header_draw
-    VIEW3D_HT_tool_header.draw = info_header_draw
 
     logger.debug("Unregistered NIMPHS")

@@ -1,9 +1,22 @@
 # <pep8 compliant>
-from bpy.types import PropertyGroup, Object
+from bpy.types import PropertyGroup, Object, Context
 from bpy.props import BoolProperty, FloatProperty, StringProperty, PointerProperty
 
-from nimphs.properties.utils.others import update_progress_bar
 from nimphs.properties.utils.point_data import PointDataManager
+
+
+def update_progress_bar(_self, context: Context) -> None:
+    """
+    Update function for the custom progress bar. Tag all info areas for redraw.
+
+    Args:
+        context (Context): context
+    """
+
+    areas = context.window.screen.areas
+    for area in areas:
+        if area.type == 'INFO':
+            area.tag_redraw()
 
 
 class NIMPHS_Scene(PropertyGroup):
@@ -12,8 +25,12 @@ class NIMPHS_Scene(PropertyGroup):
     register_cls = True
     is_custom_base_cls = False
 
+    # A variable where we can store the original draw function of VIEW_3D_HT_tool_header
     def view_3d_ht_tool_header_draw(s, c):
         return None
+
+    #: bool: Indicate if the draw method of VIEW_3D_HT_tool_header has already been saved.
+    view_3d_ht_tool_header_draw_saved: bool = False
 
     #: dict: Dictionary of file data used for all modules and all objects.
     #        Shape is: ```{"ops": file_data for current operator, "uid": obj file_data, "uid": obj file_data, ...}```
