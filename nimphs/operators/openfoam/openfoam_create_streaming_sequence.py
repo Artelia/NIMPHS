@@ -17,7 +17,7 @@ class NIMPHS_OT_OpenfoamCreateStreamingSequence(NIMPHS_CreateStreamingSequence):
 
     bl_idname = "nimphs.openfoam_create_streaming_sequence"
     bl_label = "Streaming sequence"
-    bl_description = "Create a 'streaming sequence'."
+    bl_description = "Create a 'streaming sequence'"
 
     @classmethod
     def poll(self, context: Context) -> bool:

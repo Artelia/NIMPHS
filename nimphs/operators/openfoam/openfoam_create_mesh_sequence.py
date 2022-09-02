@@ -23,7 +23,7 @@ class NIMPHS_OT_OpenfoamCreateMeshSequence(NIMPHS_CreateMeshSequence):
 
     bl_idname = "nimphs.openfoam_create_mesh_sequence"
     bl_label = "Mesh sequence"
-    bl_description = "Create mesh a sequence. Press 'esc' to cancel."
+    bl_description = "Create mesh a sequence. Press 'esc' to cancel"
 
     #: NIMPHS_OpenfoamImportSettings: import settings
     import_settings: PointerProperty(type=NIMPHS_OpenfoamImportSettings)
