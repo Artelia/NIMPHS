@@ -12,6 +12,9 @@ class NIMPHS_Scene(PropertyGroup):
     register_cls = True
     is_custom_base_cls = False
 
+    def view_3d_ht_tool_header_draw(s, c):
+        return None
+
     #: dict: Dictionary of file data used for all modules and all objects.
     #        Shape is: ```{"ops": file_data for current operator, "uid": obj file_data, "uid": obj file_data, ...}```
     file_data: dict = {"ops": None}

@@ -52,6 +52,7 @@ def register_custom_progress_bar() -> None:
 
     # Save the original draw method of Info header
     if not info_header_draw_saved:
+        print("SAVED:", VIEW3D_HT_tool_header.draw)
         info_header_draw = deepcopy(VIEW3D_HT_tool_header.draw)
         info_header_draw_saved = True
 
@@ -73,4 +74,5 @@ def register_custom_progress_bar() -> None:
             self.layout.prop(context.scene.nimphs, "m_op_value", text=text, slider=True)
 
     # Replace the draw function by our new function
+    print("CURRENT:", VIEW3D_HT_tool_header.draw)
     VIEW3D_HT_tool_header.draw = new_info_header_draw
