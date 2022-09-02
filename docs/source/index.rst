@@ -5,7 +5,7 @@ NIMPHS
 
 
 Short description
-#################
+-----------------
 
 
 |  This add-on makes possible to **import computational fluid dynamics files** (OpenFOAM and TELEMAC) in Blender.
@@ -22,7 +22,7 @@ Short description
 
 
 Documentation
-#############
+-------------
 
 
 .. toctree::
