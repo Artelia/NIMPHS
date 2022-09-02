@@ -71,7 +71,7 @@ Extract
 .. _telemac-extract-point-data-time-properties:
 
 Time
-*******
+****
 
 * **Start**: starting point of the sequence of data to export.
 * **Point data**: ending point of the sequence of data to export.
