@@ -3,6 +3,11 @@ NIMPHS
 
 |  **N**\ umerous **I**\ nstruments to **M**\ anipulate and **P**\ ost-process **H**\ ydraulic **S**\ imulations.
 
+
+Short description
+#################
+
+
 |  This add-on makes possible to **import computational fluid dynamics files** (OpenFOAM and TELEMAC) in Blender.
 
 |  Blender has a very **powerful photorealistic 3D renderer** and then can be used to render fluid dynamics simulations computed with
@@ -14,6 +19,11 @@ NIMPHS
 
    |  Thus, every time you re-open a Blender file which was containing an OpenFOAM or a TELEMAC object,
       you will be asked to reload that temporary data (**make sure the path to these files are still correct!**).
+
+
+Documentation
+#############
+
 
 .. toctree::
    :maxdepth: 2
