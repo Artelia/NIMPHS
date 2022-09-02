@@ -26,7 +26,7 @@ class NIMPHS_Scene(PropertyGroup):
     is_custom_base_cls = False
 
     # A variable where we can store the original draw function of VIEW_3D_HT_tool_header
-    def view_3d_ht_tool_header_draw(s, c):
+    def view_3d_ht_tool_header_draw(s, c):  # noqa: D102
         return None
 
     #: bool: Indicate if the draw method of VIEW_3D_HT_tool_header has already been saved.
