@@ -9,5 +9,6 @@ myst-parser
 sphinx
 sphinxemoji
 sphinx-rtd-theme
+sphinxcontrib-video
 sphinxcontrib-spelling
 fake-bpy-module-latest
