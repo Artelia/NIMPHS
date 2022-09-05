@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Interpolation &mdash; NIMPHS 0.4.0 documentation</title>
+  <title>Interpolation &mdash; NIMPHS 0.4.1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/global.css" type="text/css" />
@@ -21,7 +21,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Add-on preferences" href="../preferences.html" />
+    <link rel="next" title="Point data" href="point_data.html" />
     <link rel="prev" title="Create a sequence" href="create_sequence.html" /> 
 </head>
 
@@ -41,16 +41,18 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../installation.html">Installation guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">User guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../openfoam/index.html">OpenFOAM</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">TELEMAC</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="import.html">Import a file</a></li>
-<li class="toctree-l3"><a class="reference internal" href="preview.html">Previewing tools</a></li>
-<li class="toctree-l3"><a class="reference internal" href="create_sequence.html">Create a sequence</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Interpolation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#mesh-sequence">Mesh sequence</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#streaming-sequence">Streaming sequence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#quick-overview">Quick overview</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#detailed-documentation">Detailed documentation</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="import.html">Import a file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="preview.html">Previewing tools</a></li>
+<li class="toctree-l4"><a class="reference internal" href="create_sequence.html">Create a sequence</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Interpolation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="point_data.html">Point data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="volume.html">Volume</a></li>
 </ul>
 </li>
 </ul>
@@ -75,7 +77,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../index.html">Documentation</a> &raquo;</li>
+          <li><a href="../index.html">User guide</a> &raquo;</li>
           <li><a href="index.html">TELEMAC</a> &raquo;</li>
       <li>Interpolation</li>
       <li class="wy-breadcrumbs-aside">
@@ -95,7 +97,7 @@
 </div>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
-<p>Vertex colors are linearly interpolated using the defined shape keys.</p>
+<p>Vertex colors are automatically <strong>linearly</strong> interpolated according to shape keys positions.</p>
 </div>
 <div class="line-block">
 <div class="line">Here is how you can do it:</div>
@@ -177,7 +179,7 @@ However, you can still interpolate the animation of the mesh using our custom to
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="create_sequence.html" class="btn btn-neutral float-left" title="Create a sequence" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../preferences.html" class="btn btn-neutral float-right" title="Add-on preferences" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="point_data.html" class="btn btn-neutral float-right" title="Point data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

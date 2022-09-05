@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Volume &mdash; NIMPHS 0.4.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/global.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Add-on preferences" href="../preferences.html" />
+    <link rel="prev" title="Point data" href="point_data.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> NIMPHS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">User guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../openfoam/index.html">OpenFOAM</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">TELEMAC</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="index.html#quick-overview">Quick overview</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#detailed-documentation">Detailed documentation</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="import.html">Import a file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="preview.html">Previewing tools</a></li>
+<li class="toctree-l4"><a class="reference internal" href="create_sequence.html">Create a sequence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="interpolation.html">Interpolation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="point_data.html">Point data</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Volume</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../preferences.html">Add-on preferences</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers/index.html">Developers manual</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NIMPHS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">User guide</a> &raquo;</li>
+          <li><a href="index.html">TELEMAC</a> &raquo;</li>
+      <li>Volume</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="volume">
+<span id="telemac-volume"></span><h1>Volume<a class="headerlink" href="#volume" title="Permalink to this heading"></a></h1>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>You must have installed pyopenvdb to use this feature.</p>
+</div>
+<div class="line-block">
+<div class="line">It is possible to generate volume sequences for TELEMAC-3D files.</div>
+<div class="line">These volume sequences are exported as .vdb file sequences.</div>
+<div class="line">The VDB format is a common file format used for volumes in computer graphics.</div>
+</div>
+<section id="generate-volume-sequence">
+<span id="telemac-generate-volume-sequence"></span><h2>Generate volume sequence<a class="headerlink" href="#generate-volume-sequence" title="Permalink to this heading"></a></h2>
+<div class="line-block">
+<div class="line">This operator lets you generate volume sequences from TELEMAC-3D files.</div>
+<div class="line">Point data are exported &quot;raw&quot; (without any remapping). Thus, you can use the 'Map Range' node to do so.</div>
+</div>
+<a class="rounded-corners reference internal image-reference" href="../../_images/telemac_3d_generate_volume_sequence.png"><img alt="Generate volume sequence operator" class="rounded-corners align-center" src="../../_images/telemac_3d_generate_volume_sequence.png" style="width: 60%;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<section id="hardware">
+<span id="telemac-generate-volume-sequence-hardware-properties"></span><h3>Hardware<a class="headerlink" href="#hardware" title="Permalink to this heading"></a></h3>
+<ul>
+<li><p><strong>Mode</strong>: computation mode, select one from:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Default</strong>: can be very slow for large dimensions.</p></li>
+<li><p><strong>Multiprocessing</strong>: multi-threading computation mode, can speed up a lot the computation.</p></li>
+<li><p><strong>CUDA</strong>: make use of CUDA capable device (<em>if numba is installed</em>), can <strong>dramatically</strong> improve the computation speed.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="telemac-generate-volume-sequence-volume-properties">
+<span id="id1"></span><h3>Volume<a class="headerlink" href="#telemac-generate-volume-sequence-volume-properties" title="Permalink to this heading"></a></h3>
+<section id="size">
+<h4>Size<a class="headerlink" href="#size" title="Permalink to this heading"></a></h4>
+<ul>
+<li><p><strong>Volume definition</strong>: define the volume dimensions either by providing dimensions or a voxel size.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>Dimensions</strong>: define the volume by giving custom dimensions (L x W x H).</p></li>
+<li><p><strong>Voxel size</strong>: define the volume using a voxel size.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="density">
+<h4>Density<a class="headerlink" href="#density" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Add</strong>: add a point data to export in voxels. For now, it is limited to only one point data exported at a time.</p></li>
+</ul>
+</section>
+</section>
+<section id="interpolation">
+<span id="telemac-generate-volume-sequence-interpolation-properties"></span><h3>Interpolation<a class="headerlink" href="#interpolation" title="Permalink to this heading"></a></h3>
+<section id="space">
+<h4>Space<a class="headerlink" href="#space" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Type</strong>: type of interpolation.</p></li>
+<li><p><strong>Steps</strong>: number of planes to interpolated between each known plane.</p></li>
+</ul>
+</section>
+<section id="time">
+<h4>Time<a class="headerlink" href="#time" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Type</strong>: type of interpolation.</p></li>
+<li><p><strong>Steps</strong>: number of time points to interpolate between each known time point.</p></li>
+</ul>
+</section>
+</section>
+<section id="sequence">
+<span id="telemac-generate-volume-sequence-sequence-properties"></span><h3>Sequence<a class="headerlink" href="#sequence" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Output directory</strong>: path to the directory where to place generated .vdb files.</p></li>
+<li><p><strong>File name</strong>: name to give to the generated files.</p></li>
+<li><p><strong>Start</strong>: starting point of the sequence to export (time point).</p></li>
+<li><p><strong>End</strong>: ending point of the sequence to export (time point).</p></li>
+</ul>
+<p>Example of generated volume sequence:</p>
+<a class="rounded-corners reference internal image-reference" href="../../_images/telemac_3d_generated_volume_sequence.png"><img alt="Generated volume sequence" class="rounded-corners align-center" src="../../_images/telemac_3d_generated_volume_sequence.png" style="width: 60%;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</section>
+</section>
+<section id="set-volume-origin">
+<span id="telemac-set-volmume-origin"></span><h2>Set volume origin<a class="headerlink" href="#set-volume-origin" title="Permalink to this heading"></a></h2>
+<div class="line-block">
+<div class="line">This operator lets you align (in the 3D space) a generated volume sequence to your TELEMAC-3D file.</div>
+<div class="line">The volume will also be resized to match the dimensions of the model.</div>
+</div>
+<a class="rounded-corners reference internal image-reference" href="../../_images/telemac_3d_set_volume_origin.png"><img alt="Extract point data operator" class="rounded-corners align-center" src="../../_images/telemac_3d_set_volume_origin.png" style="width: 60%;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<section id="selection">
+<span id="telemac-set-volmume-origin-selection-properties"></span><h3>Selection<a class="headerlink" href="#selection" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Target</strong>: target model to fit dimensions and origin.</p></li>
+</ul>
+<p>Before:</p>
+<a class="rounded-corners reference internal image-reference" href="../../_images/telemac_3d_volume_origin_before.png"><img alt="Before set origin operator" class="rounded-corners align-center" src="../../_images/telemac_3d_volume_origin_before.png" style="width: 60%;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<p>After:</p>
+<a class="rounded-corners reference internal image-reference" href="../../_images/telemac_3d_volume_origin_after.png"><img alt="After set origin operator" class="rounded-corners align-center" src="../../_images/telemac_3d_volume_origin_after.png" style="width: 60%;" /></a>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="point_data.html" class="btn btn-neutral float-left" title="Point data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../preferences.html" class="btn btn-neutral float-right" title="Add-on preferences" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, ARTELIAGROUP.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

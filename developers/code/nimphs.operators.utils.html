@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nimphs.operators.utils &mdash; NIMPHS 0.4.0 documentation</title>
+  <title>nimphs.operators.utils &mdash; NIMPHS 0.4.1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/global.css" type="text/css" />
@@ -41,7 +41,7 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../users/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users/index.html">User guide</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developers manual</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../introduction.html">Introduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../development_environment.html">Development environment</a></li>
@@ -793,7 +793,7 @@ If the file is a 3D simulation, this will generate one object per plane.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nimphs.operators.utils.volume.TelemacVolume.export_time_point">
-<span class="sig-name descname"><span class="pre">export_time_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nimphs.operators.utils.volume.TelemacMeshForVolume" title="nimphs.operators.utils.volume.TelemacMeshForVolume"><span class="pre">TelemacMeshForVolume</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(None,</span> <span class="pre">None)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.utils.volume.TelemacVolume.export_time_point" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">export_time_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nimphs.operators.utils.volume.TelemacMeshForVolume" title="nimphs.operators.utils.volume.TelemacMeshForVolume"><span class="pre">TelemacMeshForVolume</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.utils.volume.TelemacVolume.export_time_point" title="Permalink to this definition"></a></dt>
 <dd><p>Generate and export volume for the current time point.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -801,7 +801,6 @@ If the file is a 3D simulation, this will generate one object per plane.</p>
 <li><p><strong>mesh</strong> (<a class="reference internal" href="#nimphs.operators.utils.volume.TelemacMeshForVolume" title="nimphs.operators.utils.volume.TelemacMeshForVolume"><em>TelemacMeshForVolume</em></a>) -- mesh</p></li>
 <li><p><strong>point_data</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) -- point data to use as density</p></li>
 <li><p><strong>file_name</strong> (<em>str</em>) -- file name</p></li>
-<li><p><strong>remap</strong> (<em>tuple</em><em>[</em><em>float</em><em>]</em><em>, </em><em>optional</em>) -- min / max to remap values. Defaults to (None, None).</p></li>
 </ul>
 </dd>
 </dl>
@@ -809,14 +808,13 @@ If the file is a 3D simulation, this will generate one object per plane.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nimphs.operators.utils.volume.TelemacVolume.fill">
-<span class="sig-name descname"><span class="pre">fill</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nimphs.operators.utils.volume.TelemacMeshForVolume" title="nimphs.operators.utils.volume.TelemacMeshForVolume"><span class="pre">TelemacMeshForVolume</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(None,</span> <span class="pre">None)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.utils.volume.TelemacVolume.fill" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">fill</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nimphs.operators.utils.volume.TelemacMeshForVolume" title="nimphs.operators.utils.volume.TelemacMeshForVolume"><span class="pre">TelemacMeshForVolume</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.utils.volume.TelemacVolume.fill" title="Permalink to this definition"></a></dt>
 <dd><p>Set the density of each voxel using the given data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mesh</strong> (<a class="reference internal" href="#nimphs.operators.utils.volume.TelemacMeshForVolume" title="nimphs.operators.utils.volume.TelemacMeshForVolume"><em>TelemacMeshForVolume</em></a>) -- mesh data</p></li>
 <li><p><strong>point_data</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) -- name of point data to use as density</p></li>
-<li><p><strong>remap</strong> (<em>tuple</em><em>[</em><em>float</em><em>]</em>) -- global min, global max to remap data</p></li>
 </ul>
 </dd>
 </dl>

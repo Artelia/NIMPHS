@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nimphs.operators.telemac &mdash; NIMPHS 0.4.0 documentation</title>
+  <title>nimphs.operators.telemac &mdash; NIMPHS 0.4.1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/global.css" type="text/css" />
@@ -41,7 +41,7 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../users/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users/index.html">User guide</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developers manual</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../introduction.html">Introduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../development_environment.html">Development environment</a></li>
@@ -667,7 +667,7 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.computing_mode">
 <span class="sig-name descname"><span class="pre">computing_mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.computing_mode" title="Permalink to this definition"></a></dt>
-<dd><p>Computing mode. Enum in ['DEFAULT', 'MULTIPROCESSING', 'CUDA']</p>
+<dd><p>Computing mode. Enum in ['DEFAULT', 'MULTIPROCESSING', 'CUDA'].</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>bpy.props.EnumProperty</p>
@@ -689,17 +689,35 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.dim_x">
 <span class="sig-name descname"><span class="pre">dim_x</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.dim_x" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Volume dimension along the 'X' axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.IntProperty</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.dim_y">
 <span class="sig-name descname"><span class="pre">dim_y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.dim_y" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Volume dimension along the 'Y' axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.IntProperty</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.dim_z">
 <span class="sig-name descname"><span class="pre">dim_z</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.dim_z" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Volume dimension along the 'Z' axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.IntProperty</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.draw">
@@ -754,7 +772,13 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.file_name">
 <span class="sig-name descname"><span class="pre">file_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.file_name" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>File name of generated .vdb files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.StringProperty</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.invoke">
@@ -815,12 +839,24 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.nb_threads">
 <span class="sig-name descname"><span class="pre">nb_threads</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.nb_threads" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Number of threads to use when multiprocessing mode is chosen.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.IntProperty</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.output_path">
 <span class="sig-name descname"><span class="pre">output_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.output_path" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Output path for generated .vdb files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.StringProperty</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.poll">
@@ -847,12 +883,24 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.space_interpolation">
 <span class="sig-name descname"><span class="pre">space_interpolation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.space_interpolation" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Space interpolation settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="nimphs.properties.telemac.html#nimphs.properties.telemac.interpolate.NIMPHS_TelemacInterpolateProperty" title="nimphs.properties.telemac.interpolate.NIMPHS_TelemacInterpolateProperty">NIMPHS_TelemacInterpolateProperty</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.time_interpolation">
 <span class="sig-name descname"><span class="pre">time_interpolation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.time_interpolation" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Time interpolation settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="nimphs.properties.telemac.html#nimphs.properties.telemac.interpolate.NIMPHS_TelemacInterpolateProperty" title="nimphs.properties.telemac.interpolate.NIMPHS_TelemacInterpolateProperty">NIMPHS_TelemacInterpolateProperty</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.time_point">
@@ -879,12 +927,24 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.volume_definition">
 <span class="sig-name descname"><span class="pre">volume_definition</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.volume_definition" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Indicate how the volume is defined.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.EnumProperty</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.vx_size">
 <span class="sig-name descname"><span class="pre">vx_size</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.vx_size" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Voxel size.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.IntProperty</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.telemac.telemac_generate_volume_sequence.NIMPHS_OT_TelemacGenerateVolumeSequence.vx_size_z">
@@ -1224,7 +1284,7 @@
 <p>Operator to set origin of a volume to a TELEMAC 3D model.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.telemac.telemac_set_volume_origin.NIMPHS_OT_TelemacSetVolumeOrigin.bl_description">
-<span class="sig-name descname"><span class="pre">bl_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Set</span> <span class="pre">origin</span> <span class="pre">of</span> <span class="pre">volume</span> <span class="pre">to</span> <span class="pre">TELEMAC</span> <span class="pre">3D</span> <span class="pre">model</span> <span class="pre">(align</span> <span class="pre">origins).'</span></em><a class="headerlink" href="#nimphs.operators.telemac.telemac_set_volume_origin.NIMPHS_OT_TelemacSetVolumeOrigin.bl_description" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">bl_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Set</span> <span class="pre">origin</span> <span class="pre">of</span> <span class="pre">volume</span> <span class="pre">to</span> <span class="pre">TELEMAC</span> <span class="pre">3D</span> <span class="pre">model</span> <span class="pre">(align</span> <span class="pre">origins)'</span></em><a class="headerlink" href="#nimphs.operators.telemac.telemac_set_volume_origin.NIMPHS_OT_TelemacSetVolumeOrigin.bl_description" title="Permalink to this definition"></a></dt>
 <dd><p>str</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>

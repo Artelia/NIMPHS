@@ -36,7 +36,7 @@ Mesh sequence
 Point data
 **********
 
-* **Method**: remapping method for point data ('LOCAL' or 'GLOBAL').
+* **Method**: remapping method for point data ('LOCAL', 'GLOBAL' or 'CUSTOM').
 * **Add**: select a new point data to import as vertex colors.
 
 

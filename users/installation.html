@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation guide &mdash; NIMPHS 0.4.0 documentation</title>
+  <title>Installation &mdash; NIMPHS 0.4.1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/global.css" type="text/css" />
@@ -22,7 +22,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="OpenFOAM" href="openfoam/index.html" />
-    <link rel="prev" title="Documentation" href="index.html" /> 
+    <link rel="prev" title="User guide" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -41,8 +41,8 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Installation guide</a><ul>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">User guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Installation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#linux">Linux</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#windows">Windows</a></li>
 </ul>
@@ -69,8 +69,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="index.html">Documentation</a> &raquo;</li>
-      <li>Installation guide</li>
+          <li><a href="index.html">User guide</a> &raquo;</li>
+      <li>Installation</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -79,8 +79,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="installation-guide">
-<span id="addon-installation"></span><h1>Installation guide<a class="headerlink" href="#installation-guide" title="Permalink to this heading"></a></h1>
+  <section id="installation">
+<span id="addon-installation"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h1>
 <ul class="simple">
 <li><p><a class="reference internal" href="#install-addon-linux"><span class="std std-ref">Linux</span></a></p></li>
 <li><p><a class="reference internal" href="#install-addon-windows"><span class="std std-ref">Windows</span></a></p></li>
@@ -93,31 +93,52 @@
 </div>
 <ol class="arabic">
 <li><p>Install <a class="reference external" href="https://www.blender.org/download/">Blender</a> (at least version 3.0)</p></li>
-<li><dl>
-<dt>Install dependencies:</dt><dd><ul>
-<li><p>Blender add-on: <a class="reference external" href="https://github.com/neverhood311/Stop-motion-OBJ/releases">Stop-motion-OBJ</a> (at least version 2.2.0.alpha.23)</p></li>
-<li><p>Python packages:</p>
+<li><p>Install dependencies:</p>
 <blockquote>
-<div><div class="admonition important">
-<p class="admonition-title">Important</p>
+<div><div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>You may have setup a custom python environment for Blender.
 All you have to do is to install the python packages inside your environment.</p>
 </div>
-<ul class="simple">
+<ul>
+<li><p>Blender add-on: <a class="reference external" href="https://github.com/neverhood311/Stop-motion-OBJ/releases">Stop-motion-OBJ</a> (at least version 2.2.0.alpha.23)</p></li>
+<li><p>Python packages:</p>
+<blockquote>
+<div><ul>
 <li><p>Go where python is installed in Blender (in <code class="docutils literal notranslate"><span class="pre">.../3.X/python/bin/</span></code>)</p></li>
-<li><p>Make sure we have pip installed: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">python3.X</span> <span class="pre">-m</span> <span class="pre">ensurepip</span></code></p></li>
-<li><p>Update pip: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">python3.X</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-U</span> <span class="pre">pip</span></code></p></li>
-<li><p>Install <a class="reference external" href="https://docs.pyvista.org/#">PyVista</a> <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">python3.X</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-U</span> <span class="pre">pyvista&gt;=0.35.0</span> <span class="pre">-t</span> <span class="pre">../lib/site-packages/</span></code></p></li>
+<li><p>Make sure we have pip installed: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">./python3.X</span> <span class="pre">-m</span> <span class="pre">ensurepip</span></code></p></li>
+<li><p>Update pip: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">./python3.X</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-U</span> <span class="pre">pip</span></code></p></li>
+<li><p>Install <a class="reference external" href="https://docs.pyvista.org/#">PyVista</a> <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">./python3.X</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-U</span> <span class="pre">pyvista</span> <span class="pre">-t</span> <span class="pre">../lib/python3.X/site-packages/</span></code></p>
+<blockquote>
+<div><div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Next points are only needed if you are planning to generate volume sequences from TELEMAC-3D files.</p>
+</div>
+</div></blockquote>
+</li>
+<li><p>Install <a class="reference external" href="https://numba.pydata.org/numba-doc/latest/index.html">Numba</a> (for CUDA support) <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">./python3.X</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-U</span> <span class="pre">numba</span> <span class="pre">-t</span> <span class="pre">../lib/python3.X/site-packages/</span></code></p></li>
+<li><p>Install <a class="reference external" href="https://github.com/AcademySoftwareFoundation/openvdb">pyopenvdb</a>. There is no &quot;simple&quot; way for the moment.
+We are waiting for <a class="reference external" href="https://github.com/AcademySoftwareFoundation/openvdb/pull/1377">this PR</a> to be merged. This should make the process a lot easier.</p>
+<div class="line-block">
+<div class="line">For now, you have to install it by your own means. You probably will have to install <a class="reference external" href="https://www.boost.org/">boost</a> and <a class="reference external" href="https://github.com/oneapi-src/oneTBB">tbb</a>.</div>
+<div class="line">Here are some steps to help you install it manually:</div>
+</div>
+<ul class="simple">
+<li><p>Download latest release of <a class="reference external" href="https://github.com/AcademySoftwareFoundation/openvdb/releases">OpenVDB</a></p></li>
+<li><p>Run: <code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">openvdb</span> <span class="pre">&amp;&amp;</span> <span class="pre">mkdir</span> <span class="pre">build</span> <span class="pre">&amp;&amp;</span> <span class="pre">cd</span> <span class="pre">build</span></code></p></li>
+<li><p>Run: <code class="docutils literal notranslate"><span class="pre">cmake</span> <span class="pre">-DOPENVDB_BUILD_PYTHON_MODULE=ON</span> <span class="pre">-DUSE_NUMPY=ON</span> <span class="pre">-DPython_EXECUTABLE=path/to/python/bin/python3.X</span> <span class="pre">..</span></code></p></li>
+<li><p>Run: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">make</span> <span class="pre">-j</span> <span class="pre">8</span> <span class="pre">&amp;&amp;</span> <span class="pre">sudo</span> <span class="pre">make</span> <span class="pre">install</span></code></p></li>
+</ul>
+</li>
 </ul>
 </div></blockquote>
 </li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </li>
 <li><dl class="simple">
 <dt>Install the add-on:</dt><dd><ul class="simple">
-<li><p>Download a version from the <a class="reference external" href="https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/releases">releases page</a> (latest recommended)</p></li>
+<li><p>Download a version from the <a class="reference external" href="https://github.com/Artelia/NIMPHS/releases">releases page</a> (latest recommended)</p></li>
 <li><p>In Blender, go to <code class="docutils literal notranslate"><span class="pre">Edit</span> <span class="pre">&gt;</span> <span class="pre">Preferences</span> <span class="pre">&gt;</span> <span class="pre">Add-on</span> <span class="pre">&gt;</span> <span class="pre">Install</span></code> and select the downloaded file</p></li>
 <li><p>Do not forget to activate it (<cite>tick the checkbox</cite>)</p></li>
 </ul>
@@ -139,31 +160,46 @@ to install python dependencies correctly.</p>
 </div>
 </div></blockquote>
 </li>
-<li><dl>
-<dt>Install dependencies:</dt><dd><ul>
-<li><p>Blender add-on: <a class="reference external" href="https://github.com/neverhood311/Stop-motion-OBJ/releases">Stop-motion-OBJ</a> (at least version 2.2.0.alpha.23)</p></li>
-<li><p>Python packages:</p>
+<li><p>Install dependencies:</p>
 <blockquote>
-<div><div class="admonition important">
-<p class="admonition-title">Important</p>
+<div><div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>You may have setup a custom python environment for Blender.
 All you have to do is to install the python packages inside your environment.</p>
 </div>
-<ul class="simple">
+<ul>
+<li><p>Blender add-on: <a class="reference external" href="https://github.com/neverhood311/Stop-motion-OBJ/releases">Stop-motion-OBJ</a> (at least version 2.2.0.alpha.23)</p></li>
+<li><p>Python packages:</p>
+<blockquote>
+<div><ul>
 <li><p>Go where python is installed in Blender (in <code class="docutils literal notranslate"><span class="pre">.../3.X/python/bin/</span></code>)</p></li>
 <li><p>Make sure we have pip installed: <code class="docutils literal notranslate"><span class="pre">.\python.exe</span> <span class="pre">-m</span> <span class="pre">ensurepip</span></code></p></li>
 <li><p>Update pip: <code class="docutils literal notranslate"><span class="pre">.\python.exe</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-U</span> <span class="pre">pip</span></code></p></li>
-<li><p>Install <a class="reference external" href="https://docs.pyvista.org/#">PyVista</a> <code class="docutils literal notranslate"><span class="pre">.\python.exe</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-U</span> <span class="pre">pyvista&gt;=0.35.0</span> <span class="pre">-t</span> <span class="pre">../lib/site-packages/</span></code></p></li>
+<li><p>Install <a class="reference external" href="https://docs.pyvista.org/#">PyVista</a> <code class="docutils literal notranslate"><span class="pre">.\python.exe</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-U</span> <span class="pre">pyvista</span> <span class="pre">-t</span> <span class="pre">../lib/site-packages/</span></code></p>
+<blockquote>
+<div><div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Next points are only needed if you are planning to generate volume sequences from TELEMAC-3D files.</p>
+</div>
+</div></blockquote>
+</li>
+<li><p>Install <a class="reference external" href="https://numba.pydata.org/numba-doc/latest/index.html">Numba</a> (for CUDA support) <code class="docutils literal notranslate"><span class="pre">.\python.exe</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-U</span> <span class="pre">numba</span> <span class="pre">-t</span> <span class="pre">../lib/site-packages/</span></code></p></li>
+<li><p>Install <a class="reference external" href="https://github.com/AcademySoftwareFoundation/openvdb">pyopenvdb</a>. There is no &quot;simple&quot; way for the moment.
+We are waiting for <a class="reference external" href="https://github.com/AcademySoftwareFoundation/openvdb/pull/1377">this PR</a> to be merged. This should make the process a lot easier.</p>
+<div class="line-block">
+<div class="line">For now, you have to install it by your own means. You probably will have to install <a class="reference external" href="https://www.boost.org/">boost</a> and <a class="reference external" href="https://github.com/oneapi-src/oneTBB">tbb</a>.</div>
+<div class="line">[TODO]</div>
+</div>
+</li>
 </ul>
 </div></blockquote>
 </li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </li>
 <li><dl class="simple">
 <dt>Install the add-on:</dt><dd><ul class="simple">
-<li><p>Download a version from the <a class="reference external" href="https://gitlab.arteliagroup.com/water/hydronum/toolsbox_blender/-/releases">releases page</a> (latest recommended)</p></li>
+<li><p>Download a version from the <a class="reference external" href="https://github.com/Artelia/NIMPHS/releases">releases page</a> (latest recommended)</p></li>
 <li><p>In Blender, go to <code class="docutils literal notranslate"><span class="pre">Edit</span> <span class="pre">&gt;</span> <span class="pre">Preferences</span> <span class="pre">&gt;</span> <span class="pre">Add-on</span> <span class="pre">&gt;</span> <span class="pre">Install</span></code> and select the downloaded file</p></li>
 <li><p>Do not forget to activate it (<cite>tick the checkbox</cite>)</p></li>
 </ul>
@@ -178,7 +214,7 @@ All you have to do is to install the python packages inside your environment.</p
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="User guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="openfoam/index.html" class="btn btn-neutral float-right" title="OpenFOAM" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

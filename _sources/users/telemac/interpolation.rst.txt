@@ -12,7 +12,7 @@ Mesh sequence
 | The use of shape keys lets you to interpolate the animation of the mesh.
 
 .. important::
-    Vertex colors are linearly interpolated using the defined shape keys.
+    Vertex colors are automatically **linearly** interpolated according to shape keys positions.
 
 | Here is how you can do it:
 
