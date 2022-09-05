@@ -14,7 +14,7 @@ bl_info = {
     "name": "NIMPHS",
     "description": "Numerous Instruments to Manipulate and Post-process Hydraulic Simulations",
     "author": "Félix Olart, Thibault Oudart",
-    "version": (0, 4, 0),
+    "version": (0, 4, 1),
     "blender": (3, 0, 0),
     "location": "File > Import",
     "warning": "This version is still in development.",
