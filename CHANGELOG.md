@@ -9,15 +9,16 @@ Updated documentation.
 
 ### Added
 
-No detail available.
+* Update documentation (#10)
+
 
 ### Fixed
 
-No detail available.
+* Fix crash when disabling add-on (#8)
 
 ### Changed
 
-No detail available.
+* TELEMAC-3D: modify how point data are exported for volume sequences (#7)
 
 </details>
 
