@@ -1,5 +1,26 @@
 # Change log
 
+## [0.4.1] - 2022-09-05
+
+Several optimizations ang bug fixes.
+Updated documentation.
+
+<details><summary>Details</summary>
+
+### Added
+
+No detail available.
+
+### Fixed
+
+No detail available.
+
+### Changed
+
+No detail available.
+
+</details>
+
 ## [0.4.0] - 2022-08-27
 
 Numerous optimizations and bug fixes.
