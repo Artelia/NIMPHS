@@ -37,6 +37,7 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.napoleon',
     'sphinx.ext.autosummary',
+    'sphinxcontrib.video',
     'sphinxcontrib.spelling',
     'sphinxemoji.sphinxemoji',
 ]

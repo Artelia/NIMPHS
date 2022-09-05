@@ -17,7 +17,7 @@ class NIMPHS_OT_TelemacSetVolumeOrigin(Operator):
 
     bl_idname = "nimphs.set_volume_origin"
     bl_label = "Set volume origin"
-    bl_description = "Set origin of volume to TELEMAC 3D model (align origins)."
+    bl_description = "Set origin of volume to TELEMAC 3D model (align origins)"
 
     #: bpy.types.Object: Selected object
     obj: Object = None

@@ -7,7 +7,7 @@ log = logging.getLogger(__name__)
 
 def update_start(self, _context: Context) -> None:  # noqa: D417
     """
-    Update time point (make sure the user can't selected an undefined time point).
+    Update time point (make sure the user can't select an undefined time point).
 
     Args:
         _context (Context):
@@ -21,7 +21,7 @@ def update_start(self, _context: Context) -> None:  # noqa: D417
 
 def update_end(self, _context: Context) -> None:  # noqa: D417
     """
-    Update time point (make sure the user can't selected an undefined time point).
+    Update time point (make sure the user can't select an undefined time point).
 
     Args:
         _context (Context):
@@ -35,7 +35,7 @@ def update_end(self, _context: Context) -> None:  # noqa: D417
 
 def update_plane_id(self, _context: Context) -> None:  # noqa: D417
     """
-    Update plane id (for 3D TELEMAC files, make sure the user can't selected an undefined plane id).
+    Update plane id (for 3D TELEMAC files, make sure the user can't select an undefined plane id).
 
     Args:
         _context (Context): context

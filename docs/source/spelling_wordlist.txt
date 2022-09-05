@@ -18,3 +18,9 @@ idname
 ok
 stringified
 Serafin
+Voxel
+voxel
+Voxels
+voxels
+vdb
+VDB
