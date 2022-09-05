@@ -8,6 +8,23 @@ TELEMAC
         Do not hesitate to open it.
     |   On Windows, ``Window > Toggle System Console``.
 
+
+.. _telemac-user-documentation-quick-overview:
+
+Quick overview
+--------------
+
+.. video:: ../../_static/videos/demo_telemac.mp4
+    :width: 900
+
+|
+
+
+.. _telemac-user-documentation-detailed-documentation:
+
+Detailed documentation
+----------------------
+
 .. toctree::
     :maxdepth: 1
     :glob:
