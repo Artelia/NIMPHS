@@ -6,7 +6,7 @@ from nimphs.properties.shared.module_streaming_sequence_settings import NIMPHS_M
 
 
 class NIMPHS_StreamingSequenceSettingsPanel(Panel):
-    """Base UI panel for both modules 'streaming sequence' settings."""
+    """Base UI panel for 'streaming sequence' settings."""
 
     register_cls = False
     is_custom_base_cls = True
@@ -61,6 +61,7 @@ class NIMPHS_StreamingSequenceSettingsPanel(Panel):
             op.chosen = point_data.list
             op.source = 'OBJECT'
 
+        # Sequence settings
         box = self.layout.box()
         row = box.row()
         row.label(text="Sequence")

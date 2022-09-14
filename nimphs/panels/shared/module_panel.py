@@ -8,7 +8,7 @@ from nimphs.panels.utils import get_selected_object
 
 class NIMPHS_ModulePanel(Panel):
     """
-    Base UI panel for OpenFOAM and TELEMAC modules.
+    Base UI panel for all modules.
 
     Create derived classes to add specific content.
     """

@@ -9,7 +9,7 @@ from nimphs.properties.utils.point_data import PointDataInformation, PointDataMa
 
 def get_selected_object(context: Context) -> Union[Object, None]:
     """
-    Return the selected object.
+    Return the selected object. If a child of the main module object is selected, return its parent.
 
     Args:
         context (Context): context
