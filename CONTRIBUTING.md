@@ -19,7 +19,8 @@ outcomes with schemas, screenshots, documentation, etc.
 
 ## Licensing
 
-If you plan to add new data or code to NIMPHS, please make sure it is compatible with the GNU GPL v3.
+If you plan to add new data or code to NIMPHS, please make sure its licence is compatible with the
+licence we use.
 
 -------------------------------------------------------------------------------------------------------------
 
@@ -30,7 +31,7 @@ Please refer to the information given in the [developers manual](https://artelia
 ## Contributing through Github
 
 To submit new code to NIMPHS, you first need to fork the GitHub repository. Then, clone the forked repository
-to you computer. Create a new branch following our [branch naming conventions](#branch-naming-conventions) in your
+to your computer. Create a new branch following our [branch naming conventions](#branch-naming-conventions) in your
 local repository.
 
 Next, add your new features in your local branch. Once you are ready to submit your code, please open a new pull request.
@@ -44,6 +45,9 @@ When creating a new branch, please name it as indicated here:
 * `fix/`: bug fixes or minor changes
 * `maint/`: for maintenance tasks
 * `release/`: for new releases
+
+Use hyphens to seperate words in the branch title.
+Example: `feat/my-new-feature`
 
 ## Style checking
 
@@ -81,7 +85,7 @@ make spelling
 
 ### Code documentation
 
-The code documentation is automatically generated from docstrings.
+The code documentation is automatically generated from docstrings written in the python files.
 Run this command to generate / update code documentation:
 
 ```shell
@@ -96,4 +100,4 @@ Run this command to build the documentation:
 make html
 ```
 
-The documentation is then available under `docs/_build/html/index.html` (open this file in a web browser).
+It is then available under `docs/_build/html/index.html` (open this file in a web browser).

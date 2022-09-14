@@ -51,9 +51,9 @@ Here are some creations made with NIMPHS.
 
 ### OpenFOAM
 
-Model A                                             | Model B
-:--------------------------------------------------:|:--------------------------------------------------:
-![TELEMAC gallery, model A](https://bit.ly/3RfjvT4) | ![TELEMAC gallery, model B](https://bit.ly/3AJNIDx)
+Model A                                              | Model B
+:---------------------------------------------------:|:---------------------------------------------------:
+![OpenFOAM gallery, model A](https://bit.ly/3RfjvT4) | ![OpenFOAM gallery, model B](https://bit.ly/3AJNIDx)
 
 Model C                                              | Model D
 :---------------------------------------------------:|:------------------------------:
@@ -62,12 +62,13 @@ Model C                                              | Model D
 ### TELEMAC
 
 Model A                                              | Model B
-:---------------------------------------------------:|:----------------------------------------------:
+:---------------------------------------------------:|:---------------------------------------------------:
 ![OpenFOAM gallery, model A](https://bit.ly/3pLn4om) | ![OpenFOAM gallery, model B](https://bit.ly/3clNytA)
 
 ## Contributing
 
 ![Contributor Covenant v2.1](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)
 
-We welcome contributions and hope that our [Contributing Guide](https://github.com/Artelia/NIMPHS/blob/main/CONTRIBUTING.md) will help you to start easily.
-Make sure to read the [Code Of Conduct](https://github.com/Artelia/NIMPHS/blob/main/CODE_OF_CONDUCT.md) before contributing.
+We welcome contributions and hope that our [contributing guide](https://github.com/Artelia/NIMPHS/blob/main/CONTRIBUTING.md)
+will help you to start easily.Make sure to read the [code of conduct](https://github.com/Artelia/NIMPHS/blob/main/CODE_OF_CONDUCT.md)
+before contributing.
