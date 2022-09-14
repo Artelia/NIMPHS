@@ -50,7 +50,7 @@ When creating a new branch, please name it as indicated here:
 We use style checking tools to verify that new code always meet our [coding style standards](https://artelia.github.io/NIMPHS/developers/introduction.html#coding-style).
 You can run a test using:
 
-```bash
+```shell
 pip install pre-commit
 pre-commint run --all-files
 ```
@@ -59,9 +59,41 @@ pre-commint run --all-files
 
 Run the test suite. Here is an example to run the test suite for Blender 3.2.1:
 
-```bash
+```shell
 python -m scripts.run_tests.py -b "3.2.1"
 ```
 
 For more information, please refer to the [corresponding section](https://artelia.github.io/NIMPHS/developers/development_environment.html#unit-tests)
 in the developers manual.
+
+## Documenation
+
+Our documentation is built using the python package sphinx.
+When running commands to build the documenation, please make sure you are under the `docs/` folder.
+
+### Style checking
+
+You can check for misspellings using this command:
+
+```shell
+make spelling
+```
+
+### Code documentation
+
+The code documentation is automatically generated from docstrings.
+Run this command to generate / update code documentation:
+
+```shell
+sphinx-apidoc -t "_templates/" --implicit-namespaces -d 1 -f -M -T -o source/developers/code/ ../nimphs "/*auto_load.py" "/*serafin.py" "/*checkdeps.py"
+```
+
+### Build documenation
+
+Run this command to build the documenation:
+
+```shell
+make html
+```
+
+The documentation is then available under `docs/_build/html/index.html` (open this file in a web browser).
