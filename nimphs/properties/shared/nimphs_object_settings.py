@@ -9,7 +9,7 @@ from nimphs.properties.utils.properties import update_preview_time_point, availa
 
 
 class NIMPHS_ObjectSettings(PropertyGroup):
-    """Data structure which holds object related settings for all the modules."""
+    """Data structure which holds object related settings for all modules."""
 
     register_cls = True
     is_custom_base_cls = False

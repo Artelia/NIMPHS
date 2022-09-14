@@ -2,16 +2,17 @@
 
 **N**umerous **I**nstruments to **M**anipulate and **P**ost-process **H**ydraulic **S**imulations.
 
-### Short description
+## Short description
 
-Import OpenFOAM (.foam) and TELEMAC (.slf) files in Blender, and make use of its powerful 3D renderer to generate photorealistic images and animations!
+Import OpenFOAM (.foam) and TELEMAC (.slf) files in Blender, and make use of its powerful 3D renderers to generate images and animations!
 
-Built with:
+## Documentation
 
-* [PyVista](https://github.com/pyvista/pyvista)
-* [Stop-motion-OBJ add-on](https://github.com/neverhood311/Stop-motion-OBJ)
+Installation guide and documentation can be found here: [NIMPHS documentation](https://artelia.github.io/NIMPHS/)
 
-## OpenFOAM
+## Features overview
+
+### OpenFOAM
 
 * Preview the imported file in the viewport
 * Create sequences to render animations
@@ -20,14 +21,13 @@ Built with:
 * Import point data as vertex colors (color attributes)
 * Clip mesh by a scalar
 
-### Screenshots
+#### Screenshots
 
 Wireframe preview                     |  Material preview
 :------------------------------------:|:-----------------------------------:
 ![Wireframe](https://bit.ly/3APEsPi)  |  ![Material](https://bit.ly/3pOWB9u)
 
-
-## TELEMAC
+### TELEMAC
 
 * Works with 2D and 3D files
 * Preview the imported file in the viewport
@@ -39,7 +39,7 @@ Wireframe preview                     |  Material preview
 * Extract point data from one vertex as time series
 * Generate volumes from TELEMAC-3D simulations
 
-### Screenshots
+#### Screenshots
 
 Wireframe preview                     |  Material preview
 :------------------------------------:|:-----------------------------------:
@@ -51,9 +51,9 @@ Here are some creations made with NIMPHS.
 
 ### OpenFOAM
 
-Model A                                             | Model B
-:--------------------------------------------------:|:--------------------------------------------------:
-![TELEMAC gallery, model A](https://bit.ly/3RfjvT4) | ![TELEMAC gallery, model B](https://bit.ly/3AJNIDx)
+Model A                                              | Model B
+:---------------------------------------------------:|:---------------------------------------------------:
+![OpenFOAM gallery, model A](https://bit.ly/3RfjvT4) | ![OpenFOAM gallery, model B](https://bit.ly/3AJNIDx)
 
 Model C                                              | Model D
 :---------------------------------------------------:|:------------------------------:
@@ -62,5 +62,13 @@ Model C                                              | Model D
 ### TELEMAC
 
 Model A                                              | Model B
-:---------------------------------------------------:|:----------------------------------------------:
+:---------------------------------------------------:|:---------------------------------------------------:
 ![OpenFOAM gallery, model A](https://bit.ly/3pLn4om) | ![OpenFOAM gallery, model B](https://bit.ly/3clNytA)
+
+## Contributing
+
+![Contributor Covenant v2.1](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)
+
+We welcome contributions and hope that our [contributing guide](https://github.com/Artelia/NIMPHS/blob/main/CONTRIBUTING.md)
+will help you to start easily.Make sure to read the [code of conduct](https://github.com/Artelia/NIMPHS/blob/main/CODE_OF_CONDUCT.md)
+before contributing.

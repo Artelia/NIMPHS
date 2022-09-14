@@ -53,6 +53,7 @@ class NIMPHS_PT_OpenfoamMainPanel(NIMPHS_ModulePanel):
 
             draw_clip_settings(self.layout, obj.nimphs.settings.openfoam.clip, enable=enable_clip)
 
+            # Preview settings
             box = self.layout.box()
             row = box.row()
             row.label(text="Preview")
