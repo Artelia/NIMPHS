@@ -61,7 +61,7 @@ class NIMPHS_StreamingSequenceSettingsPanel(Panel):
             op.chosen = point_data.list
             op.source = 'OBJECT'
 
-        # Sequence settings
+        # Sequence settings
         box = self.layout.box()
         row = box.row()
         row.label(text="Sequence")

@@ -7,14 +7,14 @@ the [Discussions](https://github.com/Artelia/NIMPHS/discussions) tab for that.
 
 ## Bug report
 
-If you encouter a bug using NIMPHS, please open a new issue. Do not hesistate to be overly
+If you encounter a bug using NIMPHS, please open a new issue. Do not hesitate to be overly
 descriptive so that we can reproduce the bug. Screenshots, sample files, tracebacks, etc. are
 welcomed.
 
 ## Feature requests
 
 We encourage users to propose new ideas in order to improve NIMPHS. For that, please first open a new
-issue to describe what could be improved, added or changed. Do not hesistate to illustrate the desired
+issue to describe what could be improved, added or changed. Do not hesitate to illustrate the desired
 outcomes with schemas, screenshots, documentation, etc.
 
 ## Licensing
@@ -42,7 +42,7 @@ When creating a new branch, please name it as indicated here:
 * `doc/`: additions or changes in the documentation
 * `feat/`: new feature or significant addition
 * `fix/`: bug fixes or minor changes
-* `maint/`: for maintainance tasks
+* `maint/`: for maintenance tasks
 * `release/`: for new releases
 
 ## Style checking
@@ -66,10 +66,10 @@ python -m scripts.run_tests.py -b "3.2.1"
 For more information, please refer to the [corresponding section](https://artelia.github.io/NIMPHS/developers/development_environment.html#unit-tests)
 in the developers manual.
 
-## Documenation
+## Documentation
 
 Our documentation is built using the python package sphinx.
-When running commands to build the documenation, please make sure you are under the `docs/` folder.
+When running commands to build the documentation, please make sure you are under the `docs/` folder.
 
 ### Style checking
 
@@ -88,9 +88,9 @@ Run this command to generate / update code documentation:
 sphinx-apidoc -t "_templates/" --implicit-namespaces -d 1 -f -M -T -o source/developers/code/ ../nimphs "/*auto_load.py" "/*serafin.py" "/*checkdeps.py"
 ```
 
-### Build documenation
+### Build documentation
 
-Run this command to build the documenation:
+Run this command to build the documentation:
 
 ```shell
 make html

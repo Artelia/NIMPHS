@@ -67,7 +67,7 @@ Model A                                              | Model B
 
 ## Contributing
 
-![Contributor Convenant v2.1](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)
+![Contributor Covenant v2.1](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)
 
 We welcome contributions and hope that our [Contributing Guide](https://github.com/Artelia/NIMPHS/blob/main/CONTRIBUTING.md) will help you to start easily.
 Make sure to read the [Code Of Conduct](https://github.com/Artelia/NIMPHS/blob/main/CODE_OF_CONDUCT.md) before contributing.
