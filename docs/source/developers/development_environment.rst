@@ -77,7 +77,7 @@ Write new tests
 
 | Please write new tests in the ``tests`` folder.
   You can either write tests in existing files (if they correspond to the theme of the file) or create a new file.
-  If you need to add data for your tests, you can place it in the ``tests/data`` folder.
+  If you need to add data for your tests, you can place it in the ``data`` folder.
 
 .. important::
 
