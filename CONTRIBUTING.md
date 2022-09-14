@@ -46,7 +46,7 @@ When creating a new branch, please name it as indicated here:
 * `maint/`: for maintenance tasks
 * `release/`: for new releases
 
-Use hyphens to seperate words in the branch title.
+Use hyphens to separate words in the branch title.
 Example: `feat/my-new-feature`
 
 ## Style checking
