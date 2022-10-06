@@ -72,14 +72,14 @@ which take place in fluid simulations.
 Some of the previously quoted tools try to tackle this issue by providing photo-realistic 3D renderers (e.g., intel
 `OSPRay` [@ospray] in ParaView). However, it is often difficult to add visually convincing scenes and contexts to
 significantly better these graphical outputs. Therefore, the tool `NIMPHS` is designed to be used for such
-applications. It is and add-on for Blender, the free and open source 3D creation suite.
+applications. It is an add-on for Blender, the free and open source 3D creation suite.
 
 # Outlook and use cases
 
 The tool `NIMPHS` was first designed to post-process hydraulic simulations. However CFD tools can tackle a much larger
 set of problematics. Thus, `NIMPHS` can also manage non-hydraulic simulations (see Figure 3 for example). Morevover,
 the add-on is designed to ease the support and implementation of other file formats which have close similarities with
-`foam` (`OpenFOAM`) and `Serafin` (`TELEMAC-MASCARET`) file formats, which are the two formats already supported.
+`foam` (`OpenFOAM`) and `Serafin` (`TELEMAC-MASCARET`) file formats (which are already supported).
 
 The examples shown in Figure 1, Figure 2 and Figure 3 are all attempts of photo-realistic renderings of fluid
 simulations. However, since Blender is a 3D creation suite, even more creative renderings can be achevied. In
