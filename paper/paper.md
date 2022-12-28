@@ -30,9 +30,9 @@ bibliography: paper.bib
 The task to communicate and show results from fluid dynamics simulations to non-specialist audiences is sometimes
 problematic. These audiences may not fully understand common graphical outputs generated through scientific
 visualization tools which are often based on a variety of color palettes. Therefore, a Blender [@blender] add-on,
-`NIMPHS`, is developed. This add-on aims to ease the process of creating interesting 3D renderings of fluid
+`NIMPHS`, has been developed. This add-on aims to ease the process of creating interesting 3D renderings of fluid
 simulations. This tool provides features to import, manipulate and post-process data from such simulations through
-the Blender rendering pipeline in order to leverage the power of its renderers: Eevee and Cycles. Some examples are
+the Blender rendering pipeline in order to leverage the power of its two renderers: Eevee and Cycles. Some examples are
 shown in Figure 1 and Figure 2.
 
 The add-on is developed using open source tools from ARTELIA, and `pyvista` [@pyvista], a high-level python API for
@@ -41,9 +41,9 @@ of animations. `NIMPHS` tries to unify the way data are manipulated among the di
 Indeed, data structures often present similarities in their topologies in CFD (Computational Fluid Dynamics), so it is
 possible to have shared features.
 
-Fast and memory efficient algorithms to manipulate data using python in Blender are implemented. For that, `numpy`
-[@numpy] is used to fasten data manipulation. When it comes to specific rendering tasks, such as volumes, the
-`multiprocessing` module, `numba` [@numba] and `pyopenvdb` [@openvdb] are used to generate volume sequences in a
+Fast and memory efficient algorithms to manipulate data using python in Blender are implemented, for that `numpy`
+[@numpy] is used. When it comes to specific rendering tasks, such as volumes, the
+`multiprocessing` modules `numba` [@numba] and `pyopenvdb` [@openvdb] are used to generate volume sequences in a
 reasonable amount of time.
 
 # Statement of need
@@ -53,7 +53,7 @@ post-processing. The first one consists in choosing the right equations and the 
 to represent the physical phenomena which will be of interest. Since these equations are only solved for a finite
 number of points in space, there is a need to discretize the modeled space into a mesh. Then, the simulation step makes
 use of fluid dynamics solvers such as `OpenFOAM` [@openfoam] and `TELEMAC-MASCARET` [@telemac-mascaret] to solve the
-previously chosen equations. Finally comes the step of post-processing generated data in order to visualize the
+previously chosen equations. Finally comes the step of post-processing the generated data in order to visualize the
 evolution of physical phenomena through time and space.
 
 Post-processing data in the field of computational fluid dynamics is an important part of the modeling process.
@@ -81,7 +81,7 @@ set of problematics. Thus, `NIMPHS` can also manage non-hydraulic simulations (s
 the add-on is designed to ease the support and implementation of other file formats which have close similarities with
 `foam` (`OpenFOAM`) and `Serafin` (`TELEMAC-MASCARET`) file formats (which are already supported).
 
-The examples shown in Figure 1, Figure 2 and Figure 3 are all attempts of photo-realistic renderings of fluid
+The examples shown in Figure 1, Figure 2 and Figure 3 are all attempts at photo-realistic renderings of fluid
 simulations. However, since Blender is a 3D creation suite, even more creative renderings can be achevied. In
 particular, we can quote the visual scripting tool `geometry nodes` available since Blender 2.92 to help in this task.
 
