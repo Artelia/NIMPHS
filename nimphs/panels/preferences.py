@@ -2,6 +2,8 @@
 from bpy.props import PointerProperty
 from bpy.types import AddonPreferences, Context
 
+import json
+
 from nimphs.properties.preferences import NIMPHS_Preferences
 
 
@@ -17,7 +19,7 @@ class NIMPHS_Preferences(AddonPreferences):
     # Access through `context.preferences.addons['nimphs'].preferences.settings`.
     settings: PointerProperty(type=NIMPHS_Preferences)
 
-    def draw(self, _context: Context) -> None:
+    def draw(self, context: Context) -> None:
         """
         UI layout of this panel.
 
@@ -29,7 +31,7 @@ class NIMPHS_Preferences(AddonPreferences):
         box = self.layout.box()
 
         row = box.row()
-        row.label(text="Files")
+        row.label(text="Files", icon='FILE')
 
         row = box.row()
         row.prop(self.settings, "openfoam_extensions", text="OpenFOAM")
@@ -41,7 +43,19 @@ class NIMPHS_Preferences(AddonPreferences):
         box = self.layout.box()
 
         row = box.row()
-        row.label(text="System")
+        row.label(text="System", icon='PREFERENCES')
 
         row = box.row()
         row.prop(self.settings, "log_level", text="Log")
+
+        with open(context.scene.nimphs_state_file, "r+", encoding='utf-8') as file:
+            state = json.load(file)["installation"]["state"]
+
+        row = box.row()
+
+        if state == 'INSTALL':
+            row.label(text="Installer state reset. Please re-open Blender to install.", icon='CHECKMARK')
+
+        elif state == 'DONE':
+            row.label(text="Installation:")
+            row.operator("nimphs.reset_installer", text="Re-install", icon='FILE_REFRESH')

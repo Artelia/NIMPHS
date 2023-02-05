@@ -20,7 +20,7 @@ class NIMPHS_InstallerAddonPreferences(AddonPreferences):
     # When the installer is loaded, access through `context.preferences.addons['nimphs'].preferences.settings`.
     settings: PointerProperty(type=NIMPHS_InstallerProperties)
 
-    def draw(self, _context: Context) -> None:
+    def draw(self, context: Context) -> None:
         """
         UI layout of this panel.
 
@@ -32,20 +32,18 @@ class NIMPHS_InstallerAddonPreferences(AddonPreferences):
         box = self.layout.box()
 
         row = box.row()
-        row.label(text="Installation")
+        row.label(text="Installation", icon='PREFERENCES')
 
-        with open(self.settings.state_file, "r+", encoding='utf-8') as file:
+        with open(context.scene.nimphs_state_file, "r+", encoding='utf-8') as file:
             state = json.load(file)["installation"]["state"]
 
         if state == 'INSTALL':
 
             row = box.row()
-            row.prop(self.settings, "configuration", text="Configuration")
+            row.prop(self.settings, "configuration", text="Config")
+            row.operator("nimphs.install", text="Install", icon='IMPORT')
 
-            row = box.row()
-            row.operator("nimphs.install", text="Install")
-
-        else:
+        elif state == 'DONE':
 
             row = box.row()
             row.label(text="Installation complete, please re-open Blender.", icon='CHECKMARK')

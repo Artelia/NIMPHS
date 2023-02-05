@@ -37,9 +37,3 @@ follow thse instructions in the developers manual'),                # noqa: F821
         description="Requirements.txt file path",
         default=os.path.join(os.path.abspath(Path(__file__).parent.parent), "requirements.txt")
     )
-
-    state_file: StringProperty(
-        name="Sate file",
-        description="File path to the 'state file' which stores information on the add-on's installation",
-        default=os.path.join(os.path.abspath(Path(__file__).parent.parent), "nimphs.json")
-    )

@@ -4,11 +4,42 @@ from bpy.types import Operator, Context
 import logging
 log = logging.getLogger(__name__)
 
-import os
 import sys
 import json
 import subprocess
-from pathlib import Path
+
+
+class NIMPHS_OT_ResetInstaller(Operator):
+    """Reset installer state to let the user install dependencies again."""
+
+    register_cls = True
+    is_custom_base_cls = False
+
+    bl_idname = "nimphs.reset_installer"
+    bl_label = "Reset installer"
+    bl_description = "Reset installer state so you can install dependencies again"
+
+    def execute(self, context: Context) -> set:
+        """
+        Reset installer state.
+
+        Args:
+            context (Context): context
+
+        Returns:
+            set: state of the operator
+        """
+
+        # Replace value inside json file
+        with open(context.scene.nimphs_state_file, "r+", encoding='utf-8') as file:
+            data = json.load(file)
+
+        data["installation"]["state"] = 'INSTALL'
+
+        with open(context.scene.nimphs_state_file, "w", encoding='utf-8') as file:
+            json.dump(data, file)
+
+        return {'FINISHED'}
 
 
 class NIMPHS_OT_Installer(Operator):
@@ -60,12 +91,12 @@ class NIMPHS_OT_Installer(Operator):
             return {'CANCELLED'}
 
         # Replace value inside json file to indicate installation is complete
-        with open(settings.state_file, "r+", encoding='utf-8') as file:
+        with open(context.scene.nimphs_state_file, "r+", encoding='utf-8') as file:
             data = json.load(file)
 
         data["installation"]["state"] = 'DONE'
 
-        with open(settings.state_file, "w", encoding='utf-8') as file:
+        with open(context.scene.nimphs_state_file, "w", encoding='utf-8') as file:
             json.dump(data, file)
 
         return {'FINISHED'}

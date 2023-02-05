@@ -36,8 +36,8 @@ if bl_version is not None and bl_version < (3, 0, 0):
     raise Exception(message)
 
 # Load add-on state information
-file_path = os.path.join(os.path.abspath(Path(__file__).parent), "nimphs.json")
-with open(file_path, "r+", encoding='utf-8') as file:
+state_file_path = os.path.join(os.path.abspath(Path(__file__).parent), "nimphs.json")
+with open(state_file_path, "r+", encoding='utf-8') as file:
     data = json.load(file)
     if data["installation"]["state"] == 'DONE':
         LOAD_INSTALLER = False
@@ -79,7 +79,11 @@ else:
 
 def register() -> None:  # noqa: D103
 
+    # File path to the 'state file' which stores information on the add-on's installation
+    Scene.nimphs_state_file = state_file_path
+
     if LOAD_INSTALLER:
+
         for cls in classes:
             bpy.utils.register_class(cls)
 
