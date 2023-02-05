@@ -19,6 +19,14 @@ Packages
 Modules
 -------
 
+nimphs.panels.installer
+-----------------------
+
+.. automodule:: nimphs.panels.installer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 nimphs.panels.preferences
 -------------------------
 

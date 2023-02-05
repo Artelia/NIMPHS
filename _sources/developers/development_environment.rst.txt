@@ -43,6 +43,24 @@ General
     ],
 
 
+Instructions for 'ADVANCED' installation configuration
+------------------------------------------------------
+
+  .. note::
+    In order to use the OpenVDB-volume-related features, you need to manually install an extra python package. Here are some instructions.
+
+  * Install `pyopenvdb <https://github.com/AcademySoftwareFoundation/openvdb>`_. There is no "simple" way for the moment.
+    We are waiting for `this PR <https://github.com/AcademySoftwareFoundation/openvdb/pull/1377>`_ to be merged. This should make the process a lot easier.
+    
+    |     For now, you have to install it by your own means. You probably will have to install `boost <https://www.boost.org/>`_ and `tbb <https://github.com/oneapi-src/oneTBB>`_.
+    |     Here are some steps to help you install it manually:
+
+    * Download latest release of `OpenVDB <https://github.com/AcademySoftwareFoundation/openvdb/releases>`_
+    * Run: ``cd openvdb && mkdir build && cd build``
+    * Run: ``cmake -DOPENVDB_BUILD_PYTHON_MODULE=ON -DUSE_NUMPY=ON -DPython_EXECUTABLE=path/to/python/bin/python3.X ..``
+    * Run: ``sudo make -j 8 && sudo make install``
+
+
 .. _development-environment-unit-testing:
 
 Unit tests
@@ -77,7 +95,7 @@ Write new tests
 
 | Please write new tests in the ``tests`` folder.
   You can either write tests in existing files (if they correspond to the theme of the file) or create a new file.
-  If you need to add data for your tests, you can place it in the ``tests/data`` folder.
+  If you need to add data for your tests, you can place it in the ``data`` folder.
 
 .. important::
 

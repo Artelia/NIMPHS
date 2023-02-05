@@ -18,6 +18,7 @@
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -53,6 +54,8 @@
 <li class="toctree-l4 current"><a class="current reference internal" href="#">nimphs.properties</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="nimphs.html#modules">Modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nimphs.html#module-nimphs.check_dependencies">nimphs.check_dependencies</a></li>
 </ul>
 </li>
 </ul>
@@ -72,10 +75,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../index.html">Developers manual</a> &raquo;</li>
-          <li><a href="nimphs.html">Code documentation</a> &raquo;</li>
-      <li>nimphs.properties</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Developers manual</a></li>
+          <li class="breadcrumb-item"><a href="nimphs.html">Code documentation</a></li>
+      <li class="breadcrumb-item active">nimphs.properties</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -99,6 +102,53 @@
 </section>
 <section id="modules">
 <h2>Modules<a class="headerlink" href="#modules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-nimphs.properties.installer">
+<span id="nimphs-properties-installer"></span><h2>nimphs.properties.installer<a class="headerlink" href="#module-nimphs.properties.installer" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.properties.installer.NIMPHS_InstallerProperties">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_InstallerProperties</span></span><a class="headerlink" href="#nimphs.properties.installer.NIMPHS_InstallerProperties" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PropertyGroup</span></code></p>
+<p>Add-on installer properties.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.installer.NIMPHS_InstallerProperties.configuration">
+<span class="sig-name descname"><span class="pre">configuration</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.installer.NIMPHS_InstallerProperties.configuration" title="Permalink to this definition"></a></dt>
+<dd><p>Installation configuration. Enum in ['CLASSIC', 'ADVANCED'].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.EnumProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.installer.NIMPHS_InstallerProperties.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.properties.installer.NIMPHS_InstallerProperties.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.installer.NIMPHS_InstallerProperties.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.properties.installer.NIMPHS_InstallerProperties.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.installer.NIMPHS_InstallerProperties.reinstall">
+<span class="sig-name descname"><span class="pre">reinstall</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.installer.NIMPHS_InstallerProperties.reinstall" title="Permalink to this definition"></a></dt>
+<dd><p>Indicate if we have to insert '--force-reinstall' when instatlling dependencies.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bpy.props.BoolProperty</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.properties.installer.NIMPHS_InstallerProperties.requirements">
+<span class="sig-name descname"><span class="pre">requirements</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nimphs.properties.installer.NIMPHS_InstallerProperties.requirements" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-nimphs.properties.preferences">
 <span id="nimphs-properties-preferences"></span><h2>nimphs.properties.preferences<a class="headerlink" href="#module-nimphs.properties.preferences" title="Permalink to this heading"></a></h2>

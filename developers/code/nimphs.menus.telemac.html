@@ -18,6 +18,7 @@
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -53,6 +54,8 @@
 <li class="toctree-l4"><a class="reference internal" href="nimphs.properties.html">nimphs.properties</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="nimphs.html#modules">Modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nimphs.html#module-nimphs.check_dependencies">nimphs.check_dependencies</a></li>
 </ul>
 </li>
 </ul>
@@ -72,11 +75,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../index.html">Developers manual</a> &raquo;</li>
-          <li><a href="nimphs.html">Code documentation</a> &raquo;</li>
-          <li><a href="nimphs.menus.html">nimphs.menus</a> &raquo;</li>
-      <li>nimphs.menus.telemac</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Developers manual</a></li>
+          <li class="breadcrumb-item"><a href="nimphs.html">Code documentation</a></li>
+          <li class="breadcrumb-item"><a href="nimphs.menus.html">nimphs.menus</a></li>
+      <li class="breadcrumb-item active">nimphs.menus.telemac</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -99,22 +102,22 @@
 <p>Main menu for the TELEMAC &gt; Create sequence.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.menus.telemac.telemac_create_sequence_menu.NIMPHS_MT_TelemacCreateSequenceMenu.bl_idname">
-<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'NIMPHS_MT_TelemacCreateSequenceMenu'</span></em><a class="headerlink" href="#nimphs.menus.telemac.telemac_create_sequence_menu.NIMPHS_MT_TelemacCreateSequenceMenu.bl_idname" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'NIMPHS_MT_TelemacCreateSequenceMenu'</span></em><a class="headerlink" href="#nimphs.menus.telemac.telemac_create_sequence_menu.NIMPHS_MT_TelemacCreateSequenceMenu.bl_idname" title="Permalink to this definition"></a></dt>
 <dd><p>If this is set, the menu gets a custom ID, otherwise it takes the name of the class used to define the menu (for example, if the class name is &quot;OBJECT_MT_hello&quot;, and bl_idname is not set by the script, then bl_idname = &quot;OBJECT_MT_hello&quot;)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><em>Union</em>[str, <em>Any</em>]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.menus.telemac.telemac_create_sequence_menu.NIMPHS_MT_TelemacCreateSequenceMenu.bl_label">
-<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Create</span> <span class="pre">sequence'</span></em><a class="headerlink" href="#nimphs.menus.telemac.telemac_create_sequence_menu.NIMPHS_MT_TelemacCreateSequenceMenu.bl_label" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Create</span> <span class="pre">sequence'</span></em><a class="headerlink" href="#nimphs.menus.telemac.telemac_create_sequence_menu.NIMPHS_MT_TelemacCreateSequenceMenu.bl_label" title="Permalink to this definition"></a></dt>
 <dd><p>The menu label</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><em>Union</em>[str, <em>Any</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -152,22 +155,22 @@
 <p>Main menu for the TELEMAC module.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.menus.telemac.telemac_main_menu.NIMPHS_MT_TelemacMainMenu.bl_idname">
-<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'NIMPHS_MT_TelemacMainMenu'</span></em><a class="headerlink" href="#nimphs.menus.telemac.telemac_main_menu.NIMPHS_MT_TelemacMainMenu.bl_idname" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'NIMPHS_MT_TelemacMainMenu'</span></em><a class="headerlink" href="#nimphs.menus.telemac.telemac_main_menu.NIMPHS_MT_TelemacMainMenu.bl_idname" title="Permalink to this definition"></a></dt>
 <dd><p>If this is set, the menu gets a custom ID, otherwise it takes the name of the class used to define the menu (for example, if the class name is &quot;OBJECT_MT_hello&quot;, and bl_idname is not set by the script, then bl_idname = &quot;OBJECT_MT_hello&quot;)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><em>Union</em>[str, <em>Any</em>]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.menus.telemac.telemac_main_menu.NIMPHS_MT_TelemacMainMenu.bl_label">
-<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'TELEMAC'</span></em><a class="headerlink" href="#nimphs.menus.telemac.telemac_main_menu.NIMPHS_MT_TelemacMainMenu.bl_label" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'TELEMAC'</span></em><a class="headerlink" href="#nimphs.menus.telemac.telemac_main_menu.NIMPHS_MT_TelemacMainMenu.bl_label" title="Permalink to this definition"></a></dt>
 <dd><p>The menu label</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><em>Union</em>[str, <em>Any</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -205,22 +208,22 @@
 <p>Main menu for TELEMAC &gt; Point data.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.menus.telemac.telemac_point_data_menu.NIMPHS_MT_TelemacPointDataMenu.bl_idname">
-<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'NIMPHS_MT_TelemacPointDataMenu'</span></em><a class="headerlink" href="#nimphs.menus.telemac.telemac_point_data_menu.NIMPHS_MT_TelemacPointDataMenu.bl_idname" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'NIMPHS_MT_TelemacPointDataMenu'</span></em><a class="headerlink" href="#nimphs.menus.telemac.telemac_point_data_menu.NIMPHS_MT_TelemacPointDataMenu.bl_idname" title="Permalink to this definition"></a></dt>
 <dd><p>If this is set, the menu gets a custom ID, otherwise it takes the name of the class used to define the menu (for example, if the class name is &quot;OBJECT_MT_hello&quot;, and bl_idname is not set by the script, then bl_idname = &quot;OBJECT_MT_hello&quot;)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><em>Union</em>[str, <em>Any</em>]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.menus.telemac.telemac_point_data_menu.NIMPHS_MT_TelemacPointDataMenu.bl_label">
-<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Point</span> <span class="pre">data'</span></em><a class="headerlink" href="#nimphs.menus.telemac.telemac_point_data_menu.NIMPHS_MT_TelemacPointDataMenu.bl_label" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Point</span> <span class="pre">data'</span></em><a class="headerlink" href="#nimphs.menus.telemac.telemac_point_data_menu.NIMPHS_MT_TelemacPointDataMenu.bl_label" title="Permalink to this definition"></a></dt>
 <dd><p>The menu label</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><em>Union</em>[str, <em>Any</em>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -258,22 +261,22 @@
 <p>Main menu for TELEMAC &gt; Volume.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.menus.telemac.telemac_volume_menu.NIMPHS_MT_TelemacVolumeMenu.bl_idname">
-<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'NIMPHS_MT_TelemacVolumeMenu'</span></em><a class="headerlink" href="#nimphs.menus.telemac.telemac_volume_menu.NIMPHS_MT_TelemacVolumeMenu.bl_idname" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'NIMPHS_MT_TelemacVolumeMenu'</span></em><a class="headerlink" href="#nimphs.menus.telemac.telemac_volume_menu.NIMPHS_MT_TelemacVolumeMenu.bl_idname" title="Permalink to this definition"></a></dt>
 <dd><p>If this is set, the menu gets a custom ID, otherwise it takes the name of the class used to define the menu (for example, if the class name is &quot;OBJECT_MT_hello&quot;, and bl_idname is not set by the script, then bl_idname = &quot;OBJECT_MT_hello&quot;)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><em>Union</em>[str, <em>Any</em>]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.menus.telemac.telemac_volume_menu.NIMPHS_MT_TelemacVolumeMenu.bl_label">
-<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Volume'</span></em><a class="headerlink" href="#nimphs.menus.telemac.telemac_volume_menu.NIMPHS_MT_TelemacVolumeMenu.bl_label" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Volume'</span></em><a class="headerlink" href="#nimphs.menus.telemac.telemac_volume_menu.NIMPHS_MT_TelemacVolumeMenu.bl_label" title="Permalink to this definition"></a></dt>
 <dd><p>The menu label</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>str</p>
+<dd class="field-odd"><p><em>Union</em>[str, <em>Any</em>]</p>
 </dd>
 </dl>
 </dd></dl>

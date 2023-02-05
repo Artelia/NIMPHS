@@ -16,3 +16,14 @@ Packages
    nimphs.operators
    nimphs.panels
    nimphs.properties
+
+Modules
+-------
+
+nimphs.check\_dependencies
+--------------------------
+
+.. automodule:: nimphs.check_dependencies
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -18,6 +18,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -45,7 +46,10 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Developers manual</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Development environment</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#general">General</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#general">General</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#instructions-for-advanced-installation-configuration">Instructions for 'ADVANCED' installation configuration</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#unit-tests">Unit tests</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#usage">Usage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#write-new-tests">Write new tests</a></li>
@@ -72,9 +76,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="index.html">Developers manual</a> &raquo;</li>
-      <li>Development environment</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Developers manual</a></li>
+      <li class="breadcrumb-item active">Development environment</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -132,15 +136,39 @@ What you can do is to use the python environment which comes with blender and in
 <div class="line">You can also setup the <a class="reference external" href="https://code.visualstudio.com/docs/python/editing#_formatting">autopep8</a> tool which will automatically format your code.</div>
 <div class="line">We use the following autopep8 arguments:</div>
 </div>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;python.formatting.autopep8Args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
-<span class="w">    </span><span class="s2">&quot;--max-line-length&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="s2">&quot;120&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="s2">&quot;--aggressive&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="s2">&quot;--ignore&quot;</span><span class="p">,</span><span class="w"></span>
-<span class="w">    </span><span class="s2">&quot;E402&quot;</span><span class="w"></span>
-<span class="p">],</span><span class="w"></span>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="nt">&quot;python.formatting.autopep8Args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;--max-line-length&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;120&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;--aggressive&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;--ignore&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;E402&quot;</span>
+<span class="p">],</span>
 </pre></div>
 </div>
+<section id="instructions-for-advanced-installation-configuration">
+<h3>Instructions for 'ADVANCED' installation configuration<a class="headerlink" href="#instructions-for-advanced-installation-configuration" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In order to use the OpenVDB-volume-related features, you need to manually install an extra python package. Here are some instructions.</p>
+</div>
+<ul>
+<li><p>Install <a class="reference external" href="https://github.com/AcademySoftwareFoundation/openvdb">pyopenvdb</a>. There is no &quot;simple&quot; way for the moment.
+We are waiting for <a class="reference external" href="https://github.com/AcademySoftwareFoundation/openvdb/pull/1377">this PR</a> to be merged. This should make the process a lot easier.</p>
+<div class="line-block">
+<div class="line">For now, you have to install it by your own means. You probably will have to install <a class="reference external" href="https://www.boost.org/">boost</a> and <a class="reference external" href="https://github.com/oneapi-src/oneTBB">tbb</a>.</div>
+<div class="line">Here are some steps to help you install it manually:</div>
+</div>
+<ul class="simple">
+<li><p>Download latest release of <a class="reference external" href="https://github.com/AcademySoftwareFoundation/openvdb/releases">OpenVDB</a></p></li>
+<li><p>Run: <code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">openvdb</span> <span class="pre">&amp;&amp;</span> <span class="pre">mkdir</span> <span class="pre">build</span> <span class="pre">&amp;&amp;</span> <span class="pre">cd</span> <span class="pre">build</span></code></p></li>
+<li><p>Run: <code class="docutils literal notranslate"><span class="pre">cmake</span> <span class="pre">-DOPENVDB_BUILD_PYTHON_MODULE=ON</span> <span class="pre">-DUSE_NUMPY=ON</span> <span class="pre">-DPython_EXECUTABLE=path/to/python/bin/python3.X</span> <span class="pre">..</span></code></p></li>
+<li><p>Run: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">make</span> <span class="pre">-j</span> <span class="pre">8</span> <span class="pre">&amp;&amp;</span> <span class="pre">sudo</span> <span class="pre">make</span> <span class="pre">install</span></code></p></li>
+</ul>
+</li>
+</ul>
+</div></blockquote>
+</section>
 </section>
 <section id="unit-tests">
 <span id="development-environment-unit-testing"></span><h2>Unit tests<a class="headerlink" href="#unit-tests" title="Permalink to this heading"></a></h2>
@@ -179,7 +207,7 @@ The <code class="docutils literal notranslate"><span class="pre">run_tests.py</s
 <div class="line-block">
 <div class="line">Please write new tests in the <code class="docutils literal notranslate"><span class="pre">tests</span></code> folder.
 You can either write tests in existing files (if they correspond to the theme of the file) or create a new file.
-If you need to add data for your tests, you can place it in the <code class="docutils literal notranslate"><span class="pre">tests/data</span></code> folder.</div>
+If you need to add data for your tests, you can place it in the <code class="docutils literal notranslate"><span class="pre">data</span></code> folder.</div>
 </div>
 <div class="admonition important">
 <p class="admonition-title">Important</p>

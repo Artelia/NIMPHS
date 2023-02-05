@@ -18,6 +18,7 @@
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -53,6 +54,8 @@
 <li class="toctree-l4"><a class="reference internal" href="nimphs.properties.html">nimphs.properties</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="nimphs.html#modules">Modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nimphs.html#module-nimphs.check_dependencies">nimphs.check_dependencies</a></li>
 </ul>
 </li>
 </ul>
@@ -72,11 +75,11 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../index.html">Developers manual</a> &raquo;</li>
-          <li><a href="nimphs.html">Code documentation</a> &raquo;</li>
-          <li><a href="nimphs.operators.html">nimphs.operators</a> &raquo;</li>
-      <li>nimphs.operators.openfoam</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Developers manual</a></li>
+          <li class="breadcrumb-item"><a href="nimphs.html">Code documentation</a></li>
+          <li class="breadcrumb-item"><a href="nimphs.operators.html">nimphs.operators</a></li>
+      <li class="breadcrumb-item active">nimphs.operators.openfoam</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -99,8 +102,8 @@
 <p>Create an OpenFOAM 'mesh sequence'.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.bl_description">
-<span class="sig-name descname"><span class="pre">bl_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&quot;Create</span> <span class="pre">mesh</span> <span class="pre">a</span> <span class="pre">sequence.</span> <span class="pre">Press</span> <span class="pre">'esc'</span> <span class="pre">to</span> <span class="pre">cancel&quot;</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.bl_description" title="Permalink to this definition"></a></dt>
-<dd><p>str</p>
+<span class="sig-name descname"><span class="pre">bl_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&quot;Create</span> <span class="pre">mesh</span> <span class="pre">a</span> <span class="pre">sequence.</span> <span class="pre">Press</span> <span class="pre">'esc'</span> <span class="pre">to</span> <span class="pre">cancel&quot;</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.bl_description" title="Permalink to this definition"></a></dt>
+<dd><p>typing.Union[str, typing.Any]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>type</p>
@@ -110,8 +113,8 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.bl_idname">
-<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nimphs.openfoam_create_mesh_sequence'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.bl_idname" title="Permalink to this definition"></a></dt>
-<dd><p>str</p>
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nimphs.openfoam_create_mesh_sequence'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.bl_idname" title="Permalink to this definition"></a></dt>
+<dd><p>typing.Union[str, typing.Any]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>type</p>
@@ -121,8 +124,8 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.bl_label">
-<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Mesh</span> <span class="pre">sequence'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.bl_label" title="Permalink to this definition"></a></dt>
-<dd><p>str</p>
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Mesh</span> <span class="pre">sequence'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_mesh_sequence.NIMPHS_OT_OpenfoamCreateMeshSequence.bl_label" title="Permalink to this definition"></a></dt>
+<dd><p>typing.Union[str, typing.Any]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>type</p>
@@ -239,8 +242,8 @@
 <p>Create an OpenFOAM 'streaming sequence'.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.bl_description">
-<span class="sig-name descname"><span class="pre">bl_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&quot;Create</span> <span class="pre">a</span> <span class="pre">'streaming</span> <span class="pre">sequence'&quot;</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.bl_description" title="Permalink to this definition"></a></dt>
-<dd><p>str</p>
+<span class="sig-name descname"><span class="pre">bl_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&quot;Create</span> <span class="pre">a</span> <span class="pre">'streaming</span> <span class="pre">sequence'&quot;</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.bl_description" title="Permalink to this definition"></a></dt>
+<dd><p>typing.Union[str, typing.Any]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>type</p>
@@ -250,8 +253,8 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.bl_idname">
-<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nimphs.openfoam_create_streaming_sequence'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.bl_idname" title="Permalink to this definition"></a></dt>
-<dd><p>str</p>
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nimphs.openfoam_create_streaming_sequence'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.bl_idname" title="Permalink to this definition"></a></dt>
+<dd><p>typing.Union[str, typing.Any]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>type</p>
@@ -261,8 +264,8 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.bl_label">
-<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Streaming</span> <span class="pre">sequence'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.bl_label" title="Permalink to this definition"></a></dt>
-<dd><p>str</p>
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Streaming</span> <span class="pre">sequence'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_create_streaming_sequence.NIMPHS_OT_OpenfoamCreateStreamingSequence.bl_label" title="Permalink to this definition"></a></dt>
+<dd><p>typing.Union[str, typing.Any]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>type</p>
@@ -357,8 +360,8 @@
 <p>Import an OpenFOAM file.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.bl_description">
-<span class="sig-name descname"><span class="pre">bl_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Import</span> <span class="pre">an</span> <span class="pre">OpenFOAM</span> <span class="pre">file'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.bl_description" title="Permalink to this definition"></a></dt>
-<dd><p>str</p>
+<span class="sig-name descname"><span class="pre">bl_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Import</span> <span class="pre">an</span> <span class="pre">OpenFOAM</span> <span class="pre">file'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.bl_description" title="Permalink to this definition"></a></dt>
+<dd><p>typing.Union[str, typing.Any]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>type</p>
@@ -368,8 +371,8 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.bl_idname">
-<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nimphs.import_openfoam_file'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.bl_idname" title="Permalink to this definition"></a></dt>
-<dd><p>str</p>
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nimphs.import_openfoam_file'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.bl_idname" title="Permalink to this definition"></a></dt>
+<dd><p>typing.Union[str, typing.Any]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>type</p>
@@ -379,8 +382,8 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.bl_label">
-<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Import'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.bl_label" title="Permalink to this definition"></a></dt>
-<dd><p>str</p>
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Import'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_import_file.NIMPHS_OT_OpenfoamImportFile.bl_label" title="Permalink to this definition"></a></dt>
+<dd><p>typing.Union[str, typing.Any]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>type</p>
@@ -497,8 +500,8 @@
 <p>Operator to generate a preview of an OpenFOAM object.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.bl_description">
-<span class="sig-name descname"><span class="pre">bl_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Preview</span> <span class="pre">the</span> <span class="pre">selected</span> <span class="pre">object'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.bl_description" title="Permalink to this definition"></a></dt>
-<dd><p>str</p>
+<span class="sig-name descname"><span class="pre">bl_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Preview</span> <span class="pre">the</span> <span class="pre">selected</span> <span class="pre">object'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.bl_description" title="Permalink to this definition"></a></dt>
+<dd><p>typing.Union[str, typing.Any]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>type</p>
@@ -508,8 +511,8 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.bl_idname">
-<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nimphs.openfoam_preview'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.bl_idname" title="Permalink to this definition"></a></dt>
-<dd><p>str</p>
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nimphs.openfoam_preview'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.bl_idname" title="Permalink to this definition"></a></dt>
+<dd><p>typing.Union[str, typing.Any]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>type</p>
@@ -519,8 +522,8 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.bl_label">
-<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Preview'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.bl_label" title="Permalink to this definition"></a></dt>
-<dd><p>str</p>
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Preview'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_preview.NIMPHS_OT_OpenfoamPreview.bl_label" title="Permalink to this definition"></a></dt>
+<dd><p>typing.Union[str, typing.Any]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>type</p>
@@ -595,8 +598,8 @@
 <p>Operator to reload file data of the selected OpenFOAM object.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile.bl_description">
-<span class="sig-name descname"><span class="pre">bl_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Reload</span> <span class="pre">file</span> <span class="pre">data</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">selected</span> <span class="pre">OpenFOAM</span> <span class="pre">object'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile.bl_description" title="Permalink to this definition"></a></dt>
-<dd><p>str</p>
+<span class="sig-name descname"><span class="pre">bl_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Reload</span> <span class="pre">file</span> <span class="pre">data</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">selected</span> <span class="pre">OpenFOAM</span> <span class="pre">object'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile.bl_description" title="Permalink to this definition"></a></dt>
+<dd><p>typing.Union[str, typing.Any]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>type</p>
@@ -606,8 +609,8 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile.bl_idname">
-<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nimphs.reload_openfoam_file'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile.bl_idname" title="Permalink to this definition"></a></dt>
-<dd><p>str</p>
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nimphs.reload_openfoam_file'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile.bl_idname" title="Permalink to this definition"></a></dt>
+<dd><p>typing.Union[str, typing.Any]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>type</p>
@@ -617,8 +620,8 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile.bl_label">
-<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Reload'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile.bl_label" title="Permalink to this definition"></a></dt>
-<dd><p>str</p>
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Reload'</span></em><a class="headerlink" href="#nimphs.operators.openfoam.openfoam_reload_file.NIMPHS_OT_OpenfoamReloadFile.bl_label" title="Permalink to this definition"></a></dt>
+<dd><p>typing.Union[str, typing.Any]</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>type</p>

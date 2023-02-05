@@ -18,6 +18,7 @@
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -53,6 +54,8 @@
 <li class="toctree-l4"><a class="reference internal" href="nimphs.properties.html">nimphs.properties</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="nimphs.html#modules">Modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nimphs.html#module-nimphs.check_dependencies">nimphs.check_dependencies</a></li>
 </ul>
 </li>
 </ul>
@@ -72,10 +75,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../index.html">Developers manual</a> &raquo;</li>
-          <li><a href="nimphs.html">Code documentation</a> &raquo;</li>
-      <li>nimphs.operators</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Developers manual</a></li>
+          <li class="breadcrumb-item"><a href="nimphs.html">Code documentation</a></li>
+      <li class="breadcrumb-item active">nimphs.operators</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -96,6 +99,174 @@
 <li class="toctree-l1"><a class="reference internal" href="nimphs.operators.utils.html">nimphs.operators.utils</a></li>
 </ul>
 </div>
+</section>
+<section id="modules">
+<h2>Modules<a class="headerlink" href="#modules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-nimphs.operators.installer">
+<span id="nimphs-operators-installer"></span><h2>nimphs.operators.installer<a class="headerlink" href="#module-nimphs.operators.installer" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.installer.NIMPHS_OT_Installer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_OT_Installer</span></span><a class="headerlink" href="#nimphs.operators.installer.NIMPHS_OT_Installer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Operator</span></code></p>
+<p>Run installation from the installation panel located into Add-on's preferences.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.installer.NIMPHS_OT_Installer.bl_description">
+<span class="sig-name descname"><span class="pre">bl_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Run</span> <span class="pre">the</span> <span class="pre">installation</span> <span class="pre">process</span> <span class="pre">depending</span> <span class="pre">on</span> <span class="pre">the</span> <span class="pre">chosen</span> <span class="pre">configuration'</span></em><a class="headerlink" href="#nimphs.operators.installer.NIMPHS_OT_Installer.bl_description" title="Permalink to this definition"></a></dt>
+<dd><p>typing.Union[str, typing.Any]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.installer.NIMPHS_OT_Installer.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nimphs.install'</span></em><a class="headerlink" href="#nimphs.operators.installer.NIMPHS_OT_Installer.bl_idname" title="Permalink to this definition"></a></dt>
+<dd><p>typing.Union[str, typing.Any]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.installer.NIMPHS_OT_Installer.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Install'</span></em><a class="headerlink" href="#nimphs.operators.installer.NIMPHS_OT_Installer.bl_label" title="Permalink to this definition"></a></dt>
+<dd><p>typing.Union[str, typing.Any]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.installer.NIMPHS_OT_Installer.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.installer.NIMPHS_OT_Installer.execute" title="Permalink to this definition"></a></dt>
+<dd><p>Run installation process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.installer.NIMPHS_OT_Installer.install_package">
+<span class="sig-name descname"><span class="pre">install_package</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.installer.NIMPHS_OT_Installer.install_package" title="Permalink to this definition"></a></dt>
+<dd><p>Install the given python package.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>package</strong> (<em>str</em>) -- name of the python package.</p></li>
+<li><p><strong>force</strong> (<em>bool</em><em>, </em><em>optional</em>) -- force reinstall. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.installer.NIMPHS_OT_Installer.install_requirements">
+<span class="sig-name descname"><span class="pre">install_requirements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">requirements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#nimphs.operators.installer.NIMPHS_OT_Installer.install_requirements" title="Permalink to this definition"></a></dt>
+<dd><p>Install python packages from the given requirements file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>requirements</strong> (<em>str</em>) -- path to the requirements file.</p></li>
+<li><p><strong>force</strong> (<em>bool</em><em>, </em><em>optional</em>) -- force reinstall. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.installer.NIMPHS_OT_Installer.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.operators.installer.NIMPHS_OT_Installer.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.installer.NIMPHS_OT_Installer.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.operators.installer.NIMPHS_OT_Installer.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nimphs.operators.installer.NIMPHS_OT_ResetInstaller">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NIMPHS_OT_ResetInstaller</span></span><a class="headerlink" href="#nimphs.operators.installer.NIMPHS_OT_ResetInstaller" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Operator</span></code></p>
+<p>Reset installer state to let the user install dependencies again.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.installer.NIMPHS_OT_ResetInstaller.bl_description">
+<span class="sig-name descname"><span class="pre">bl_description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Reset</span> <span class="pre">installer</span> <span class="pre">state</span> <span class="pre">so</span> <span class="pre">you</span> <span class="pre">can</span> <span class="pre">install</span> <span class="pre">dependencies</span> <span class="pre">again'</span></em><a class="headerlink" href="#nimphs.operators.installer.NIMPHS_OT_ResetInstaller.bl_description" title="Permalink to this definition"></a></dt>
+<dd><p>typing.Union[str, typing.Any]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.installer.NIMPHS_OT_ResetInstaller.bl_idname">
+<span class="sig-name descname"><span class="pre">bl_idname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nimphs.reset_installer'</span></em><a class="headerlink" href="#nimphs.operators.installer.NIMPHS_OT_ResetInstaller.bl_idname" title="Permalink to this definition"></a></dt>
+<dd><p>typing.Union[str, typing.Any]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.installer.NIMPHS_OT_ResetInstaller.bl_label">
+<span class="sig-name descname"><span class="pre">bl_label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Reset</span> <span class="pre">installer'</span></em><a class="headerlink" href="#nimphs.operators.installer.NIMPHS_OT_ResetInstaller.bl_label" title="Permalink to this definition"></a></dt>
+<dd><p>typing.Union[str, typing.Any]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nimphs.operators.installer.NIMPHS_OT_ResetInstaller.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Context</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span></span></span><a class="headerlink" href="#nimphs.operators.installer.NIMPHS_OT_ResetInstaller.execute" title="Permalink to this definition"></a></dt>
+<dd><p>Reset installer state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>context</strong> (<em>Context</em>) -- context</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>state of the operator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.installer.NIMPHS_OT_ResetInstaller.is_custom_base_cls">
+<span class="sig-name descname"><span class="pre">is_custom_base_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#nimphs.operators.installer.NIMPHS_OT_ResetInstaller.is_custom_base_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nimphs.operators.installer.NIMPHS_OT_ResetInstaller.register_cls">
+<span class="sig-name descname"><span class="pre">register_cls</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#nimphs.operators.installer.NIMPHS_OT_ResetInstaller.register_cls" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 

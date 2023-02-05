@@ -20,6 +20,14 @@ Packages
 Modules
 -------
 
+nimphs.properties.installer
+---------------------------
+
+.. automodule:: nimphs.properties.installer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 nimphs.properties.preferences
 -----------------------------
 

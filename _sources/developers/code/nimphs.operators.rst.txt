@@ -16,3 +16,14 @@ Packages
    nimphs.operators.shared
    nimphs.operators.telemac
    nimphs.operators.utils
+
+Modules
+-------
+
+nimphs.operators.installer
+--------------------------
+
+.. automodule:: nimphs.operators.installer
+   :members:
+   :undoc-members:
+   :show-inheritance:
