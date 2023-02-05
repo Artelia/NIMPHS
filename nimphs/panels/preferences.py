@@ -24,7 +24,7 @@ class NIMPHS_Preferences(AddonPreferences):
         UI layout of this panel.
 
         Args:
-            _context (Context): context
+            context (Context): context
         """
 
         # Files preferences

@@ -25,7 +25,7 @@ class NIMPHS_InstallerAddonPreferences(AddonPreferences):
         UI layout of this panel.
 
         Args:
-            _context (Context): context
+            context (Context): context
         """
 
         # Installation configuration

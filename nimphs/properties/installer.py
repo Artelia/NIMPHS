@@ -14,20 +14,20 @@ class NIMPHS_InstallerProperties(PropertyGroup):
 
     #: bpy.props.EnumProperty: Installation configuration. Enum in ['CLASSIC', 'ADVANCED'].
     configuration: EnumProperty(
-        name="Configuration",
+        name="Configuration",                                       # noqa: F821
         description="Installation configuration. Enum in ['CLASSIC', 'ADVANCED']",
         items=[
-            ('CLASSIC', 'Classic', 'Install all the necessary dependcies needed to make this add-on work. \
+            ('CLASSIC', 'Classic', 'Install all the necessary dependendices needed to make this add-on work. \
 This configuration does not include under-development features'),   # noqa: F821
-            ('ADVANCED', 'Advanced', 'Install all the necessary dependcies needed to make this add-on work \
+            ('ADVANCED', 'Advanced', 'Install all the necessary dependendices needed to make this add-on work \
 plus other python packages for under-development features. This configuration might not work if you did not \
-follow thse instructions in the developers manual'),                # noqa: F821
+follow the instructions in the developers manual'),                # noqa: F821
         ],
     )
 
     #: bpy.props.BoolProperty: Indicate if we have to insert '--force-reinstall' when instatlling dependencies.
     reinstall: BoolProperty(
-        name="Re-install",
+        name="Re-install",  # noqa: F821
         description="Force re-installation of all the dependencies.",
         default=False,
     )
