@@ -28,7 +28,7 @@ follow the instructions in the developers manual'),                # noqa: F821
     #: bpy.props.BoolProperty: Indicate if we have to insert '--force-reinstall' when instatlling dependencies.
     reinstall: BoolProperty(
         name="Re-install",  # noqa: F821
-        description="Force re-installation of all the dependencies.",
+        description="Force re-installation of all the python packages (equivalent to --force-reinstall)",
         default=False,
     )
 

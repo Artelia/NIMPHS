@@ -41,6 +41,7 @@ class NIMPHS_InstallerAddonPreferences(AddonPreferences):
 
             row = box.row()
             row.prop(self.settings, "configuration", text="Config")
+            row.prop(self.settings, "reinstall", text="Force")
             row.operator("nimphs.install", text="Install", icon='IMPORT')
 
         elif state == 'DONE':
