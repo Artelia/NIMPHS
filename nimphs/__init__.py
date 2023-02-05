@@ -43,6 +43,10 @@ with open(file_path, "r+", encoding='utf-8') as file:
         LOAD_INSTALLER = False
     elif data["installation"]["state"] == 'INSTALL':
         LOAD_INSTALLER = True
+    else:
+        message = ("\n\n"
+                   "Unrecognized installation state.\n")
+        raise Exception(message)
 
 # Setup logger
 import logging
@@ -66,12 +70,18 @@ if LOAD_INSTALLER is False:
     auto_load.init()
 
 else:
-    pass
+    from nimphs.properties.installer import NIMPHS_InstallerProperties
+    from nimphs.panels.installer import NIMPHS_InstallerAddonPreferences
 
 
 def register() -> None:  # noqa: D103
 
-    if LOAD_INSTALLER is False:
+    if LOAD_INSTALLER:
+        classes = (NIMPHS_InstallerProperties, NIMPHS_InstallerAddonPreferences)
+        for cls in classes:
+            bpy.utils.register_class(cls)
+
+    else:
         auto_load.register()
 
         # Register custom properties
@@ -110,7 +120,12 @@ def register() -> None:  # noqa: D103
 
 def unregister() -> None:  # noqa: D103
 
-    if LOAD_INSTALLER is False:
+    if LOAD_INSTALLER:
+        classes = (NIMPHS_InstallerProperties, NIMPHS_InstallerAddonPreferences)
+        for cls in reversed(classes):
+            bpy.utils.unregister_class(cls)
+
+    else:
         # Reset default values (in case of unregister/register during execution of a modal operator)
         bpy.context.scene.nimphs.m_op_running = False
         bpy.context.scene.nimphs.m_op_value = -1.0

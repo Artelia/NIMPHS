@@ -1,6 +1,5 @@
 {
     "installation": {
-        "state": "INSTALL",
-        "config": "BASIC"
+        "state": "INSTALL"
     }
 }
