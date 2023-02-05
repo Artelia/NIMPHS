@@ -3,6 +3,8 @@
 from bpy.props import PointerProperty
 from bpy.types import AddonPreferences, Context
 
+import json
+
 from nimphs.properties.installer import NIMPHS_InstallerProperties
 
 
@@ -32,8 +34,18 @@ class NIMPHS_InstallerAddonPreferences(AddonPreferences):
         row = box.row()
         row.label(text="Installation")
 
-        row = box.row()
-        row.prop(self.settings, "configuration", text="Configuration")
+        with open(self.settings.state_file, "r+", encoding='utf-8') as file:
+            state = json.load(file)["installation"]["state"]
 
-        row = box.row()
-        row.operator("nimphs.install", text="Install")
+        if state == 'INSTALL':
+
+            row = box.row()
+            row.prop(self.settings, "configuration", text="Configuration")
+
+            row = box.row()
+            row.operator("nimphs.install", text="Install")
+
+        else:
+
+            row = box.row()
+            row.label(text="Installation complete, please re-open Blender.", icon='CHECKMARK')

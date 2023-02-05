@@ -1,6 +1,9 @@
 # <pep8 compliant>
 from bpy.types import PropertyGroup
-from bpy.props import EnumProperty, BoolProperty
+from bpy.props import EnumProperty, BoolProperty, StringProperty
+
+import os
+from pathlib import Path
 
 
 class NIMPHS_InstallerProperties(PropertyGroup):
@@ -27,4 +30,16 @@ follow thse instructions in the developers manual'),                # noqa: F821
         name="Re-install",
         description="Force re-installation of all the dependencies.",
         default=False,
+    )
+
+    requirements: StringProperty(
+        name="Python requirements",
+        description="Requirements.txt file path",
+        default=os.path.join(os.path.abspath(Path(__file__).parent.parent), "requirements.txt")
+    )
+
+    state_file: StringProperty(
+        name="Sate file",
+        description="File path to the 'state file' which stores information on the add-on's installation",
+        default=os.path.join(os.path.abspath(Path(__file__).parent.parent), "nimphs.json")
     )

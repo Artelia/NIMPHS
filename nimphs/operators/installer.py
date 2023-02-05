@@ -6,6 +6,7 @@ log = logging.getLogger(__name__)
 
 import os
 import sys
+import json
 import subprocess
 from pathlib import Path
 
@@ -31,7 +32,6 @@ class NIMPHS_OT_Installer(Operator):
             set: state of the operator
         """
 
-        file_path = os.path.join(os.path.abspath(Path(__file__).parent.parent), "requirements.txt")
         settings = context.preferences.addons['nimphs'].preferences.settings
 
         # Try to install 'ADVANCED' packages first
@@ -46,14 +46,27 @@ class NIMPHS_OT_Installer(Operator):
 
                 log.error(message + str(exception))
 
+                return {'CANCELLED'}
+
         # Then, install packages for the 'CLASSIC' configuration
         try:
-            self.install_requirements(file_path, force=settings.reinstall)
+            self.install_requirements(settings.requirements, force=settings.reinstall)
         except Exception as exception:
             message = ("\n\n"
                        "An error occurred during installation.\n")
 
             log.error(message + str(exception))
+
+            return {'CANCELLED'}
+
+        # Replace value inside json file to indicate installation is complete
+        with open(settings.state_file, "r+", encoding='utf-8') as file:
+            data = json.load(file)
+
+        data["installation"]["state"] = 'DONE'
+
+        with open(settings.state_file, "w", encoding='utf-8') as file:
+            json.dump(data, file)
 
         return {'FINISHED'}
 
