@@ -16,7 +16,7 @@ from nimphs.operators.shared.utils import update_end
 from nimphs.panels.utils import get_selected_object, draw_point_data
 from nimphs.operators.shared.modal_operator import NIMPHS_ModalOperator
 from nimphs.operators.shared.create_sequence import NIMPHS_CreateSequence
-from nimphs.checkdeps import HAS_CUDA, HAS_MULTIPROCESSING, HAS_PYOPENVDB
+from nimphs.check_dependencies import HAS_CUDA, HAS_MULTIPROCESSING, HAS_PYOPENVDB
 from nimphs.operators.utils.volume import TelemacMeshForVolume, TelemacVolume
 from nimphs.properties.telemac.interpolate import NIMPHS_TelemacInterpolateProperty
 from nimphs.properties.utils.point_data import PointDataInformation, PointDataManager
