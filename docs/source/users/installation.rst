@@ -3,92 +3,60 @@
 Installation
 ============
 
-* :ref:`install-addon-linux`
-* :ref:`install-addon-windows`
-
-
-.. _install-addon-linux:
-
-Linux
-#####
-
-.. important::
-    This tutorial is written for Ubuntu
-
 #. Install `Blender <https://www.blender.org/download/>`_ (at least version 3.0)
 
 #. Install dependencies:
 
-    .. note::
-        You may have setup a custom python environment for Blender.
-        All you have to do is to install the python packages inside your environment.
-
     * Blender add-on: `Stop-motion-OBJ <https://github.com/neverhood311/Stop-motion-OBJ/releases>`_ (at least version 2.2.0.alpha.23)
-    * Python packages:
 
-        * Go where python is installed in Blender (in ``.../3.X/python/bin/``)
-        * Make sure we have pip installed: ``sudo ./python3.X -m ensurepip``
-        * Update pip: ``sudo ./python3.X -m pip install -U pip``
-        * Install `PyVista <https://docs.pyvista.org/#>`_ ``sudo ./python3.X -m pip install -U pyvista -t ../lib/python3.X/site-packages/``
+#. Install NIMPHS:
 
-            .. important::
-                Next points are only needed if you are planning to generate volume sequences from TELEMAC-3D files.
-
-        * Install `Numba <https://numba.pydata.org/numba-doc/latest/index.html>`_ (for CUDA support) ``sudo ./python3.X -m pip install -U numba -t ../lib/python3.X/site-packages/``
-        * Install `pyopenvdb <https://github.com/AcademySoftwareFoundation/openvdb>`_. There is no "simple" way for the moment.
-          We are waiting for `this PR <https://github.com/AcademySoftwareFoundation/openvdb/pull/1377>`_ to be merged. This should make the process a lot easier.
-          
-          |     For now, you have to install it by your own means. You probably will have to install `boost <https://www.boost.org/>`_ and `tbb <https://github.com/oneapi-src/oneTBB>`_.
-          |     Here are some steps to help you install it manually:
-
-          * Download latest release of `OpenVDB <https://github.com/AcademySoftwareFoundation/openvdb/releases>`_
-          * Run: ``cd openvdb && mkdir build && cd build``
-          * Run: ``cmake -DOPENVDB_BUILD_PYTHON_MODULE=ON -DUSE_NUMPY=ON -DPython_EXECUTABLE=path/to/python/bin/python3.X ..``
-          * Run: ``sudo make -j 8 && sudo make install``
-
-#. Install the add-on:
     * Download a version from the `releases page <https://github.com/Artelia/NIMPHS/releases>`_ (latest recommended)
-    * In Blender, go to ``Edit > Preferences > Add-on > Install`` and select the downloaded file
-    * Do not forget to activate it (`tick the checkbox`)
+    * Open Blender, go to ``Edit > Preferences > Add-on > Install`` and select the downloaded file
+    * Activate it (`tick the checkbox`)
+    * Go under preferences and select an installation configuration:
+
+        * ``CLASSIC``: this is the basic and recommended configuration.
+        * ``ADVANCED``: configuration which will let you install other dependencies to use under-development features.
+        * `Force` (option): install python pyckages with the ``--force-reinstall`` flag on.
+
+    * Then, click on the ``install`` button.
+
+        .. image:: /images/installation/run_install_process.png
+            :width: 55%
+            :alt: Preview panel
+            :align: center
+            :class: rounded-corners
+
+    * |  If everything went well, you should see this message. Then, just reopen Blender and voilà! |:magic_wand:|
+      |  If not, the error message should be printed in the console.
+
+        .. image:: /images/installation/post_run_install_process.png
+            :width: 55%
+            :alt: Preview panel
+            :align: center
+            :class: rounded-corners
 
 
-.. _install-addon-windows:
-
-Windows
-#######
-
-#. Install `Blender <https://www.blender.org/download/>`_ (at least version 3.0)
-
-    .. important::
-        If you have **administrator privileges** then you can install Blender globally.
-        If not, we recommend you to **install a portable version** otherwise you may not be able
-        to install python dependencies correctly.
-
-#. Install dependencies:
+Reinstall python dependencies
+=============================
 
     .. note::
-        You may have setup a custom python environment for Blender.
-        All you have to do is to install the python packages inside your environment.
+        If you need to reinstall the python dependencies or switch configuration, follow these instructions.
 
-    * Blender add-on: `Stop-motion-OBJ <https://github.com/neverhood311/Stop-motion-OBJ/releases>`_ (at least version 2.2.0.alpha.23)
-    * Python packages:
+    * Open Blender, go to ``Edit > Preferences > Add-on``
+    * Then, click on the ``Re-install`` button
 
-        * Go where python is installed in Blender (in ``.../3.X/python/bin/``)
-        * Make sure we have pip installed: ``.\python.exe -m ensurepip``
-        * Update pip: ``.\python.exe -m pip install -U pip``
-        * Install `PyVista <https://docs.pyvista.org/#>`_ ``.\python.exe -m pip install -U pyvista -t ../lib/site-packages/``
+        .. image:: /images/installation/reset_installer_state.png
+            :width: 55%
+            :alt: Preview panel
+            :align: center
+            :class: rounded-corners
 
-            .. important::
-                Next points are only needed if you are planning to generate volume sequences from TELEMAC-3D files.
+    * Then, follow the instructions and do the same process as in step ``3. Install NIMPHS``.
 
-        * Install `Numba <https://numba.pydata.org/numba-doc/latest/index.html>`_ (for CUDA support) ``.\python.exe -m pip install -U numba -t ../lib/site-packages/``
-        * Install `pyopenvdb <https://github.com/AcademySoftwareFoundation/openvdb>`_. There is no "simple" way for the moment.
-          We are waiting for `this PR <https://github.com/AcademySoftwareFoundation/openvdb/pull/1377>`_ to be merged. This should make the process a lot easier.
-          
-          |     For now, you have to install it by your own means. You probably will have to install `boost <https://www.boost.org/>`_ and `tbb <https://github.com/oneapi-src/oneTBB>`_.
-          |     [TODO]
-          
-#. Install the add-on:
-    * Download a version from the `releases page <https://github.com/Artelia/NIMPHS/releases>`_ (latest recommended)
-    * In Blender, go to ``Edit > Preferences > Add-on > Install`` and select the downloaded file
-    * Do not forget to activate it (`tick the checkbox`)
+        .. image:: /images/installation/post_reset_installer_state.png
+            :width: 55%
+            :alt: Preview panel
+            :align: center
+            :class: rounded-corners
