@@ -1,6 +1,6 @@
 # <pep8 compliant>
 from bpy.types import PropertyGroup
-from bpy.props import EnumProperty
+from bpy.props import EnumProperty, BoolProperty
 
 
 class NIMPHS_InstallerProperties(PropertyGroup):
@@ -15,9 +15,16 @@ class NIMPHS_InstallerProperties(PropertyGroup):
         description="Installation configuration. Enum in ['CLASSIC', 'ADVANCED']",
         items=[
             ('CLASSIC', 'Classic', 'Install all the necessary dependcies needed to make this add-on work. \
-This configuration does not include under-development features'),  # noqa: F821
+This configuration does not include under-development features'),   # noqa: F821
             ('ADVANCED', 'Advanced', 'Install all the necessary dependcies needed to make this add-on work \
 plus other python packages for under-development features. This configuration might not work if you did not \
-follow thse instructions in the developers manual'),                     # noqa: F821
+follow thse instructions in the developers manual'),                # noqa: F821
         ],
+    )
+
+    #: bpy.props.BoolProperty: Indicate if we have to insert '--force-reinstall' when instatlling dependencies.
+    reinstall: BoolProperty(
+        name="Re-install",
+        description="Force re-installation of all the dependencies.",
+        default=False,
     )

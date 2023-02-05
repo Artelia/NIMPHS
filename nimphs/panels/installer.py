@@ -34,3 +34,6 @@ class NIMPHS_InstallerAddonPreferences(AddonPreferences):
 
         row = box.row()
         row.prop(self.settings, "configuration", text="Configuration")
+
+        row = box.row()
+        row.operator("nimphs.install", text="Install")

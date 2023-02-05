@@ -1,0 +1,5 @@
+# Requirements for the 'CLASSIC' configuration.
+
+pip
+pyvista >= 0.35.1
+matplotlib

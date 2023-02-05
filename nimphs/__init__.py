@@ -72,12 +72,14 @@ if LOAD_INSTALLER is False:
 else:
     from nimphs.properties.installer import NIMPHS_InstallerProperties
     from nimphs.panels.installer import NIMPHS_InstallerAddonPreferences
+    from nimphs.operators.installer import NIMPHS_OT_Installer
+
+    classes = (NIMPHS_InstallerProperties, NIMPHS_InstallerAddonPreferences, NIMPHS_OT_Installer)
 
 
 def register() -> None:  # noqa: D103
 
     if LOAD_INSTALLER:
-        classes = (NIMPHS_InstallerProperties, NIMPHS_InstallerAddonPreferences)
         for cls in classes:
             bpy.utils.register_class(cls)
 
@@ -121,7 +123,6 @@ def register() -> None:  # noqa: D103
 def unregister() -> None:  # noqa: D103
 
     if LOAD_INSTALLER:
-        classes = (NIMPHS_InstallerProperties, NIMPHS_InstallerAddonPreferences)
         for cls in reversed(classes):
             bpy.utils.unregister_class(cls)
 
