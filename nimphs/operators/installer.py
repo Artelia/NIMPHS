@@ -69,8 +69,8 @@ class NIMPHS_OT_Installer(Operator):
         if settings.configuration == 'ADVANCED':
 
             try:
-                self.install_package('numba', force=settings.reinstall)
-                self.install_package('multiprocessing', force=settings.reinstall)
+                self.install_package('numba', directory=context.scene.site_packages, force=settings.reinstall)
+                self.install_package('multiprocessing', directory=context.scene.site_packages, force=settings.reinstall)
             except Exception as exception:
                 message = ("\n\n"
                            "An error occurred during installation with 'ADVANCED' configuration.\n")
@@ -81,7 +81,10 @@ class NIMPHS_OT_Installer(Operator):
 
         # Then, install packages for the 'CLASSIC' configuration
         try:
-            self.install_requirements(settings.requirements, force=settings.reinstall)
+            self.install_requirements(
+                settings.requirements,
+                directory=context.scene.site_packages,
+                force=settings.reinstall)
         except Exception as exception:
             message = ("\n\n"
                        "An error occurred during installation.\n")
@@ -101,29 +104,40 @@ class NIMPHS_OT_Installer(Operator):
 
         return {'FINISHED'}
 
-    def install_package(self, package: str, force: bool = False) -> None:
+    def install_package(self, package: str, directory: str = '', force: bool = False) -> None:
         """
         Install the given python package.
 
         Args:
             package (str): name of the python package.
+            directory (str, optional): specify a directory where to install the package.
             force (bool, optional): force reinstall. Defaults to False.
         """
+
         args = [sys.executable, "-m", "pip", "install", package]
         if force:
             args.append("--force-reinstall")
+        if directory != '':
+            args.append("-t")
+            args.append(directory)
+
         subprocess.check_call(args)
 
-    def install_requirements(self, requirements: str, force: bool = False) -> None:
+    def install_requirements(self, requirements: str, directory: str = '', force: bool = False) -> None:
         """
         Install python packages from the given requirements file.
 
         Args:
             requirements (str): path to the requirements file.
+            directory (str, optional): specify a directory where to install packages.
             force (bool, optional): force reinstall. Defaults to False.
         """
 
         args = [sys.executable, "-m", "pip", "install", "-r", requirements, "-U"]
         if force:
             args.append("--force-reinstall")
+        if directory != '':
+            args.append("-t")
+            args.append(directory)
+
         subprocess.check_call(args)
