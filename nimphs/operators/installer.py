@@ -65,6 +65,13 @@ class NIMPHS_OT_Installer(Operator):
 
         settings = context.preferences.addons['nimphs'].preferences.settings
 
+        # Make sure we have pip available
+        args = [sys.executable, "-m", "ensurepip"]
+        subprocess.check_call(args)
+
+        # Upgrade pip
+        args = [sys.executable, "-m", "pip", "install", "--upgrade"]
+
         # Try to install 'ADVANCED' packages first
         if settings.configuration == 'ADVANCED':
 
