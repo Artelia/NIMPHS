@@ -7,7 +7,6 @@ from bpy.app.handlers import frame_change_pre, frame_change_post, save_pre
 from bpy.types import Scene, Object, TOPBAR_MT_file_import, VIEW3D_MT_editor_menus, VIEW3D_HT_tool_header
 
 import os
-import sys
 import json
 from pathlib import Path
 
@@ -82,11 +81,6 @@ def register() -> None:  # noqa: D103
 
     # File path to the 'state file' which stores information on the add-on's installation
     Scene.nimphs_state_file = state_file_path
-
-    # Find path to 'site-packages'
-    for path in sys.path:
-        if "site-packages" in path:
-            Scene.site_packages = path
 
     if LOAD_INSTALLER:
 

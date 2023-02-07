@@ -7,6 +7,7 @@ log = logging.getLogger(__name__)
 import sys
 import json
 import subprocess
+from distutils.sysconfig import get_python_lib
 
 
 class NIMPHS_OT_ResetInstaller(Operator):
@@ -70,14 +71,14 @@ class NIMPHS_OT_Installer(Operator):
         subprocess.check_call(args)
 
         # Upgrade pip
-        args = [sys.executable, "-m", "pip", "install", "--upgrade"]
+        args = [sys.executable, "-m", "pip", "install", "--upgrade", "--user"]
 
         # Try to install 'ADVANCED' packages first
         if settings.configuration == 'ADVANCED':
 
             try:
-                self.install_package('numba', directory=context.scene.site_packages, force=settings.reinstall)
-                self.install_package('multiprocessing', directory=context.scene.site_packages, force=settings.reinstall)
+                self.install_package('numba', force=settings.reinstall)
+                self.install_package('multiprocessing', force=settings.reinstall)
             except Exception as exception:
                 message = ("\n\n"
                            "An error occurred during installation with 'ADVANCED' configuration.\n")
@@ -88,10 +89,7 @@ class NIMPHS_OT_Installer(Operator):
 
         # Then, install packages for the 'CLASSIC' configuration
         try:
-            self.install_requirements(
-                settings.requirements,
-                directory=context.scene.site_packages,
-                force=settings.reinstall)
+            self.install_requirements(settings.requirements, force=settings.reinstall)
         except Exception as exception:
             message = ("\n\n"
                        "An error occurred during installation.\n")
@@ -121,7 +119,7 @@ class NIMPHS_OT_Installer(Operator):
             force (bool, optional): force reinstall. Defaults to False.
         """
 
-        args = [sys.executable, "-m", "pip", "install", package]
+        args = [sys.executable, "-m", "pip", "install", package, "--user"]
         if force:
             args.append("--force-reinstall")
         if directory != '':
@@ -140,7 +138,7 @@ class NIMPHS_OT_Installer(Operator):
             force (bool, optional): force reinstall. Defaults to False.
         """
 
-        args = [sys.executable, "-m", "pip", "install", "-r", requirements, "-U"]
+        args = [sys.executable, "-m", "pip", "install", "-r", requirements, "--upgrade", "--user"]
         if force:
             args.append("--force-reinstall")
         if directory != '':
