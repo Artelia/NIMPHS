@@ -7,8 +7,6 @@ log = logging.getLogger(__name__)
 import sys
 import json
 import subprocess
-from distutils.sysconfig import get_python_lib
-
 
 class NIMPHS_OT_ResetInstaller(Operator):
     """Reset installer state to let the user install dependencies again."""
@@ -71,7 +69,8 @@ class NIMPHS_OT_Installer(Operator):
         subprocess.check_call(args)
 
         # Upgrade pip
-        args = [sys.executable, "-m", "pip", "install", "--upgrade", "--user"]
+        args = [sys.executable, "-m", "pip", "install", "--upgrade", "pip", "--user"]
+        subprocess.check_call(args)
 
         # Try to install 'ADVANCED' packages first
         if settings.configuration == 'ADVANCED':
@@ -109,40 +108,32 @@ class NIMPHS_OT_Installer(Operator):
 
         return {'FINISHED'}
 
-    def install_package(self, package: str, directory: str = '', force: bool = False) -> None:
+    def install_package(self, package: str, force: bool = False) -> None:
         """
         Install the given python package.
 
         Args:
             package (str): name of the python package.
-            directory (str, optional): specify a directory where to install the package.
             force (bool, optional): force reinstall. Defaults to False.
         """
 
         args = [sys.executable, "-m", "pip", "install", package, "--user"]
         if force:
             args.append("--force-reinstall")
-        if directory != '':
-            args.append("-t")
-            args.append(directory)
 
         subprocess.check_call(args)
 
-    def install_requirements(self, requirements: str, directory: str = '', force: bool = False) -> None:
+    def install_requirements(self, requirements: str, force: bool = False) -> None:
         """
         Install python packages from the given requirements file.
 
         Args:
             requirements (str): path to the requirements file.
-            directory (str, optional): specify a directory where to install packages.
             force (bool, optional): force reinstall. Defaults to False.
         """
 
         args = [sys.executable, "-m", "pip", "install", "-r", requirements, "--upgrade", "--user"]
         if force:
             args.append("--force-reinstall")
-        if directory != '':
-            args.append("-t")
-            args.append(directory)
 
         subprocess.check_call(args)

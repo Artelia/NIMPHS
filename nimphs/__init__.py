@@ -7,8 +7,15 @@ from bpy.app.handlers import frame_change_pre, frame_change_post, save_pre
 from bpy.types import Scene, Object, TOPBAR_MT_file_import, VIEW3D_MT_editor_menus, VIEW3D_HT_tool_header
 
 import os
+import sys
+import site
 import json
 from pathlib import Path
+
+# Add user default folders where pip will install some of the dependencies
+# This is because some folders may not be writable
+sys.path.append(os.path.abspath(site.USER_SITE))
+sys.path.append(os.path.join(os.path.abspath(Path(site.USER_SITE).parent), "Scripts"))
 
 from . import auto_load
 
