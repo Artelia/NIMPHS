@@ -7,8 +7,15 @@ from bpy.app.handlers import frame_change_pre, frame_change_post, save_pre
 from bpy.types import Scene, Object, TOPBAR_MT_file_import, VIEW3D_MT_editor_menus, VIEW3D_HT_tool_header
 
 import os
+import sys
+import site
 import json
 from pathlib import Path
+
+# Add user default folders where pip will install some of the dependencies
+# This is because some folders may not be writable
+sys.path.append(os.path.abspath(site.USER_SITE))
+sys.path.append(os.path.join(os.path.abspath(Path(site.USER_SITE).parent), "Scripts"))
 
 from . import auto_load
 
@@ -18,7 +25,7 @@ bl_info = {
     "name": "NIMPHS",
     "description": "Numerous Instruments to Manipulate and Post-process Hydraulic Simulations",
     "author": "Félix Olart, Thibault Oudart",
-    "version": (0, 4, 2),
+    "version": (0, 4, 3),
     "blender": (3, 0, 0),
     "location": "File > Import",
     "warning": "This version is still in development.",
@@ -127,6 +134,7 @@ def register() -> None:  # noqa: D103
 def unregister() -> None:  # noqa: D103
 
     if LOAD_INSTALLER:
+
         for cls in reversed(classes):
             bpy.utils.unregister_class(cls)
 

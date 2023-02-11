@@ -65,17 +65,26 @@ class NIMPHS_OT_Installer(Operator):
 
         settings = context.preferences.addons['nimphs'].preferences.settings
 
+        # Make sure we have pip available
+        args = [sys.executable, "-m", "ensurepip"]
+        subprocess.check_call(args)
+
+        # Upgrade pip
+        args = [sys.executable, "-m", "pip", "install", "--upgrade", "pip", "--user"]
+        subprocess.check_call(args)
+
         # Try to install 'ADVANCED' packages first
         if settings.configuration == 'ADVANCED':
 
             try:
                 self.install_package('numba', force=settings.reinstall)
-                self.install_package('multiprocessing', force=settings.reinstall)
             except Exception as exception:
                 message = ("\n\n"
                            "An error occurred during installation with 'ADVANCED' configuration.\n")
 
                 log.error(message + str(exception))
+
+                self.report({'ERROR'}, "An error occurred during installation. See console logs.")
 
                 return {'CANCELLED'}
 
@@ -87,6 +96,8 @@ class NIMPHS_OT_Installer(Operator):
                        "An error occurred during installation.\n")
 
             log.error(message + str(exception))
+
+            self.report({'ERROR'}, "An error occurred during installation. See console logs.")
 
             return {'CANCELLED'}
 
@@ -109,9 +120,11 @@ class NIMPHS_OT_Installer(Operator):
             package (str): name of the python package.
             force (bool, optional): force reinstall. Defaults to False.
         """
-        args = [sys.executable, "-m", "pip", "install", package]
+
+        args = [sys.executable, "-m", "pip", "install", package, "--upgrade", "--user"]
         if force:
             args.append("--force-reinstall")
+
         subprocess.check_call(args)
 
     def install_requirements(self, requirements: str, force: bool = False) -> None:
@@ -123,7 +136,8 @@ class NIMPHS_OT_Installer(Operator):
             force (bool, optional): force reinstall. Defaults to False.
         """
 
-        args = [sys.executable, "-m", "pip", "install", "-r", requirements, "-U"]
+        args = [sys.executable, "-m", "pip", "install", "-r", requirements, "--upgrade", "--user"]
         if force:
             args.append("--force-reinstall")
+
         subprocess.check_call(args)
