@@ -84,6 +84,8 @@ class NIMPHS_OT_Installer(Operator):
 
                 log.error(message + str(exception))
 
+                self.report({'ERROR'}, "An error occurred during installation. See console logs.")
+
                 return {'CANCELLED'}
 
         # Then, install packages for the 'CLASSIC' configuration
@@ -94,6 +96,8 @@ class NIMPHS_OT_Installer(Operator):
                        "An error occurred during installation.\n")
 
             log.error(message + str(exception))
+
+            self.report({'ERROR'}, "An error occurred during installation. See console logs.")
 
             return {'CANCELLED'}
 
@@ -117,7 +121,7 @@ class NIMPHS_OT_Installer(Operator):
             force (bool, optional): force reinstall. Defaults to False.
         """
 
-        args = [sys.executable, "-m", "pip", "install", package, "--user"]
+        args = [sys.executable, "-m", "pip", "install", package, "--upgrade", "--user"]
         if force:
             args.append("--force-reinstall")
 
