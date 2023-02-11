@@ -8,6 +8,7 @@ import sys
 import json
 import subprocess
 
+
 class NIMPHS_OT_ResetInstaller(Operator):
     """Reset installer state to let the user install dependencies again."""
 
@@ -77,7 +78,6 @@ class NIMPHS_OT_Installer(Operator):
 
             try:
                 self.install_package('numba', force=settings.reinstall)
-                self.install_package('multiprocessing', force=settings.reinstall)
             except Exception as exception:
                 message = ("\n\n"
                            "An error occurred during installation with 'ADVANCED' configuration.\n")
