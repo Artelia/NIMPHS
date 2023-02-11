@@ -18,9 +18,9 @@ Installation
 
         * ``CLASSIC``: this is the basic and recommended configuration.
         * ``ADVANCED``: configuration which will let you install other dependencies to use under-development features.
-        * `Force` (option): install python pyckages with the ``--force-reinstall`` flag on.
+        * `Force` (option): install python packages with the ``--force-reinstall`` flag on.
 
-    * Then, click on the ``install`` button.
+    * Then, click on the ``install`` button. The Blender UI will freeze for a moment, this is normal. Python packages are being downloaded and installed.
 
         .. image:: /images/installation/run_install_process.png
             :width: 55%
@@ -39,7 +39,7 @@ Installation
 
 
 Reinstall python dependencies
-=============================
+-----------------------------
 
     .. note::
         If you need to reinstall the python dependencies or switch configuration, follow these instructions.
