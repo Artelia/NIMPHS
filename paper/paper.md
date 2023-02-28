@@ -35,20 +35,20 @@ simulations. This tool provides features to import, manipulate and post-process 
 the Blender rendering pipeline in order to leverage the power of its two renderers: Eevee and Cycles. Some examples are
 shown in Figure 1 and Figure 2.
 
-The add-on is developed using open source tools from ARTELIA, and `pyvista` [@pyvista], a high-level python API for
+The add-on is developed using open source tools from ARTELIA, and using `PyVista` [@pyvista], a high-level python API for
 `VTK` [@vtk]. It also makes use of another Blender add-on: `Stop-Motion-OBJ` [@stop-motion-obj] to ease the creation
 of animations. `NIMPHS` tries to unify the way data are manipulated among the different file formats it supports.
 Indeed, data structures often present similarities in their topologies in CFD (Computational Fluid Dynamics), so it is
 possible to have shared features.
 
-Fast and memory efficient algorithms to manipulate data using python in Blender are implemented, for that `numpy`
+Fast and memory efficient algorithms to manipulate data using Python in Blender are implemented, for that `NumPy`
 [@numpy] is used. When it comes to specific rendering tasks, such as volumes, the
 `multiprocessing` modules `numba` [@numba] and `pyopenvdb` [@openvdb] are used to generate volume sequences in a
 reasonable amount of time.
 
 # Statement of need
 
-The process of modeling fluid flows is often divided into three main steps: pre-processing, simulation and
+The process of modeling fluid flows is often divided into three main steps: pre-processing, simulation, and
 post-processing. The first one consists in choosing the right equations and the extent of the model in order
 to represent the physical phenomena which will be of interest. Since these equations are only solved for a finite
 number of points in space, there is a need to discretize the modeled space into a mesh. Then, the simulation step makes
@@ -59,7 +59,7 @@ evolution of physical phenomena through time and space.
 Post-processing data in the field of computational fluid dynamics is an important part of the modeling process.
 Engineers and researchers need visualizations to understand, validate and fix the results of their simulations in
 comparison to real world observations and laboratory experiments. There are several tools at our disposal to generate
-graphical outputs of such models. We can quote: ParaView [@paraview], QGIS [@qgis], Fudaa [@fudaa] or Tecplot
+graphical outputs of such models. We can quote: ParaView [@paraview], QGIS [@qgis], Fudaa [@fudaa], or Tecplot
 [@tecplot]. These powerful software are commonly used by scientists to provide outputs in order to analyze them and
 then take diverse decisions or communicate their results.
 
@@ -69,7 +69,7 @@ keys to understand the results. Thus, one idea is to generate photo-realistic re
 produce better visuals for these audiences. Such graphical outputs could ease the understanding of physical phenomena
 which take place in fluid simulations.
 
-Some of the previously quoted tools try to tackle this issue by providing photo-realistic 3D renderers (e.g., intel
+Some of the previously quoted tools try to tackle this issue by providing photo-realistic 3D renderers (e.g., Intel
 `OSPRay` [@ospray] in ParaView). However, it is often difficult to add visually convincing scenes and contexts to
 significantly better these graphical outputs. Therefore, the tool `NIMPHS` is designed to be used for such
 applications. It is an add-on for Blender, the free and open source 3D creation suite.
