@@ -73,7 +73,7 @@ We welcome contributions and hope that our [contributing guide](https://github.c
 will help you to start easily.Make sure to read the [code of conduct](https://github.com/Artelia/NIMPHS/blob/main/CODE_OF_CONDUCT.md)
 before contributing.
 
-## Citing Quantum Nodes
+## Citing NIMPHS
 
 There is a [paper about NIMPHS](https://joss.theoj.org/papers/10.21105/joss.04868)!
 
