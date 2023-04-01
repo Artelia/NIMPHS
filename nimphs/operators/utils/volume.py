@@ -7,7 +7,7 @@ import numpy as np
 from math import ceil
 import itertools as it
 from copy import deepcopy
-from nimphs.checkdeps import HAS_CUDA
+from nimphs.check_dependencies import HAS_CUDA
 from nimphs.properties.telemac.serafin import Serafin
 
 
