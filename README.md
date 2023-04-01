@@ -72,3 +72,27 @@ Model A                                              | Model B
 We welcome contributions and hope that our [contributing guide](https://github.com/Artelia/NIMPHS/blob/main/CONTRIBUTING.md)
 will help you to start easily.Make sure to read the [code of conduct](https://github.com/Artelia/NIMPHS/blob/main/CODE_OF_CONDUCT.md)
 before contributing.
+
+## Citing Quantum Nodes
+
+There is a [paper about NIMPHS](https://joss.theoj.org/papers/10.21105/joss.04868)!
+
+If you are using NIMPHS in your research, please cite our work.
+
+> Olart et al., (2023). NIMPHS: Numerous Instruments to Manipulate and Post-process Hydraulic Simulations. Journal of Open Source Software, 8(83), 4868, https://doi.org/10.21105/joss.04868
+
+### Bibtex
+
+```
+@article{Olart2023,
+    doi = {10.21105/joss.04868},
+    url = {https://doi.org/10.21105/joss.04868},
+    year = {2023},
+    publisher = {The Open Journal},
+    volume = {8},
+    number = {83},
+    pages = {4868},
+    author = {Félix Olart and Thibault Oudart and Olivier Bertrand and Mehdi-Pierre Daou},
+    title = {NIMPHS: Numerous Instruments to Manipulate and Post-process Hydraulic Simulations}, journal = {Journal of Open Source Software}
+} 
+```
